@@ -10,5 +10,6 @@
     "search.exclude": {
         "**/node_modules": true,
         "distribution/": true
-    }
+    },
+    "eslint.enable": false
 }

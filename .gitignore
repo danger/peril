@@ -5,4 +5,4 @@ node_modules
 .npm
 *.dat
 config/default.json
-distribution
+out

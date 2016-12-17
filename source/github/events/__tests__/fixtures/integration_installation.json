@@ -1,0 +1,47 @@
+{
+  "action": "created",
+  "installation": {
+    "id": 4766,
+    "account": {
+      "login": "danger",
+      "id": 17147106,
+      "avatar_url": "https://avatars.githubusercontent.com/u/17147106?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/danger",
+      "html_url": "https://github.com/danger",
+      "followers_url": "https://api.github.com/users/danger/followers",
+      "following_url": "https://api.github.com/users/danger/following{/other_user}",
+      "gists_url": "https://api.github.com/users/danger/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/danger/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/danger/subscriptions",
+      "organizations_url": "https://api.github.com/users/danger/orgs",
+      "repos_url": "https://api.github.com/users/danger/repos",
+      "events_url": "https://api.github.com/users/danger/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/danger/received_events",
+      "type": "Organization",
+      "site_admin": false
+    },
+    "access_tokens_url": "https://api.github.com/installations/4766/access_tokens",
+    "repositories_url": "https://api.github.com/installation/repositories",
+    "html_url": "https://github.com/organizations/danger/settings/installations/4766"
+  },
+  "sender": {
+    "login": "orta",
+    "id": 49038,
+    "avatar_url": "https://avatars.githubusercontent.com/u/49038?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/orta",
+    "html_url": "https://github.com/orta",
+    "followers_url": "https://api.github.com/users/orta/followers",
+    "following_url": "https://api.github.com/users/orta/following{/other_user}",
+    "gists_url": "https://api.github.com/users/orta/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/orta/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/orta/subscriptions",
+    "organizations_url": "https://api.github.com/users/orta/orgs",
+    "repos_url": "https://api.github.com/users/orta/repos",
+    "events_url": "https://api.github.com/users/orta/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/orta/received_events",
+    "type": "User",
+    "site_admin": false
+  }
+}

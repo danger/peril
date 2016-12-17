@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "Warning Danger! Danger!",
   "scripts": {
-    "start": "babel-watch --watch views source/peril.js",
+    "start": "node out/peril.js",
+    "watch": "tsc -watch -p ./",
     "test": "jest",
     "jest": "jest",
     "add_types": "typings"
@@ -15,7 +16,7 @@
   "author": "Facebook",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.15.0",
+    "body-parser": "^1.15.2",
     "config": "^1.20.4",
     "ejs": "^2.4.2",
     "express": "^4.13.4",
@@ -37,7 +38,7 @@
     "tslint": "^4.1.1",
     "typings": "^2.0.0"
   },
-    "jest": {
+  "jest": {
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
@@ -48,5 +49,4 @@
       "js"
     ]
   }
-
 }
