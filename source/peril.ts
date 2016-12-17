@@ -1,9 +1,13 @@
 import * as express from 'express'
-import bodyParser from "body-parser"
+const bodyParser = require('body-parser')
 import {ping} from "./github/events/ping"
 import {integrationInstallation} from "./github/events/integration_installation"
+import * as pg from "pg"
 
 require("./globals")
+
+const db = new pg.Client("localhost")
+// db.connect()
 
 // Error logging
 process.on("unhandledRejection", (reason: string, p: any) => {
@@ -14,11 +18,10 @@ const app = express();
 
 app.set("port", process.env.PORT || 5000)
 app.set("view engine", "ejs")
-// app.use(bodyParser.json())
+app.use(bodyParser.json())
 app.use(express.static("public"))
 
 app.post("/webhook", (req, res, next) => {
-
   const event = req.header("X-GitHub-Event")
   switch(event) {
     case "ping": {
@@ -26,7 +29,7 @@ app.post("/webhook", (req, res, next) => {
       break;
     }
     case "integration_installation": {
-      integrationInstallation(req, res)
+      integrationInstallation(req, res, db)
       break;
     }
     default: {

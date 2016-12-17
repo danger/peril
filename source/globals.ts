@@ -10,7 +10,12 @@ import * as config from "config"
  * @returns {string}
  */
 function getEnv(local: string, configName: string): string {
-  return (process.env[local]) ? process.env[local] : config.get(configName)
+  if (process.env[local]) { return process.env[local] }
+  const devKey: any = config.get(configName)
+  if(devKey.constructor === Array ) {
+    return devKey.join("\n")
+  }
+  return devKey;
 }
 
 /** Private key for the app
@@ -19,9 +24,13 @@ function getEnv(local: string, configName: string): string {
  */
 export const PRIVATE_GITHUB_SIGNING_KEY = getEnv("PRIVATE_GITHUB_SIGNING_KEY", "PRIVATE_GITHUB_SIGNING_KEY")
 
+/**
+ * The ID for the GitHub integration
+ */
+export const PERIL_INTEGATION_ID = getEnv("PERIL_INTEGATION_ID", "PERIL_INTEGATION_ID")
+
 // Normal validation stuff
-if (!(PRIVATE_GITHUB_SIGNING_KEY)) {
+if (!PRIVATE_GITHUB_SIGNING_KEY && !PERIL_INTEGATION_ID ) {
   console.error("Missing config values")
   process.exit(1)
 }
-
