@@ -19,3 +19,8 @@ Things that need to be done before any sort of semi-public beta:
 * process separation for sandboxing eval
 * danger scoping for saying run this on an "issue" 
 
+### Short term plan
+
+As with Danger-JS, I'll be starting off with just the infrastructure I use: namely building GitHub integration using their new "[Integrations](https://developer.github.com/early-access/integrations/)" thing.
+
+I have zero problems with adding support for other code review tools.
