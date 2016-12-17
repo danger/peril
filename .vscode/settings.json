@@ -1,0 +1,14 @@
+{
+    "javascript.validate.enable": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "distribution/": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "distribution/": true
+    }
+}

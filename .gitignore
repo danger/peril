@@ -1,0 +1,8 @@
+logs
+*.log
+pids
+node_modules
+.npm
+*.dat
+config/default.json
+distribution

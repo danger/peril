@@ -1,0 +1,1 @@
+web: node distribution/mitosis.js
