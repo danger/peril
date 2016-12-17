@@ -1,3 +1,3 @@
 ### Peril
 
-Hosteed Danger
+Hosted Danger
