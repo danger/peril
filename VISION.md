@@ -8,3 +8,14 @@ Hosted Danger comes with a few interesting ramifications.
 * Because she's not running on CI, Danger can run on any webhook.
 
 I've wanted to do this for a [long, long time](https://github.com/danger/danger/issues/42) and the re-write aspect of Danger JS means that I could apply the constraints necessary for running hosted from day-1.
+
+### Long term plan
+
+I'm wary of creating a web service that can be business critical in my spare time. I've done this before with the CocoaDocs infrastructure, and it consumed a massive amount of time. So, I'm taking this one slow.
+
+Things that need to be done before any sort of semi-public beta:
+
+* https for peril
+* process separation for sandboxing eval
+* danger scoping for saying run this on an "issue" 
+
