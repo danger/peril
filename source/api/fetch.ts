@@ -1,9 +1,10 @@
+const config = require("config")
 import * as node_fetch from "node-fetch" 
-import {LOG_FETCH_REQUESTS} from "../globals"
+
 
 export default function fetch(url: string | node_fetch.Request, init?: node_fetch.RequestInit): Promise<node_fetch.Response> {
 
-  if (LOG_FETCH_REQUESTS) {
+  if (config.has("LOG_FETCH_REQUESTS")) {
     const output = ["curl", "-i"]
     if (init.method) {
       output.push(`-X ${init.method}`)

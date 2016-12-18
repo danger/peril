@@ -1,5 +1,3 @@
-// @flow
-
 import * as config from "config"
 
 /**
@@ -9,13 +7,17 @@ import * as config from "config"
  * @param {string} configName Config key
  * @returns {string}
  */
-function getEnv(configName: string): string {
-  if (process.env[configName]) { return process.env[configName] }
-  const devKey: any = config.get(configName)
-  if(devKey.constructor === Array ) {
-    return devKey.join("\n")
-  }
-  return devKey;
+function getEnv(configName) {
+    if (process.env[configName]) {
+        return process.env[configName];
+    }
+    if (config.has(configName)) {
+        const devKey = config.get(configName);
+        if (devKey.constructor === Array) {
+            return devKey.join("\n");
+        }
+    }
+    return null;
 }
 
 /** Private key for the app
