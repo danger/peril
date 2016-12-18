@@ -1,4 +1,4 @@
-import { jwtForGitHubAuth }  from "../integration_installation"
+import { jwtForGitHubAuth }  from "../github"
 
 describe("jwt", () => {
   it("Creates a JWT", () => {

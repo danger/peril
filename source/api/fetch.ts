@@ -27,7 +27,7 @@ export default function fetch(url: string | node_fetch.Request, init?: node_fetc
     
     console.log(output.join(" "))
   }
-  
+
   const originalFetch:any = node_fetch
   return originalFetch(url, init)
 }
