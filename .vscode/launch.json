@@ -11,7 +11,8 @@
       "program": "${workspaceRoot}/out/peril.js",
       "cwd": "${workspaceRoot}",
       "outFiles": ["out"],
-      "sourceMaps": true
+      "sourceMaps": true,
+      "preLaunchTask": "yarn"
     },
     {
       "type": "node",

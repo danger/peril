@@ -5,11 +5,11 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        "distribution/": true
+        "out/": true
     },
     "search.exclude": {
         "**/node_modules": true,
-        "distribution/": true
+        "out/": true
     },
     "eslint.enable": false
 }

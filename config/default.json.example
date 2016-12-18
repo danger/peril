@@ -2,5 +2,7 @@
     "PRIVATE_GITHUB_SIGNING_KEY": ["-----BEGIN RSA PRIVATE KEY-----",
         "MIIEpAIBAAKCAQEA3aIAKAaR8lasL0Ehl/dthRKSH0zVJFSx6JIxqwrr7qbinT1s",
     ],
-    "PERIL_INTEGATION_ID": "865"
+    "PERIL_INTEGATION_ID": "865",
+    "WEB_URL": "https://danger.peril",
+    "DB_URL": "localhost:27017"
 }

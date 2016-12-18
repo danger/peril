@@ -1,17 +1,26 @@
 import * as express from 'express'
-import fetch from "node-fetch"
-import * as pg from "pg"
+import fetch from "../../api/fetch"
 import {PRIVATE_GITHUB_SIGNING_KEY, PERIL_INTEGATION_ID} from "../../globals"
 import * as jwt from "jsonwebtoken"
+import {GitHubInstallation, saveInstallation} from "../../db/mongo"
 
-export async function integrationInstallation(req: express.Request, res: express.Response, db: pg.Client) {
+export async function integrationInstallation(req: express.Request, res: express.Response) {
   res.status(200).send("pong")
-  
-  // const response = await db.query('INSERT INTO "public"."github_installations"("document") VALUES($1)', ['{ "id":11123 }'])
+    
   const githubJWT = jwtForGitHubAuth()
-  console.log(githubJWT)
+
   const token = await getAccessToken(req.body.installation.access_tokens_url, githubJWT)
-  console.log(token)
+  const credentials = await token.json()
+
+  const installation: GitHubInstallation = {
+    id: req.body.installation.id,
+    account: req.body.installation.account,
+    sender: req.body.installation.sender,
+    accessToken: credentials.token,
+    tokenExpires: credentials.expires_at
+  }
+
+  await saveInstallation(installation)
 }
 
   function getAccessToken(url: string, jwt: string) {
@@ -24,13 +33,13 @@ export async function integrationInstallation(req: express.Request, res: express
     })
   }
 
-function jwtForGitHubAuth() {
-  const now = new Date().getTime()
-  const expires = new Date().getTime() + 60
+export function jwtForGitHubAuth() {
+  const now = Math.round(new Date().getTime() / 1000)
+  const expires = now + 60
   const keyContent = PRIVATE_GITHUB_SIGNING_KEY
   return jwt.sign({
     iat: now,
     exp: expires,
-    issue: PERIL_INTEGATION_ID
+    iss: PERIL_INTEGATION_ID
   }, keyContent, { algorithm:"RS256" })
 }
