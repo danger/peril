@@ -1,5 +1,3 @@
-// @flow
-
 import mongojs from "mongojs"
 import { DB_URL } from "../globals"
 import { GitHubUser } from "./types"
@@ -53,5 +51,5 @@ export async function updateIntegration(installation: GitHubIntegration) {
     integrationDB.update({ id: installation.id }, { $set: installation }, () => {
       resolve(installation)
     })
-  });
+  })
 }

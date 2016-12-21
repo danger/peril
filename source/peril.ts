@@ -1,16 +1,16 @@
-import * as express from 'express'
-const bodyParser = require('body-parser')
-import {ping} from "./github/events/ping"
+import * as express from "express"
+const bodyParser = require("body-parser")  // tslint:disable-line
 import {integrationInstallation} from "./github/events/integration_installation"
+import {ping} from "./github/events/ping"
 
-require("./globals")
+require("./globals")  // tslint:disable-line
 
 // Error logging
 process.on("unhandledRejection", (reason: string, p: any) => {
-  console.log("Error: ", reason)
+  console.log("Error: ", reason)  // tslint:disable-line
 })
 
-const app = express();
+const app = express()
 
 app.set("port", process.env.PORT || 5000)
 app.set("view engine", "ejs")
@@ -19,7 +19,7 @@ app.use(express.static("public"))
 
 app.post("/webhook", (req, res, next) => {
   const event = req.header("X-GitHub-Event")
-  switch(event) {
+  switch (event) {
     case "ping": {
       ping(req, res)
       break
@@ -32,10 +32,9 @@ app.post("/webhook", (req, res, next) => {
       res.status(404).send("Yo, this ain't done yet")
     }
   }
-  
 })
 
 // Start server
 app.listen(app.get("port"), () => {
-  console.log(`Started server at http://localhost:${process.env.PORT || 5000}`)
+  console.log(`Started server at http://localhost:${process.env.PORT || 5000}`)  // tslint:disable-line
 })

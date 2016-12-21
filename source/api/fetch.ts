@@ -1,8 +1,8 @@
-const config = require("config")
-import * as node_fetch from "node-fetch" 
+const config = require("config")  // tslint:disable-line
+import * as node_fetch from "node-fetch"
 
-
-export default function fetch(url: string | node_fetch.Request, init?: node_fetch.RequestInit): Promise<node_fetch.Response> {
+export default function fetch(url: string | node_fetch.Request, init?: node_fetch.RequestInit):
+  Promise<node_fetch.Response> {
 
   if (config.has("LOG_FETCH_REQUESTS")) {
     const output = ["curl", "-i"]
@@ -22,13 +22,13 @@ export default function fetch(url: string | node_fetch.Request, init?: node_fetc
       // output.concat([init.body])
     }
 
-    if (typeof url === 'string') {
+    if (typeof url === "string") {
       output.push(url)
     }
-    
-    console.log(output.join(" "))
+
+    console.log(output.join(" "))  // tslint:disable-line
   }
 
-  const originalFetch:any = node_fetch
+  const originalFetch: any = node_fetch
   return originalFetch(url, init)
 }
