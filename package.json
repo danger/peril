@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node out/peril.js",
     "compile": "tsc -watch -p ./",
-    "test": "jest",
+    "test": "jest && tslint source",
     "jest": "jest",
     "add_types": "typings"
   },

@@ -14,7 +14,8 @@ function getEnv(configName) {
     if (config.has(configName)) {
         const devKey = config.get(configName);
         if (devKey.constructor === Array) {
-            return devKey.join("\n");
+            const arrayKeys = devKey as Array<string>
+            return arrayKeys.join("\n");
         }
     }
     return null;
