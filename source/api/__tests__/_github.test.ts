@@ -2,7 +2,7 @@ import { jwtForGitHubAuth }  from "../github"
 
 describe("jwt", () => {
   it("Creates a JWT", () => {
-    Date = jest.fn(() => { return { getTime: () => 1000 } })
+    global.Date = jest.fn(() => { return { getTime: () => 1000 } }) as any
 
     const jwt = jwtForGitHubAuth()
     // Feel free to throw this into: https://jwt.io
