@@ -1,6 +1,6 @@
 // @flow
 
-const mongojs = require("mongojs")
+import mongojs from "mongojs"
 import { DB_URL } from "../globals"
 import { GitHubUser } from "./types"
 

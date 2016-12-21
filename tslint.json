@@ -1,0 +1,20 @@
+{
+  /*
+   * Possible values:
+   * - the name of a built-in config
+   * - the name of an NPM module which has a "main" file that exports a config object
+   * - a relative path to a JSON file
+   */
+  "extends": "tslint:recommended",
+  "rules": {
+    "semicolon": [true, "never", "ignore-interfaces", "ignore-bound-class-methods"],
+    "interface-name": [true, "never-prefix"],
+    "quotemark": [true, "double"]
+  },
+  "rulesDirectory": [
+    /*
+     * A list of relative or absolute paths to directories that contain custom rules.
+     * See the Custom Rules documentation below for more details.
+     */
+  ]
+}
