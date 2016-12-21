@@ -9,15 +9,16 @@ import * as config from "config"
  */
 function getEnv(configName) {
     if (process.env[configName]) {
-        return process.env[configName];
+        return process.env[configName]
     }
     if (config.has(configName)) {
-        const devKey = config.get(configName);
+        const devKey = config.get(configName)
         if (devKey.constructor === Array) {
-            return devKey.join("\n");
+            const arrayKeys = devKey as string[]
+            return arrayKeys.join("\n")
         }
     }
-    return null;
+    return null
 }
 
 /** Private key for the app
@@ -39,7 +40,6 @@ export const DB_URL = getEnv("DB_URL")
 
 /** Mongo db URL  */
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
-
 
 // Normal validation stuff
 if (!PRIVATE_GITHUB_SIGNING_KEY && !PERIL_INTEGATION_ID && !WEB_URL && !DB_URL) {

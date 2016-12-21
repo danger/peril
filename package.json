@@ -5,8 +5,9 @@
   "scripts": {
     "start": "node out/peril.js",
     "compile": "tsc -watch -p ./",
-    "test": "jest",
+    "test": "jest && yarn run tslint source/**/*.ts",
     "jest": "jest",
+    "tslint": "tslint",
     "add_types": "typings"
   },
   "repository": {
@@ -24,7 +25,7 @@
     "express": "^4.13.4",
     "jsonwebtoken": "^7.2.1",
     "mongodb": "^2.2.11",
-    "mongojs": "^2.4.0",
+    "mongojs": "orta/mongojs#module_import",
     "node-fetch": "^1.6.3",
     "typescript": "^2.1.4"
   },

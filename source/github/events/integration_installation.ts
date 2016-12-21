@@ -1,6 +1,6 @@
-import * as express from 'express'
+import * as express from "express"
 
-import { getAccessTokenForIntegration, fetch } from "../../api/github"
+import { fetch, getAccessTokenForIntegration } from "../../api/github"
 import {GitHubIntegration, saveIntegration} from "../../db/mongo"
 
 export async function integrationInstallation(req: express.Request, res: express.Response) {
@@ -12,11 +12,11 @@ export async function integrationInstallation(req: express.Request, res: express
   const credentials = await token.json()
 
   const installation: GitHubIntegration = {
-    id: req.body.installation.id,
-    account: req.body.installation.account,
-    sender: req.body.installation.sender,
     accessToken: credentials.token,
-    tokenExpires: credentials.expires_at
+    account: req.body.installation.account,
+    id: req.body.installation.id,
+    sender: req.body.installation.sender,
+    tokenExpires: credentials.expires_at,
   }
 
   await saveIntegration(installation)
