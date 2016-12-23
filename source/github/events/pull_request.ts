@@ -11,14 +11,14 @@ export async function pullRequest(req: express.Request, res: express.Response) {
   const action = pr.action
   const installationID = pr.installation.id
   switch (action) {
-    case "created":
+    case "opened":
     case "synchronize":
     case "closed":
       const integration = await getIntegration(installationID)
       runDangerAgainstInstallation(pr, integration)
 
-    default:
+    default: {
+      console.log("Don't know this action")
+    }
   }
 }
-
-

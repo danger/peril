@@ -28,5 +28,5 @@
         "-----END RSA PRIVATE KEY-----"],
     "PERIL_INTEGATION_ID": "865",
     "WEB_URL": "https://danger.peril",
-    "DB_URL": "localhost:27017"
+    "DB_URL": "localhost:5432"
 }

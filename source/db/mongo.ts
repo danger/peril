@@ -3,7 +3,7 @@ import { DB_URL } from "../globals"
 import { GitHubUser } from "./types"
 
 // docs - http://mafintosh.github.io/mongojs/ 
-
+console.log(DB_URL)
 const db = mongojs(`mongodb://${DB_URL}`, ["github_installations"])
 const integrationDB = db.github_integrations
 

@@ -1,15 +1,16 @@
 /* tslint:disable: no-var-requires */
 
-const getCISourceForEnv = require("danger/ci_source/ci_source.js")
-import {PullRequestJSON} from "../github/types/pull_request"
+import { GitHubIntegration } from "../db/mongo"
+import { PullRequestJSON } from "../github/types/pull_request"
 
-import {GitHubIntegration} from "../db/mongo"
-const { GitHub } = require("danger/platforms/GitHub.js")
-const { Executor } = require("danger/platforms/GitHub.js")
+import { getCISourceForEnv } from "danger/distribution/ci_source/ci_source"
+import { GitHub } from "danger/distribution/platforms/GitHub"
+import Executor from "danger/distribution/runner/Executor"
 
-// import {GitHub} from "../../node_modules/danger/distribution/platforms/GitHub.js"
+import { writeFileSync } from "fs"
+import { tmpdir } from "os"
 
-export function runDangerAgainstInstallation(pullRequest: PullRequestJSON, installation: GitHubIntegration) {
+export async function runDangerAgainstInstallation(pullRequest: PullRequestJSON, installation: GitHubIntegration) {
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
@@ -24,6 +25,11 @@ export function runDangerAgainstInstallation(pullRequest: PullRequestJSON, insta
   }
 
   const gh = new GitHub(installation.accessToken, source)
+  gh.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
+  
   const exec = new Executor(source, gh)
-  exec.runDanger()
+  const dangerfile = await gh.fileContents("dangerfile.js")
+  const localDangerfile = tmpdir() + "/dangerfile.js"
+  writeFileSync(localDangerfile, dangerfile)
+  exec.runDanger(localDangerfile)
 }
