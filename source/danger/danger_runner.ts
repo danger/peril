@@ -1,4 +1,5 @@
 /* tslint:disable: no-var-requires */
+const config = require("config")
 
 import { GitHubIntegration } from "../db/mongo"
 import { PullRequestJSON } from "../github/types/pull_request"
@@ -19,14 +20,19 @@ export async function runDangerAgainstInstallation(pullRequest: PullRequestJSON,
     isCI: true,
     isPR: true,
     name: "Peril",
-    pullRequestID: String(pullRequest.pull_request.id),
+    pullRequestID: String(pullRequest.pull_request.number),
     repoSlug: pullRequest.repository.full_name,
     supportedPlatforms: [],
   }
 
+
+  if (config.has("LOG_FETCH_REQUESTS")) {
+    global["verbose"] = true
+  }
+  console.log("OK")
   const gh = new GitHub(installation.accessToken, source)
   gh.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
-  
+
   const exec = new Executor(source, gh)
   const dangerfile = await gh.fileContents("dangerfile.js")
   const localDangerfile = tmpdir() + "/dangerfile.js"
