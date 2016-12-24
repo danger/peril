@@ -29,7 +29,7 @@ export async function runDangerAgainstInstallation(pullRequest: PullRequestJSON,
   if (config.has("LOG_FETCH_REQUESTS")) {
     global["verbose"] = true
   }
-  console.log("OK")
+
   const gh = new GitHub(installation.accessToken, source)
   gh.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
