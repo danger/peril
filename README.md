@@ -58,4 +58,4 @@ yarn link danger
 
 Your tools for working with this data are those webhook notifications on the GitHub integration page, re-send them when you want. You can also re-send them [from ngrok local](http://localhost:4040/inspect/http).
 
-You need to make sure that the install message is sent to your dev setup, so it will grab the access tokens and set up an installation account for it in mongo.
+You need to make sure that the install message is sent to your dev setup, so it will grab the access tokens and set up an installation account for it in mongo (`X-GitHub-Event: integration_installation`).
