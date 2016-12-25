@@ -18,7 +18,7 @@ export async function pullRequest(req: express.Request, res: express.Response) {
       runDangerAgainstInstallation(pr, integration)
 
     default: {
-      console.log("Don't know this action")
+      console.log("Don't know this action")  // tslint:disable-line
     }
   }
 }

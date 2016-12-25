@@ -25,9 +25,8 @@ export async function runDangerAgainstInstallation(pullRequest: PullRequestJSON,
     supportedPlatforms: [],
   }
 
-
   if (config.has("LOG_FETCH_REQUESTS")) {
-    global["verbose"] = true
+    global["verbose"] = true // tslint:disable-line
   }
 
   const gh = new GitHub(installation.accessToken, source)
