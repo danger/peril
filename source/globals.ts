@@ -17,8 +17,17 @@ function getEnv(configName) {
             const arrayKeys = devKey as string[]
             return arrayKeys.join("\n")
         }
+        return devKey
     }
     return null
+}
+
+function validates(keys: string[]) {
+    keys.forEach((element) => {
+        if (!getEnv(element)) {
+            throw new Error(`Could not get Key: ${element}`)
+        }
+    })
 }
 
 /** Private key for the app
@@ -42,7 +51,4 @@ export const DB_URL = getEnv("DB_URL")
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
 
 // Normal validation stuff
-if (!PRIVATE_GITHUB_SIGNING_KEY && !PERIL_INTEGATION_ID && !WEB_URL && !DB_URL) {
-  console.error("Missing config values")
-  process.exit(1)
-}
+validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGATION_ID", "WEB_URL", "DB_URL"])

@@ -46,6 +46,7 @@ export async function saveIntegration(integration: GitHubIntegration) {
   })
 }
 
+/** Updates the db */
 export async function updateIntegration(installation: GitHubIntegration) {
   return new Promise<GitHubIntegration>((resolve: any, reject: any) => {
     integrationDB.update({ id: installation.id }, { $set: installation }, () => {

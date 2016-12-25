@@ -305,7 +305,7 @@ babel-plugin-jest-hoist@^18.0.0:
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-18.0.0.tgz#4150e70ecab560e6e7344adc849498072d34e12a"
 
-babel-polyfill@^6.20.0:
+babel-polyfill@^6.16.0, babel-polyfill@^6.20.0:
   version "6.20.0"
   resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.20.0.tgz#de4a371006139e20990aac0be367d398331204e7"
   dependencies:
@@ -718,6 +718,15 @@ currently-unhandled@^0.4.1:
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"
   dependencies:
     array-find-index "^1.0.1"
+
+danger@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-0.7.0.tgz#82ff1e6c2f286fe38370bf9fb755552f66e5b29f"
+  dependencies:
+    babel-polyfill "^6.16.0"
+    commander "^2.9.0"
+    node-fetch "^1.6.3"
+    parse-diff "^0.4.0"
 
 dashdash@^1.12.0:
   version "1.14.0"
@@ -2483,6 +2492,10 @@ package-json@^2.0.0:
     registry-auth-token "^3.0.1"
     registry-url "^3.0.3"
     semver "^5.1.0"
+
+parse-diff@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/parse-diff/-/parse-diff-0.4.0.tgz#9ce35bcce8fc0b7c58f46d71113394fc0b4982dd"
 
 parse-glob@^3.0.4:
   version "3.0.4"

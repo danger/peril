@@ -1,9 +1,10 @@
+require("./globals")  // tslint:disable-line
+
 import * as express from "express"
 const bodyParser = require("body-parser")  // tslint:disable-line
 import {integrationInstallation} from "./github/events/integration_installation"
 import {ping} from "./github/events/ping"
-
-require("./globals")  // tslint:disable-line
+import {pullRequest} from "./github/events/pull_request"
 
 // Error logging
 process.on("unhandledRejection", (reason: string, p: any) => {
@@ -26,6 +27,10 @@ app.post("/webhook", (req, res, next) => {
     }
     case "integration_installation": {
       integrationInstallation(req, res)
+      break
+    }
+    case "pull_request": {
+      pullRequest(req, res)
       break
     }
     default: {
