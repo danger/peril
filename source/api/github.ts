@@ -2,43 +2,31 @@ import * as node_fetch from "node-fetch"
 import { LOG_FETCH_REQUESTS, PERIL_INTEGATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
 
 import * as jwt from "jsonwebtoken"
-import { getIntegration, updateIntegration } from "../db/mongo"
+import { getIntegration, GitHubIntegration, updateIntegration } from "../db/mongo"
 import originalFetch from "./fetch"
 
-/** A version of fetch that handled integration-based authentication, adds the github domain to the path  */
-export async function fetch(integrationID: number, path: string | node_fetch.Request, init?: node_fetch.RequestInit)
-: Promise<node_fetch.Response> {
-  const url = "https://api.github.com" + path
-  const integration = await getIntegration(integrationID)
+export async function ensureIntegrationIsUptodate(integration: GitHubIntegration): Promise<GitHubIntegration> {
+  //  const integration = await getIntegration(integrationID)
 
   // Ensure token  is in date
-  const tokenExpiryDate = Date.parse(integration.accessToken)
+  const tokenExpiryDate = Date.parse(integration.tokenExpires)
   const now = new Date()
   const expired = now.getTime() > tokenExpiryDate
-
   let token = integration.accessToken
 
   // Has token expired?
   if (expired) {
-    const newToken = await getAccessTokenForIntegration(integrationID)
+    const newToken = await getAccessTokenForIntegration(integration.id)
     const credentials = await newToken.json()
     token = credentials.token
 
     // Update db, no need to await it
     integration.accessToken = token
     integration.tokenExpires = credentials.expires_at
-    updateIntegration(integration)
+    await updateIntegration(integration)
   }
 
-  const options: any = {
-    ...init,
-    headers: {
-      ...init.headers,
-      Accept: "application/vnd.github.machine-man-preview+json",
-      Authorization: `token ${token}`,
-    },
-  }
-  return originalFetch(url, options)
+  return integration
 }
 
 export function getAccessTokenForIntegration(integrationID: number) {

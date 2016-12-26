@@ -5,13 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "type": "node2",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Launch Dev Web Server",
       "program": "${workspaceRoot}/out/peril.js",
+      "args": [
+        "--harmony-async-await"
+      ],
       "cwd": "${workspaceRoot}",
-      "outFiles": ["out"],
       "sourceMaps": true,
+      "smartStep": true,
       "preLaunchTask": "yarn"
     },
     {

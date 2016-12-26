@@ -1,6 +1,7 @@
 /* tslint:disable: no-var-requires */
 const config = require("config")
 
+import { ensureIntegrationIsUptodate } from "../api/github"
 import { GitHubIntegration } from "../db/mongo"
 import { PullRequestJSON } from "../github/types/pull_request"
 
@@ -29,12 +30,21 @@ export async function runDangerAgainstInstallation(pullRequest: PullRequestJSON,
     global["verbose"] = true // tslint:disable-line
   }
 
-  const gh = new GitHub(installation.accessToken, source)
+  const integration = await ensureIntegrationIsUptodate(installation)
+
+  const gh = new GitHub(integration.accessToken, source)
   gh.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
   const exec = new Executor(source, gh)
   const dangerfile = await gh.fileContents("dangerfile.js")
+
   const localDangerfile = tmpdir() + "/dangerfile.js"
   writeFileSync(localDangerfile, dangerfile)
-  exec.runDanger(localDangerfile)
+
+  const runtimeEnv = await exec.setupDanger()
+
+  // This is where we can hook in and do the sandboxing
+  runtimeEnv.environment.global.process = {}
+
+  exec.runDanger(localDangerfile, runtimeEnv)
 }

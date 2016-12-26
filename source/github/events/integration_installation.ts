@@ -1,6 +1,6 @@
 import * as express from "express"
 
-import { fetch, getAccessTokenForIntegration } from "../../api/github"
+import { getAccessTokenForIntegration } from "../../api/github"
 import {GitHubIntegration, saveIntegration} from "../../db/mongo"
 
 export async function integrationInstallation(req: express.Request, res: express.Response) {
@@ -20,5 +20,4 @@ export async function integrationInstallation(req: express.Request, res: express
   }
 
   await saveIntegration(installation)
-
 }
