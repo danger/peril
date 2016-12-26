@@ -1,6 +1,7 @@
 /* tslint:disable: no-var-requires */
 const config = require("config")
 
+import { ensureIntegrationIsUptodate } from "../api/github"
 import { GitHubIntegration } from "../db/mongo"
 import { PullRequestJSON } from "../github/types/pull_request"
 
@@ -29,7 +30,9 @@ export async function runDangerAgainstInstallation(pullRequest: PullRequestJSON,
     global["verbose"] = true // tslint:disable-line
   }
 
-  const gh = new GitHub(installation.accessToken, source)
+  const integration = await ensureIntegrationIsUptodate(installation)
+
+  const gh = new GitHub(integration.accessToken, source)
   gh.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
   const exec = new Executor(source, gh)
