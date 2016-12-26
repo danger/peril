@@ -37,7 +37,14 @@ export async function runDangerAgainstInstallation(pullRequest: PullRequestJSON,
 
   const exec = new Executor(source, gh)
   const dangerfile = await gh.fileContents("dangerfile.js")
+
   const localDangerfile = tmpdir() + "/dangerfile.js"
   writeFileSync(localDangerfile, dangerfile)
-  exec.runDanger(localDangerfile)
+
+  const runtimeEnv = await exec.setupDanger()
+
+  // This is where we can hook in and do the sandboxing
+  runtimeEnv.environment.global.process = {}
+
+  exec.runDanger(localDangerfile, runtimeEnv)
 }
