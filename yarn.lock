@@ -305,7 +305,7 @@ babel-plugin-jest-hoist@^18.0.0:
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-18.0.0.tgz#4150e70ecab560e6e7344adc849498072d34e12a"
 
-babel-polyfill@^6.16.0, babel-polyfill@^6.20.0:
+babel-polyfill@^6.20.0:
   version "6.20.0"
   resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.20.0.tgz#de4a371006139e20990aac0be367d398331204e7"
   dependencies:
@@ -719,12 +719,16 @@ currently-unhandled@^0.4.1:
   dependencies:
     array-find-index "^1.0.1"
 
-danger@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-0.7.0.tgz#82ff1e6c2f286fe38370bf9fb755552f66e5b29f"
+danger@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-0.9.0.tgz#36a9d9a3f060c8d334423585500fe280bafe95a1"
   dependencies:
-    babel-polyfill "^6.16.0"
+    babel-polyfill "^6.20.0"
     commander "^2.9.0"
+    debug "^2.6.0"
+    jest-runtime "^18.0.0"
+    lodash.find "^4.6.0"
+    lodash.includes "^4.3.0"
     node-fetch "^1.6.3"
     parse-diff "^0.4.0"
 
@@ -746,6 +750,12 @@ debug@2, debug@^2.1.1, debug@^2.2.0, debug@~2.2.0:
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
     ms "0.7.1"
+
+debug@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.0.tgz#bc596bcabe7617f11d9fa15361eded5608b8499b"
+  dependencies:
+    ms "0.7.2"
 
 decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
@@ -2063,6 +2073,10 @@ lodash.escape@^3.0.0:
   dependencies:
     lodash._root "^3.0.0"
 
+lodash.find@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.find/-/lodash.find-4.6.0.tgz#cb0704d47ab71789ffa0de8b97dd926fb88b13b1"
+
 lodash.includes@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.includes/-/lodash.includes-4.3.0.tgz#60bb98a87cb923c68ca1e51325483314849f553f"
@@ -2090,6 +2104,10 @@ lodash.once@^4.0.0:
 lodash.partition@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.partition/-/lodash.partition-4.6.0.tgz#a38e46b73469e0420b0da1212e66d414be364ba4"
+
+lodash.pickby@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.pickby/-/lodash.pickby-4.6.0.tgz#7dea21d8c18d7703a27c704c15d3b84a67e33aff"
 
 lodash.restparam@^3.0.0:
   version "3.6.1"
@@ -2310,6 +2328,10 @@ mongojs@orta/mongojs#module_import:
 ms@0.7.1, ms@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
+
+ms@0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
 
 multimatch@^2.1.0:
   version "2.1.0"
@@ -3167,15 +3189,16 @@ trim-newlines@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-1.0.0.tgz#5887966bb582a4503a41eb524f7d35011815a613"
 
-ts-jest@^17.0.3:
-  version "17.0.3"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-17.0.3.tgz#63915b6446e41366b9ca8c1ec88772c586c62230"
+ts-jest@^18.0.0:
+  version "18.0.2"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-18.0.2.tgz#f21e712169c7a7dd8202c5a11c78efe7c244858c"
   dependencies:
     glob-all "^3.1.0"
     istanbul-lib-instrument "^1.2.0"
     lodash.assign "^4.2.0"
     lodash.includes "^4.3.0"
     lodash.partition "^4.6.0"
+    lodash.pickby "^4.6.0"
     remap-istanbul "^0.7.0"
     source-map-support "^0.4.4"
     yargs "^6.1.1"

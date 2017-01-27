@@ -40,22 +40,26 @@ yarn link danger
 
 ### Getting Webhooks from GitHub
 
-1. Create a GitHub Integration, you can go to your user account, then Integrations. As it's your own dev integration, you may as well just give yourself all the callbacks. If you want the exact access rights, see [the Danger page](https://github.com/integration/danger)
+1. Install [ngrok](https://ngrok.com/) and start it with `ngrok http 5000`. It will give you an address like `https://9cbc94d15.ngrok.io/`.
 
-2. Install [ngrok](https://ngrok.com/) and start it. It will give you an address like `https://9cbc94d15.ngrok.io/` add `/webhook` to the end of it, and make it the webhook addresses for your integration. Start ngrok with `ngrok http 5000`
+2. Create a GitHub Integration, you can go to your user account, then Integrations. As it's your own dev integration, you may as well just give yourself all the callbacks. If you want the exact access rights, see [the Danger page](https://github.com/integration/danger)
 
-3. Start your server, this will go on port 5000 - and be active over the web on your ngrok address.
+  * You should set up your **callback url** to be: https://9cbc94d15.ngrok.io/webhook
 
-4. Go the the integration page, and hit the "Install" button in the top left, then add it to a repo. This should start sending things to your server.
+  * and your **webhook url** to be: https://9cbc94d15.ngrok.io/webhook
+
+  * You will need your a copy of your private key, it will be used inside your `config/default.json` later.
+
+3. Make sure you have a mongodb running, I recommend [the app](http://gcollazo.github.io/mongodbapp/) and this [editor](https://robomongo.org). Make a db called `github_installations` and a collection called `github_integrations`. These will probably be changed in the future as they are bad names - sorry.
+
+4. Start your server, this will go on port 5000 - and be active over the web on your ngrok address.
 
 5. You need to set up the Integration private key. Download it. Open it in a text editor. You need to get it formatted like the one inside [default.json.example](/config/default.json.example).
 
-6. Set up your own default.json based on the example one.
+6. Set up your own `default.json` based on the example one.
 
-7. Make sure you have a mongodb running, I recommend [the app](http://gcollazo.github.io/mongodbapp/) and this [editor](https://robomongo.org). 
+7. OK, you're good to go.
 
-8. OK, you're good to go.
+8. Go the the integration page, and hit the "Install" button in the top left, then add it to a repo. This should start sending data to your server. You should see a `POST /webhook  200 OK` to indicate that it's set up in ngrok. You should see 
 
 Your tools for working with this data are those webhook notifications on the GitHub integration page, re-send them when you want. You can also re-send them [from ngrok local](http://localhost:4040/inspect/http).
-
-You need to make sure that the install message is sent to your dev setup, so it will grab the access tokens and set up an installation account for it in mongo (`X-GitHub-Event: integration_installation`).
