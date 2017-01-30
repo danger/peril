@@ -10,13 +10,14 @@ export async function pullRequest(req: express.Request, res: express.Response) {
   const pr: PullRequestJSON = req.body
   const action = pr.action
   const installationID = pr.installation.id
+
   switch (action) {
     case "opened":
     case "synchronize":
     case "closed":
       const integration = await getIntegration(installationID)
       runDangerAgainstInstallation(pr, integration)
-
+      break
     default: {
       console.log("Don't know this action")  // tslint:disable-line
     }
