@@ -4,7 +4,7 @@ import { GitHubUser } from "./types"
 
 // docs - http://mafintosh.github.io/mongojs/ 
 
-const db = mongojs(`mongodb://${DB_URL}`, ["github_installations"])
+const db = mongojs(`mongodb://${DB_URL}/github_installations`, ["github_integrations"])
 const integrationDB = db.github_integrations
 
 export type AuthToken = string
