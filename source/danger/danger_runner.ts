@@ -7,7 +7,7 @@ import { PullRequestJSON } from "../github/types/pull_request"
 
 import { getCISourceForEnv } from "danger/distribution/ci_source/ci_source"
 import { GitHub } from "danger/distribution/platforms/GitHub"
-import Executor from "danger/distribution/runner/Executor"
+import { Executor } from "danger/distribution/runner/Executor"
 
 import { writeFileSync } from "fs"
 import { tmpdir } from "os"
