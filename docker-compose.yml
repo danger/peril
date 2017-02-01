@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  peril:
+    build: .
+    ports:
+      - "5000:5000"
+    links:
+      - "mongodb"
+  ngrok:
+    image: wernight/ngrok
+    links:
+      - "peril"
+    command: "ngrok http peril:5000"
+    ports:
+      - "4040:4040"
+  mongodb:
+    image: mongo:3.0
