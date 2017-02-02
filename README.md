@@ -31,7 +31,7 @@ yarn install
 yarn link danger
 
 # Then start the file watcher in a new tab
-yarn start buildwatch
+yarn start build:watch
 
 # Then in Peril again
 cd ../Peril
