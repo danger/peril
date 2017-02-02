@@ -1,10 +1,14 @@
-FROM node:7-slim
+FROM node
 
-ADD . /
-RUN npm i -g yarn && yarn install --ignore-engines 
-# && yarn build <- compilation still fails, will keep that commented until it doesn't throw an error
+ADD . /app
+WORKDIR /app
+
+RUN npm i -g yarn && \
+	npm i -g typescript	&& \
+	yarn install --ignore-engines 
+RUN yarn build || true
 
 EXPOSE 5000
 
-ENTRYPOINT ["yarn", "start"]
+CMD yarn start
 
