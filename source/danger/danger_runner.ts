@@ -5,8 +5,9 @@ import { ensureIntegrationIsUptodate } from "../api/github"
 import { GitHubIntegration } from "../db/mongo"
 import { PullRequestJSON } from "../github/types/pull_request"
 
-import { getCISourceForEnv } from "danger/distribution/ci_source/ci_source"
+import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
 import { GitHub } from "danger/distribution/platforms/GitHub"
+import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { Executor } from "danger/distribution/runner/Executor"
 
 import { writeFileSync } from "fs"
@@ -31,12 +32,14 @@ export async function runDangerAgainstInstallation(pullRequest: PullRequestJSON,
   }
 
   const integration = await ensureIntegrationIsUptodate(installation)
+  const githubAPI = new GitHubAPI(integration.accessToken, source)
+  githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
-  const gh = new GitHub(integration.accessToken, source)
-  gh.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
+  const gh = new GitHub(githubAPI)
+  // gh.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
   const exec = new Executor(source, gh)
-  const dangerfile = await gh.fileContents("dangerfile.js")
+  const dangerfile = await githubAPI.fileContents("dangerfile.js")
 
   const localDangerfile = tmpdir() + "/dangerfile.js"
   writeFileSync(localDangerfile, dangerfile)
