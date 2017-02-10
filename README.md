@@ -65,7 +65,7 @@ Your tools for working with this data are those webhook notifications on the Git
 
 ### Running it with Docker
 
-Assuming that the Github Integration is already setup:
+Assuming that the Github Integration is already set up:
 
 1. Set up your own `docker-compose.yml` based on the example one (see `docker-compose.sample.yml`).
 
@@ -76,3 +76,8 @@ Assuming that the Github Integration is already setup:
 4. Update your Github Integration **webhook url** and **callback url** with the new ngrok url
 
 :whale:
+
+### Developing with Docker
+
+To develop peril inside a docker container, you can run `docker-compose -f docker-compose.dev.yml up`. This will mount your project folder inside the peril container and run the `yarn compile` command that will watch for changes in your local code.
+
