@@ -61,3 +61,18 @@ yarn link danger
 7. Go the the integration page, and hit the "Install" button in the top left, then add it to a repo. This should start sending data to your server. You should see a `POST /webhook  200 OK` to indicate that it's set up in ngrok. You should see 
 
 Your tools for working with this data are those webhook notifications on the GitHub integration page, re-send them when you want. You can also re-send them [from ngrok local](http://localhost:4040/inspect/http).
+
+
+### Running it with Docker
+
+Assuming that the Github Integration is already setup:
+
+1. Set up your own `docker-compose.yml` based on the example one (see `docker-compose.sample.yml`).
+
+2. Run `docker-compose -up --build`. This will build the Peril service and launch the stack.
+
+3. Go to `http://localhost:4040` to get the ngrok url.
+
+4. Update your Github Integration **webhook url** and **callback url** with the new ngrok url
+
+:whale:
