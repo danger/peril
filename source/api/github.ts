@@ -6,7 +6,6 @@ import { getIntegration, GitHubIntegration, updateIntegration } from "../db/mong
 import originalFetch from "./fetch"
 
 export async function ensureIntegrationIsUptodate(integration: GitHubIntegration): Promise<GitHubIntegration> {
-  //  const integration = await getIntegration(integrationID)
 
   // Ensure token  is in date
   const tokenExpiryDate = Date.parse(integration.tokenExpires)
