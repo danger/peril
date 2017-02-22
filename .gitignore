@@ -6,3 +6,4 @@ node_modules
 *.dat
 config/default.json
 out
+docker-compose.yml
