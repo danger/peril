@@ -1,0 +1,102 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: peril
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: peril
+      name: peril
+      namespace: default
+    spec:
+      containers:
+      - name: peril
+        image: dangersystems/peril:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: WEB_URL
+          value: https://peril.artsy.net
+        - name: DB_URL
+          value: mongodb:27017
+        - name: PERIL_INTEGATION_ID
+          valueFrom:
+            secretKeyRef:
+              name: peril-secrets
+              key: PERIL_INTEGATION_ID
+        - name: PRIVATE_GITHUB_SIGNING_KEY
+          valueFrom:
+            secretKeyRef:
+              name: peril-secrets
+              key: PRIVATE_GITHUB_SIGNING_KEY
+      - image: mongo:3.0
+        imagePullPolicy: Always
+        name: peril-mongodb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: peril
+  name: peril
+  namespace: default
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::585031190124:server-certificate/2016-01-19_artsy-net-wildcard"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    name: https
+    targetPort: 5000
+  selector:
+    app: peril
+  sessionAffinity: None
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: peril-mongodb
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: peril-mongodb
+      name: peril-mongodb
+      namespace: default
+    spec:
+      containers:
+      - name: peril-mongodb
+        image: mongo:3.0
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+          - name: peril-mongodb-persistent-storage
+            mountPath: /data/db
+      volumes:
+      - name: peril-mongodb-persistent-storage
+        awsElasticBlockStore:
+          volumeID: vol-02636429adb69a3d4
+          fsType: ext4
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: peril-mongodb
+  name: peril-mongodb
+  namespace: default
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+    protocol: TCP
+  selector:
+    app: peril-mongodb
+  type: ClusterIP
