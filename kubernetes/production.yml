@@ -20,7 +20,9 @@ spec:
         - containerPort: 5000
         env:
         - name: WEB_URL
-        - value: https://peril.artsy.net
+          value: https://peril.artsy.net
+        - name: DB_URL
+          value: mongodb:27017
         - name: PERIL_INTEGATION_ID
           valueFrom:
             secretKeyRef:
@@ -80,7 +82,7 @@ spec:
       volumes:
       - name: peril-mongodb-persistent-storage
         awsElasticBlockStore:
-          volumeID: vol-0e24ab46936904f3f
+          volumeID: vol-02636429adb69a3d4
           fsType: ext4
 ---
 apiVersion: v1

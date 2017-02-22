@@ -20,7 +20,9 @@ spec:
         - containerPort: 5000
         env:
         - name: WEB_URL
-        - value: https://peril-staging.artsy.net
+          value: https://peril-staging.artsy.net
+        - name: DB_URL
+          value: mongodb:27017
         - name: PERIL_INTEGATION_ID
           valueFrom:
             secretKeyRef:
