@@ -15,7 +15,8 @@ export interface GitHubIntegration {
   account: GitHubUser,
   sender: GitHubUser,
   accessToken: string,
-  tokenExpires: string
+  tokenExpires: string,
+  onlyForOrgMembers?: string | null
 }
 
 /** An individual repo installation of Danger via Peril */

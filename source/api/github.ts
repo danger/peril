@@ -5,9 +5,9 @@ import * as jwt from "jsonwebtoken"
 import { getIntegration, GitHubIntegration, updateIntegration } from "../db/mongo"
 import originalFetch from "./fetch"
 
-export async function ensureIntegrationIsUptodate(integration: GitHubIntegration): Promise<GitHubIntegration> {
+export async function ensureIntegrationIsUpToDate(integration: GitHubIntegration): Promise<GitHubIntegration> {
 
-  // Ensure token  is in date
+  // Ensure token is in date
   const tokenExpiryDate = Date.parse(integration.tokenExpires)
   const now = new Date()
   const expired = now.getTime() > tokenExpiryDate
