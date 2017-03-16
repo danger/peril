@@ -69,7 +69,7 @@ Assuming that the Github Integration is already set up:
 
 1. Set up your own `docker-compose.yml` based on the example one (see `docker-compose.sample.yml`).
 
-2. Run `docker-compose -up --build`. This will build the Peril service and launch the stack.
+2. Run `docker-compose up --build`. This will build the Peril service and launch the stack.
 
 3. Go to `http://localhost:4040` to get the ngrok url.
 
