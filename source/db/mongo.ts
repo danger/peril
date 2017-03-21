@@ -4,13 +4,13 @@ import { GitHubUser } from "./types"
 
 // docs - http://mafintosh.github.io/mongojs/
 
-const db = mongojs(`mongodb://${DB_URL}/github_installations`, ["github_integrations"])
-const integrationDB = db.github_integrations
+const db = mongojs(`mongodb://${DB_URL}/peril`, ["github_installations"])
+const installations = db.github_installations
 
 export type AuthToken = string
 
 /** An individual integration of Danger via Peril, this is like the org */
-export interface GitHubIntegration {
+export interface GitHubInstallation {
   id: number
   account: GitHubUser,
   sender: GitHubUser,
@@ -20,17 +20,10 @@ export interface GitHubIntegration {
   filepathForDangerfile?: string
 }
 
-/** An individual repo installation of Danger via Peril */
-export interface GitHubInstallation {
-  id: number
-  integrationID: string,
-  repoSlug: string
-}
-
 /** Gets an Integration */
-export async function getIntegration(integrationID: number) {
-  return new Promise<GitHubIntegration>((resolve: any, reject: any) => {
-   integrationDB.findOne({ id: integrationID }, async (err, doc) => {
+export async function getInstallation(installationID: number) {
+  return new Promise<GitHubInstallation>((resolve: any, reject: any) => {
+   installations.findOne({ id: installationID }, async (err, doc) => {
       if (err) { return reject(err) }
       if (doc) { return resolve(doc) }
     })
@@ -38,10 +31,10 @@ export async function getIntegration(integrationID: number) {
 }
 
 /** Saves an Integration */
-export async function saveIntegration(integration: GitHubIntegration) {
+export async function saveInstallation(installation: GitHubInstallation) {
   return new Promise((resolve: any, reject: any) => {
     // Insert a new model
-    integrationDB.insert(integration, (err, doc) => {
+    installations.insert(installation, (err, doc) => {
       if (err) { return reject(err) }
       if (doc) { return resolve(doc) }
     })
@@ -49,9 +42,9 @@ export async function saveIntegration(integration: GitHubIntegration) {
 }
 
 /** Updates the db */
-export async function updateIntegration(installation: GitHubIntegration) {
-  return new Promise<GitHubIntegration>((resolve: any, reject: any) => {
-    integrationDB.update({ id: installation.id }, { $set: installation }, () => {
+export async function updateInstallation(installation: GitHubInstallation) {
+  return new Promise<GitHubInstallation>((resolve: any, reject: any) => {
+    installations.update({ id: installation.id }, { $set: installation }, () => {
       resolve(installation)
     })
   })

@@ -1,8 +1,8 @@
 /* tslint:disable: no-var-requires */
 const config = require("config")
 
-import { ensureIntegrationIsUpToDate } from "../api/github"
-import { GitHubIntegration } from "../db/mongo"
+import { ensureInstallationIsUpToDate } from "../api/github"
+import { GitHubInstallation } from "../db/mongo"
 import { PullRequestJSON } from "../github/types/pull_request"
 
 import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"

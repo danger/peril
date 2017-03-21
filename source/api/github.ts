@@ -2,34 +2,34 @@ import * as node_fetch from "node-fetch"
 import { LOG_FETCH_REQUESTS, PERIL_INTEGATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
 
 import * as jwt from "jsonwebtoken"
-import { getIntegration, GitHubIntegration, updateIntegration } from "../db/mongo"
+import { getInstallation, GitHubInstallation, updateInstallation } from "../db/mongo"
 import originalFetch from "./fetch"
 
-export async function ensureIntegrationIsUpToDate(integration: GitHubIntegration): Promise<GitHubIntegration> {
+export async function ensureInstallationIsUpToDate(installation: GitHubInstallation): Promise<GitHubInstallation> {
 
   // Ensure token is in date
-  const tokenExpiryDate = Date.parse(integration.tokenExpires)
+  const tokenExpiryDate = Date.parse(installation.tokenExpires)
   const now = new Date()
   const expired = now.getTime() > tokenExpiryDate
-  let token = integration.accessToken
+  let token = installation.accessToken
 
   // Has token expired?
   if (expired) {
-    const newToken = await getAccessTokenForIntegration(integration.id)
+    const newToken = await getAccessTokenForInstallation(installation.id)
     const credentials = await newToken.json()
     token = credentials.token
 
     // Update db, no need to await it
-    integration.accessToken = token
-    integration.tokenExpires = credentials.expires_at
-    await updateIntegration(integration)
+    installation.accessToken = token
+    installation.tokenExpires = credentials.expires_at
+    await updateInstallation(installation)
   }
 
-  return integration
+  return installation
 }
 
-export function getAccessTokenForIntegration(integrationID: number) {
-  const url = `https://api.github.com/installations/${integrationID}/access_tokens`
+export function getAccessTokenForInstallation(installationID: number) {
+  const url = `https://api.github.com/installations/${installationID}/access_tokens`
   const headers = {
       Accept: "application/vnd.github.machine-man-preview+json",
       Authorization: `Bearer ${jwtForGitHubAuth()}`,

@@ -2,7 +2,7 @@ require("./globals")  // tslint:disable-line
 
 import * as express from "express"
 const bodyParser = require("body-parser")  // tslint:disable-line
-import {integrationInstallation} from "./github/events/integration_installation"
+import {createInstallation} from "./github/events/create_installation"
 import {ping} from "./github/events/ping"
 import {pullRequest} from "./github/events/pull_request"
 
@@ -26,7 +26,7 @@ app.post("/webhook", (req, res, next) => {
       break
     }
     case "integration_installation": {
-      integrationInstallation(req, res)
+      createInstallation(req, res)
       break
     }
     case "pull_request": {
