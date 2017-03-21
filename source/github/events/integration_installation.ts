@@ -16,7 +16,7 @@ export async function integrationInstallation(req: express.Request, res: express
     account: req.body.installation.account,
     id: req.body.installation.id,
     sender: req.body.installation.sender,
-    tokenExpires: credentials.expires_at, 
+    tokenExpires: credentials.expires_at,
   }
 
   await saveIntegration(installation)

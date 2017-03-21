@@ -2,7 +2,7 @@ import mongojs from "mongojs"
 import { DB_URL } from "../globals"
 import { GitHubUser } from "./types"
 
-// docs - http://mafintosh.github.io/mongojs/ 
+// docs - http://mafintosh.github.io/mongojs/
 
 const db = mongojs(`mongodb://${DB_URL}/github_installations`, ["github_integrations"])
 const integrationDB = db.github_integrations
@@ -16,7 +16,8 @@ export interface GitHubIntegration {
   sender: GitHubUser,
   accessToken: string,
   tokenExpires: string,
-  onlyForOrgMembers?: string | null
+  onlyForOrgMembers?: string | null,
+  filepathForDangerfile?: string
 }
 
 /** An individual repo installation of Danger via Peril */

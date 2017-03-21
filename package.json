@@ -6,28 +6,25 @@
     "start": "node out/peril.js",
     "compile": "tsc -watch -p ./",
     "build": "tsc",
-    "test": "jest && yarn run tslint source/**/*.ts",
-    "jest": "jest",
-    "tslint": "tslint",
-    "add_types": "typings"
+    "test": "jest && yarn run tslint source/**/*.ts"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fbsamples/messenger-platform-samples.git"
+    "url": "https://github.com/danger/peril.git"
   },
-  "author": "Facebook",
-  "license": "ISC",
+  "author": "Orta",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",
     "config": "^1.20.4",
-    "danger": "^0.11.5",
+    "danger": "^0.14.1",
     "ejs": "^2.4.2",
     "express": "^4.13.4",
     "jsonwebtoken": "^7.2.1",
     "mongodb": "^2.2.11",
     "mongojs": "orta/mongojs#module_import",
     "node-fetch": "^1.6.3",
-    "typescript": "^2.1.4"
+    "typescript": "2.2.1"
   },
   "engines": {
     "node": "7.2.1"
@@ -43,7 +40,7 @@
     "babel-polyfill": "^6.20.0",
     "jest": "^19.0.0",
     "ts-jest": "^19.0.0",
-    "tslint": "^4.1.1",
+    "tslint": "^4.5.1",
     "typings": "^2.0.0"
   },
   "jest": {
