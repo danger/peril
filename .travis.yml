@@ -1,3 +1,23 @@
 language: node_js
 node_js: node
 cache: yarn
+
+# All this is for staging deployment
+
+services:
+- docker
+before_install:
+- pip install --user awscli
+- export PATH=$PATH:$HOME/.local/bin
+script:
+- eval $(aws ecr get-login --region us-west-2)
+- docker-compose build
+- docker tag org/web:latest 453815413853.dkr.ecr.us-west-2.amazonaws.com/peril-staging
+- docker push 453815413853.dkr.ecr.us-west-2.amazonaws.com/peril-staging
+
+# These are for EC2 also
+
+env:
+  global:
+  - secure: SuQil4z64UqOYo+IjaBIVQRHfM2BSSVlfuwOVOr62ZbvnLkts468qlWORZfGdoSZfOINsZRxbZ2mUsyJ1fDhtaaUURIEE2MkzN4fnL+ofQYMoNvWAgFEC8JINCZdMSeZMoF4SJQo/zm3O0nV7aPUIf/teJyoqIS42v1vnheDOw5snGx77E/pMS578uSdx7gtGxljuMakYVtHIK8+Jalsc2ttARO2O/taV23sTW3Pt3qJCDAow/L0U0NNem171d3hmhizB2u6zA4gbM4rXQnaS6bFj7rGX/J5fBOnpoLQbGMA2mEXivecL3q+ECkyhbbucDFAs2z1OqsCTxs73apohyPqE9b+Z17+GsHBUUNKfney3EXa8tvelFdQNbrRb7AhpEcNadCPFn41mFzl9OBGdVZOoCoJnCF0tCYMgkrxEMbHeiFfwRsLozW0Jo3opb00IJb7CO3NIJxJa2TRzrQbsn/ENQTdFR/VZwCVvbGx7sS1YI394mUAaq93uoF/d3Orw1Jo3QTHXPEY9AVkqWbZlupQTn3zcupTQAqfAk1RC6Mw9FOxmHU9HTg/lxBRYygitKM02hHzj5OKSOe2lgb7rSaYr8hGtYz4Gahc8d5FpDTynpPGdyxIMLP2j6ncbAz6b7miAFnErZG3esMDD1i1S8q49MI2oauFO2k8hnwslaU=
+  - secure: oFlYAcTByS1/luBpdy0zHv4btiTeH0FJVGuBYMKiMCOUhl/Wy+H2MppBMMacQP6ud6FEedVpIXtRx6+CHYHNC/V6UiJq5JfWCufwIGSW7C+OwTcFgruKtfMor/OKpSAeOy4W/wqmPx3LQ1/nEDWWPDWgZo4udW2jA8WGQPSaVjYvzdXhh6HWu6x8u1eSdtrycwB/SppCG7fv4ygVoL8ADK8I/0McjXiHwDaPsbZkTnnpMzjRcaaW4AIaBQe/hWbIVbMnk6nCxYRJTPAyDdze/e++DhFNaZZ7JhYFTwtVNj9Xqi98pPIfIWU8njOg9QX/Y2M129YS2YBN+B8T4YEGkTAY0HboivhBYXRvpQ8U5HuuQ2zrZzLYozUUjJTUrB8KaP7ec9jWzACUj3zUTtyfNXNWILDixkko36HONJYhZNJXsBa6oOtdM+rB18b67AsSPc54Z3ytfcEr7C8CWWCTlSA/2uRDpvN0rqdp18qkod+5BqejkVPa/tyJhqGVnJgLuLdlTPgKhkKcsrMaPMicRyT/9bNuCsHGUmK6qdTX76T6CxzuVqoWWaXCWHAdycxiiIUSnMfZNy7txskGg8DI/yHqvQ+xA/ehuMfmL2RWgcdD7DRhcusbaS3H12nh/q9fEStbBef3WlXmleNtGM2cigxmKFm00QO+vT1+Yua3PRE=
