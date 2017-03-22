@@ -1,56 +1,43 @@
-import mongojs from "mongojs"
+// import mongojs from "mongojs"
+import * as debug from "debug"
+import { Db, MongoClient } from "mongodb"
 import { DB_URL } from "../globals"
 import { GitHubUser } from "./types"
 
-// docs - http://mafintosh.github.io/mongojs/ 
+const d = debug("peril:db")
+d.enabled = true
 
-const db = mongojs(`mongodb://${DB_URL}/github_installations`, ["github_integrations"])
-const integrationDB = db.github_integrations
+let db: Db
+const setup = async () => {
+  db = await MongoClient.connect(`mongodb://${DB_URL}/peril`)
+}
+setup()
 
 export type AuthToken = string
 
 /** An individual integration of Danger via Peril, this is like the org */
-export interface GitHubIntegration {
+export interface GitHubInstallation {
   id: number
   account: GitHubUser,
   sender: GitHubUser,
-  accessToken: string,
-  tokenExpires: string
-}
-
-/** An individual repo installation of Danger via Peril */
-export interface GitHubInstallation {
-  id: number
-  integrationID: string,
-  repoSlug: string
+  onlyForOrgMembers: boolean,
+  filepathForDangerfile: string
 }
 
 /** Gets an Integration */
-export async function getIntegration(integrationID: number) {
-  return new Promise<GitHubIntegration>((resolve: any, reject: any) => {
-   integrationDB.findOne({ id: integrationID }, async (err, doc) => {
-      if (err) { return reject(err) }
-      if (doc) { return resolve(doc) }
-    })
-  })
+export async function getInstallation(installationID: number) {
+  d(`Getting installation with id: ${installationID}`)
+  return db.collection("installations").findOne({ id: installationID })
 }
 
 /** Saves an Integration */
-export async function saveIntegration(integration: GitHubIntegration) {
-  return new Promise((resolve: any, reject: any) => {
-    // Insert a new model
-    integrationDB.insert(integration, (err, doc) => {
-      if (err) { return reject(err) }
-      if (doc) { return resolve(doc) }
-    })
-  })
+export async function saveInstallation(installation: GitHubInstallation) {
+  d(`Saving installation with id: ${installation.id}`)
+  return db.collection("installations").insert(installation)
 }
 
 /** Updates the db */
-export async function updateIntegration(installation: GitHubIntegration) {
-  return new Promise<GitHubIntegration>((resolve: any, reject: any) => {
-    integrationDB.update({ id: installation.id }, { $set: installation }, () => {
-      resolve(installation)
-    })
-  })
+export async function updateInstallation(installation: GitHubInstallation) {
+  d(`Updating installation with id: ${installation.id}`)
+  return db.collection("installations").update({ id: installation.id }, { $set: installation })
 }

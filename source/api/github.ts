@@ -2,37 +2,24 @@ import * as node_fetch from "node-fetch"
 import { LOG_FETCH_REQUESTS, PERIL_INTEGATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
 
 import * as jwt from "jsonwebtoken"
-import { getIntegration, GitHubIntegration, updateIntegration } from "../db/mongo"
+import { getInstallation, GitHubInstallation, updateInstallation } from "../db/mongo"
 import originalFetch from "./fetch"
 
-export async function ensureIntegrationIsUptodate(integration: GitHubIntegration): Promise<GitHubIntegration> {
-
-  // Ensure token  is in date
-  const tokenExpiryDate = Date.parse(integration.tokenExpires)
-  const now = new Date()
-  const expired = now.getTime() > tokenExpiryDate
-  let token = integration.accessToken
-
-  // Has token expired?
-  if (expired) {
-    const newToken = await getAccessTokenForIntegration(integration.id)
-    const credentials = await newToken.json()
-    token = credentials.token
-
-    // Update db, no need to await it
-    integration.accessToken = token
-    integration.tokenExpires = credentials.expires_at
-    await updateIntegration(integration)
+export async function getTemporaryAccessTokenForInstallation(installation: GitHubInstallation): Promise<string> {
+  const newToken = await getAccessTokenForInstallation(installation.id)
+  const credentials = await newToken.json()
+  if (!newToken.ok) {
+    console.log(`Could not get an access token for ${installation.id}`) // tslint:disable-line
+    console.log(`GitHub returned: ${JSON.stringify(credentials)}`) // tslint:disable-line
   }
-
-  return integration
+  return credentials.token
 }
 
-export function getAccessTokenForIntegration(integrationID: number) {
-  const url = `https://api.github.com/installations/${integrationID}/access_tokens`
+export function getAccessTokenForInstallation(installationID: number) {
+  const url = `https://api.github.com/installations/${installationID}/access_tokens`
   const headers = {
-      Accept: "application/vnd.github.machine-man-preview+json",
-      Authorization: `Bearer ${jwtForGitHubAuth()}`,
+    Accept: "application/vnd.github.machine-man-preview+json",
+    Authorization: `Bearer ${jwtForGitHubAuth()}`,
   }
   return originalFetch(url, {
     body: JSON.stringify({}),
