@@ -6,7 +6,7 @@ import { getInstallation, GitHubInstallation, updateInstallation } from "../db/m
 import originalFetch from "./fetch"
 
 export async function getTemporaryAccessTokenForInstallation(installation: GitHubInstallation): Promise<string> {
-  const newToken = await getAccessTokenForInstallation(installation.id)
+  const newToken = await requestAccessTokenForInstallation(installation.id)
   const credentials = await newToken.json()
   if (!newToken.ok) {
     console.log(`Could not get an access token for ${installation.id}`) // tslint:disable-line
@@ -15,7 +15,7 @@ export async function getTemporaryAccessTokenForInstallation(installation: GitHu
   return credentials.token
 }
 
-export function getAccessTokenForInstallation(installationID: number) {
+export function requestAccessTokenForInstallation(installationID: number) {
   const url = `https://api.github.com/installations/${installationID}/access_tokens`
   const headers = {
     Accept: "application/vnd.github.machine-man-preview+json",

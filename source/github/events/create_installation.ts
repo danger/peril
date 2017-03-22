@@ -1,6 +1,6 @@
 import * as express from "express"
 
-import { getAccessTokenForInstallation } from "../../api/github"
+import { requestAccessTokenForInstallation } from "../../api/github"
 import {GitHubInstallation, saveInstallation} from "../../db/mongo"
 
 export async function createInstallation(req: express.Request, res: express.Response) {
