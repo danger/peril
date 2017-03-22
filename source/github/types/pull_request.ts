@@ -61,7 +61,6 @@ export interface GithubPullRequest {
     changed_files: number
 }
 
-
 export interface GithubRepository {
     id: number
     name: string

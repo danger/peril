@@ -1,0 +1,11 @@
+version: '2'
+services:
+  web:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    image: peril-staging
+    volumes:
+      - .:/app
+    command: yarn compile
