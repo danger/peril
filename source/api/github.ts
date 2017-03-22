@@ -9,8 +9,8 @@ export async function getTemporaryAccessTokenForInstallation(installation: GitHu
   const newToken = await getAccessTokenForInstallation(installation.id)
   const credentials = await newToken.json()
   if (!newToken.ok) {
-    console.log(`Could not get an access token for ${installation.id}`)
-    console.log(`GitHub returned: ${JSON.stringify(credentials)}`)
+    console.log(`Could not get an access token for ${installation.id}`) // tslint:disable-line
+    console.log(`GitHub returned: ${JSON.stringify(credentials)}`) // tslint:disable-line
   }
   return credentials.token
 }
