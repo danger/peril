@@ -1,11 +1,17 @@
-import mongojs from "mongojs"
+// import mongojs from "mongojs"
+import * as debug from "debug"
+import { Db, MongoClient } from "mongodb"
 import { DB_URL } from "../globals"
 import { GitHubUser } from "./types"
 
-// docs - http://mafintosh.github.io/mongojs/
+const d = debug("peril:db")
+d.enabled = true
 
-const db = mongojs(`mongodb://${DB_URL}/peril`, ["github_installations"])
-const installations = db.github_installations
+let db: Db
+const setup = async () => {
+  db = await MongoClient.connect(`mongodb://${DB_URL}/peril`)
+}
+setup()
 
 export type AuthToken = string
 
@@ -14,38 +20,24 @@ export interface GitHubInstallation {
   id: number
   account: GitHubUser,
   sender: GitHubUser,
-  accessToken: string,
-  tokenExpires: string,
-  onlyForOrgMembers?: string | null,
-  filepathForDangerfile?: string
+  onlyForOrgMembers: boolean,
+  filepathForDangerfile: string
 }
 
 /** Gets an Integration */
 export async function getInstallation(installationID: number) {
-  return new Promise<GitHubInstallation>((resolve: any, reject: any) => {
-   installations.findOne({ id: installationID }, async (err, doc) => {
-      if (err) { return reject(err) }
-      if (doc) { return resolve(doc) }
-    })
-  })
+  d(`Getting installation with id: ${installationID}`)
+  return db.collection("installations").findOne({ id: installationID })
 }
 
 /** Saves an Integration */
 export async function saveInstallation(installation: GitHubInstallation) {
-  return new Promise((resolve: any, reject: any) => {
-    // Insert a new model
-    installations.insert(installation, (err, doc) => {
-      if (err) { return reject(err) }
-      if (doc) { return resolve(doc) }
-    })
-  })
+  d(`Saving installation with id: ${installation.id}`)
+  return db.collection("installations").insert(installation)
 }
 
 /** Updates the db */
 export async function updateInstallation(installation: GitHubInstallation) {
-  return new Promise<GitHubInstallation>((resolve: any, reject: any) => {
-    installations.update({ id: installation.id }, { $set: installation }, () => {
-      resolve(installation)
-    })
-  })
+  d(`Updating installation with id: ${installation.id}`)
+  return db.collection("installations").update({ id: installation.id }, { $set: installation })
 }

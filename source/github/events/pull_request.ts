@@ -3,7 +3,7 @@ import * as express from "express"
 import { FakeCI } from "danger/distribution/ci_source/providers/Fake"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 
-import { ensureInstallationIsUpToDate } from "../../api/github"
+import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import {runDangerAgainstInstallation} from "../../danger/danger_runner"
 import {getInstallation, GitHubInstallation} from "../../db/mongo"
 import {isUserInOrg} from "../lib/github_helpers"
@@ -21,21 +21,25 @@ export async function pullRequest(req: express.Request, res: express.Response) {
     case "synchronize":
     case "closed":
       let installation = await getInstallation(installationID)
-      installation = await ensureInstallationIsUpToDate(installation)
+      const token = await getTemporaryAccessTokenForInstallation(installation)
 
       // Move to
       // api = new GitHubAPI({ repoSlug: "artsy/emission", pullRequestID: "1" }, "ABCDE")
       // with next Danger release
 
       const fakeCI = new FakeCI({ DANGER_TEST_REPO: pr.repository.full_name, DANGER_TEST_PR: pr.number })
-      const githubAPI = new GitHubAPI(fakeCI, installation.accessToken)
+      const githubAPI = new GitHubAPI(fakeCI, token)
       githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
+      // How can I get this from an API, if we cannot use /me
+      // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
+      githubAPI.getUserID = () => Promise.resolve(24758014)
+
       if (installation.onlyForOrgMembers && await isUserInOrg(pr.sender, pr.organization.login, githubAPI)) {
-        runDangerAgainstInstallation(installation.filepathForDangerfile, pr, githubAPI)
+        runDangerAgainstInstallation("dangerfile.js", pr, githubAPI)
 
       } else {
-        runDangerAgainstInstallation(installation.filepathForDangerfile, pr, githubAPI)
+        runDangerAgainstInstallation("dangerfile.js", pr, githubAPI)
       }
       break
     default: {

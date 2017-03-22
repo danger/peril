@@ -8,15 +8,12 @@ export async function createInstallation(req: express.Request, res: express.Resp
 
   const installationID = req.body.installation.id
 
-  const token = await getAccessTokenForInstallation(installationID)
-  const credentials = await token.json()
-
   const installation: GitHubInstallation = {
-    accessToken: credentials.token,
     account: req.body.installation.account,
+    filepathForDangerfile: "dangerfile.js",
     id: req.body.installation.id,
+    onlyForOrgMembers: true,
     sender: req.body.installation.sender,
-    tokenExpires: credentials.expires_at,
   }
 
   await saveInstallation(installation)

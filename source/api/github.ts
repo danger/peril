@@ -5,34 +5,21 @@ import * as jwt from "jsonwebtoken"
 import { getInstallation, GitHubInstallation, updateInstallation } from "../db/mongo"
 import originalFetch from "./fetch"
 
-export async function ensureInstallationIsUpToDate(installation: GitHubInstallation): Promise<GitHubInstallation> {
-
-  // Ensure token is in date
-  const tokenExpiryDate = Date.parse(installation.tokenExpires)
-  const now = new Date()
-  const expired = now.getTime() > tokenExpiryDate
-  let token = installation.accessToken
-
-  // Has token expired?
-  if (expired) {
-    const newToken = await getAccessTokenForInstallation(installation.id)
-    const credentials = await newToken.json()
-    token = credentials.token
-
-    // Update db, no need to await it
-    installation.accessToken = token
-    installation.tokenExpires = credentials.expires_at
-    await updateInstallation(installation)
+export async function getTemporaryAccessTokenForInstallation(installation: GitHubInstallation): Promise<string> {
+  const newToken = await getAccessTokenForInstallation(installation.id)
+  const credentials = await newToken.json()
+  if (!newToken.ok) {
+    console.log(`Could not get an access token for ${installation.id}`)
+    console.log(`GitHub returned: ${JSON.stringify(credentials)}`)
   }
-
-  return installation
+  return credentials.token
 }
 
 export function getAccessTokenForInstallation(installationID: number) {
   const url = `https://api.github.com/installations/${installationID}/access_tokens`
   const headers = {
-      Accept: "application/vnd.github.machine-man-preview+json",
-      Authorization: `Bearer ${jwtForGitHubAuth()}`,
+    Accept: "application/vnd.github.machine-man-preview+json",
+    Authorization: `Bearer ${jwtForGitHubAuth()}`,
   }
   return originalFetch(url, {
     body: JSON.stringify({}),

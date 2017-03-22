@@ -1,7 +1,6 @@
 /* tslint:disable: no-var-requires */
 const config = require("config")
 
-import { ensureInstallationIsUpToDate } from "../api/github"
 import { GitHubInstallation } from "../db/mongo"
 import { PullRequestJSON } from "../github/types/pull_request"
 
