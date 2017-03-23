@@ -12,7 +12,7 @@ before_install:
 script:
 - eval $(aws ecr get-login --region us-west-2)
 - docker-compose build
-- docker tag org/web:latest 453815413853.dkr.ecr.us-west-2.amazonaws.com/peril-staging
+- docker tag peril-staging:latest 453815413853.dkr.ecr.us-west-2.amazonaws.com/peril-staging
 - docker push 453815413853.dkr.ecr.us-west-2.amazonaws.com/peril-staging
 
 # These are for EC2 also
