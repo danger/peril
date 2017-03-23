@@ -9,3 +9,5 @@ services:
     volumes:
       - .:/app
     command: yarn compile
+  mongodb:
+    image: mongo:3.0
