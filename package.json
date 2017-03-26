@@ -6,7 +6,7 @@
     "start": "node out/peril.js",
     "compile": "tsc -watch -p ./",
     "build": "tsc",
-    "postinstall": "yarn install && yarn build",
+    "postinstall": "yarn build",
     "test": "jest && yarn run tslint source/**/*.ts"
   },
   "repository": {
