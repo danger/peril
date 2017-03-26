@@ -5,4 +5,5 @@ node_modules
 .npm
 *.dat
 config/default.json
+config/staging.now.env
 out

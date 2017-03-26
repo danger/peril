@@ -50,5 +50,11 @@ export const DB_URL = getEnv("DB_URL")
 /** Mongo db URL  */
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
 
+/** Papertrail url  */
+export const PAPERTRAIL_URL = getEnv("PAPERTRAIL_URL")
+
+/** Papertrail port  */
+export const PAPERTRAIL_PORT = getEnv("PAPERTRAIL_PORT")
+
 // Normal validation stuff
 validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGATION_ID", "WEB_URL", "DB_URL"])

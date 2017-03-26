@@ -3,9 +3,10 @@ FROM node
 ADD . /app
 WORKDIR /app
 
-RUN yarn install --ignore-engines
-RUN yarn build
+RUN npm install
+RUN npm run build
 
-EXPOSE 5000
+ENV PORT=80
+EXPOSE 80
 
-CMD yarn start
+CMD npm start

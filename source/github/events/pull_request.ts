@@ -10,7 +10,6 @@ import {isUserInOrg} from "../lib/github_helpers"
 import {PullRequestJSON} from "../types/pull_request"
 
 export async function pullRequest(req: express.Request, res: express.Response) {
-  res.status(200).send("pong")
 
   const pr: PullRequestJSON = req.body
   const action = pr.action
@@ -21,6 +20,11 @@ export async function pullRequest(req: express.Request, res: express.Response) {
     case "synchronize":
     case "closed":
       let installation = await getInstallation(installationID)
+      if (!installation) {
+          res.status(404).send(`Could not find installation with id: ${installationID}`)
+      } else {
+          res.status(200).send("Found installation")
+      }
       const token = await getTemporaryAccessTokenForInstallation(installation)
 
       // Move to

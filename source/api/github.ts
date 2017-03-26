@@ -2,6 +2,7 @@ import * as node_fetch from "node-fetch"
 import { LOG_FETCH_REQUESTS, PERIL_INTEGATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
 
 import * as jwt from "jsonwebtoken"
+import * as winston from "winston"
 import { getInstallation, GitHubInstallation, updateInstallation } from "../db/mongo"
 import originalFetch from "./fetch"
 
@@ -9,8 +10,8 @@ export async function getTemporaryAccessTokenForInstallation(installation: GitHu
   const newToken = await requestAccessTokenForInstallation(installation.id)
   const credentials = await newToken.json()
   if (!newToken.ok) {
-    console.log(`Could not get an access token for ${installation.id}`) // tslint:disable-line
-    console.log(`GitHub returned: ${JSON.stringify(credentials)}`) // tslint:disable-line
+    winston.log("Token", `Could not get an access token for ${installation.id}`)
+    winston.log("Token", `GitHub returned: ${JSON.stringify(credentials)}`)
   }
   return credentials.token
 }

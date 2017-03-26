@@ -1,11 +1,7 @@
-// import mongojs from "mongojs"
-import * as debug from "debug"
 import { Db, MongoClient } from "mongodb"
+import * as winston from "winston"
 import { DB_URL } from "../globals"
 import { GitHubUser } from "./types"
-
-const d = debug("peril:db")
-d.enabled = true
 
 let db: Db
 const setup = async () => {
@@ -26,18 +22,18 @@ export interface GitHubInstallation {
 
 /** Gets an Integration */
 export async function getInstallation(installationID: number) {
-  d(`Getting installation with id: ${installationID}`)
+  winston.log("mongo", `Getting installation with id: ${installationID}`)
   return db.collection("installations").findOne({ id: installationID })
 }
 
 /** Saves an Integration */
 export async function saveInstallation(installation: GitHubInstallation) {
-  d(`Saving installation with id: ${installation.id}`)
+  winston.log("mongo", `Saving installation with id: ${installation.id}`)
   return db.collection("installations").insert(installation)
 }
 
 /** Updates the db */
 export async function updateInstallation(installation: GitHubInstallation) {
-  d(`Updating installation with id: ${installation.id}`)
+  winston.log("mongo", `Updating installation with id: ${installation.id}`)
   return db.collection("installations").update({ id: installation.id }, { $set: installation })
 }

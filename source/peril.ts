@@ -1,6 +1,4 @@
 require("./globals")  // tslint:disable-line
-
-import * as debug from "debug"
 import * as express from "express"
 
 const bodyParser = require("body-parser")  // tslint:disable-line
@@ -8,14 +6,15 @@ import {createInstallation} from "./github/events/create_installation"
 import {ping} from "./github/events/ping"
 import {pullRequest} from "./github/events/pull_request"
 
+import * as winston from "winston"
+
 // Error logging
 process.on("unhandledRejection", (reason: string, p: any) => {
   console.log("Error: ", reason)  // tslint:disable-line
 })
 
 const app = express()
-const d = debug("peril:routing")
-d.enabled = true
+import "./setup_logger"
 
 app.set("port", process.env.PORT || 5000)
 app.set("view engine", "ejs")
@@ -24,7 +23,7 @@ app.use(express.static("public"))
 
 app.post("/webhook", (req, res, next) => {
   const event = req.header("X-GitHub-Event")
-  d(`Recieved ${event} - ${req.body.action}`)
+  winston.log("router", `Recieved ${event}:`)
 
   switch (event) {
     case "ping": {
@@ -34,16 +33,17 @@ app.post("/webhook", (req, res, next) => {
     case "integration_installation": {
       // note that deleting an create_installation
       // comes through this too with: "action": "deleted",
-      d(`  on ${req.body.installation.account.login}`)
+      winston.log("router", ` ${req.body.installation.action} on ${req.body.installation.account.login}`)
       createInstallation(req, res)
       break
     }
     case "pull_request": {
-      d(`  on ${req.body.installation.account}`)
+      winston.log("router", ` ${req.body.pr.action} on ${req.body.installation.account}`)
       pullRequest(req, res)
       break
     }
     default: {
+      winston.log("router", ` unhandled - 404ing`)
       res.status(404).send("Yo, this ain't done yet")
     }
   }

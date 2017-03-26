@@ -26,7 +26,7 @@ This is [Peril](https://us-west-2.console.aws.amazon.com/ecs/home?region=us-west
 
 ### There is a staging GitHub integration
 
-[Peril Staging](https://github.com/organizations/PerilTest/settings/integrations/peril-staging) only runs against repos in the [PerilTest org](https://github.com/PerilTest), and others cannot run it. It's `id` is 1839, it's key is in my personal 1password.
+[Peril Staging](https://github.com/organizations/PerilTest/settings/integrations/peril-staging) only runs against repos in the [PerilTest org](https://github.com/PerilTest), and others cannot run it. The integration's `id` is `1839`, it's key is in my personal 1password.
 
 
 ###  Updating ENV vars
@@ -35,6 +35,7 @@ This is [Peril](https://us-west-2.console.aws.amazon.com/ecs/home?region=us-west
 * Update [peril-staging](https://us-west-2.console.aws.amazon.com/ecs/home?region=us-west-2#/clusters/peril-staging/services) service.
 * Stop running tasks, create new task with updated definition.
 
+There is a Container Instance that will need to has it's task updated to ensure it's on the latest.
 
 
 ### And for production?
