@@ -1,7 +1,7 @@
 /* tslint:disable: no-var-requires */
 const config = require("config")
 
-import { GitHubInstallation } from "../db/mongo"
+import { GitHubInstallation } from "../db"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
 import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"

@@ -34,10 +34,10 @@ export const PERIL_INTEGATION_ID = getEnv("PERIL_INTEGATION_ID")
 /** The front-end URL route  */
 export const WEB_URL = getEnv("WEB_URL")
 
-/** Mongo db URL  */
+/** Postgres db URL  */
 export const DATABASE_URL = getEnv("DATABASE_URL")
 
-/** Mongo db URL  */
+/** Should fetch log out to the console?  */
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
 
 /** Papertrail url  */

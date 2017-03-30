@@ -41,7 +41,7 @@ services:
         Xr6gdKXTH+oo8RTvBqhepvW5GvTaaPZS9wZKzey7oUp6ItJPUEEZmSA=
         -----END RSA PRIVATE KEY-----
       PERIL_INTEGATION_ID: 1234
-      DB_URL: mongodb:27017
+      DATABASE_URL: localhost:5432
       WEB_URL: http://danger.systems
   ngrok:
     image: wernight/ngrok
@@ -50,5 +50,3 @@ services:
     command: "ngrok http peril:5000"
     ports:
       - "4040:4040"
-  mongodb:
-    image: mongo:3.0
