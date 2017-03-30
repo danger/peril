@@ -32,12 +32,7 @@ describe("evaling", () => {
   let api: GitHubAPI = {} as any
 
   beforeEach(async () => {
-    // Move to
-    // api = new GitHubAPI({ repoSlug: "artsy/emission", pullRequestID: "1" }, "ABCDE")
-    // with next Danger release
-
-    const fakeCI = new FakeCI({ DANGER_TEST_REPO: "artsy/emission", DANGER_TEST_PR: "1" })
-    api = new GitHubAPI(fakeCI)
+    api = new GitHubAPI({ repoSlug: "artsy/emission", pullRequestID: "1" }, "ABCDE")
 
     api.getPullRequestInfo = await requestWithFixturedJSON("github_pr.json")
     api.getPullRequestDiff = await requestWithFixturedContent("github_diff.diff")
