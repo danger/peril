@@ -34,18 +34,19 @@ app.post("/webhook", (req, res, next) => {
       break
     }
     case "integration_installation": {
-      const action = req.body.action
-      const response = req.body as InstallationCreated
+      const request = req.body as InstallationCreated
+      const action = request.action
 
       if (action === "created") {
-        winston.log("router", ` ${response.action} on ${response.sender}`)
-        createInstallation(response.installation, req, res)
+        winston.log("router", ` ${request.action} on ${request.sender}`)
+        createInstallation(request.installation, req, res)
       }
       break
     }
     case "pull_request": {
-      winston.log("router", ` ${req.body.pr.action} on ${req.body.pr.account}`)
-      pullRequest(req.body as PR, req, res)
+      const request = req.body as PR
+      winston.log("router", ` ${request.action} on ${request.repository.full_name}`)
+      pullRequest(request, req, res)
       break
     }
     default: {
