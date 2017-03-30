@@ -38,7 +38,7 @@ app.post("/webhook", (req, res, next) => {
       break
     }
     case "pull_request": {
-      winston.log("router", ` ${req.body.pr.action} on ${req.body.installation.account}`)
+      winston.log("router", ` ${req.body.pr.action} on ${req.body.pr.account}`)
       pullRequest(req, res)
       break
     }
