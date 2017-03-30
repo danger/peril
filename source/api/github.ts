@@ -1,6 +1,9 @@
 import * as node_fetch from "node-fetch"
 import { LOG_FETCH_REQUESTS, PERIL_INTEGATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
 
+import * as fs from "fs"
+import * as os from "os"
+
 import * as jwt from "jsonwebtoken"
 import * as winston from "winston"
 import { getInstallation, GitHubInstallation, updateInstallation } from "../db/mongo"
@@ -33,6 +36,7 @@ export function jwtForGitHubAuth() {
   const now = Math.round(new Date().getTime() / 1000)
   const expires = now + 60
   const keyContent = PRIVATE_GITHUB_SIGNING_KEY
+
   return jwt.sign({
     exp: expires,
     iat: now,
