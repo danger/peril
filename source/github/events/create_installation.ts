@@ -1,14 +1,14 @@
 import * as express from "express"
 
+import { Installation } from "../events/types/integration_installation_created.types"
+
 import { requestAccessTokenForInstallation } from "../../api/github"
 import { GitHubInstallation, saveInstallation } from "../../db/mongo"
 
-export async function createInstallation(req: express.Request, res: express.Response) {
-
-  const installationID = req.body.installation.id
+export async function createInstallation(installationJSON: Installation, req: express.Request, res: express.Response) {
 
   const installation: GitHubInstallation = {
-    id: req.body.installation.id,
+    id: installationJSON.id,
     settings: {
       filepathForDangerfile: "dangerfile.js",
       onlyForOrgMembers: true,

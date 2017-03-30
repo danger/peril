@@ -2,7 +2,7 @@
 const config = require("config")
 
 import { GitHubInstallation } from "../db/mongo"
-import { PullRequestJSON } from "../github/types/pull_request"
+import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
 import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
@@ -17,7 +17,7 @@ import { tmpdir } from "os"
 /**
  * The single function to run danger against an installation
  */
-export async function runDangerAgainstInstallation(path: string, pullRequest: PullRequestJSON, api: GitHubAPI) {
+export async function runDangerAgainstInstallation(path: string, pullRequest: PR, api: GitHubAPI) {
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 

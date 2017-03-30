@@ -13,8 +13,10 @@
     },
     "exclude": [
         "node_modules",
+        "node_modules/json2ts/*",
         "out",
         "dangerfile.js",
+        "scripts",
         "migrations"
     ]
 }
