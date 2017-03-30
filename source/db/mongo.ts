@@ -1,39 +1,44 @@
 import { Db, MongoClient } from "mongodb"
 import * as winston from "winston"
-import { DB_URL } from "../globals"
+import { DATABASE_URL } from "../globals"
 import { GitHubUser } from "./types"
 
-let db: Db
-const setup = async () => {
-  db = await MongoClient.connect(`mongodb://${DB_URL}/peril`)
-}
-setup()
+// Docs: https://github.com/vitaly-t/pg-promise
+// Examples: https://github.com/vitaly-t/pg-promise/wiki/Learn-by-Example
+
+import * as pg from "pg-promise"
+
+let db = pg()(DATABASE_URL)
+
+// const db = require('pg-promise')(); // // tslint:disable-line
 
 export type AuthToken = string
 
 /** An individual integration of Danger via Peril, this is like the org */
 export interface GitHubInstallation {
   id: number
-  account: GitHubUser,
-  sender: GitHubUser,
-  onlyForOrgMembers: boolean,
-  filepathForDangerfile: string
+  settings: {
+    onlyForOrgMembers?: boolean,
+    filepathForDangerfile?: string,
+  }
 }
 
 /** Gets an Integration */
 export async function getInstallation(installationID: number) {
   winston.log("mongo", `Getting installation with id: ${installationID}`)
-  return db.collection("installations").findOne({ id: installationID })
+  return db.one("select * from installations where id=$1", [installationID])
 }
 
 /** Saves an Integration */
 export async function saveInstallation(installation: GitHubInstallation) {
   winston.log("mongo", `Saving installation with id: ${installation.id}`)
-  return db.collection("installations").insert(installation)
+  return db.one("insert into installation(id, settings) values($1, $2) returning *",
+    [installation.id, installation.settings])
 }
 
 /** Updates the db */
 export async function updateInstallation(installation: GitHubInstallation) {
   winston.log("mongo", `Updating installation with id: ${installation.id}`)
-  return db.collection("installations").update({ id: installation.id }, { $set: installation })
+  winston.log("mongo", `Does not do anything`)
+  // return db.collection("installations").update({ id: installation.id }, { $set: installation })
 }

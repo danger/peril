@@ -6,42 +6,17 @@
     "start": "node out/peril.js",
     "compile": "tsc -watch -p ./",
     "build": "tsc",
-    "test": "jest && yarn run tslint source/**/*.ts"
+    "postinstall": "yarn build",
+    "test": "jest && yarn run tslint source/**/*.ts",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/danger/peril.git"
   },
-  "now": {
-    "name":"ASDASDAS"
-  },
   "author": "Orta",
   "license": "MIT",
   "dependencies": {
-    "@types/winston": "^2.3.0",
-    "babel-cli": "6.16",
-    "babel-polyfill": "^6.20.0",
-    "babel-plugin-syntax-async-functions": "^6.13.0",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "babel-plugin-transform-regenerator": "^6.22.0",
-    "babel-preset-es2015": "^6.24.0",
-    "babel-preset-stage-3": "^6.22.0",
-    "body-parser": "^1.15.2",
-    "config": "^1.20.4",
-    "danger": "^0.14.1",
-    "ejs": "^2.4.2",
-    "express": "^4.13.4",
-    "jsonwebtoken": "^7.2.1",
-    "mongodb": "^2.2.25",
-    "node-fetch": "^1.6.3",
-    "typescript": "2.2.1",
-    "winston": "^2.3.1",
-    "winston-papertrail": "^1.0.4"
-  },
-  "engines": {
-    "node": "7.2.1"
-  },
-  "devDependencies": {
     "@types/config": "^0.0.32",
     "@types/debug": "^0.0.29",
     "@types/ejs": "^2.3.33",
@@ -51,10 +26,35 @@
     "@types/mongodb": "^2.1.41",
     "@types/node-fetch": "^1.6.6",
     "@types/pg": "^6.1.34",
+    "@types/pg-promise": "^0.0.28",
+    "@types/winston": "^2.3.0",
+    "babel-cli": "6.16",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-regenerator": "^6.22.0",
+    "babel-polyfill": "^6.20.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-stage-3": "^6.22.0",
+    "body-parser": "^1.15.2",
+    "config": "^1.20.4",
+    "danger": "^0.14.2",
+    "dotenv": "^4.0.0",
+    "ejs": "^2.4.2",
+    "express": "^4.13.4",
     "jest": "^19.0.2",
+    "jsonwebtoken": "^7.2.1",
+    "node-fetch": "^1.6.3",
+    "node-pg-migrate": "^1.2.1",
+    "pg-promise": "^5.6.4",
     "ts-jest": "^19.0.0",
     "tslint": "^4.5.1",
-    "typings": "^2.0.0"
+    "typescript": "2.2.1",
+    "typings": "^2.0.0",
+    "winston": "^2.3.1",
+    "winston-papertrail": "^1.0.4"
+  },
+  "engines": {
+    "node": "7.2.1"
   },
   "jest": {
     "transform": {

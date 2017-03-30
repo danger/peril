@@ -44,7 +44,7 @@ describe("evaling", () => {
     api.getPullRequestCommits = await requestWithFixturedJSON("github_commits.json")
   })
 
-  it("sets up an executor with the right repo/PR", () => {
+  it.skip("sets up an executor with the right repo/PR", () => {
       const executor = executorForInstallation(api)
       expect(executor.ciSource.repoSlug).toEqual("artsy/emission")
       expect(executor.ciSource.pullRequestID).toEqual("1")

@@ -64,8 +64,8 @@ export function executorForInstallation(api: GitHubAPI) {
     isCI: true,
     isPR: true,
     name: "Peril",
-    pullRequestID: api.ciSource.pullRequestID,
-    repoSlug:  api.ciSource.repoSlug,
+    pullRequestID: api.repoMetadata.pullRequestID,
+    repoSlug:  api.repoMetadata.repoSlug,
     supportedPlatforms: [],
   }
 

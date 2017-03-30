@@ -7,3 +7,4 @@ node_modules
 config/default.json
 config/staging.now.env
 out
+.env

@@ -1,4 +1,5 @@
-import * as config from "config"
+import * as dotenv from "dotenv"
+dotenv.config()
 
 /**
  * Pulls out an env var from either the host ENV, or a config file
@@ -8,18 +9,7 @@ import * as config from "config"
  * @returns {string}
  */
 function getEnv(configName) {
-    if (process.env[configName]) {
-        return process.env[configName]
-    }
-    if (config.has(configName)) {
-        const devKey = config.get(configName)
-        if (devKey.constructor === Array) {
-            const arrayKeys = devKey as string[]
-            return arrayKeys.join("\n")
-        }
-        return devKey
-    }
-    return null
+    return process.env[configName]
 }
 
 function validates(keys: string[]) {
@@ -45,7 +35,7 @@ export const PERIL_INTEGATION_ID = getEnv("PERIL_INTEGATION_ID")
 export const WEB_URL = getEnv("WEB_URL")
 
 /** Mongo db URL  */
-export const DB_URL = getEnv("DB_URL")
+export const DATABASE_URL = getEnv("DATABASE_URL")
 
 /** Mongo db URL  */
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
@@ -57,4 +47,4 @@ export const PAPERTRAIL_URL = getEnv("PAPERTRAIL_URL")
 export const PAPERTRAIL_PORT = getEnv("PAPERTRAIL_PORT")
 
 // Normal validation stuff
-validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGATION_ID", "WEB_URL", "DB_URL"])
+validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGATION_ID", "WEB_URL", "DATABASE_URL"])
