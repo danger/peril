@@ -22,11 +22,10 @@ export async function pullRequest(pr: PR, req: express.Request, res: express.Res
       let installation = await getInstallation(installationID)
       if (!installation) {
           res.status(404).send(`Could not find installation with id: ${installationID}`)
-      } else {
-          res.status(200).send("Found installation")
+          return
       }
-      const token = await getTemporaryAccessTokenForInstallation(installation)
 
+      const token = await getTemporaryAccessTokenForInstallation(installation)
       const githubAPI = new GitHubAPI({ repoSlug: pr.repository.full_name, pullRequestID: String(pr.number) }, token)
       githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
@@ -34,11 +33,15 @@ export async function pullRequest(pr: PR, req: express.Request, res: express.Res
       // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
       githubAPI.getUserID = () => Promise.resolve(24758014)
 
-      if (installation.onlyForOrgMembers && await isUserInOrg(pr.sender as any, pr.organization.login, githubAPI)) {
-        runDangerAgainstInstallation("dangerfile.js", pr, githubAPI)
+      const skipOrgCheck = !installation.settings.onlyForOrgMembers
+      const userIsInOrg = installation.settings.onlyForOrgMembers
+                          && await isUserInOrg(pr.sender as any, pr.organization.login, githubAPI)
 
-      } else {
-        runDangerAgainstInstallation("dangerfile.js", pr, githubAPI)
+      if (skipOrgCheck || userIsInOrg) {
+        res.status(200).send("Found installation")
+
+        const dangerfile = installation.settings.filepathForDangerfile || "dangerfile.js"
+        runDangerAgainstInstallation(dangerfile, pr, githubAPI)
       }
       break
     default: {

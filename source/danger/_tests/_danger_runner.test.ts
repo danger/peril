@@ -42,19 +42,33 @@ describe("evaling", () => {
     api.getPullRequestInfo = await requestWithFixturedJSON("github_pr.json")
     api.getPullRequestDiff = await requestWithFixturedContent("github_diff.diff")
     api.getPullRequestCommits = await requestWithFixturedJSON("github_commits.json")
+    api.getReviewerRequests = await requestWithFixturedJSON("github_requested_reviewers.json")
+    api.getReviews = await requestWithFixturedJSON("github_reviews.json")
+    api.getIssue  = await requestWithFixturedJSON("github_issue.json")
   })
 
-  it.skip("sets up an executor with the right repo/PR", () => {
+  it("sets up an executor with the right repo/PR", () => {
       const executor = executorForInstallation(api)
       expect(executor.ciSource.repoSlug).toEqual("artsy/emission")
       expect(executor.ciSource.pullRequestID).toEqual("1")
   })
 
-  it.skip("runs dangerfile with fixtured data", async () => {
+  it("runs a typescript dangerfile with fixtured data", async () => {
+      const executor = executorForInstallation(api)
+      const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_empty.ts`, executor)
+      expect(results).toEqual({
+        fails: [], markdowns: [], messages: [], warnings: [{message: "OK"}],
+      })
+  })
+
+  // I wonder if the babel setup isn't quite right yet
+  it.skip("runs a JS dangerfile with fixtured data", async () => {
       const executor = executorForInstallation(api)
       // The executor will return results etc in the next release
       const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_insecure.js`, executor)
-      expect(results).toEqual({})
+      expect(results).toEqual({
+        fails: [], markdowns: [], messages: [], warnings: [{message: "OK"}],
+      })
   })
 
   it("does not allow access to the `process` global")
