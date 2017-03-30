@@ -12,6 +12,7 @@
         "allowJs": true
     },
     "exclude": [
+        "source/danger/_tests/fixtures",
         "node_modules",
         "out",
         "dangerfile.js",

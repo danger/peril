@@ -24,7 +24,7 @@ export interface GitHubInstallation {
 }
 
 /** Gets an Integration */
-export async function getInstallation(installationID: number) {
+export async function getInstallation(installationID: number): Promise<GitHubInstallation> {
   winston.log("mongo", `Getting installation with id: ${installationID}`)
   return db.one("select * from installations where id=$1", [installationID])
 }
