@@ -7,8 +7,9 @@
     "compile": "tsc -watch -p ./",
     "build": "tsc",
     "postinstall": "yarn build",
-    "test": "jest && yarn run tslint source/**/*.ts",
-    "test:watch": "jest --watch"
+    "test": "jest && tslint source/**/*.ts",
+    "test:watch": "jest --watch",
+    "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix"
   },
   "repository": {
     "type": "git",
@@ -41,12 +42,15 @@
     "dotenv": "^4.0.0",
     "ejs": "^2.4.2",
     "express": "^4.13.4",
+    "glob": "^7.1.1",
     "jest": "^19.0.2",
+    "json2ts": "orta/json2ts#ts-less",
     "jsonwebtoken": "^7.2.1",
     "node-fetch": "^1.6.3",
     "node-pg-migrate": "^1.2.1",
     "pg-promise": "^5.6.4",
     "ts-jest": "^19.0.0",
+    "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "typescript": "2.2.1",
     "typings": "^2.0.0",

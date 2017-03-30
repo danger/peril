@@ -32,7 +32,7 @@ export async function getInstallation(installationID: number) {
 /** Saves an Integration */
 export async function saveInstallation(installation: GitHubInstallation) {
   winston.log("mongo", `Saving installation with id: ${installation.id}`)
-  return db.one("insert into installation(id, settings) values($1, $2) returning *",
+  return db.one("insert into installations(id, settings) values($1, $2) returning *",
     [installation.id, installation.settings])
 }
 
