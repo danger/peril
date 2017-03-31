@@ -5,8 +5,6 @@ services:
     build: .
     ports:
       - "5000:5000"
-    links:
-      - "mongodb"
     volumes:
       - .:/app
     command: yarn compile

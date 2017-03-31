@@ -7,7 +7,7 @@ import { RootObject as PR } from "./types/pull_request_opened.types"
 
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import {runDangerAgainstInstallation} from "../../danger/danger_runner"
-import {getInstallation, GitHubInstallation} from "../../db/mongo"
+import {getInstallation, GitHubInstallation} from "../../db"
 import {isUserInOrg} from "../lib/github_helpers"
 
 export async function pullRequest(pr: PR, req: express.Request, res: express.Response) {
