@@ -41,45 +41,60 @@ export interface GitHubInstallation {
     onlyForOrgMembers?: boolean,
   }
 
-  /** Having rules in here would mean that it would happen on _any_ event */
-  runnerRules: RunnerRules
+  /** Having rules in here would mean that it would happen on _any_ event, another JSON type in the DB */
+  rules: RunnerRuleset
 }
 
-export type RunnerRuleset = { [name: string]: DangerfileReferenceString }
-
-/** Represents the settings for any Danger run */
-export interface RunnerRules {
-    /** Normal incremental ID */
-    id: number
-    /** A dictionary of events to which are `PerilEventString`: DangerfileReferenceString */
-    rules: RunnerRuleset
-}
-
-export interface GithubRepo {
-  /** The installation that this repo is connected to */
-  installationID: number,
-  /** The ful name of the slug for this repo, note these could not be unique (GitHub Enterprise?) */
-  fullName: string,
-  /** Runner rules ID reference */
-  runnerRulesID: number
-}
-
-/** Gets an Integration */
-export async function getInstallation(installationID: number): Promise<GitHubInstallation> {
-  winston.log("db", `Getting installation with id: ${installationID}`)
-  return db.one("select * from installations where id=$1", [installationID])
-}
 
 /** Saves an Integration */
 export async function saveInstallation(installation: GitHubInstallation) {
   winston.log("db", `Saving installation with id: ${installation.id}`)
-  return db.one("insert into installations(id, settings) values($1, $2) returning *",
-    [installation.id, JSON.stringify(installation.settings)])
+  return db.one(
+    "insert into installations(id, settings, rules) values($1, $2, $3) returning *",
+    [installation.id, JSON.stringify(installation.settings), JSON.stringify(installation.rules)])
 }
 
-/** Updates the db */
-export async function updateInstallation(installation: GitHubInstallation) {
-  winston.log("db", `Updating installation with id: ${installation.id}`)
-  winston.log("db", `Does not do anything`)
-  // return db.collection("installations").update({ id: installation.id }, { $set: installation })
+
+export type RunnerRuleset = { [name: string]: DangerfileReferenceString }
+
+export interface GithubRepo {
+  /** UUID */
+  id: number
+  /** The installation that this repo is connected to */
+  installationID: number,
+  /** The full name of the slug for this repo, note these could not be unique (GitHub Enterprise?) */
+  fullName: string,
+  /** Runner rules ID reference, another JSON type in the DB */
+  rules: RunnerRuleset
+}
+
+
+/** Saves a repo */
+export async function saveGitHubRepo(repo: GithubRepo) {
+  winston.log("db", `Saving repo with slu: ${repo.fullName}`)
+  return db.one(
+    "insert into github_repos(id, installations_id, full_name, rules) values($1, $2, $3, $4) returning *",
+    [repo.id, repo.installationID, repo.fullName, JSON.stringify(repo.rules)])
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** Gets an Integration */
+export async function getInstallation(installationID: number): Promise<GitHubInstallation | null> {
+  return db.one("select * from installations where id=$1", [installationID])
+}
+
+/** Deletes an Integration */
+export async function deleteInstallation(installationID: number): Promise<GitHubInstallation> {
+  return db.one("select * from installations where id=$1", [installationID])
+}
+
+/** Gets a Github repo from the DB */
+export async function getRepo(installationID: number, repoName: string): Promise<GithubRepo | null> {
+  return db.one("select * from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
+}
+/** Deletes a Github repo from the DB */
+export async function deleteRepo(installationID: number, repoName: string): Promise<GithubRepo> {
+  return db.one("delete from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
 }

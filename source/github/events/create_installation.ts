@@ -9,11 +9,12 @@ export async function createInstallation(installationJSON: Installation, req: ex
 
   const installation: GitHubInstallation = {
     id: installationJSON.id,
+    rules: {},
     settings: {
-      filepathForDangerfile: "dangerfile.js",
       onlyForOrgMembers: true,
     },
   }
+  // Default to no runnerRules
 
   res.status(200).send("Creating new installation.")
   await saveInstallation(installation)

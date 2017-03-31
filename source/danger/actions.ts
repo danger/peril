@@ -17,6 +17,14 @@ export enum dsl {
   import,
 }
 
+/** Can Danger reply inline? */
+export enum feedback {
+  /** What for years has been the "Danger DSL" */
+  commentable,
+  /** Take whatever triggered this run and use that as the DSL */
+  silent,
+}
+
 /** Represents runs that Danger should do based on Rules and Events */
 export interface DangerRun {
   /** What event name triggered this */
@@ -28,21 +36,32 @@ export interface DangerRun {
   /** Where should we look in that repo for the Dangerfile? */
   dangerfilePath: string
   /** What type of DSL should the run use? */
-  dslType: dsl
+  dslType: dsl,
+  /** Can Danger provide commentable feedback? */
+  feedback: feedback
 }
 
 /** Takes an event and action, and defines whether to do a dangerfile run with it. */
-export const actionForRule = (event: string, action: string | null, rule: RunnerRuleset): DangerRun | null =>  {
-  // Direct hits, make the rule
+export const dangerRunForRules = (event: string, action: string | null, rule: RunnerRuleset | undefined | null): DangerRun | null => { // tslint:disable-line
+  // Can't do anything with nothing
+  if (!rule) { return null }
+
+  // We can just see if anything exists at the right places,
+  // and return the first right object
   const isDirect = rule[event]
   const globsAll = rule[event + ".*"]
   const eventDotAction = action && rule[event + "." + action]
   const path = isDirect || globsAll || eventDotAction
 
-  if (path) {
-    return { event, action, dslType: dslTypeForEvent(event), ...dangerRepresentationforPath(path) }
-  } else {
-    return null
+  // Bail, we can't do anything
+  if (!path) { return null }
+
+  return {
+    event,
+    action,
+    dslType: dslTypeForEvent(event),
+    ...dangerRepresentationforPath(path),
+    feedback: feedbackTypeForEvent(event)
   }
 }
 
@@ -62,4 +81,10 @@ export const dangerRepresentationforPath = (value: DangerfileReferenceString) =>
 export const dslTypeForEvent = (event: string): dsl => {
   if (event === "pull_request") { return dsl.pr }
   return dsl.import
+}
+
+/** What events can we provide feedback inline with? */
+export const feedbackTypeForEvent = (event: string): feedback => {
+  if (event === "pull_request" || event === "issue") { return feedback.silent }
+  return feedback.silent
 }

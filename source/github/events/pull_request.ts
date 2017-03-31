@@ -1,6 +1,6 @@
 import * as express from "express"
 
-import { FakeCI } from "danger/distribution/ci_source/providers/Fake"
+
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 
 import { RootObject as PR } from "./types/pull_request_opened.types"
@@ -40,7 +40,7 @@ export async function pullRequest(pr: PR, req: express.Request, res: express.Res
       if (skipOrgCheck || userIsInOrg) {
         res.status(200).send("Found installation")
 
-        const dangerfile = installation.settings.filepathForDangerfile || "dangerfile.js"
+        const dangerfile = "dangerfile.js"
         runDangerAgainstInstallation(dangerfile, pr, githubAPI)
       }
       break

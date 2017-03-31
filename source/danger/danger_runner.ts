@@ -38,6 +38,9 @@ export async function runDangerAgainstInstallation(path: string, pullRequest: PR
 export async function runDangerAgainstFile(file: string, exec: Executor) {
   const runtimeEnv = await exec.setupDanger()
 
+  // const context = contextForDanger(dsl)
+  // return await createDangerfileRuntimeEnvironment(context)
+
   // This is where we can hook in and do sandboxing
   runtimeEnv.environment.global.process = {
     argv: [],
@@ -62,7 +65,7 @@ export async function handleDangerResults(results: DangerResults, exec: Executor
  */
 export function executorForInstallation(api: GitHubAPI) {
 
-    // We need this for things like repo slugs, PR IDs etc
+  // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
   const source = {
