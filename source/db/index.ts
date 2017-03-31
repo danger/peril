@@ -14,7 +14,7 @@ let db = pg()(DATABASE_URL)
  * - "/path/to/dangerfile.ts"
  * - "repo/slug@to/dangerfile.ts"
  */
-type DangerfileReferenceString = string
+export type DangerfileReferenceString = string
 
 /**
  * An event string would be something like:
@@ -23,7 +23,7 @@ type DangerfileReferenceString = string
  * - "ping"
  * - "issue.*"
  */
-type PerilEventString = string
+export type PerilEventString = string
 
 /** An individual integration of Danger via Peril, this is like the org */
 export interface GitHubInstallation {
