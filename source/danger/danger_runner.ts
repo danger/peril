@@ -14,7 +14,7 @@ import { Executor } from "danger/distribution/runner/Executor"
 
 import { writeFileSync } from "fs"
 import { tmpdir } from "os"
-import { dsl } from "./actions"
+import { dsl } from "./danger_run"
 
 import perilPlatform from "./peril_platform"
 

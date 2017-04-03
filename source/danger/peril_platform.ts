@@ -1,6 +1,6 @@
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { Platform } from "danger/distribution/platforms/platform"
-import { dsl } from "./actions"
+import { dsl } from "./danger_run"
 
 const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: any): Platform => {
   if  (type === dsl.pr && github) {

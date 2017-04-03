@@ -1,10 +1,11 @@
 import * as express from "express"
 
+import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
-import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/actions"
+import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerAgainstInstallation } from "../../danger/danger_runner"
 import { getInstallation, getRepo, GitHubInstallation, GithubRepo } from "../../db"
 import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
@@ -67,16 +68,26 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     allResults.push(results)
   }
 
-// merge resuls
-// handle restults
+  const commentableRun = runs.find((run) => run.feedback === feedback.commentable)
+  if (commentableRun) {
 
-  const finalResults = allResults
-  //  await exec.handleResults(results)
+    const finalResults = allResults.reduce((curr: DangerResults, run: DangerResults) => {
+      return {
+        fails: [...curr.fails, ...run.fails],
+        markdowns: [...curr.markdowns, ...run.markdowns],
+        messages: [...curr.messages, ...run.messages],
+        warnings: [...curr.warnings, ...run.warnings],
+      }
+    }, { fails: [], markdowns: [], warnings: [], messages: []})
+    const issue = getIssueNumber(req.body)
+    const githubAPI = githubAPIForCommentable(commentableRun, token, repo, issue)
+    const exec = executorForInstallation(new GitHub(githubAPI))
+    await exec.handleResults(finalResults[0])
+  }
   console.log(allResults) // tslint:disable-line
-
 }
 
-// This doens't feel great, but is OK for now
+// This doesn't feel great, but is OK for now
 const getIssueNumber = (json: any): number | null => {
   if (json.pull_request) { return json.pull_request.number }
   if (json.issue) { return json.issue.number }
@@ -86,17 +97,17 @@ const getIssueNumber = (json: any): number | null => {
 const githubAPIForCommentable
   = (run: DangerRun, token: string, repo: GithubRepo | null, issueNumber: number | null) => {
 
-  const thisRepo = run.repoSlug || repo && repo.fullName
-  // Any commentable event will include a repo
-  const forceRepo = thisRepo as string
+    const thisRepo = run.repoSlug || repo && repo.fullName
+    // Any commentable event will include a repo
+    const forceRepo = thisRepo as string
 
-  const githubAPI = new GitHubAPI({ repoSlug: forceRepo, pullRequestID: String(issueNumber) }, token)
-  githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
+    const githubAPI = new GitHubAPI({ repoSlug: forceRepo, pullRequestID: String(issueNumber) }, token)
+    githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
-  // How can I get this from an API, if we cannot use /me ?
-  // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
-  githubAPI.getUserID = () => Promise.resolve(24758014)
-  return githubAPI
-}
+    // How can I get this from an API, if we cannot use /me ?
+    // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
+    githubAPI.getUserID = () => Promise.resolve(24758014)
+    return githubAPI
+  }
 
 export default githubDangerRunner

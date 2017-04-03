@@ -4,24 +4,24 @@ import { DangerfileReferenceString, RunnerRuleset } from "../db"
  * Think about it, we can't provide the same DSL
  * to a PR as we send to an Issue, or to User creation.
  *
- * This is a stop-gap, (ish()) I wonder if I can annotate the
+ * This is a stop-gap, (ish?) I wonder if I can annotate the
  * JSON DSLs to help build your own dangerfiles for those.
  *
  * It may make sense to just throw the JSON from the integration
  * event directly into the global scope.
  */
 export enum dsl {
-  /** What for years has been the "Danger DSL" */
+  /** What, for years, has been the "Danger DSL" */
   pr,
-  /** Take whatever triggered this run and use that as the DSL */
+  /** Take whatever triggered this run and use that as the github. DSL */
   import,
 }
 
 /** Can Danger reply inline? */
 export enum feedback {
-  /** What for years has been the "Danger DSL" */
+  /** Is there a way in which Danger can provide any feedback? */
   commentable,
-  /** Take whatever triggered this run and use that as the DSL */
+  /** Can only execute the JS, no feedback into an issue as the event doesn't correlate to one */
   silent,
 }
 
