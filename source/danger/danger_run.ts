@@ -2,13 +2,8 @@ import { DangerfileReferenceString, RunnerRuleset } from "../db"
 
 /**
  * Think about it, we can't provide the same DSL
- * to a PR as we send to an Issue, or to User creation.
- *
- * This is a stop-gap, (ish?) I wonder if I can annotate the
- * JSON DSLs to help build your own dangerfiles for those.
- *
- * It may make sense to just throw the JSON from the integration
- * event directly into the global scope.
+ * to a PR as we send to an Issue, or to User creation, the lack of
+ * reference to a PR means that we can't do work like finding diffs.
  */
 export enum dsl {
   /** What, for years, has been the "Danger DSL" */
@@ -61,7 +56,7 @@ export const dangerRunForRules = (event: string, action: string | null, rule: Ru
     action,
     dslType: dslTypeForEvent(event),
     ...dangerRepresentationforPath(path),
-    feedback: feedbackTypeForEvent(event)
+    feedback: feedbackTypeForEvent(event),
   }
 }
 
@@ -72,7 +67,7 @@ export const dangerRepresentationforPath = (value: DangerfileReferenceString) =>
   } else {
     return {
       dangerfilePath: value.split("@")[1] as string,
-      repoSlug: value.split("@")[0] as string
+      repoSlug: value.split("@")[0] as string,
     }
   }
 }
@@ -84,6 +79,7 @@ export const dslTypeForEvent = (event: string): dsl => {
 }
 
 /** What events can we provide feedback inline with? */
+// Build system mentions?
 export const feedbackTypeForEvent = (event: string): feedback => {
   if (event === "pull_request" || event === "issue") { return feedback.commentable }
   return feedback.silent

@@ -4,7 +4,8 @@ import {
   dangerRunForRules,
   dsl,
   dslTypeForEvent,
-  feedback } from "../danger_run"
+  feedback,
+} from "../danger_run"
 
 describe("for ping", () => {
   it("returns an action when ping is in the rules", () => {

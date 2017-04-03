@@ -1,4 +1,3 @@
-import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import fetch from "../../api/fetch"
 import { GitHubUser } from "../../db/types"
 
@@ -24,8 +23,7 @@ async function api(token: string, path: string, headers: any = {}, body: any = {
         headers.Authorization = `token ${token}`
     }
 
-    // this function does not work with gh enterprise yet.
-    const baseUrl = "https://api.github.com"
+    const baseUrl = process.env.DANGER_GITHUB_API_BASE_URL || "https://api.github.com"
     return fetch(`${baseUrl}/${path}`, {
         method,
         body,

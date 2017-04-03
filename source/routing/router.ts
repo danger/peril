@@ -1,6 +1,7 @@
 import * as winston from "winston"
 
 import { createInstallation } from "../github/events/create_installation"
+import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"
 
 import { RootObject as InstallationCreated } from "../github/events/types/integration_installation_created.types"
@@ -40,16 +41,9 @@ export const githubRouting = (event, req, res) => {
       break
     }
 
-    // case "pull_request": {
-    //   const request = req.body as PR
-    //   winston.log("router", ` ${request.action} on ${request.repository.full_name}`)
-    //   pullRequest(request, req, res)
-    //   break
-    // }
-
     default: {
       winston.log("router", ` - passing to Dangerfile rule router`)
-      // res.status(404).send("Yo, this ain't done yet")
+      githubDangerRunner(event, req, res)
     }
   }
 }

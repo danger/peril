@@ -1,11 +1,11 @@
 const pingMock = jest.fn()
-jest.mock("../../github/events/ping", () => { return { ping: pingMock }})
+jest.mock("../../github/events/ping", () => { return { ping: pingMock } })
 
 const createInstallationMock = jest.fn()
-jest.mock("../../github/events/create_installation", () => { return { createInstallation: createInstallationMock }})
+jest.mock("../../github/events/create_installation", () => { return { createInstallation: createInstallationMock } })
 
-// const prMock = jest.fn()
-// jest.mock("../../github/events/pull_request", () => { return { pullRequest: prMock }})
+const githubRunnerMock = jest.fn()
+jest.mock("../../github/events/github_runner", () => { return { githubDangerRunner: githubRunnerMock } })
 
 import { githubRouting } from "../router"
 
@@ -22,15 +22,14 @@ describe("routing for GitHub", () => {
     expect(createInstallationMock).toBeCalled()
   })
 
-  it.skip("does not creates an installation when an integration is updated is updated", () => {
-    const body = { action: "updated" }
-    githubRouting("integration_installation", { body }, {})
-    expect(createInstallationMock).not.toBeCalled()
-  })
+  it("calls the GitHub runner for any other event", () => {
+    githubRouting("issue", {}, {})
+    expect(githubRunnerMock).toBeCalledWith("issue", {}, {})
 
-  // it("creates an installation when an integration is created", () => {
-  //   const body = {action: "Action", repository: {full_name: "OK"}}
-  //   githubRouting("pull_request", { body }, {})
-  //   expect(createInstallationMock).toBeCalled()
-  // })
+    githubRouting("new_user", {}, {})
+    expect(githubRunnerMock).toBeCalledWith("new_user", {}, {})
+
+    githubRouting("random_thing", {}, {})
+    expect(githubRunnerMock).toBeCalledWith("random_thing", {}, {})
+  })
 })

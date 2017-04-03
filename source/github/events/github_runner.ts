@@ -10,6 +10,26 @@ import { executorForInstallation, runDangerAgainstInstallation } from "../../dan
 import { getInstallation, getRepo, GitHubInstallation, GithubRepo } from "../../db"
 import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 
+/**
+ * So, this function has a bunch of responsibilities.
+ *
+ *  - Validating there is an installation ref in the db
+ *  - Getting (potential) repo information
+ *  - Generating runs for an installation, could be up to two (org + repo) per integration event
+ *  - Going frm a run to executing Danger for that run
+ *  - Handling the varients in a Danger run
+ *
+ *    - Event is org based (no repo, DSL is event JSON)
+ *    - Event is repo based (has a refernce to a repo, but nothing to comment on)
+ *    - Event is PR based (has a repo + issue, can comment, gets normal DangerDSL)
+ *    - Event is issue based (has a repo + issue, can comment, gets event DSL )
+ *
+ *  - Merging multiple results into one
+ *  - Passing back the feedback results, if we can
+ *
+ * As you can imagine, this does indeed make it ripe for a good refactoring in the future.
+ */
+
 export async function githubDangerRunner(event: string, req: express.Request, res: express.Response) {
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
@@ -20,16 +40,18 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     return
   }
 
-  // This could definitely be null, for example: Org User Added
-  // Bit of awkward type jugging here...
-  const fullRepoName = req.body.repository.full_name as string | null
+  // The repo could definitely be null, for example: Org User Added
+  // So, we need to assume from here on, that this data is not always available
+  const fullRepoName = req.body.repository && req.body.repository.full_name as string | null
   let repo = null as GithubRepo | null
   if (fullRepoName) { repo = await getRepo(installationID, fullRepoName) }
 
+  //
   const installationRun = dangerRunForRules(event, action, installation.rules)
   const repoRun = dangerRunForRules(event, action, repo && repo.rules)
   const runs = [installationRun, repoRun].filter((r) => !!r) as DangerRun[]
 
+  // We got no runs ( so there were no rules that correspond to the event)
   if (runs.length === 0) {
     res.status(204).send(`No work to do.`)
     return
@@ -61,7 +83,9 @@ export async function githubDangerRunner(event: string, req: express.Request, re
       }
     }
 
-    const branch = "master"
+    // In theory only a PR requires a custom branch, so we can check directly for that
+    // in the event JSON and if it's not there then use master
+    const branch = req.body.pull_request ? req.body.pull_request.head.ref : "master"
     const file = await getGitHubFileContents(token, run.dangerfilePath || repo!.fullName, run.dangerfilePath, branch)
 
     const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
@@ -78,7 +102,8 @@ export async function githubDangerRunner(event: string, req: express.Request, re
         messages: [...curr.messages, ...run.messages],
         warnings: [...curr.warnings, ...run.warnings],
       }
-    }, { fails: [], markdowns: [], warnings: [], messages: []})
+    }, { fails: [], markdowns: [], warnings: [], messages: [] })
+
     const issue = getIssueNumber(req.body)
     const githubAPI = githubAPIForCommentable(commentableRun, token, repo, issue)
     const exec = executorForInstallation(new GitHub(githubAPI))
