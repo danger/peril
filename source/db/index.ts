@@ -71,7 +71,7 @@ export interface GithubRepo {
 
 /** Saves a repo */
 export async function saveGitHubRepo(repo: GithubRepo) {
-  winston.log("db", `Saving repo with slu: ${repo.fullName}`)
+  winston.log("db", `Saving repo with slug: ${repo.fullName}`)
   return db.one(
     "insert into github_repos(id, installations_id, full_name, rules) values($1, $2, $3, $4) returning *",
     [repo.id, repo.installationID, repo.fullName, JSON.stringify(repo.rules)])

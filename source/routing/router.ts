@@ -2,7 +2,6 @@ import * as winston from "winston"
 
 import { createInstallation } from "../github/events/create_installation"
 import { ping } from "../github/events/ping"
-import { pullRequest } from "../github/events/pull_request"
 
 import { RootObject as InstallationCreated } from "../github/events/types/integration_installation_created.types"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"

@@ -85,6 +85,6 @@ export const dslTypeForEvent = (event: string): dsl => {
 
 /** What events can we provide feedback inline with? */
 export const feedbackTypeForEvent = (event: string): feedback => {
-  if (event === "pull_request" || event === "issue") { return feedback.silent }
+  if (event === "pull_request" || event === "issue") { return feedback.commentable }
   return feedback.silent
 }

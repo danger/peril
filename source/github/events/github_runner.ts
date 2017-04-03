@@ -2,12 +2,12 @@ import * as express from "express"
 
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 
-import { dangerRunForRules, DangerRun, dsl, feedback } from "../../danger/actions"
-
+import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
-import { runDangerAgainstInstallation } from "../../danger/danger_runner"
-import { getInstallation, GitHubInstallation, getRepo, GithubRepo } from "../../db"
-import { isUserInOrg } from "../lib/github_helpers"
+import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/actions"
+import { executorForInstallation, runDangerAgainstInstallation } from "../../danger/danger_runner"
+import { getInstallation, getRepo, GitHubInstallation, GithubRepo } from "../../db"
+import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 
 export async function githubDangerRunner(event: string, req: express.Request, res: express.Response) {
   const action = req.body.action as string | null
@@ -27,17 +27,20 @@ export async function githubDangerRunner(event: string, req: express.Request, re
 
   const installationRun = dangerRunForRules(event, action, installation.rules)
   const repoRun = dangerRunForRules(event, action, repo && repo.rules)
-  const runs = [installationRun, repoRun].filter(r => !!r) as DangerRun[]
+  const runs = [installationRun, repoRun].filter((r) => !!r) as DangerRun[]
 
   if (runs.length === 0) {
-    res.status(302).send(`No work to do.`)
+    res.status(204).send(`No work to do.`)
     return
   }
 
   const token = await getTemporaryAccessTokenForInstallation(installation)
 
+  const allResults = [] as DangerResults[]
   for (const run of runs) {
+    const useFullDangerDSL = run.dslType === dsl.pr
     const supportGithubCommentAPIs = run.feedback === feedback.commentable
+
     // Do we need an authenticated Danger GitHubAPI instance so we
     // can leave feedback on an issue?
     let githubAPI = null as GitHubAPI | null
@@ -46,32 +49,30 @@ export async function githubDangerRunner(event: string, req: express.Request, re
       githubAPI = githubAPIForCommentable(run, token, repo, issue)
     }
 
+    // Are we being extra paranoid about running Dangerfiles?
     const triggeredByUser = req.body.sender as any | null
     if (triggeredByUser && githubAPI && repo && installation && installation.settings.onlyForOrgMembers) {
       const org = repo.fullName.split("/")[0]
-      const userInOrg = await isUserInOrg(triggeredByUser, org, githubAPI)
+      const userInOrg = await isUserInOrg(token, triggeredByUser, org)
       if (!userInOrg) {
-        res.status(302).send(`Not running because ${triggeredByUser} is not in ${org}.`)
+        res.status(403).send(`Not running because ${triggeredByUser} is not in ${org}.`)
         return
       }
     }
 
-    const dangerfile = run.dangerfilePath
-    runDangerAgainstInstallation(dangerfile, pr, githubAPI)
+    const branch = "master"
+    const file = await getGitHubFileContents(token, run.dangerfilePath || repo!.fullName, run.dangerfilePath, branch)
+
+    const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
+    allResults.push(results)
   }
-}
 
-/**
- * Executes Danger based on a DangerRun instance
- * 
- * @param run The DangeRun to work with
- * @param token API token
+// merge resuls
+// handle restults
 
- */
-
-const runDangerRun = async (run: DangerRun, githubAPI?: GitHubAPI) => {
-  const supportGithubCommentAPIs = run.feedback === feedback.commentable
-  const useFullDangerDSL = run.dslType === dsl.pr
+  const finalResults = allResults
+  //  await exec.handleResults(results)
+  console.log(allResults) // tslint:disable-line
 
 }
 
@@ -82,7 +83,9 @@ const getIssueNumber = (json: any): number | null => {
   return null
 }
 
-const githubAPIForCommentable = (run: DangerRun, token: string, repo: GithubRepo | null, issueNumber: number | null) => {
+const githubAPIForCommentable
+  = (run: DangerRun, token: string, repo: GithubRepo | null, issueNumber: number | null) => {
+
   const thisRepo = run.repoSlug || repo && repo.fullName
   // Any commentable event will include a repo
   const forceRepo = thisRepo as string

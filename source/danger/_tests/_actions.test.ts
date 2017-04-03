@@ -1,4 +1,10 @@
-import { dangerRunForRules, DangerRun, dslTypeForEvent, dsl, dangerRepresentationforPath } from "../actions"
+import {
+  dangerRepresentationforPath,
+  DangerRun,
+  dangerRunForRules,
+  dsl,
+  dslTypeForEvent,
+  feedback } from "../actions"
 
 describe("for ping", () => {
   it("returns an action when ping is in the rules", () => {
@@ -8,10 +14,11 @@ describe("for ping", () => {
       dangerfilePath: "dangerfile.js",
       dslType: dsl.import,
       event: "ping",
+      feedback: feedback.silent,
     })
   })
 
-  it("returns an action when ping is in the rules", () => {
+  it("returns nothing when ping is not in the rules", () => {
     const rules = {}
     expect(dangerRunForRules("ping", null, rules)).toBeNull()
   })
@@ -25,6 +32,7 @@ describe("for PRs", () => {
       dangerfilePath: "dangerfile.js",
       dslType: dsl.pr,
       event: "pull_request",
+      feedback: feedback.commentable,
     })
   })
 
@@ -36,9 +44,9 @@ describe("for PRs", () => {
       dangerfilePath: "dangerfile.js",
       dslType: dsl.pr,
       event: "pull_request",
+      feedback: feedback.commentable,
     })
   })
-
 
   it("returns null when you only ask for a specific action", () => {
     const rules = { "pull_request.created": "dangerfile.js" }
@@ -52,11 +60,10 @@ describe("for PRs", () => {
       dangerfilePath: "dangerfile.js",
       dslType: dsl.pr,
       event: "pull_request",
+      feedback: feedback.commentable,
     })
   })
 })
-
-
 
 describe("dangerRepresentationforPath", () => {
   it("returns just the path when there is no repo reference", () => {
@@ -75,8 +82,6 @@ describe("dangerRepresentationforPath", () => {
   })
 })
 
-
-
 describe("dslTypeForEvent", () => {
   it("recommends importing the integration as the DSL for anything but a PR", () => {
     expect(dslTypeForEvent("ping")).toEqual(dsl.import)
@@ -88,4 +93,3 @@ describe("dslTypeForEvent", () => {
     expect(dslTypeForEvent("pull_request")).toEqual(dsl.pr)
   })
 })
-

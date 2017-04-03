@@ -1,6 +1,7 @@
 import { FakeCI } from "danger/distribution/ci_source/providers/Fake"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
+import { Platform } from "danger/distribution/platforms/platform"
 
 import {
   executorForInstallation,
@@ -30,9 +31,11 @@ const requestWithFixturedContent = async (path: string): Promise<() => Promise<s
 
 describe("evaling", () => {
   let api: GitHubAPI = {} as any
+  let platform: Platform = {} as any
 
   beforeEach(async () => {
     api = new GitHubAPI({ repoSlug: "artsy/emission", pullRequestID: "1" }, "ABCDE")
+    platform = new GitHub(api)
 
     api.getPullRequestInfo = await requestWithFixturedJSON("github_pr.json")
     api.getPullRequestDiff = await requestWithFixturedContent("github_diff.diff")
@@ -42,14 +45,8 @@ describe("evaling", () => {
     api.getIssue  = await requestWithFixturedJSON("github_issue.json")
   })
 
-  it("sets up an executor with the right repo/PR", () => {
-      const executor = executorForInstallation(api)
-      expect(executor.ciSource.repoSlug).toEqual("artsy/emission")
-      expect(executor.ciSource.pullRequestID).toEqual("1")
-  })
-
   it("runs a typescript dangerfile with fixtured data", async () => {
-      const executor = executorForInstallation(api)
+      const executor = executorForInstallation(platform)
       const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_empty.ts`, executor)
       expect(results).toEqual({
         fails: [], markdowns: [], messages: [], warnings: [{message: "OK"}],
@@ -58,7 +55,7 @@ describe("evaling", () => {
 
   // I wonder if the babel setup isn't quite right yet
   it.skip("runs a JS dangerfile with fixtured data", async () => {
-      const executor = executorForInstallation(api)
+      const executor = executorForInstallation(platform)
       // The executor will return results etc in the next release
       const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_insecure.js`, executor)
       expect(results).toEqual({
