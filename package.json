@@ -29,7 +29,7 @@
     "@types/pg": "^6.1.34",
     "@types/pg-promise": "^0.0.28",
     "@types/winston": "^2.3.0",
-    "babel-cli": "6.16",
+    "babel-cli": "~6.24.1",
     "babel-plugin-syntax-async-functions": "^6.13.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-regenerator": "^6.22.0",
