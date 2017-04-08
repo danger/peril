@@ -9,7 +9,9 @@ export async function createInstallation(installationJSON: Installation, req: ex
 
   const installation: GitHubInstallation = {
     id: installationJSON.id,
-    rules: {},
+    rules: {
+      pull_request: "dangerfile.js",
+    },
     settings: {
       onlyForOrgMembers: true,
     },

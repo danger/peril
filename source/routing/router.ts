@@ -1,5 +1,6 @@
 import * as winston from "winston"
 
+import { deleteInstallation } from "../db"
 import { createInstallation } from "../github/events/create_installation"
 import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"
@@ -25,10 +26,11 @@ export const githubRouting = (event, req, res) => {
     case "integration_installation": {
       const request = req.body as InstallationCreated
       const action = request.action
-
+      const installation = request.installation
+      // Create a db entry for any new integrations
       if (action === "created") {
         winston.log("router", ` - Creating new integration`)
-        createInstallation(request.installation, req, res)
+        createInstallation(installation, req, res)
       }
 
       // Keep our db up to date as repos are added and removed
@@ -38,6 +40,13 @@ export const githubRouting = (event, req, res) => {
         // request.repositories_added
         // request.repositories_removed
       }
+
+      // Delete any integrations that have uninstalled Peril :wave:
+      if (action === "deleted") {
+        winston.log("router", ` - Deleting integration ${installation.id}`)
+        deleteInstallation(installation.id)
+      }
+
       break
     }
 
