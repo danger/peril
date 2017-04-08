@@ -1,5 +1,5 @@
-import * as winston from "winston"
 import { DATABASE_URL } from "../globals"
+import winston from "../logger"
 import { GitHubUser } from "./types"
 
 // Docs: https://github.com/vitaly-t/pg-promise

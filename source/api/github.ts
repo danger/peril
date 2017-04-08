@@ -5,8 +5,8 @@ import * as fs from "fs"
 import * as os from "os"
 
 import * as jwt from "jsonwebtoken"
-import * as winston from "winston"
 import { getInstallation, GitHubInstallation } from "../db"
+import winston from "../logger"
 import originalFetch from "./fetch"
 
 export async function getTemporaryAccessTokenForInstallation(installation: GitHubInstallation): Promise<string> {

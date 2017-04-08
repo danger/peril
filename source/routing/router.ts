@@ -1,4 +1,4 @@
-import * as winston from "winston"
+import winston from "../logger"
 
 import { deleteInstallation } from "../db"
 import { createInstallation } from "../github/events/create_installation"

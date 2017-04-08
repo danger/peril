@@ -1,5 +1,6 @@
 import * as winston from "winston"
 
+const logger = winston
 require("winston-papertrail").Papertrail // tslint:disable-line
 
 import { PAPERTRAIL_PORT, PAPERTRAIL_URL } from "./globals"
@@ -14,5 +15,7 @@ if (PAPERTRAIL_URL !== null) {
   })
 
 } else {
-  winston.debug("Skipping papertrail setup.") // tslint:disable-line
+  console.log("Skipping papertrail setup for winston.") // tslint:disable-line
 }
+
+export default logger
