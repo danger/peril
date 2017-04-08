@@ -1,7 +1,8 @@
 /* tslint:disable: no-var-requires */
 const config = require("config")
+import { Platform } from "danger/distribution/platforms/platform"
 
-import { GitHubInstallation } from "../db/mongo"
+import { GitHubInstallation } from "../db"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
 import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
@@ -13,23 +14,26 @@ import { Executor } from "danger/distribution/runner/Executor"
 
 import { writeFileSync } from "fs"
 import { tmpdir } from "os"
+import { dsl } from "./danger_run"
+
+import perilPlatform from "./peril_platform"
 
 /**
  * The single function to run danger against an installation
  */
-export async function runDangerAgainstInstallation(path: string, pullRequest: PR, api: GitHubAPI) {
+export async function  runDangerAgainstInstallation(contents: string, path: string, api: GitHubAPI | null, type: dsl) {
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
-  const exec = await executorForInstallation(api)
-  const dangerfile = await api.fileContents(path)
+  const gh = api ? new GitHub(api) : null
+  const platform = perilPlatform(type, gh, {})
+
+  const exec = await executorForInstallation(platform)
 
   const localDangerfile = tmpdir() + "/" + path
-  writeFileSync(localDangerfile, dangerfile)
+  writeFileSync(localDangerfile, contents)
 
-  const results = await runDangerAgainstFile(localDangerfile, exec)
-  handleDangerResults(results, exec)
-  return results
+  return await runDangerAgainstFile(localDangerfile, exec)
 }
 
 /**
@@ -60,9 +64,9 @@ export async function handleDangerResults(results: DangerResults, exec: Executor
 /**
  * Generates a Danger Executor based on the installation's context
  */
-export function executorForInstallation(api: GitHubAPI) {
+export function executorForInstallation(platform: Platform) {
 
-    // We need this for things like repo slugs, PR IDs etc
+  // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
   const source = {
@@ -70,8 +74,8 @@ export function executorForInstallation(api: GitHubAPI) {
     isCI: true,
     isPR: true,
     name: "Peril",
-    pullRequestID: api.repoMetadata.pullRequestID,
-    repoSlug:  api.repoMetadata.repoSlug,
+    pullRequestID: "not used",
+    repoSlug:  "not used",
     supportedPlatforms: [],
   }
 
@@ -81,12 +85,11 @@ export function executorForInstallation(api: GitHubAPI) {
     global["verbose"] = true // tslint:disable-line
   }
 
-  const gh = new GitHub(api)
-
   const execConfig = {
     stdoutOnly: false,
     verbose: config.has("LOG_FETCH_REQUESTS"),
   }
 
-  return new Executor(source, gh, execConfig)
+  // Source can be removed in the next release of Danger
+  return new Executor(source, platform, execConfig)
 }

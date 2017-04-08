@@ -2,6 +2,9 @@ import * as fs from "fs"
 import * as glob from "glob"
 import * as tsToJSON from "json2ts"
 
+// Globs through our event fixtures and converts them into
+// TypeScript files
+
 glob("source/github/events/__tests__/fixtures/*.json", (error, files: string[]) => {
   files.forEach((file) => {
     const contents = fs.readFileSync(file).toString()
