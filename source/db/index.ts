@@ -45,7 +45,6 @@ export interface GitHubInstallation {
   rules: RunnerRuleset
 }
 
-
 /** Saves an Integration */
 export async function saveInstallation(installation: GitHubInstallation) {
   winston.log("db", `Saving installation with id: ${installation.id}`)
@@ -53,7 +52,6 @@ export async function saveInstallation(installation: GitHubInstallation) {
     "insert into installations(id, settings, rules) values($1, $2, $3) returning *",
     [installation.id, JSON.stringify(installation.settings), JSON.stringify(installation.rules)])
 }
-
 
 export type RunnerRuleset = { [name: string]: DangerfileReferenceString }
 
@@ -67,7 +65,6 @@ export interface GithubRepo {
   /** Runner rules ID reference, another JSON type in the DB */
   rules: RunnerRuleset
 }
-
 
 /** Saves a repo */
 export async function saveGitHubRepo(repo: GithubRepo) {
@@ -92,7 +89,17 @@ export async function deleteInstallation(installationID: number): Promise<GitHub
 
 /** Gets a Github repo from the DB */
 export async function getRepo(installationID: number, repoName: string): Promise<GithubRepo | null> {
-  return db.one("select * from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
+  try {
+    return db.one("select * from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
+
+  } catch (error) {
+    // Allow nullable repo calls
+    if (error.name === "QueryResultError") {
+      return null
+    } else {
+      throw error
+    }
+  }
 }
 /** Deletes a Github repo from the DB */
 export async function deleteRepo(installationID: number, repoName: string): Promise<GithubRepo> {
