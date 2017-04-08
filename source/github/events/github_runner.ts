@@ -1,4 +1,5 @@
 import * as express from "express"
+import winston from "../../logger"
 
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
@@ -30,6 +31,9 @@ import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
  * As you can imagine, this does indeed make it ripe for a good refactoring in the future.
  */
 
+/** Logs */
+const log = (message: string) => { winston.info(`[runner] - ${message}`) }
+
 export async function githubDangerRunner(event: string, req: express.Request, res: express.Response) {
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
@@ -46,7 +50,6 @@ export async function githubDangerRunner(event: string, req: express.Request, re
   let repo = null as GithubRepo | null
   if (fullRepoName) { repo = await getRepo(installationID, fullRepoName) }
 
-  //
   const installationRun = dangerRunForRules(event, action, installation.rules)
   const repoRun = dangerRunForRules(event, action, repo && repo.rules)
   const runs = [installationRun, repoRun].filter((r) => !!r) as DangerRun[]
@@ -61,20 +64,31 @@ export async function githubDangerRunner(event: string, req: express.Request, re
 
   const allResults = [] as DangerResults[]
   for (const run of runs) {
+    log(`Running: ${JSON.stringify(run, null, " ")}`)
+
     const useFullDangerDSL = run.dslType === dsl.pr
     const supportGithubCommentAPIs = run.feedback === feedback.commentable
+    const hasRepo = repo && repo.fullName
+
+    log(`USe fullDSL: ${useFullDangerDSL}`)
+    log(`supportGithubCommentAPIs: ${supportGithubCommentAPIs}`)
+    log(`hasRepo: ${hasRepo}`)
 
     // Do we need an authenticated Danger GitHubAPI instance so we
     // can leave feedback on an issue?
     let githubAPI = null as GitHubAPI | null
-    if (supportGithubCommentAPIs && repo) {
+    if (supportGithubCommentAPIs && hasRepo) {
       const issue = getIssueNumber(req.body)
-      githubAPI = githubAPIForCommentable(run, token, repo, issue)
+      const repoSlug = getRepoSlug(req.body)
+      // TODO: An org could refer to a dangerfile that's not in the current repo
+      githubAPI = githubAPIForCommentable(run, token, repoSlug!, issue)
+      log("Got GitHub API")
     }
 
     // Are we being extra paranoid about running Dangerfiles?
     const triggeredByUser = req.body.sender as any | null
     if (triggeredByUser && githubAPI && repo && installation && installation.settings.onlyForOrgMembers) {
+      log("Checking if user is in org")
       const org = repo.fullName.split("/")[0]
       const userInOrg = await isUserInOrg(token, triggeredByUser, org)
       if (!userInOrg) {
@@ -105,7 +119,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     }, { fails: [], markdowns: [], warnings: [], messages: [] })
 
     const issue = getIssueNumber(req.body)
-    const githubAPI = githubAPIForCommentable(commentableRun, token, repo, issue)
+    const githubAPI = githubAPIForCommentable(commentableRun, token, repo!.fullName, issue)
     const exec = executorForInstallation(new GitHub(githubAPI))
     await exec.handleResults(finalResults[0])
   }
@@ -119,14 +133,16 @@ const getIssueNumber = (json: any): number | null => {
   return null
 }
 
+// This doesn't feel great, but is OK for now
+const getRepoSlug = (json: any): string | null => {
+  if (json.repository) { return json.repository.full_name }
+  return null
+}
+
 const githubAPIForCommentable
-  = (run: DangerRun, token: string, repo: GithubRepo | null, issueNumber: number | null) => {
+  = (run: DangerRun, token: string, repoSlug: string, issueNumber: number | null) => {
 
-    const thisRepo = run.repoSlug || repo && repo.fullName
-    // Any commentable event will include a repo
-    const forceRepo = thisRepo as string
-
-    const githubAPI = new GitHubAPI({ repoSlug: forceRepo, pullRequestID: String(issueNumber) }, token)
+    const githubAPI = new GitHubAPI({ repoSlug, pullRequestID: String(issueNumber) }, token)
     githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
     // How can I get this from an API, if we cannot use /me ?

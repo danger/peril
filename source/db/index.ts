@@ -45,9 +45,12 @@ export interface GitHubInstallation {
   rules: RunnerRuleset
 }
 
+/** Logs */
+const info = (message: string) => { winston.info(`[db] - ${message}`) }
+
 /** Saves an Integration */
 export async function saveInstallation(installation: GitHubInstallation) {
-  winston.log("db", `Saving installation with id: ${installation.id}`)
+  info(`Saving installation with id: ${installation.id}`)
   return db.one(
     "insert into installations(id, settings, rules) values($1, $2, $3) returning *",
     [installation.id, JSON.stringify(installation.settings), JSON.stringify(installation.rules)])
@@ -68,7 +71,7 @@ export interface GithubRepo {
 
 /** Saves a repo */
 export async function saveGitHubRepo(repo: GithubRepo) {
-  winston.log("db", `Saving repo with slug: ${repo.fullName}`)
+  info(`Saving repo with slug: ${repo.fullName}`)
   return db.one(
     "insert into github_repos(id, installations_id, full_name, rules) values($1, $2, $3, $4) returning *",
     [repo.id, repo.installationID, repo.fullName, JSON.stringify(repo.rules)])
@@ -96,5 +99,6 @@ export async function getRepo(installationID: number, repoName: string): Promise
 }
 /** Deletes a Github repo from the DB */
 export async function deleteRepo(installationID: number, repoName: string): Promise<GithubRepo> {
+  info(`Deleting github repo ${repoName}`)
   return db.one("delete from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
 }

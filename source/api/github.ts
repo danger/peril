@@ -9,12 +9,18 @@ import { getInstallation, GitHubInstallation } from "../db"
 import winston from "../logger"
 import originalFetch from "./fetch"
 
+/** Logs */
+const error = (message: string) => {
+  winston.info(`[github auth] - ${message}`)
+  console.error(message)
+}
+
 export async function getTemporaryAccessTokenForInstallation(installation: GitHubInstallation): Promise<string> {
   const newToken = await requestAccessTokenForInstallation(installation.id)
   const credentials = await newToken.json()
   if (!newToken.ok) {
-    winston.log("Token", `Could not get an access token for ${installation.id}`)
-    winston.log("Token", `GitHub returned: ${JSON.stringify(credentials)}`)
+    error(`Could not get an access token for ${installation.id}`)
+    error(`GitHub returned: ${JSON.stringify(credentials)}`)
   }
   return credentials.token
 }

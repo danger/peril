@@ -1,6 +1,8 @@
 /* tslint:disable: no-var-requires */
 const config = require("config")
+
 import { Platform } from "danger/distribution/platforms/platform"
+import winston from "../logger"
 
 import { GitHubInstallation } from "../db"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
@@ -18,6 +20,9 @@ import { dsl } from "./danger_run"
 
 import perilPlatform from "./peril_platform"
 
+/** Logs */
+const log = (message: string) => { winston.info(`[runner] - ${message}`) }
+
 /**
  * The single function to run danger against an installation
  */
@@ -25,6 +30,7 @@ export async function  runDangerAgainstInstallation(contents: string, path: stri
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
+  log(`Running Danger: got API? ${api}`)
   const gh = api ? new GitHub(api) : null
   const platform = perilPlatform(type, gh, {})
 
