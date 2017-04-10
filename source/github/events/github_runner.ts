@@ -111,7 +111,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     const neededDangerfileIsSameRepo = run.repoSlug === req.body.pull_request.head.repo.full_name
     const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : "master"
 
-    const file = await getGitHubFileContents(token, runRepo, run.dangerfilePath, branch)
+    const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
     console.log(`Running: ${repoForDangerfile} + ${run.dangerfilePath} - ${branch}`)
     console.log("Running:")
     console.log(file)
