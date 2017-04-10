@@ -105,11 +105,14 @@ export async function githubDangerRunner(event: string, req: express.Request, re
 
     // In theory only a PR requires a custom branch, so we can check directly for that
     // in the event JSON and if it's not there then use master
-    const branch = req.body.pull_request ? req.body.pull_request.head.ref : "master"
     // prioritise the run metadata
     const repoForDangerfile = run.repoSlug || runRepo
+    const dangerfileBranchForPR = req.body.pull_request ? req.body.pull_request.head.ref : "master"
+    const neededDangerfileIsSameRepo = run.repoSlug === req.body.pull_request.head.repo.full_name
+    const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : "master"
+
     const file = await getGitHubFileContents(token, runRepo, run.dangerfilePath, branch)
-    console.log(`Running: ${repoForDangerfile} + ${run.dangerfilePath}`)
+    console.log(`Running: ${repoForDangerfile} + ${run.dangerfilePath} - ${branch}`)
     console.log("Running:")
     console.log(file)
 
@@ -136,7 +139,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     console.log(finalResults) // tslint:disable-line
   }
 
-  res.status(204).send(`Run ${runs.length} Dangerfiles: `)
+  res.status(204).send(`Run ${runs.length} Dangerfiles`)
 }
 
 // This doesn't feel great, but is OK for now
