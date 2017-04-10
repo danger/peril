@@ -106,7 +106,9 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     // In theory only a PR requires a custom branch, so we can check directly for that
     // in the event JSON and if it's not there then use master
     const branch = req.body.pull_request ? req.body.pull_request.head.ref : "master"
-    const file = await getGitHubFileContents(token, repo && repo.fullName || fullRepoName!, run.dangerfilePath, branch)
+    const file = await getGitHubFileContents(token, runRepo, run.dangerfilePath, branch)
+    console.log("Running:")
+    console.log(file)
 
     const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
     allResults.push(results)
@@ -128,8 +130,8 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     const githubAPI = githubAPIForCommentable(commentableRun, token, runRepo, issue)
     const exec = executorForInstallation(new GitHub(githubAPI))
     await exec.handleResults(finalResults)
+    console.log(finalResults) // tslint:disable-line
   }
-  console.log(allResults) // tslint:disable-line
 }
 
 // This doesn't feel great, but is OK for now
