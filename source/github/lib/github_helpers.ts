@@ -14,6 +14,7 @@ export async function getGitHubFileContents(token: string, repoSlug: string, pat
         const buffer = new Buffer(data.content, "base64")
         return buffer.toString()
     } else {
+        console.log("res: " + res.url)
         console.log("Getting GitHub file failed: " + JSON.stringify(data))
         return ""
     }
