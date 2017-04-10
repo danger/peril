@@ -53,7 +53,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
 
   if (!runRepo) {
     res.status(404).send(`WIP - not built out support for non-repo related events - sorry`)
-    
+
     return
   }
 
@@ -127,7 +127,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     const issue = getIssueNumber(req.body)
     const githubAPI = githubAPIForCommentable(commentableRun, token, runRepo, issue)
     const exec = executorForInstallation(new GitHub(githubAPI))
-    await exec.handleResults(finalResults[0])
+    await exec.handleResults(finalResults)
   }
   console.log(allResults) // tslint:disable-line
 }
