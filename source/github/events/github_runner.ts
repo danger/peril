@@ -34,7 +34,7 @@ import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 /** Logs */
 const log = (message: string) => { winston.info(`[runner] - ${message}`) }
 
-export async function githubDangerRunner(event: string, req: express.Request, res: express.Response) {
+export async function githubDangerRunner(event: string, req: express.Request, res: express.Response, next: any) {
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
 
@@ -53,7 +53,6 @@ export async function githubDangerRunner(event: string, req: express.Request, re
 
   if (!runRepo) {
     res.status(404).send(`WIP - not built out support for non-repo related events - sorry`)
-
     return
   }
 
@@ -64,6 +63,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
   // We got no runs ( so there were no rules that correspond to the event)
   if (runs.length === 0) {
     res.status(204).send(`No work to do.`)
+    next()
     return
   }
 
@@ -93,7 +93,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
 
     // Are we being extra paranoid about running Dangerfiles?
     const triggeredByUser = req.body.sender as any | null
-    if (triggeredByUser && githubAPI && repo && installation && installation.settings.onlyForOrgMembers) {
+    if (triggeredByUser && githubAPI && runRepo && installation && installation.settings.onlyForOrgMembers) {
       log("Checking if user is in org")
       const org = fullRepoName!.split("/")[0]
       const userInOrg = await isUserInOrg(token, triggeredByUser, org)
@@ -112,9 +112,6 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : "master"
 
     const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
-    console.log(`Running: ${repoForDangerfile} + ${run.dangerfilePath} - ${branch}`)
-    console.log("Running:")
-    console.log(file)
 
     const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
     allResults.push(results)
@@ -139,7 +136,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     console.log(finalResults) // tslint:disable-line
   }
 
-  res.status(204).send(`Run ${runs.length} Dangerfiles`)
+  res.status(200).send(`Run ${runs.length} Dangerfiles`)
 }
 
 // This doesn't feel great, but is OK for now

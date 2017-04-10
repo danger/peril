@@ -15,11 +15,10 @@ const router = (req, res, next) => {
   const event = req.header("X-GitHub-Event")
   winston.log("router", `Recieved ${event}:`)
 
-  githubRouting(event, req, res)
-  next()
+  githubRouting(event, req, res, next)
 }
 
-export const githubRouting = (event, req, res) => {
+export const githubRouting = (event, req, res, next) => {
   switch (event) {
     case "ping": {
       ping(req, res)
@@ -55,7 +54,7 @@ export const githubRouting = (event, req, res) => {
 
     default: {
       info(` - passing to Dangerfile rule router`)
-      githubDangerRunner(event, req, res)
+      githubDangerRunner(event, req, res, next)
     }
   }
 }

@@ -12,24 +12,24 @@ import { githubRouting } from "../router"
 describe("routing for GitHub", () => {
 
   it("calls ping when a ping action is sent", () => {
-    githubRouting("ping", {}, {})
+    githubRouting("ping", {}, {}, {})
     expect(pingMock).toBeCalled()
   })
 
   it("creates an installation when an integration is created", () => {
     const body = { action: "created" }
-    githubRouting("integration_installation", { body }, {})
+    githubRouting("integration_installation", { body }, {}, {})
     expect(createInstallationMock).toBeCalled()
   })
 
   it("calls the GitHub runner for any other event", () => {
-    githubRouting("issue", {}, {})
-    expect(githubRunnerMock).toBeCalledWith("issue", {}, {})
+    githubRouting("issue", {}, {}, {})
+    expect(githubRunnerMock).toBeCalledWith("issue", {}, {}, {})
 
-    githubRouting("new_user", {}, {})
-    expect(githubRunnerMock).toBeCalledWith("new_user", {}, {})
+    githubRouting("new_user", {}, {}, {})
+    expect(githubRunnerMock).toBeCalledWith("new_user", {}, {}, {})
 
-    githubRouting("random_thing", {}, {})
-    expect(githubRunnerMock).toBeCalledWith("random_thing", {}, {})
+    githubRouting("random_thing", {}, {}, {})
+    expect(githubRunnerMock).toBeCalledWith("random_thing", {}, {}, {})
   })
 })
