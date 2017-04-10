@@ -96,9 +96,10 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     if (triggeredByUser && githubAPI && runRepo && installation && installation.settings.onlyForOrgMembers) {
       log("Checking if user is in org")
       const org = fullRepoName!.split("/")[0]
-      const userInOrg = await isUserInOrg(token, triggeredByUser, org)
+      const user = triggeredByUser.login
+      const userInOrg = await isUserInOrg(token, user, org)
       if (!userInOrg) {
-        res.status(403).send(`Not running because ${triggeredByUser} is not in ${org}.`)
+        res.status(403).send(`Not running because ${user} is not in ${org}.`)
         return
       }
     }
