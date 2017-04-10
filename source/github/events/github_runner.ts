@@ -49,6 +49,12 @@ export async function githubDangerRunner(event: string, req: express.Request, re
   const fullRepoName = req.body.repository && req.body.repository.full_name as string | null
   let repo = null as GithubRepo | null
   if (fullRepoName) { repo = await getRepo(installationID, fullRepoName) }
+  const runRepo = repo && repo.fullName || fullRepoName
+
+  if (!runRepo) {
+    res.status(404).send(`WIP - not built out support for non-repo related events - sorry`)
+    return
+  }
 
   const installationRun = dangerRunForRules(event, action, installation.rules)
   const repoRun = dangerRunForRules(event, action, repo && repo.rules)
@@ -68,20 +74,19 @@ export async function githubDangerRunner(event: string, req: express.Request, re
 
     const useFullDangerDSL = run.dslType === dsl.pr
     const supportGithubCommentAPIs = run.feedback === feedback.commentable
-    const hasRepo = repo && repo.fullName
 
-    log(`USe fullDSL: ${useFullDangerDSL}`)
+    log(`Use fullDSL: ${useFullDangerDSL}`)
     log(`supportGithubCommentAPIs: ${supportGithubCommentAPIs}`)
-    log(`hasRepo: ${hasRepo}`)
+    log(`runRepo: ${runRepo}`)
 
     // Do we need an authenticated Danger GitHubAPI instance so we
     // can leave feedback on an issue?
     let githubAPI = null as GitHubAPI | null
-    if (supportGithubCommentAPIs && hasRepo) {
+    if (supportGithubCommentAPIs && runRepo) {
       const issue = getIssueNumber(req.body)
-      const repoSlug = getRepoSlug(req.body)
+      // const repoSlug = getRepoSlug(req.body)
       // TODO: An org could refer to a dangerfile that's not in the current repo
-      githubAPI = githubAPIForCommentable(run, token, repoSlug!, issue)
+      githubAPI = githubAPIForCommentable(run, token, runRepo, issue)
       log("Got GitHub API")
     }
 
@@ -89,7 +94,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     const triggeredByUser = req.body.sender as any | null
     if (triggeredByUser && githubAPI && repo && installation && installation.settings.onlyForOrgMembers) {
       log("Checking if user is in org")
-      const org = repo.fullName.split("/")[0]
+      const org = fullRepoName!.split("/")[0]
       const userInOrg = await isUserInOrg(token, triggeredByUser, org)
       if (!userInOrg) {
         res.status(403).send(`Not running because ${triggeredByUser} is not in ${org}.`)
@@ -100,7 +105,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     // In theory only a PR requires a custom branch, so we can check directly for that
     // in the event JSON and if it's not there then use master
     const branch = req.body.pull_request ? req.body.pull_request.head.ref : "master"
-    const file = await getGitHubFileContents(token, run.dangerfilePath || repo!.fullName, run.dangerfilePath, branch)
+    const file = await getGitHubFileContents(token, repo && repo.fullName || fullRepoName!, run.dangerfilePath, branch)
 
     const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
     allResults.push(results)
@@ -119,7 +124,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     }, { fails: [], markdowns: [], warnings: [], messages: [] })
 
     const issue = getIssueNumber(req.body)
-    const githubAPI = githubAPIForCommentable(commentableRun, token, repo!.fullName, issue)
+    const githubAPI = githubAPIForCommentable(commentableRun, token, runRepo, issue)
     const exec = executorForInstallation(new GitHub(githubAPI))
     await exec.handleResults(finalResults[0])
   }
