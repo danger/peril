@@ -9,11 +9,12 @@ export async function isUserInOrg(token: string, user: GitHubUser, org: string) 
 
 export async function getGitHubFileContents(token: string, repoSlug: string, path: string, ref: string) {
     const res = await api(token, `repos/${repoSlug}/contents/${path}?ref=${ref}`)
+    const data = await res.json()
     if (res.ok) {
-        const data = await res.json()
         const buffer = new Buffer(data.content, "base64")
         return buffer.toString()
     } else {
+        console.log("Getting GitHub file failed: " + JSON.stringify(data))
         return ""
     }
 }
