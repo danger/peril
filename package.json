@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node out/peril.js",
     "compile": "tsc -watch -p ./",
-    "build": "tsc",
+    "build": "yarn tsc",
     "postinstall": "yarn build",
     "test": "jest && yarn lint",
     "lint": "tslint source/**/**/**.ts",
