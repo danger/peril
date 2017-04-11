@@ -1,6 +1,8 @@
 import * as express from "express"
 import winston from "../../logger"
 
+import { PERIL_BOT_USER_ID } from "../../globals"
+
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 
@@ -161,7 +163,7 @@ const githubAPIForCommentable
 
     // How can I get this from an API, if we cannot use /me ?
     // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
-    githubAPI.getUserID = () => Promise.resolve(24758014)
+    githubAPI.getUserID = () => Promise.resolve(parseInt(PERIL_BOT_USER_ID, 10))
     return githubAPI
   }
 

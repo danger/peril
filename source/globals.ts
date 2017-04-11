@@ -29,7 +29,7 @@ export const PRIVATE_GITHUB_SIGNING_KEY = getEnv("PRIVATE_GITHUB_SIGNING_KEY")
 /**
  * The ID for the GitHub integration
  */
-export const PERIL_INTEGATION_ID = getEnv("PERIL_INTEGATION_ID")
+export const PERIL_INTEGRATION_ID = getEnv("PERIL_INTEGRATION_ID")
 
 /** The front-end URL route  */
 export const WEB_URL = getEnv("WEB_URL")
@@ -46,5 +46,8 @@ export const PAPERTRAIL_URL = getEnv("PAPERTRAIL_URL")
 /** Papertrail port  */
 export const PAPERTRAIL_PORT = getEnv("PAPERTRAIL_PORT")
 
+/** Papertrail port  */
+export const PERIL_BOT_USER_ID = getEnv("PERIL_BOT_USER_ID")
+
 // Normal validation stuff
-validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGATION_ID", "WEB_URL", "DATABASE_URL"])
+validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID", "WEB_URL", "DATABASE_URL", "PERIL_BOT_USER_ID"])

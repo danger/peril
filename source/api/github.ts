@@ -1,5 +1,5 @@
 import * as node_fetch from "node-fetch"
-import { LOG_FETCH_REQUESTS, PERIL_INTEGATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
+import { LOG_FETCH_REQUESTS, PERIL_INTEGRATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
 
 import * as fs from "fs"
 import * as os from "os"
@@ -46,6 +46,6 @@ export function jwtForGitHubAuth() {
   return jwt.sign({
     exp: expires,
     iat: now,
-    iss: PERIL_INTEGATION_ID,
+    iss: PERIL_INTEGRATION_ID,
   }, keyContent, { algorithm: "RS256" })
 }
