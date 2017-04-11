@@ -4,7 +4,7 @@ import { GitHubUser } from "../../db/types"
 export async function isUserInOrg(token: string, user: GitHubUser, org: string) {
     // https://developer.github.com/v3/orgs/members/#check-membership
     const res = await api(token, `orgs/${org}/members/${user}`)
-    return res.status === 302
+    return res.status === 204
 }
 
 export async function getGitHubFileContents(token: string, repoSlug: string, path: string, ref: string) {
