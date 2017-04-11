@@ -79,5 +79,4 @@ Assuming that the Github Integration is already set up:
 
 ### Developing with Docker
 
-To develop peril inside a docker container, you can run `docker-compose -f docker-compose.dev.yml up`. This will mount your project folder inside the peril container and run the `yarn compile` command that will watch for changes in your local code.
-
+To develop peril inside a docker container, you can run `docker-compose up`. This will mount your project folder inside the peril container and run the `yarn start` command to run the service.
