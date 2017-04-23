@@ -31,6 +31,7 @@ Notes on the integration:
 * They share a global namespace for names, so "peril-[me]" rather than "peril".
 * You can make them apply to just an org, then randos can't sign up for your integration. That's at the bottom of the create integration page.
 * You can find the create integration in User or Org settings.
+* The integration will give you a private key to download, that you'll use in the ENV vars below
 
 That should get you enough to set up your ENV vars:
 
