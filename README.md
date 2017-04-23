@@ -63,9 +63,20 @@ Now, any other GitHub event goes to peril and is handled by the [GitHub runner](
 
 All other events are ignored. You can do a bit more with these rules, see [the tests](/source/danger/_tests/_danger_run.test.ts).
 
+You can find the rules inside the tables for both `"installations"` and `"github_repo"`. The installations are global rules that run everywhere, the github_repo rules are only applied on one repo.
+
 That's really about it ATM, it's likely there are bugs here & there as this is just past proof of concept stage but not quite in production for any of Orta's projects.
 
-# Dev
+## Code Overview
+
+There are three files where the magic happens:
+
+- [source/danger/danger_runner.ts](source/danger/danger_runner.ts) - Running and coordinating a Dangerfile
+- [source/githubevents/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
+- [/source/routing/router.ts](/source/routing/router.ts) - Any unique work on GitHub events
+
+
+This is a _just barely tested_ project, there's a lot in places where the code isn't going to change much.
 
 ### Using a Danger fork
 If you want to also make changes to Danger JS, and use the local version to make changes
