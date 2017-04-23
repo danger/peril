@@ -27,7 +27,7 @@ You can then run the project with `yarn start`. For running on your server, you'
 That should get you enough to set up your ENV vars:
 
 ```sh
-PRIVATE_GITHUB_SIGNING_KEY = "-----BEGIN RSA PRIVATE KEY----- [snip]  -----END RSA PRIVATE KEY-----"
+PRIVATE_GITHUB_SIGNING_KEY = "-----BEGIN RSA PRIVATE KEY----- [snip] -----END RSA PRIVATE KEY-----"
 PERIL_INTEGRATION_ID=1839
 WEB_URL=https://peril-staging.herokuapp.com
 DATABASE_URL=postgres://localhost:5432/peril-dev
@@ -45,7 +45,7 @@ Notes:
 
 ---
 
-S, you got the server up and running, now you need to install your GitHub integration in your org. If you've already done this, you can go into your integration admin panel and re-send the event, or re-install.
+So, you got the server up and running, now you need to install your GitHub integration in your org. If you've already done this, you can go into your integration admin panel and re-send the event, or re-install.
 
 You should get a reply back from peril [saying](source/github/events/create_installation.ts#L8) `"Creating new installation"`.
 
