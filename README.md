@@ -10,6 +10,8 @@ Want to understand what the plan is? Consult the [VISION.md](/VISION.md)
 
 Ace, great, cool. So, it's a bit of a process. I'm not sure if this will get easier in time. It's a complex app.
 
+Warning: Until [#48][48] and other security measures are put in place Peril should be considered insecure for any public-facing use.
+
 ### Setting up a Peril server
 
 ```sh
@@ -20,9 +22,15 @@ yarn install
 
 You can then run the project with `yarn start`. For running on your server, you're going to need: 
 
-* A GitHub [integration][] (you can make them per-org, you can choose permissions - but you really have to have repo + PR access)
+* A GitHub [integration][] 
 * A hosted postgres database (smallest possible)
 * The ability to go in and make changes to your database (I use [Postico][])
+
+Notes on the integration:
+
+* They share a global namespace for names, so "peril-[me]" rather than "peril".
+* You can make them apply to just an org, then randos can't sign up for your integration. That's at the bottom of the create integration page.
+* You can find the create integration in User or Org settings.
 
 That should get you enough to set up your ENV vars:
 
@@ -141,3 +149,4 @@ To develop peril inside a docker container, you can run `docker-compose up`. Thi
 
 [postico]: https://eggerapps.at/postico/
 [integration]: https://developer.github.com/early-access/integrations/
+[48]: https://github.com/danger/peril/issues/48
