@@ -1,5 +1,7 @@
 ### What is the setup for Peril staging?
 
+Note: This is very out of date!
+
 ### Travis CI deploys an ECS Repo
 
 This uses `docker-compose` to (generate a disk image?) which is uploaded to my [Amazon ECS](https://us-west-2.console.aws.amazon.com/ecs/home?region=us-west-2#/repositories).

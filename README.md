@@ -10,7 +10,7 @@ Want to understand what the plan is? Consult the [VISION.md](/VISION.md)
 
 Ace, great, cool. So, it's a bit of a process. I'm not sure if this will get easier in time. It's a complex app.
 
-### Setting up Peril
+### Setting up a Peril server
 
 ```sh
 git clone https://github.com/danger/peril.git
@@ -18,7 +18,54 @@ cd peril
 yarn install
 ```
 
-You can then run the project with `yarn start`. I use VS Code to launch, and debug Peril. You should do that too.
+You can then run the project with `yarn start`. For running on your server, you're going to need: 
+
+* A GitHub [integration][] (you can make them per-org, you can choose permissions - but you really have to have repo + PR access)
+* A hosted postgres database (smallest possible)
+* The ability to go in and make changes to your database (I use [Postico][])
+
+That should get you enough to set up your ENV vars:
+
+```sh
+PRIVATE_GITHUB_SIGNING_KEY = "-----BEGIN RSA PRIVATE KEY----- [snip]  -----END RSA PRIVATE KEY-----"
+PERIL_INTEGRATION_ID=1839
+WEB_URL=https://peril-staging.herokuapp.com
+DATABASE_URL=postgres://localhost:5432/peril-dev
+PAPERTRAIL_URL=logs3.papertrailapp.com
+PAPERTRAIL_PORT=28486
+PERIL_BOT_USER_ID=1839
+```
+
+Notes:
+
+- The `PERIL_BOT_USER_ID` you don't need at first, you can get it working with any number (it's used for updating/deleting posts).
+- The `PRIVATE_GITHUB_SIGNING_KEY` can be set with something like `heroku config:add PRIVATE_GITHUB_SIGNING_KEY=(cat /Users/orta/Downloads/peril-staging.2017-03-23.private-key.pem )`.
+- The `WEB_URL` isn't used yet.
+- The `PAPERTRAIL_URL` / `PAPERTRAIL_PORT` vars are optional, but are useful for reading server logs.
+
+---
+
+S, you got the server up and running, now you need to install your GitHub integration in your org. If you've already done this, you can go into your integration admin panel and re-send the event, or re-install.
+
+You should get a reply back from peril [saying](source/github/events/create_installation.ts#L8) `"Creating new installation"`.
+
+Now, any other GitHub event goes to peril and is handled by the [GitHub runner](source/github/events/github_runner.ts). This is powered by JSON and a set of rules called [DangerRunRules](master/source/danger/danger_run.ts) - these bind GitHub event names + actions to actions in danger. E.g.
+
+```json
+"rules": {
+  "pull_request": "Dangerfile.js",
+  "issue": "danger/issues.js"
+}
+```
+
+* When an event `"pull_request"` comes in, it will look in the current repo for a "Dangerfile.js" and will run Danger against that.  
+* When an event `"issue"` comes in, then `danger/issues.js` will run.
+
+All other events are ignored. You can do a bit more with these rules, see [the tests](/source/danger/_tests/_danger_run.test.ts).
+
+That's really about it ATM, it's likely there are bugs here & there as this is just past proof of concept stage but not quite in production for any of Orta's projects.
+
+# Dev
 
 ### Using a Danger fork
 If you want to also make changes to Danger JS, and use the local version to make changes
@@ -38,7 +85,7 @@ cd ../Peril
 yarn link danger
 ```
 
-### Getting Webhooks from GitHub
+### Getting Webhooks locally from GitHub
 
 1. Install [ngrok](https://ngrok.com/) and start it with `ngrok http 5000`. It will give you an address like `https://9cbc94d15.ngrok.io/`.
 
@@ -80,3 +127,6 @@ Assuming that the Github Integration is already set up:
 ### Developing with Docker
 
 To develop peril inside a docker container, you can run `docker-compose up`. This will mount your project folder inside the peril container and run the `yarn start` command to run the service.
+
+[postico]: https://eggerapps.at/postico/
+[integration]: https://developer.github.com/early-access/integrations/
