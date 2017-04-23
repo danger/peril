@@ -73,7 +73,7 @@ There are three files where the magic happens:
 
 - [source/danger/danger_runner.ts](source/danger/danger_runner.ts) - Running and coordinating a Dangerfile
 - [source/githubevents/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
-- [/source/routing/router.ts](/source/routing/router.ts) - Any unique work on GitHub events
+- [source/routing/router.ts](source/routing/router.ts) - Any unique work on GitHub events
 
 
 This is a _just barely tested_ project, there's a lot in places where the code isn't going to change much.
