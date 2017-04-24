@@ -45,7 +45,7 @@
     "glob": "^7.1.1",
     "jest": "^19.0.2",
     "json2ts": "orta/json2ts#ts-less",
-    "jsonwebtoken": "^7.2.1",
+    "jsonwebtoken": "7.3.0",
     "node-fetch": "^1.6.3",
     "node-pg-migrate": "^1.2.1",
     "pg-promise": "^5.6.4",
