@@ -34,6 +34,13 @@ export const PERIL_INTEGRATION_ID = getEnv("PERIL_INTEGRATION_ID")
 /** The front-end URL route  */
 export const WEB_URL = getEnv("WEB_URL")
 
+/**
+ * Database JSON File, as a github URL
+ * e.g. "orta/peril@settings.json"
+ * Which is settings.json in the root of the repo orta/peril
+*/
+export const DATABASE_JSON_FILE = getEnv("DATABASE_JSON_FILE")
+
 /** Postgres db URL  */
 export const DATABASE_URL = getEnv("DATABASE_URL")
 
@@ -49,5 +56,10 @@ export const PAPERTRAIL_PORT = getEnv("PAPERTRAIL_PORT")
 /** Papertrail port  */
 export const PERIL_BOT_USER_ID = getEnv("PERIL_BOT_USER_ID")
 
-// Normal validation stuff
-validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID", "WEB_URL", "DATABASE_URL", "PERIL_BOT_USER_ID"])
+// Can't run without these
+validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
+
+// Validate the db
+if (!DATABASE_URL && !DATABASE_JSON_FILE) {
+    throw new Error("Peril cannot work without either a DATABASE_URL or a DATABASE_JSON_FILE")
+}
