@@ -1,5 +1,6 @@
 import fetch from "../../api/fetch"
 import { GitHubUser } from "../../db/types"
+import winston from "../../logger"
 
 export async function isUserInOrg(token: string, user: GitHubUser, org: string) {
     // https://developer.github.com/v3/orgs/members/#check-membership
@@ -14,8 +15,8 @@ export async function getGitHubFileContents(token: string, repoSlug: string, pat
         const buffer = new Buffer(data.content, "base64")
         return buffer.toString()
     } else {
-        console.log("res: " + res.url)
-        console.log("Getting GitHub file failed: " + JSON.stringify(data))
+        winston.error("res: " + res.url)
+        winston.error("Getting GitHub file failed: " + JSON.stringify(data))
         return ""
     }
 }

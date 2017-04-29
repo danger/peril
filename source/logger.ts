@@ -5,9 +5,8 @@ require("winston-papertrail").Papertrail // tslint:disable-line
 
 import { PAPERTRAIL_PORT, PAPERTRAIL_URL } from "./globals"
 
-if (PAPERTRAIL_URL !== null) {
-
-  // Adds papertrail to the logging systems
+// Optionall adds papertrail to the logging systems
+if (PAPERTRAIL_URL) {
   const transports = winston.transports as any
   winston.add(transports.Papertrail, {
     host: PAPERTRAIL_URL,
