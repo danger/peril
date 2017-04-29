@@ -39,6 +39,10 @@ That should get you enough to set up your ENV vars:
 PRIVATE_GITHUB_SIGNING_KEY = "-----BEGIN RSA PRIVATE KEY----- [snip] -----END RSA PRIVATE KEY-----"
 PERIL_INTEGRATION_ID=1839
 WEB_URL=https://peril-staging.herokuapp.com
+
+# Either this, if you are going to have Peril only work for one org
+DATABASE_JSON_FILE=orta/peril@settings.json
+# Or
 DATABASE_URL=postgres://localhost:5432/peril-dev
 PAPERTRAIL_URL=logs3.papertrailapp.com
 PAPERTRAIL_PORT=28486
