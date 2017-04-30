@@ -1,6 +1,6 @@
 import winston from "../logger"
 
-import { deleteInstallation } from "../db"
+import db from "../db"
 import { createInstallation } from "../github/events/create_installation"
 import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"
@@ -46,7 +46,7 @@ export const githubRouting = (event, req, res, next) => {
       // Delete any integrations that have uninstalled Peril :wave:
       if (action === "deleted") {
         info(` - Deleting integration ${installation.id}`)
-        deleteInstallation(installation.id)
+        db.deleteInstallation(installation.id)
       }
 
       break

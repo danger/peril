@@ -10,7 +10,7 @@ import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerAgainstInstallation } from "../../danger/danger_runner"
-import { getInstallation, getRepo, GitHubInstallation, GithubRepo } from "../../db"
+import db, { GitHubInstallation, GithubRepo } from "../../db"
 import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 
 /**
@@ -40,7 +40,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
 
-  let installation = await getInstallation(installationID)
+  let installation = await db.getInstallation(installationID)
   if (!installation) {
     res.status(404).send(`Could not find installation with id: ${installationID}`)
     return
@@ -50,7 +50,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
   // So, we need to assume from here on, that this data is not always available
   const fullRepoName = req.body.repository && req.body.repository.full_name as string | null
   let repo = null as GithubRepo | null
-  if (fullRepoName) { repo = await getRepo(installationID, fullRepoName) }
+  if (fullRepoName) { repo = await db.getRepo(installationID, fullRepoName) }
   const runRepo = repo && repo.fullName || fullRepoName
 
   if (!runRepo) {

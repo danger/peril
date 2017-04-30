@@ -8,8 +8,9 @@ export async function isUserInOrg(token: string, user: GitHubUser, org: string) 
     return res.status === 204
 }
 
-export async function getGitHubFileContents(token: string, repoSlug: string, path: string, ref: string) {
-    const res = await api(token, `repos/${repoSlug}/contents/${path}?ref=${ref}`)
+export async function getGitHubFileContents(token: string, repoSlug: string, path: string, ref: string | null) {
+    const refString = ref ? `ref=${ref}` : ""
+    const res = await api(token, `repos/${repoSlug}/contents/${path}?${refString}`)
     const data = await res.json()
     if (res.ok) {
         const buffer = new Buffer(data.content, "base64")
