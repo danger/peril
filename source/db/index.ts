@@ -3,6 +3,7 @@ import { DATABASE_JSON_FILE, DATABASE_URL } from "../globals"
 import winston from "../logger"
 import { GitHubUser } from "./types"
 
+import jsonDB from "./json"
 import postgres from "./postgres"
 
 /**
@@ -78,7 +79,9 @@ let exposedDB: DatabaseAdaptor = null as any
 if (DATABASE_URL) {
   exposedDB = postgres
 } else {
-  // exposedDB = json
+  exposedDB = jsonDB(DATABASE_JSON_FILE)
 }
+
+exposedDB.setup()
 
 export default exposedDB

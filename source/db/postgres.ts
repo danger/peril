@@ -10,11 +10,8 @@ import { GitHubUser } from "./types"
 import * as pg from "pg-promise"
 
 let db: pg.IDatabase<{}>
-//
 /** Logs */
 const info = (message: string) => { winston.info(`[db] - ${message}`) }
-
-let singleInstallationModeInstallation: GitHubInstallation = null as any
 
 const database: DatabaseAdaptor = {
   setup: async () => {

@@ -8,7 +8,13 @@ export async function isUserInOrg(token: string, user: GitHubUser, org: string) 
     return res.status === 204
 }
 
-export async function getGitHubFileContents(token: string, repoSlug: string, path: string, ref: string | null) {
+/**
+ * There's definitely a time when you want access to a GitHub file
+ * but won't have an auth token to do it yet, this function should
+ * help out there, you can provide any auth token you want.
+ * Returns either the contents or nothing.
+ */
+export async function getGitHubFileContents(token: string | null, repoSlug: string, path: string, ref: string | null) {
     const refString = ref ? `ref=${ref}` : ""
     const res = await api(token, `repos/${repoSlug}/contents/${path}?${refString}`)
     const data = await res.json()
@@ -22,7 +28,10 @@ export async function getGitHubFileContents(token: string, repoSlug: string, pat
     }
 }
 
-async function api(token: string, path: string, headers: any = {}, body: any = {}, method: string = "GET") {
+/**
+ * A quick GitHub API client
+ */
+async function api(token: string | null, path: string, headers: any = {}, body: any = {}, method: string = "GET") {
     if (token) {
         headers.Authorization = `token ${token}`
     }

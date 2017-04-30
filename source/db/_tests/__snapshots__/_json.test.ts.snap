@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`makes the right calls to GitHub gets repo rules correct 1`] = `
+Object {
+  "UUID": 123123123,
+  "fullName": "orta/ORStackView",
+  "id": 111,
+  "installationID": 1,
+  "rules": Object {
+    "issue.created": "orta/peril@lock_issues.ts",
+  },
+}
+`;
+
+exports[`makes the right calls to GitHub with a legit stubbed JSON file 1`] = `
+Object {
+  "id": 1,
+  "repos": Object {
+    "orta/ORStackView": Object {
+      "issue.created": "orta/peril@lock_issues.ts",
+    },
+  },
+  "rules": Object {
+    "issue": "orta/peril@issue.ts",
+    "pull_request": "orta/peril@pr.ts",
+  },
+  "settings": Object {
+    "onlyForOrgMembers": false,
+  },
+}
+`;
