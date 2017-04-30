@@ -2,7 +2,6 @@
 
 exports[`makes the right calls to GitHub gets repo rules correct 1`] = `
 Object {
-  "UUID": 123123123,
   "fullName": "orta/ORStackView",
   "id": 111,
   "installationID": 1,

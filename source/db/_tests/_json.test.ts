@@ -15,7 +15,6 @@ const legitSettings = `{
 }`
 
 const contentsMock = jest.fn((token, path) => {
-  console.log(path)
   if (path === "orta/peril") { return Promise.resolve(legitSettings) }
   if (path === "orta/other") { return Promise.resolve("") }
 })

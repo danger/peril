@@ -8,7 +8,7 @@ import { DangerfileReferenceString, RunnerRuleset } from "../db"
 export enum dsl {
   /** What, for years, has been the "Danger DSL" */
   pr,
-  /** Take whatever triggered this run and use that as the github. DSL */
+  /** Take whatever JSON triggered this run and use that as the `github.` DSL */
   import,
 }
 

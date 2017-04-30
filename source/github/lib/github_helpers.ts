@@ -32,9 +32,7 @@ export async function getGitHubFileContents(token: string | null, repoSlug: stri
  * A quick GitHub API client
  */
 async function api(token: string | null, path: string, headers: any = {}, body: any = {}, method: string = "GET") {
-    if (token) {
-        headers.Authorization = `token ${token}`
-    }
+    if (token) { headers.Authorization = `token ${token}` }
 
     const baseUrl = process.env.DANGER_GITHUB_API_BASE_URL || "https://api.github.com"
     return fetch(`${baseUrl}/${path}`, {

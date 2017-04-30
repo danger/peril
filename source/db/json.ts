@@ -76,13 +76,14 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString) : DatabaseAdapt
     // Type this?
     const repos = (org as any).repos
     if (!repos[repoName]) { return null }
-    return {
-      UUID: 123123123,
+
+    const repo: GithubRepo = {
       fullName: repoName,
-      id: 111,
-      installationID: 1,
+      id: 111, // Should I care?
+      installationID: 1, // Should I care?
       rules: repos[repoName],
     }
+    return repo
   },
 
   /** Deletes a Github repo from the DB */

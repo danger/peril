@@ -1,10 +1,9 @@
-const config = require("config")  // tslint:disable-line
 import * as node_fetch from "node-fetch"
 
 export default function fetch(url: string | node_fetch.Request, init?: node_fetch.RequestInit):
   Promise<node_fetch.Response> {
 
-  if (config.has("LOG_FETCH_REQUESTS") && init) {
+  if (process.env.LOG_FETCH_REQUESTS && init) {
     const output = ["curl", "-i"]
     if (init.method) {
       output.push(`-X ${init.method}`)

@@ -53,7 +53,15 @@ describe("evaling", () => {
       })
   })
 
-  // I wonder if the babel setup isn't quite right yet
+  it("highlights some of the security measures", async () => {
+      const executor = executorForInstallation(platform)
+      const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_insecure.ts`, executor)
+      expect(results.markdowns).toEqual([
+        "`Object.keys(process.env).length` is 0",
+      ])
+  })
+
+  // I wonder if the babel setup isn't quite right yet for this test
   it.skip("runs a JS dangerfile with fixtured data", async () => {
       const executor = executorForInstallation(platform)
       // The executor will return results etc in the next release
