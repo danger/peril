@@ -13,7 +13,7 @@ import { Executor } from "danger/distribution/runner/Executor"
 
 import { tmpdir } from "os"
 import { basename, resolve } from "path"
-import write from "write-file-promise"
+import * as write from "write-file-promise"
 import { dsl } from "./danger_run"
 
 import perilPlatform from "./peril_platform"
