@@ -124,9 +124,14 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : null
 
     const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
-
-    const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
-    allResults.push(results)
+    if (file !== "") {
+      const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
+      allResults.push(results)
+    } else {
+      log("Got no github file contents, commenting.")
+      const message = `Could not find Dangerfile at ${run.dangerfilePath} on ${repoForDangerfile}`
+      allResults.push({ fails: [{ message }], markdowns: [], warnings: [], messages: [] })
+    }
   }
 
   const commentableRun = runs.find((run) => run.feedback === feedback.commentable)
@@ -138,7 +143,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
   res.status(200).send(`Run ${runs.length} Dangerfiles`)
 }
 
-export const mergeResults = (results: DangerResults[]): DangerResults => {
+  export const mergeResults = (results: DangerResults[]): DangerResults => {
   return results.reduce((curr: DangerResults, newResults: DangerResults) => {
     return {
       fails: [...curr.fails, ...newResults.fails],
@@ -149,14 +154,14 @@ export const mergeResults = (results: DangerResults[]): DangerResults => {
   }, { fails: [], markdowns: [], warnings: [], messages: [] })
 }
 
-export const commentOnResults = async (results: DangerResults, run, token, settings) => {
+  export const commentOnResults = async (results: DangerResults, run, token, settings) => {
     const githubAPI = githubAPIForCommentable(run, token, settings.repoName, settings.commentableID)
     const exec = executorForInstallation(new GitHub(githubAPI))
     await exec.handleResults(results)
 }
 
 // This doesn't feel great, but is OK for now
-const getIssueNumber = (json: any): number | null => {
+  const getIssueNumber = (json: any): number | null => {
   if (json.pull_request) { return json.pull_request.number }
   if (json.issue) { return json.issue.number }
   return null
