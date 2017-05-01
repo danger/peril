@@ -3,6 +3,7 @@ import winston from "../../logger"
 
 import { PERIL_BOT_USER_ID } from "../../globals"
 
+import { GitHubAPI } from "danger/distribution/[p"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 
@@ -137,13 +138,22 @@ export async function githubDangerRunner(event: string, req: express.Request, re
   const commentableRun = runs.find((run) => run.feedback === feedback.commentable)
   if (commentableRun && allResults.length) {
     const finalResults = mergeResults(allResults)
+    log(`Commenting, with results: ${mdResults(finalResults)}`)
     commentOnResults(finalResults, commentableRun, token, settings)
   }
 
   res.status(200).send(`Run ${runs.length} Dangerfiles`)
 }
 
-  export const mergeResults = (results: DangerResults[]): DangerResults => {
+export const mdResults = (results: DangerResults): string => {
+  return `
+mds: ${results.markdowns.length}
+mds: ${results.messages.length}
+warns: ${results.warnings.length}
+fails: ${results.fails.length}
+  `
+}
+export const mergeResults = (results: DangerResults[]): DangerResults => {
   return results.reduce((curr: DangerResults, newResults: DangerResults) => {
     return {
       fails: [...curr.fails, ...newResults.fails],
