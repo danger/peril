@@ -4467,6 +4467,10 @@ write-file-atomic@^1.1.2:
     imurmurhash "^0.1.4"
     slide "^1.1.5"
 
+write-file-promise@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/write-file-promise/-/write-file-promise-1.0.0.tgz#26720198825efa2d2d122c265f2dac971f2355ef"
+
 xdg-basedir@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-2.0.0.tgz#edbc903cc385fc04523d966a335504b5504d1bd2"

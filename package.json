@@ -53,7 +53,8 @@
     "typescript": "^2.3.2",
     "typings": "^2.0.0",
     "winston": "^2.3.1",
-    "winston-papertrail": "^1.0.4"
+    "winston-papertrail": "^1.0.4",
+    "write-file-promise": "^1.0.0"
   },
   "engines": {
     "node": "7.2.1"

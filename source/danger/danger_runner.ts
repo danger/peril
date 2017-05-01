@@ -11,8 +11,9 @@ import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { runDangerfileEnvironment } from "danger/distribution/runner/DangerfileRunner"
 import { Executor } from "danger/distribution/runner/Executor"
 
-import { writeFileSync } from "fs"
 import { tmpdir } from "os"
+import { basename, resolve } from "path"
+import write from "write-file-promise"
 import { dsl } from "./danger_run"
 
 import perilPlatform from "./peril_platform"
@@ -33,9 +34,9 @@ export async function  runDangerAgainstInstallation(contents: string, path: stri
 
   const exec = await executorForInstallation(platform)
 
-  // TODO: Replace this sync call
-  const localDangerfile = tmpdir() + "/" + path
-  writeFileSync(localDangerfile, contents)
+  const randomFolder = Math.random().toString(36)
+  const localDangerfile = resolve(tmpdir(), randomFolder, basename(path))
+  await write(localDangerfile, contents)
 
   return await runDangerAgainstFile(localDangerfile, exec)
 }
