@@ -3,7 +3,6 @@ import winston from "../../logger"
 
 import { PERIL_BOT_USER_ID } from "../../globals"
 
-import { GitHubAPI } from "danger/distribution/[p"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 
