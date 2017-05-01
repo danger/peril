@@ -1,12 +1,10 @@
-import { DATABASE_URL } from "../globals"
+import { getGitHubFileContents } from "../github/lib/github_helpers"
+import { DATABASE_JSON_FILE, DATABASE_URL } from "../globals"
 import winston from "../logger"
 import { GitHubUser } from "./types"
 
-// Docs: https://github.com/vitaly-t/pg-promise
-// Examples: https://github.com/vitaly-t/pg-promise/wiki/Learn-by-Example
-
-import * as pg from "pg-promise"
-let db = pg()(DATABASE_URL)
+import jsonDB from "./json"
+import postgres from "./postgres"
 
 /**
  * Should look like one of the following:
@@ -45,17 +43,6 @@ export interface GitHubInstallation {
   rules: RunnerRuleset
 }
 
-/** Logs */
-const info = (message: string) => { winston.info(`[db] - ${message}`) }
-
-/** Saves an Integration */
-export async function saveInstallation(installation: GitHubInstallation) {
-  info(`Saving installation with id: ${installation.id}`)
-  return db.one(
-    "insert into installations(id, settings, rules) values($1, $2, $3) returning *",
-    [installation.id, JSON.stringify(installation.settings), JSON.stringify(installation.rules)])
-}
-
 export type RunnerRuleset = { [name: string]: DangerfileReferenceString }
 
 export interface GithubRepo {
@@ -69,36 +56,32 @@ export interface GithubRepo {
   rules: RunnerRuleset
 }
 
-/** Saves a repo */
-export async function saveGitHubRepo(repo: GithubRepo) {
-  info(`Saving repo with slug: ${repo.fullName}`)
-  return db.one(
-    "insert into github_repos(id, installations_id, full_name, rules) values($1, $2, $3, $4) returning *",
-    [repo.id, repo.installationID, repo.fullName, JSON.stringify(repo.rules)])
+export interface DatabaseAdaptor {
+  /** A once per server start setup function */
+  setup: () => Promise<void>
+
+  /** Gets an integrations settings */
+  getInstallation: (installationID: number) => Promise<GitHubInstallation | null>
+  /** Saves an Integration */
+  saveInstallation: (installation: GitHubInstallation) => Promise<void>
+  /** Deletes the operation */
+  deleteInstallation: (installationID: number) => Promise<void>
+
+  /** Gets an optional repo out of the installation settings */
+  getRepo: (installationID: number, repoName: string) => Promise<GithubRepo | null>
+  /** Saves a Repo */
+  saveGitHubRepo: (repo: GithubRepo) => Promise<void>
+  /** Deletes a repo from the  */
+  deleteRepo: (installationID: number, repoName: string) => Promise<void>
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/** Gets an Integration */
-export async function getInstallation(installationID: number): Promise<GitHubInstallation | null> {
-  return db.one("select * from installations where id=$1", [installationID])
+let exposedDB: DatabaseAdaptor = null as any
+if (DATABASE_URL) {
+  exposedDB = postgres
+} else {
+  exposedDB = jsonDB(DATABASE_JSON_FILE)
 }
 
-/** Deletes an Integration */
-export async function deleteInstallation(installationID: number): Promise<GitHubInstallation> {
-  return db.one("select * from installations where id=$1", [installationID])
-}
+exposedDB.setup()
 
-/** Gets a Github repo from the DB */
-export async function getRepo(installationID: number, repoName: string): Promise<GithubRepo | null> {
-  const results = await db.any(
-    "select * from github_repos where installations_id=$1 and full_name=$2",
-    [installationID, repoName])
-  return results.length === 0 ? null : results[0]
-}
-/** Deletes a Github repo from the DB */
-export async function deleteRepo(installationID: number, repoName: string): Promise<GithubRepo> {
-  info(`Deleting github repo ${repoName}`)
-  return db.one("delete from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
-}
+export default exposedDB

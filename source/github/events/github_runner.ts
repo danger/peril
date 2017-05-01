@@ -10,16 +10,15 @@ import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerAgainstInstallation } from "../../danger/danger_runner"
-import { getInstallation, getRepo, GitHubInstallation, GithubRepo } from "../../db"
+import db, { GitHubInstallation, GithubRepo } from "../../db"
 import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 
 /**
  * So, this function has a bunch of responsibilities.
  *
  *  - Validating there is an installation ref in the db
- *  - Getting (potential) repo information
  *  - Generating runs for an installation, could be up to two (org + repo) per integration event
- *  - Going frm a run to executing Danger for that run
+ *  - Going from a run to executing Danger for that run
  *  - Handling the varients in a Danger run
  *
  *    - Event is org based (no repo, DSL is event JSON)
@@ -27,7 +26,6 @@ import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
  *    - Event is PR based (has a repo + issue, can comment, gets normal DangerDSL)
  *    - Event is issue based (has a repo + issue, can comment, gets event DSL )
  *
- *  - Merging multiple results into one
  *  - Passing back the feedback results, if we can
  *
  * As you can imagine, this does indeed make it ripe for a good refactoring in the future.
@@ -36,30 +34,44 @@ import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 /** Logs */
 const log = (message: string) => { winston.info(`[runner] - ${message}`) }
 
+export const setupForRequest = async (req: express.Request) => {
+  const isRepoEvent = !!req.body.repository
+  const repoName = isRepoEvent && req.body.repository.full_name
+  const installationID = req.body.installation.id as number
+  const isTriggeredByUser = !!req.body.sender
+  const hasRelatedCommentable = getIssueNumber(req.body) !== null
+
+  return {
+    commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
+    isRepoEvent,
+    isTriggeredByUser,
+    repo: isRepoEvent ? await db.getRepo(installationID, repoName) : null,
+    repoName,
+    triggeredByUsername: isTriggeredByUser ? req.body.sender.login : null,
+    hasRelatedCommentable,
+  }
+}
+
 export async function githubDangerRunner(event: string, req: express.Request, res: express.Response, next: any) {
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
 
-  let installation = await getInstallation(installationID)
+  let installation = await db.getInstallation(installationID)
   if (!installation) {
     res.status(404).send(`Could not find installation with id: ${installationID}`)
     return
   }
 
-  // The repo could definitely be null, for example: Org User Added
-  // So, we need to assume from here on, that this data is not always available
-  const fullRepoName = req.body.repository && req.body.repository.full_name as string | null
-  let repo = null as GithubRepo | null
-  if (fullRepoName) { repo = await getRepo(installationID, fullRepoName) }
-  const runRepo = repo && repo.fullName || fullRepoName
+  const settings = await setupForRequest(req)
 
-  if (!runRepo) {
+  // TODO: Why did I make this call before?
+  if (!settings.isRepoEvent) {
     res.status(404).send(`WIP - not built out support for non-repo related events - sorry`)
     return
   }
 
   const installationRun = dangerRunForRules(event, action, installation.rules)
-  const repoRun = dangerRunForRules(event, action, repo && repo.rules)
+  const repoRun = dangerRunForRules(event, action, settings.repo && settings.repo.rules)
   const runs = [installationRun, repoRun].filter((r) => !!r) as DangerRun[]
 
   // We got no runs ( so there were no rules that correspond to the event)
@@ -69,39 +81,36 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     return
   }
 
+  log(`Event Settings: ${JSON.stringify(settings, null, " ")}`)
   const token = await getTemporaryAccessTokenForInstallation(installation)
 
   const allResults = [] as DangerResults[]
   for (const run of runs) {
     log(`Running: ${JSON.stringify(run, null, " ")}`)
 
-    const useFullDangerDSL = run.dslType === dsl.pr
+    const isPR = run.dslType === dsl.pr
     const supportGithubCommentAPIs = run.feedback === feedback.commentable
 
-    log(`Use fullDSL: ${useFullDangerDSL}`)
+    log(`Use fullDSL: ${isPR}`)
     log(`supportGithubCommentAPIs: ${supportGithubCommentAPIs}`)
-    log(`runRepo: ${runRepo}`)
 
     // Do we need an authenticated Danger GitHubAPI instance so we
     // can leave feedback on an issue?
     let githubAPI = null as GitHubAPI | null
-    if (supportGithubCommentAPIs && runRepo) {
-      const issue = getIssueNumber(req.body)
-      // const repoSlug = getRepoSlug(req.body)
-      // TODO: An org could refer to a dangerfile that's not in the current repo
-      githubAPI = githubAPIForCommentable(run, token, runRepo, issue)
-      log("Got GitHub API")
+    if (supportGithubCommentAPIs && settings.commentableID && settings.repo) {
+      githubAPI = githubAPIForCommentable(run, token, settings.repo.fullName, settings.commentableID)
+      log("Got a GitHub API")
     }
 
     // Are we being extra paranoid about running Dangerfiles?
-    const triggeredByUser = req.body.sender as any | null
-    if (triggeredByUser && githubAPI && runRepo && installation && installation.settings.onlyForOrgMembers) {
+    // Ideally this can move to detect if the PR changed the Dangerfile also
+    const onlyOrgPR = installation.settings.onlyForOrgMembers && isPR
+    if (onlyOrgPR && githubAPI && settings.repoName && settings.triggeredByUsername) {
       log("Checking if user is in org")
-      const org = fullRepoName!.split("/")[0]
-      const user = triggeredByUser.login
-      const userInOrg = await isUserInOrg(token, user, org)
+      const org = settings.repoName.split("/")[0]
+      const userInOrg = await isUserInOrg(token, settings.triggeredByUsername, org)
       if (!userInOrg) {
-        res.status(403).send(`Not running because ${user} is not in ${org}.`)
+        res.status(403).send(`Not running because ${settings.triggeredByUsername} is not in ${org}.`)
         return
       }
     }
@@ -109,10 +118,10 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     // In theory only a PR requires a custom branch, so we can check directly for that
     // in the event JSON and if it's not there then use master
     // prioritise the run metadata
-    const repoForDangerfile = run.repoSlug || runRepo
-    const dangerfileBranchForPR = req.body.pull_request ? req.body.pull_request.head.ref : "master"
+    const repoForDangerfile = run.repoSlug || settings.repoName
+    const dangerfileBranchForPR = req.body.pull_request ? req.body.pull_request.head.ref : null
     const neededDangerfileIsSameRepo = run.repoSlug === req.body.pull_request.head.repo.full_name
-    const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : "master"
+    const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : null
 
     const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
 
@@ -121,25 +130,29 @@ export async function githubDangerRunner(event: string, req: express.Request, re
   }
 
   const commentableRun = runs.find((run) => run.feedback === feedback.commentable)
-  if (commentableRun) {
-
-    const finalResults = allResults.reduce((curr: DangerResults, run: DangerResults) => {
-      return {
-        fails: [...curr.fails, ...run.fails],
-        markdowns: [...curr.markdowns, ...run.markdowns],
-        messages: [...curr.messages, ...run.messages],
-        warnings: [...curr.warnings, ...run.warnings],
-      }
-    }, { fails: [], markdowns: [], warnings: [], messages: [] })
-
-    const issue = getIssueNumber(req.body)
-    const githubAPI = githubAPIForCommentable(commentableRun, token, runRepo, issue)
-    const exec = executorForInstallation(new GitHub(githubAPI))
-    await exec.handleResults(finalResults)
-    console.log(finalResults) // tslint:disable-line
+  if (commentableRun && allResults.length) {
+    const finalResults = mergeResults(allResults)
+    commentOnResults(finalResults, commentableRun, token, settings)
   }
 
   res.status(200).send(`Run ${runs.length} Dangerfiles`)
+}
+
+export const mergeResults = (results: DangerResults[]): DangerResults => {
+  return results.reduce((curr: DangerResults, newResults: DangerResults) => {
+    return {
+      fails: [...curr.fails, ...newResults.fails],
+      markdowns: [...curr.markdowns, ...newResults.markdowns],
+      messages: [...curr.messages, ...newResults.messages],
+      warnings: [...curr.warnings, ...newResults.warnings],
+    }
+  }, { fails: [], markdowns: [], warnings: [], messages: [] })
+}
+
+export const commentOnResults = async (results: DangerResults, run, token, settings) => {
+    const githubAPI = githubAPIForCommentable(run, token, settings.repoName, settings.commentableID)
+    const exec = executorForInstallation(new GitHub(githubAPI))
+    await exec.handleResults(results)
 }
 
 // This doesn't feel great, but is OK for now
@@ -150,12 +163,12 @@ const getIssueNumber = (json: any): number | null => {
 }
 
 // This doesn't feel great, but is OK for now
-const getRepoSlug = (json: any): string | null => {
+  const getRepoSlug = (json: any): string | null => {
   if (json.repository) { return json.repository.full_name }
   return null
 }
 
-const githubAPIForCommentable
+  const githubAPIForCommentable
   = (run: DangerRun, token: string, repoSlug: string, issueNumber: number | null) => {
 
     const githubAPI = new GitHubAPI({ repoSlug, pullRequestID: String(issueNumber) }, token)
@@ -163,8 +176,9 @@ const githubAPIForCommentable
 
     // How can I get this from an API, if we cannot use /me ?
     // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
+    // Talked to GH - they know it's an issue.
     githubAPI.getUserID = () => Promise.resolve(parseInt(PERIL_BOT_USER_ID, 10))
     return githubAPI
   }
 
-export default githubDangerRunner
+  export default githubDangerRunner

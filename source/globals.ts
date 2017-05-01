@@ -41,6 +41,15 @@ export const WEB_URL = getEnv("WEB_URL")
 */
 export const DATABASE_JSON_FILE = getEnv("DATABASE_JSON_FILE")
 
+/**
+ * The ID for the GitHub installation, you can find this in the
+ * `integration_installation` event sent by GitHub. Only needed if
+ * you are doing JSON based Dangerfiles.
+ *
+ * In theory this can be optional if the repo is OSS.
+ */
+export const PERIL_ORG_INSTALLATION_ID = getEnv("PERIL_ORG_INSTALLATION_ID")
+
 /** Postgres db URL  */
 export const DATABASE_URL = getEnv("DATABASE_URL")
 

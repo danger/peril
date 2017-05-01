@@ -1,6 +1,3 @@
-/* tslint:disable: no-var-requires */
-const config = require("config")
-
 import { Platform } from "danger/distribution/platforms/platform"
 import winston from "../logger"
 
@@ -36,6 +33,7 @@ export async function  runDangerAgainstInstallation(contents: string, path: stri
 
   const exec = await executorForInstallation(platform)
 
+  // TODO: Replace this sync call
   const localDangerfile = tmpdir() + "/" + path
   writeFileSync(localDangerfile, contents)
 
@@ -85,15 +83,9 @@ export function executorForInstallation(platform: Platform) {
     supportedPlatforms: [],
   }
 
-  // The executor config should deprecate the need for this ideally
-
-  if (config.has("LOG_FETCH_REQUESTS")) {
-    global["verbose"] = true // tslint:disable-line
-  }
-
   const execConfig = {
     stdoutOnly: false,
-    verbose: config.has("LOG_FETCH_REQUESTS"),
+    verbose: process.env.LOG_FETCH_REQUESTS,
   }
 
   // Source can be removed in the next release of Danger

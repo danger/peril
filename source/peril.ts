@@ -8,6 +8,7 @@ import webhook from "./routing/router"
 // Error logging
 process.on("unhandledRejection", (reason: string, p: any) => {
   console.log("Error: ", reason)  // tslint:disable-line
+  throw reason
 })
 
 const app = express()
