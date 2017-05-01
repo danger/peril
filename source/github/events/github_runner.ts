@@ -119,8 +119,8 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     // in the event JSON and if it's not there then use master
     // prioritise the run metadata
     const repoForDangerfile = run.repoSlug || settings.repoName
-    const dangerfileBranchForPR = req.body.pull_request ? req.body.pull_request.head.ref : null
-    const neededDangerfileIsSameRepo = run.repoSlug === req.body.pull_request.head.repo.full_name
+    const dangerfileBranchForPR = isPR ? req.body.pull_request.head.ref : null
+    const neededDangerfileIsSameRepo = isPR ? run.repoSlug === req.body.pull_request.head.repo.full_name : false
     const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : null
 
     const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
