@@ -10,9 +10,7 @@ import { GitHubUser } from "./types"
 
 /*
 For example:
-
 {
-  "id": [your_installation_id], // could be optional?
   "settings": {
     "onlyForOrgMembers": false
   },
@@ -49,6 +47,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString) : DatabaseAdapt
 
       if (file === "") { throwNoJSONFileFound(dangerFilePath) }
       org = JSON.parse(file)
+      org.id = PERIL_ORG_INSTALLATION_ID
   },
 
   /** Saves an Integration */

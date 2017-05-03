@@ -6,13 +6,17 @@ Want to understand what the plan is? Consult the [VISION.md](/VISION.md)
 
 ---
 
+### I want to run Peril for my org
+
+OK, I made a quick tutorial for [running a private Peril against your org](./docs/setup_for_org.md).
+
 ### I want to hack on Peril!
 
 Ace, great, cool. So, it's a bit of a process. I'm not sure if this will get easier in time. It's a complex app.
 
-Warning: Until [#48][48] and other security measures are put in place Peril should be considered insecure for any public-facing use.
+*Warning*: Until [#48][48] and other security measures are put in place Peril should be considered *insecure* for any public-facing use. For now, the setting `onlyForOrgMembers` can reduce the chances of their being an issue of data leakage.
 
-### Setting up a Peril server
+### Setting up to work on Peril
 
 ```sh
 git clone https://github.com/danger/peril.git
@@ -20,10 +24,14 @@ cd peril
 yarn install
 ```
 
+Peril is a TypeScript project, so I'd recommend using VS Code. The project is pretty well tested now, so it's very possible that to make the changes you want you can just do it in the tests to verify.
+
+However, if you would like a full setup for local development:
+
 You can then run the project with `yarn start`. For running on your server, you're going to need: 
 
 * A GitHub [integration][] 
-* A hosted postgres database (smallest possible)
+* A tiny postgres database
 * The ability to go in and make changes to your database (I use [Postico][])
 
 Notes on the integration:
@@ -123,9 +131,9 @@ yarn link danger
 
 3. Start your server, this will go on port 5000 - and be active over the web on your ngrok address.
 
-4. You need to set up the Integration private key. Download it. Open it in a text editor. You need to get it formatted like the one inside [default.json.example](/config/default.json.example).
+4. You need to set up the Integration private key. Download it. Open it in a text editor. You need to get it formatted like the one inside [.env.sample](.env.sample).
 
-5. Set up your own `default.json` based on the example one.
+5. Set up your own `.env` based on the example one.
 
 6. OK, you're good to go.
 

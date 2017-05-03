@@ -1,0 +1,32 @@
+{
+  "name": "Peril",
+  "description": "Org-Wide Cultural Rules.",
+  "website": "https://github.com/danger/peril",
+  "repository": "https://github.com/danger/peril",
+  "env": {
+    "PERIL_INTEGRATION_ID": {
+      "description": "The ID for your custom Peril integration.",
+      "value": "19"
+    },
+    "PRIVATE_GITHUB_SIGNING_KEY": {
+      "description": "This is your key from the integration. You can paste it in after running this command: "
+    },
+    "DATABASE_JSON_FILE": {
+      "description": "The GitHub repo address where you can get to the settings JSON file.",
+      "value": "orta/peril@settings-peril.json"
+    },
+    "PERIL_BOT_USER_ID": {
+      "description": "You can't do this yet, but you should do it later. This is the user ID for the bot that Peril uses to comment. If you add this, then Peril can update and delete it's own comments.",
+        "value": "23"
+    },
+    "PAPERTRAIL_URL": {
+      "description": "Optional: If you want to see logs via papertrail, this is your URL."
+    },
+    "PAPERTRAIL_PORT": {
+      "description": "Optional: If you want to see logs via papertrail, this is your port."
+    }
+  },
+  "buildpacks": [
+    {"url": "heroku/node"}
+  ]
+}
