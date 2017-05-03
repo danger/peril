@@ -24,7 +24,7 @@ const log = (message: string) => { winston.info(`[runner] - ${message}`) }
 /**
  * The single function to run danger against an installation
  */
-export async function  runDangerAgainstInstallation(contents: string, path: string, api: GitHubAPI | null, type: dsl) {
+export async function runDangerAgainstInstallation(contents: string, path: string, api: GitHubAPI | null, type: dsl) {
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
@@ -80,15 +80,15 @@ export function executorForInstallation(platform: Platform) {
     isPR: true,
     name: "Peril",
     pullRequestID: "not used",
-    repoSlug:  "not used",
+    repoSlug: "not used",
     supportedPlatforms: [],
   }
 
-const execConfig = {
+  const execConfig = {
     stdoutOnly: false,
     verbose: process.env.LOG_FETCH_REQUESTS,
   }
 
   // Source can be removed in the next release of Danger
-return new Executor(source, platform, execConfig)
+  return new Executor(source, platform, execConfig)
 }
