@@ -72,7 +72,7 @@ export const dangerRepresentationforPath = (value: DangerfileReferenceString) =>
   }
 }
 
-/** What type of DSL should yu use for the Dangerfile eval? */
+/** What type of DSL should get used for the Dangerfile eval? */
 export const dslTypeForEvent = (event: string): dsl => {
   if (event === "pull_request") { return dsl.pr }
   return dsl.import

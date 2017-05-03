@@ -10,6 +10,7 @@
     "test": "jest && yarn lint",
     "lint": "tslint source/**/**/**.ts",
     "test:watch": "jest --watch",
+    "type-check": "tsc --noEmit --pretty",
     "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix"
   },
   "repository": {

@@ -84,11 +84,11 @@ export function executorForInstallation(platform: Platform) {
     supportedPlatforms: [],
   }
 
-  const execConfig = {
+const execConfig = {
     stdoutOnly: false,
     verbose: process.env.LOG_FETCH_REQUESTS,
   }
 
   // Source can be removed in the next release of Danger
-  return new Executor(source, platform, execConfig)
+return new Executor(source, platform, execConfig)
 }

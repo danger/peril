@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "settings": {
+    "onlyForOrgMembers": false
+  },
+  "rules": {
+    "pull_request": "orta/peril@pr.ts",
+    "issue": "orta/peril@issue.ts"
+  },
+  "repos": {
+    "orta/ORStackView": {
+      "issue.created": "orta/peril@lock_issues.ts"
+    }
+  }
+}

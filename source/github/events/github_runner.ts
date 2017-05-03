@@ -14,7 +14,7 @@ import db, { GitHubInstallation, GithubRepo } from "../../db"
 import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 
 /**
- * So, this function has a bunch of responsibilities.
+ * So, these function have a bunch of responsibilities.
  *
  *  - Validating there is an installation ref in the db
  *  - Generating runs for an installation, could be up to two (org + repo) per integration event
@@ -22,7 +22,7 @@ import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
  *  - Handling the varients in a Danger run
  *
  *    - Event is org based (no repo, DSL is event JSON)
- *    - Event is repo based (has a refernce to a repo, but nothing to comment on)
+ *    - Event is repo based (has a reference to a repo, but nothing to comment on)
  *    - Event is PR based (has a repo + issue, can comment, gets normal DangerDSL)
  *    - Event is issue based (has a repo + issue, can comment, gets event DSL )
  *
@@ -34,7 +34,17 @@ import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 /** Logs */
 const log = (message: string) => { winston.info(`[runner] - ${message}`) }
 
-export const setupForRequest = async (req: express.Request) => {
+export interface GitHubRunSettings {
+    commentableID: number | null,
+    isRepoEvent: boolean | null,
+    isTriggeredByUser: boolean,
+    repo: GithubRepo | null,
+    repoName: string | null,
+    triggeredByUsername: string | null,
+    hasRelatedCommentable: boolean,
+}
+
+export const setupForRequest = async (req: express.Request): Promise<GitHubRunSettings> => {
   const isRepoEvent = !!req.body.repository
   const repoName = isRepoEvent && req.body.repository.full_name
   const installationID = req.body.installation.id as number
@@ -52,7 +62,7 @@ export const setupForRequest = async (req: express.Request) => {
   }
 }
 
-export async function githubDangerRunner(event: string, req: express.Request, res: express.Response, next: any) {
+export  const githubDangerRunner = async (event: string, req: express.Request, res: express.Response, next: any) => {
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
 
@@ -70,9 +80,18 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     return
   }
 
+  const runs = runsForEvent(event, action, installation, settings)
+  await run(runs, settings, installation, req, res, next)
+}
+
+export function runsForEvent(event: string, action: string | null, installation: GitHubInstallation,  settings: any) {
   const installationRun = dangerRunForRules(event, action, installation.rules)
   const repoRun = dangerRunForRules(event, action, settings.repo && settings.repo.rules)
-  const runs = [installationRun, repoRun].filter((r) => !!r) as DangerRun[]
+  return [installationRun, repoRun].filter((r) => !!r) as DangerRun[]
+}
+
+export const run = async (
+  runs: DangerRun[], settings: any, installation, req: express.Request, res: express.Response, next: any)  => {
 
   // We got no runs ( so there were no rules that correspond to the event)
   if (runs.length === 0) {
@@ -98,7 +117,7 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     // can leave feedback on an issue?
     let githubAPI = null as GitHubAPI | null
     if (supportGithubCommentAPIs && settings.commentableID && settings.repo) {
-      githubAPI = githubAPIForCommentable(run, token, settings.repo.fullName, settings.commentableID)
+      githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
       log("Got a GitHub API")
     }
 
@@ -134,11 +153,11 @@ export async function githubDangerRunner(event: string, req: express.Request, re
     }
   }
 
-  const commentableRun = runs.find((run) => run.feedback === feedback.commentable)
+  const commentableRun = runs.find((r) => r.feedback === feedback.commentable)
   if (commentableRun && allResults.length) {
     const finalResults = mergeResults(allResults)
     log(`Commenting, with results: ${mdResults(finalResults)}`)
-    commentOnResults(finalResults, commentableRun, token, settings)
+    commentOnResults(finalResults, token, settings)
   }
 
   res.status(200).send(`Run ${runs.length} Dangerfiles`)
@@ -152,6 +171,7 @@ warns: ${results.warnings.length}
 fails: ${results.fails.length}
   `
 }
+
 export const mergeResults = (results: DangerResults[]): DangerResults => {
   return results.reduce((curr: DangerResults, newResults: DangerResults) => {
     return {
@@ -163,10 +183,10 @@ export const mergeResults = (results: DangerResults[]): DangerResults => {
   }, { fails: [], markdowns: [], warnings: [], messages: [] })
 }
 
-  export const commentOnResults = async (results: DangerResults, run, token, settings) => {
-    const githubAPI = githubAPIForCommentable(run, token, settings.repoName, settings.commentableID)
-    const exec = executorForInstallation(new GitHub(githubAPI))
-    await exec.handleResults(results)
+export const commentOnResults = async (results: DangerResults, token, settings) => {
+  const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
+  const exec = executorForInstallation(new GitHub(githubAPI))
+  await exec.handleResults(results)
 }
 
 // This doesn't feel great, but is OK for now
@@ -182,17 +202,16 @@ export const mergeResults = (results: DangerResults[]): DangerResults => {
   return null
 }
 
-  const githubAPIForCommentable
-  = (run: DangerRun, token: string, repoSlug: string, issueNumber: number | null) => {
+const githubAPIForCommentable = (token: string, repoSlug: string, issueNumber: number | null) => {
 
-    const githubAPI = new GitHubAPI({ repoSlug, pullRequestID: String(issueNumber) }, token)
-    githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
+  const githubAPI = new GitHubAPI({ repoSlug, pullRequestID: String(issueNumber) }, token)
+  githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 
-    // How can I get this from an API, if we cannot use /me ?
-    // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
-    // Talked to GH - they know it's an issue.
-    githubAPI.getUserID = () => Promise.resolve(parseInt(PERIL_BOT_USER_ID, 10))
-    return githubAPI
-  }
+  // How can I get this from an API, if we cannot use /me ?
+  // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
+  // Talked to GH - they know it's an issue.
+  githubAPI.getUserID = () => Promise.resolve(parseInt(PERIL_BOT_USER_ID, 10))
+  return githubAPI
+}
 
-  export default githubDangerRunner
+export default githubDangerRunner
