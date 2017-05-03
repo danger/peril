@@ -61,7 +61,8 @@ When you make updates to this file, you need to restart your Peril server.
 
 Ok, so, you need a heroku account. So sign up if you've not. This post will wait fr you.
 
-Click [this] button. It's the "auto-heroku-ize" button that will walk you through setting up the environment variables for running Danger for just one org.
+Click: [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+ . It's the "auto-heroku-ize" button that will walk you through setting up the environment variables for running Danger for just one org.
 
 # Prove it works
 

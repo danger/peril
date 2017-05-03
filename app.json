@@ -3,6 +3,11 @@
   "description": "Org-Wide Cultural Rules.",
   "website": "https://github.com/danger/peril",
   "repository": "https://github.com/danger/peril",
+    "keywords": [
+    "culture",
+    "danger",
+    "javascript"
+  ],
   "env": {
     "PERIL_INTEGRATION_ID": {
       "description": "The ID for your custom Peril integration.",
