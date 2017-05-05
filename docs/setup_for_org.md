@@ -74,9 +74,25 @@ It should take you to a page like this:
 
 You need to go through adding the environment variables. The `app.json` is self-documenting about the variables that need to be set.
 
+# Hooking the integration to your repo
+
+Go to:  https://[your-heroku-app].herokuapp.com/ - it should show a really simple "Hello world" page. That means the server launched.
+
+Back to your integration settings. You can skip the "Setup URL", but you need to set your "Webhook URL". This is the heroku URL for the webhook, it is `https://[your-heroku-app].herokuapp.com/webhook`
+
+Save your changes. Now you need to install the integration into your repo. Go to the "Your installations" tab inside the Integration. Hit "Install"
+
+Go through either adding it to the org, or adding each repo you want. Then go back to your integration, if you go to "Advanced" on the top you can see the list of events that got sent to your Peril instance. Hopefully it looks like this:
+
+![](images/events.png)
+
+This 
+
 # Prove it works
 
-If you open a PR on any repo, Peril should comment on your PR.
+If you open a PR on any repo, Peril should comment on your PR. 
+
+
 
 If it doesn't, run `heroku logs --app [my_heroku_peril_app]` and see if I missed something obvious.
 
