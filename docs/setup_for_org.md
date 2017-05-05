@@ -6,7 +6,7 @@ I'm assuming you're going to use heroku. Peril is set up for being used in Docke
 
 So, you will need to have:
 
-* A unique GitHub [integration][]
+* A unique GitHub Integration
 * A repo where you can keep Peril settings
 * A heroku instance for Peril
 
@@ -24,22 +24,26 @@ You can do the same thing on your user account too BTW.
 
 ## Repo Settings
 
-You need to have a repo which Peril has access to. This repo needs to have a settings JSON file. For now, let's use some example dangerfiles:
+You need to have a repo which Peril has access to. This repo needs to have a settings JSON file. For now, let's use some example Dangerfiles:
 
 ```json
-"settings": {
-  "onlyForOrgMembers": false
-},
-"rules": {
-  "pull_request": "orta/example-peril@pr.ts",
-  "issue": "orta/example-peril@issue.ts"
-},
-"repos" : {
-  "orta/ORStackView": {
-    "issue.created": "lock_old_issues.ts"
+{
+  "settings": {
+    "onlyForOrgMembers": false
+  },
+  "rules": {
+    "pull_request": "orta/peril-bootstrap@pr.ts",
+    "issue": "orta/example-peril@issue.ts"
+  },
+  "repos" : {
+    "orta/ORStackView": {
+      "issue.created": "lock_old_issues.ts"
+    }
   }
 }
 ```
+
+You can look at the both the [pull_request](https://github.com/orta/peril-bootstrap/blob/master/pr.ts) and [issue](https://github.com/orta/peril-bootstrap/blob/master/issue.ts), to verify there are no [shenanigans](https://www.merriam-webster.com/dictionary/shenanigan). 
 
 This JSON file is split into 3 parts:
 
@@ -49,20 +53,26 @@ This JSON file is split into 3 parts:
 
 This setup will:
 
-* Listen for the event `"pull_request"`, and will pull  `"pr.ts"` from the repo: `orta/example-peril`.
-* Listen for the event `"issue"`, and will pull  `"issue.ts"` from the repo: `orta/example-peril`.
+* Listen for the event `"pull_request"`, and will pull  `"pr.ts"` from the repo: `orta/peril-bootstrap`.
+* Listen for the event `"issue"`, and will pull  `"issue.ts"` from the repo: `orta/peril-bootstrap`.
 * Listen for the event `"issue"` event, and only if the action is `"created"` and will pull `"lock_old_issues.ts"` from the same repo: `orta/ORStackView`. So it would ignore issue updates or deletes.
 
-You can actually use `orta/example-peril` BTW, I have some dummy Dangerfiles on that repo exactly for this purpose. Save the above JSON as `peril-settings.json`. Add that to a repo, push it to master on your GitHub remote.
+You can actually use `orta/example-peril` BTW, I have some dummy Dangerfiles on that repo exactly for this purpose. Save the above JSON as `peril-settings.json`. Add that to a repo, push it to master on your GitHub remote. Here's one [I did earlier](https://github.com/artsy/artsy-danger/commit/03a1745b1f9f83fc2367ed6cdc72dee3f466b75f).
 
-When you make updates to this file, you need to restart your Peril server.
+Note: when you make updates to this file, you need to restart your Peril server.
 
 ## Heroku
 
-Ok, so, you need a heroku account. So sign up if you've not. This post will wait fr you.
+Ok, so, you need a heroku account. So sign up if you've not. This post will wait for you.
 
-Click: [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+Click: [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/danger/peril)
  . It's the "auto-heroku-ize" button that will walk you through setting up the environment variables for running Danger for just one org.
+
+It should take you to a page like this:
+
+![](images/heroku_setup.png)
+
+You need to go through adding the environment variables. The `app.json` is self-documenting about the variables that need to be set.
 
 # Prove it works
 
