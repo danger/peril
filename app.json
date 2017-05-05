@@ -17,11 +17,11 @@
       "description": "This is your key from the integration. First download the private key, then type this into terminal `cat '` then drag your file in to the terminal, then add `' | pbcopy` to the end. Press enter, and it will copy the contents to your pasteboard. The command should look like: `cat '/Users/orta/Downloads/artsy-peril.2017-05-05.private-key.pem' | pbcopy`"
     },
     "DATABASE_JSON_FILE": {
-      "description": "The GitHub repo address where you can get to the settings JSON file.",
+      "description": "The GitHub repo address where you can get to the settings JSON file. This is formatted as org/repo@filepath",
       "value": "orta/peril@settings-peril.json"
     },
     "PERIL_BOT_USER_ID": {
-      "description": "You can't do this yet, but you should do it later. This is the user ID for the bot that Peril uses to comment. If you add this, then Peril can update and delete it's own comments.",
+      "description": "You can't do this yet, but you should do it later. This is the user ID for the bot that Peril uses to comment. If you add this, then Peril can update and delete its own comments.",
         "value": "23"
     },
     "PAPERTRAIL_URL": {
