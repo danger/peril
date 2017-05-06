@@ -10,5 +10,5 @@ This gets confusing, so I'll try map out all the terms used inside Peril.
 * *Integration* - A GitHub API type, it allows external apps to get a feed of events and can have "[bot]" accounts.
 * *Installation* - When a GitHub user adds an integration to an org, or a set of repos. This is the installation of an integration.
 * *[bot] account* - An account for an integration, it has the word [bot] next to its name.
-* *Event* - Any user interaction that happens on GitHub, within the context of your org.
+* *Event* - Any user interaction that happens on GitHub, within the context of your org. See this [link for all events](https://developer.github.com/webhooks/#events).
 * *Action* - An event can have a sub-action, so a `"issues"` event can have the actions of `"created"`, `"updated"`, etc.

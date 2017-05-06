@@ -32,8 +32,8 @@ You need to have a repo which Peril has access to. This repo needs to have a set
     "onlyForOrgMembers": false
   },
   "rules": {
-    "pull_request": "orta/peril-bootstrap@pr.ts",
-    "issue": "orta/example-peril@issue.ts"
+    "pull_request": "orta/peril-bootstrap@dangerfiles/pr.js",
+    "issue": "orta/example-peril@dangerfiles/issue.js"
   },
   "repos" : {
     "orta/ORStackView": {
@@ -43,7 +43,7 @@ You need to have a repo which Peril has access to. This repo needs to have a set
 }
 ```
 
-You can look at the both the [pull_request](https://github.com/orta/peril-bootstrap/blob/master/pr.ts) and [issue](https://github.com/orta/peril-bootstrap/blob/master/issue.ts), to verify there are no [shenanigans](https://www.merriam-webster.com/dictionary/shenanigan). 
+You can look at the both the [pull_request](https://github.com/orta/peril-bootstrap/blob/master/dangerfiles/pr.js) and [issue](https://github.com/orta/peril-bootstrap/blob/master/dangerfiles/issue.js), to verify there are no [shenanigans](https://www.merriam-webster.com/dictionary/shenanigan). 
 
 This JSON file is split into 3 parts:
 
@@ -53,8 +53,8 @@ This JSON file is split into 3 parts:
 
 This setup will:
 
-* Listen for the event `"pull_request"`, and will pull  `"pr.ts"` from the repo: `orta/peril-bootstrap`.
-* Listen for the event `"issue"`, and will pull  `"issue.ts"` from the repo: `orta/peril-bootstrap`.
+* Listen for the event `"pull_request"`, and will pull  `"dangerfiles/pr.js"` from the repo: `orta/peril-bootstrap`.
+* Listen for the event `"issue"`, and will pull  `"dangerfiles/issue.js"` from the repo: `orta/peril-bootstrap`.
 * Listen for the event `"issue"` event, and only if the action is `"created"` and will pull `"lock_old_issues.ts"` from the same repo: `orta/ORStackView`. So it would ignore issue updates or deletes.
 
 You can actually use `orta/example-peril` BTW, I have some dummy Dangerfiles on that repo exactly for this purpose. Save the above JSON as `peril-settings.json`. Add that to a repo, push it to master on your GitHub remote. Here's one [I did earlier](https://github.com/artsy/artsy-danger/commit/03a1745b1f9f83fc2367ed6cdc72dee3f466b75f).
@@ -90,9 +90,29 @@ This
 
 # Prove it works
 
-If you open a PR on any repo, Peril should comment on your PR. 
+If you open a PR on any of your repos, Peril should comment on your PR. 
 
+# Troubleshooting
 
+### Check your logs
 
-If it doesn't, run `heroku logs --app [my_heroku_peril_app]` and see if I missed something obvious.
+Run `heroku logs --app [my_heroku_peril_app]`.
+
+### "You need an installation ID for your integration: `PERIL_ORG_INSTALLATION_ID`
+
+Go back to your integration settings, you _probably_ have two events so far. The 2nd one, which has a `X-GitHub-Event: integration_installation` will provide you with the env var for `PERIL_ORG_INSTALLATION_ID`. You can find the installation id inside "installation.id" in the JSON. To set the heroku env var, run `heroku config:add PERIL_ORG_INSTALLATION_ID="[my-id]" --app [my_heroku_peril_app]`
+
+Setting it will restart the server.
+
+### Peril isn't editing it's own messages: `PERIL_BOT_USER_ID`
+
+The GitHub API doesn't let the bot know what it's user ID is yet, so you'll need to pull this out of the API, sorry. Find an issue/PR where Peril has commented, then you need to see the API request for that issue/PR. For both issues and PRs, you use a URL like
+
+> `https://api.github.com/repos/[org]/[repo]/issues/[pr_or_issue_id]/comments`
+
+Then you can scroll down to find the ID of the Peril user account. Set this on your server using: `heroku config:add PERIL_BOT_USER_ID="[bot-id]" --app [my_heroku_peril_app]`.
+
+### Peril crashed, so I changed something and want to run the same event
+
+Inside the Integration settings under Advanced, you can get a list of all events sent to Peril. You can open one of them, and then click on "Redeliver" to send it again.
 
