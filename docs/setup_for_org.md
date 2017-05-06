@@ -116,3 +116,14 @@ Then you can scroll down to find the ID of the Peril user account. Set this on y
 
 Inside the Integration settings under Advanced, you can get a list of all events sent to Peril. You can open one of them, and then click on "Redeliver" to send it again.
 
+
+# What now?
+
+Well, so far there are a bunch of big interesting unknowns for Peril:
+
+* Using `node_modules` in a Dangerfile via a whitelist
+* TypeScript based Dangerfiles
+* Verify that Org Events work
+* Create rules that occur on a schedule
+
+So if you'd like to take a look at those, they're fun issues. 
