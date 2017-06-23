@@ -145,10 +145,13 @@ export const runEverything = async (
     // in the event JSON and if it's not there then use master
     // prioritise the run metadata
 
-    const repoForDangerfile = run.repoSlug || settings.repoName
+    const dangerfileRepoForPR = isPR ? req.body.pull_request.head.repo.full_name : settings.repoName
     const dangerfileBranchForPR = isPR ? req.body.pull_request.head.ref : null
     const neededDangerfileIsSameRepo = isPR ? run.repoSlug === req.body.pull_request.head.repo.full_name : false
     const branch = neededDangerfileIsSameRepo ? null : dangerfileBranchForPR
+
+    // Either it's dictated in the run as an external repo, or we use the most natual repo
+    const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
 
     const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
     if (file !== "") {
@@ -156,6 +159,7 @@ export const runEverything = async (
       allResults.push(results)
     } else {
       log("Got no github file contents, commenting.")
+      // TODO: Allow this to be triggered via a comment in a PR?
       const results = {
         settings,
         run,
