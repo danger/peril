@@ -53,12 +53,12 @@ export const setupForRequest = async (req: express.Request): Promise<GitHubRunSe
 
   return {
     commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
+    hasRelatedCommentable,
     isRepoEvent,
     isTriggeredByUser,
     repo: isRepoEvent ? await db.getRepo(installationID, repoName) : null,
     repoName,
     triggeredByUsername: isTriggeredByUser ? req.body.sender.login : null,
-    hasRelatedCommentable,
   }
 }
 
@@ -66,7 +66,7 @@ export  const githubDangerRunner = async (event: string, req: express.Request, r
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
 
-  let installation = await db.getInstallation(installationID)
+  const installation = await db.getInstallation(installationID)
   if (!installation) {
     res.status(404).send(`Could not find installation with id: ${installationID}`)
     return
@@ -190,14 +190,14 @@ export const commentOnResults = async (results: DangerResults, token, settings) 
 }
 
 // This doesn't feel great, but is OK for now
-  const getIssueNumber = (json: any): number | null => {
+const getIssueNumber = (json: any): number | null => {
   if (json.pull_request) { return json.pull_request.number }
   if (json.issue) { return json.issue.number }
   return null
 }
 
 // This doesn't feel great, but is OK for now
-  const getRepoSlug = (json: any): string | null => {
+const getRepoSlug = (json: any): string | null => {
   if (json.repository) { return json.repository.full_name }
   return null
 }
