@@ -18,9 +18,15 @@ You would go to the URL (with your org):
 
 Then create a new integration (use `peril-[my-org]`, there is a global namespace.) At the bottom is the option to only allow this integration to run on your org, you want this ticked probably.
 
-Once this is created, you need to install the integration on your GitHub org. [explain process for this]. Also download the integration github signing key and keep track of the integration ID, you'll need this later.
+With respect to permissions, my recommendations are:
 
-You can do the same thing on your user account too BTW.
+* Repo Metadata: Read
+* Issues: Read & Write
+* Pull Requests: Read & Write
+
+It's trivial to go and change these later as you think of more rules that need different events.
+
+Once this is created, download the integration github signing key and keep track of the integration ID, you'll need this later.
 
 ## Repo Settings
 
@@ -92,6 +98,30 @@ This
 
 If you open a PR on any of your repos, Peril should comment on your PR. 
 
+# What now?
+
+### Write your own org Dangerfiles
+
+Inside your repo create a new file for your first Dangerfile. Maybe have something like:
+
+```js
+import {warning, danger} from "danger"
+// Add a check to see if a changelog exists, then warn if it isn't in modified etc
+```
+
+
+### Improve Peril
+
+Well, so far there are a bunch of big interesting unknowns for Peril:
+
+* Using `node_modules` in a Dangerfile via a whitelist
+* TypeScript based Dangerfiles
+* Verify that Org Events work
+* Create rules that occur on a schedule
+
+So if you'd like to take a look at those, they're fun issues. 
+
+
 # Troubleshooting
 
 ### Check your logs
@@ -116,14 +146,3 @@ Then you can scroll down to find the ID of the Peril user account. Set this on y
 
 Inside the Integration settings under Advanced, you can get a list of all events sent to Peril. You can open one of them, and then click on "Redeliver" to send it again.
 
-
-# What now?
-
-Well, so far there are a bunch of big interesting unknowns for Peril:
-
-* Using `node_modules` in a Dangerfile via a whitelist
-* TypeScript based Dangerfiles
-* Verify that Org Events work
-* Create rules that occur on a schedule
-
-So if you'd like to take a look at those, they're fun issues. 

@@ -81,7 +81,7 @@ export  const githubDangerRunner = async (event: string, req: express.Request, r
   }
 
   const runs = runsForEvent(event, action, installation, settings)
-  await run(runs, settings, installation, req, res, next)
+  await runEverything(runs, settings, installation, req, res, next)
 }
 
 export function runsForEvent(event: string, action: string | null, installation: GitHubInstallation,  settings: any) {
@@ -90,7 +90,7 @@ export function runsForEvent(event: string, action: string | null, installation:
   return [installationRun, repoRun].filter((r) => !!r) as DangerRun[]
 }
 
-export const run = async (
+export const runEverything = async (
   runs: DangerRun[], settings: any, installation, req: express.Request, res: express.Response, next: any)  => {
 
   // We got no runs ( so there were no rules that correspond to the event)
