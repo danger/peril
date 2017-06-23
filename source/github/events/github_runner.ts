@@ -144,6 +144,7 @@ export const runEverything = async (
     // In theory only a PR requires a custom branch, so we can check directly for that
     // in the event JSON and if it's not there then use master
     // prioritise the run metadata
+
     const repoForDangerfile = run.repoSlug || settings.repoName
     const dangerfileBranchForPR = isPR ? req.body.pull_request.head.ref : null
     const neededDangerfileIsSameRepo = isPR ? run.repoSlug === req.body.pull_request.head.repo.full_name : false
@@ -156,6 +157,8 @@ export const runEverything = async (
     } else {
       log("Got no github file contents, commenting.")
       const results = {
+        settings,
+        run,
         repoForDangerfile,
         dangerfileBranchForPR,
         neededDangerfileIsSameRepo,
@@ -166,9 +169,9 @@ export const runEverything = async (
       }
       const actualBranch = branch ? branch : "master"
       const message = `Could not find Dangerfile at ${run.dangerfilePath} on ${repoForDangerfile} on branch ${actualBranch}.  
-      
-    ${JSON.stringify(results)}
-      
+\`\`\`json      
+${JSON.stringify(results, null, "  ")}
+\`\`\`   
       `
       allResults.push({ fails: [{ message }], markdowns: [], warnings: [], messages: [] })
     }
