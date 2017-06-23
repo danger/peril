@@ -15,11 +15,15 @@ const legitSettings = `{
 }`
 
 const contentsMock = jest.fn((token, path) => {
-  if (path === "orta/peril") { return Promise.resolve(legitSettings) }
-  if (path === "orta/other") { return Promise.resolve("") }
+  if (path === "orta/peril") {
+    return Promise.resolve(legitSettings)
+  }
+  if (path === "orta/other") {
+    return Promise.resolve("")
+  }
 })
 
-jest.mock("../../github/lib/github_helpers", () =>  ({ getGitHubFileContents: contentsMock }))
+jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContents: contentsMock }))
 
 import { DatabaseAdaptor } from "../index"
 import jsonDB from "../json"
@@ -44,7 +48,7 @@ describe("makes the right calls to GitHub", () => {
 })
 
 // need a unhandled rejection from promises?
-it.skip("Raises with a bad URL",  () => {
+it.skip("Raises with a bad URL", () => {
   const db = jsonDB("orta/other@settings.json")
   expect(async () => {
     await db.setup()

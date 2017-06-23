@@ -19,7 +19,9 @@ import { dsl } from "./danger_run"
 import perilPlatform from "./peril_platform"
 
 /** Logs */
-const log = (message: string) => { winston.info(`[runner] - ${message}`) }
+const log = (message: string) => {
+  winston.info(`[runner] - ${message}`)
+}
 
 /**
  * The single function to run danger against an installation
@@ -70,7 +72,6 @@ export async function handleDangerResults(results: DangerResults, exec: Executor
  * Generates a Danger Executor based on the installation's context
  */
 export function executorForInstallation(platform: Platform) {
-
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 

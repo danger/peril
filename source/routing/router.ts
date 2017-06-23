@@ -9,7 +9,9 @@ import { RootObject as InstallationCreated } from "../github/events/types/integr
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
 /** Logs */
-const info = (message: string) => { winston.info(`[router] - ${message}`) }
+const info = (message: string) => {
+  winston.info(`[router] - ${message}`)
+}
 
 const router = (req, res, next) => {
   const event = req.header("X-GitHub-Event")

@@ -43,9 +43,13 @@ export function jwtForGitHubAuth() {
   const expires = now + 60
   const keyContent = PRIVATE_GITHUB_SIGNING_KEY
 
-  return jwt.sign({
-    exp: expires,
-    iat: now,
-    iss: PERIL_INTEGRATION_ID,
-  }, keyContent, { algorithm: "RS256" })
+  return jwt.sign(
+    {
+      exp: expires,
+      iat: now,
+      iss: PERIL_INTEGRATION_ID,
+    },
+    keyContent,
+    { algorithm: "RS256" }
+  )
 }

@@ -12,7 +12,6 @@ if (PAPERTRAIL_URL) {
     host: PAPERTRAIL_URL,
     port: parseInt(PAPERTRAIL_PORT, 10),
   })
-
 } else {
   console.log("Skipping papertrail setup for winston.") // tslint:disable-line
 }

@@ -9,15 +9,15 @@ dotenv.config()
  * @returns {string}
  */
 function getEnv(configName) {
-    return process.env[configName]
+  return process.env[configName]
 }
 
 function validates(keys: string[]) {
-    keys.forEach((element) => {
-        if (!getEnv(element)) {
-            throw new Error(`Could not get Key: ${element}`)
-        }
-    })
+  keys.forEach(element => {
+    if (!getEnv(element)) {
+      throw new Error(`Could not get Key: ${element}`)
+    }
+  })
 }
 
 /** Private key for the app
@@ -70,5 +70,5 @@ validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
 
 // Validate the db
 if (!DATABASE_URL && !DATABASE_JSON_FILE) {
-    throw new Error("Peril cannot work without either a DATABASE_URL or a DATABASE_JSON_FILE")
+  throw new Error("Peril cannot work without either a DATABASE_URL or a DATABASE_JSON_FILE")
 }

@@ -18,7 +18,7 @@ const defaultRun = {
   triggeredByUsername: "orta",
 }
 
-const getSettings = (overwrites) => ({
+const getSettings = overwrites => ({
   ...defaultRun,
   ...overwrites,
 })

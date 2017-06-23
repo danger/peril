@@ -1,6 +1,6 @@
-import {getTemporaryAccessTokenForInstallation} from "../api/github"
+import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { getGitHubFileContents } from "../github/lib/github_helpers"
-import { PERIL_ORG_INSTALLATION_ID} from "../globals"
+import { PERIL_ORG_INSTALLATION_ID } from "../globals"
 import winston from "../logger"
 import { DangerfileReferenceString, DatabaseAdaptor, GitHubInstallation, GithubRepo } from "./index"
 import { GitHubUser } from "./types"
@@ -27,27 +27,32 @@ For example:
 */
 
 /** Logs */
-const info = (message: string) => { winston.info(`[db] - ${message}`) }
+const info = (message: string) => {
+  winston.info(`[db] - ${message}`)
+}
 
 let org: GitHubInstallation = null as any
 
-const jsonDatabase = (dangerFilePath: DangerfileReferenceString) : DatabaseAdaptor => ({
-
+const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
   setup: async () => {
-      const repo = dangerFilePath.split("@")[0]
-      const path = dangerFilePath.split("@")[1]
-      // Try see if we can pull it without an access token
-      let file = await getGitHubFileContents(null, repo, path, null)
-      // Might be private, in this case you have to have set up PERIL_ORG_INSTALLATION_ID
-      if (file === "") {
-        if (!PERIL_ORG_INSTALLATION_ID) { throwNoPerilInstallationID() }
-        const token = await getTemporaryAccessTokenForInstallation(PERIL_ORG_INSTALLATION_ID)
-        file = await getGitHubFileContents(token, repo, path, null)
+    const repo = dangerFilePath.split("@")[0]
+    const path = dangerFilePath.split("@")[1]
+    // Try see if we can pull it without an access token
+    let file = await getGitHubFileContents(null, repo, path, null)
+    // Might be private, in this case you have to have set up PERIL_ORG_INSTALLATION_ID
+    if (file === "") {
+      if (!PERIL_ORG_INSTALLATION_ID) {
+        throwNoPerilInstallationID()
       }
+      const token = await getTemporaryAccessTokenForInstallation(PERIL_ORG_INSTALLATION_ID)
+      file = await getGitHubFileContents(token, repo, path, null)
+    }
 
-      if (file === "") { throwNoJSONFileFound(dangerFilePath) }
-      org = JSON.parse(file)
-      org.id = PERIL_ORG_INSTALLATION_ID
+    if (file === "") {
+      throwNoJSONFileFound(dangerFilePath)
+    }
+    org = JSON.parse(file)
+    org.id = PERIL_ORG_INSTALLATION_ID
   },
 
   /** Saves an Integration */
@@ -56,7 +61,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString) : DatabaseAdapt
   },
 
   /** Saves a repo */
- saveGitHubRepo: async (repo: GithubRepo) => {
+  saveGitHubRepo: async (repo: GithubRepo) => {
     info(`Skipping saving github repo with slug: ${repo.fullName} due to no db`)
   },
 
@@ -74,7 +79,9 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString) : DatabaseAdapt
   getRepo: async (installationID: number, repoName: string): Promise<GithubRepo | null> => {
     // Type this?
     const repos = (org as any).repos
-    if (!repos[repoName]) { return null }
+    if (!repos[repoName]) {
+      return null
+    }
 
     const repo: GithubRepo = {
       fullName: repoName,
@@ -96,9 +103,11 @@ export default jsonDatabase
 // Some error handling.
 
 const throwNoPerilInstallationID = () => {
-    /* tslint:disable: max-line-length */
-  const msg = "Sorry, if you have a Peril JSON setttings file in a private repo, you will need an installation ID for your integration."
-  const subtitle = "You can find this inside the integration_installation event sent when you installed the integration into your org."
+  /* tslint:disable: max-line-length */
+  const msg =
+    "Sorry, if you have a Peril JSON setttings file in a private repo, you will need an installation ID for your integration."
+  const subtitle =
+    "You can find this inside the integration_installation event sent when you installed the integration into your org."
   const action = `Set this as "PERIL_ORG_INSTALLATION_ID" in your ENV vars.`
   throw new Error([msg, subtitle, action].join(" "))
   /* tslint:enable: max-line-length */

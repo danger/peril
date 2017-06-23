@@ -11,7 +11,10 @@
     "lint": "tslint source/**/**/**.ts",
     "test:watch": "jest --watch",
     "type-check": "tsc --noEmit --pretty",
-    "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix"
+    "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
+    "prettier": "prettier",
+    "prettier-write": "npm run prettier -- --parser typescript --no-semi --trailing-comma es5 --write --print-width 120 ",
+    "prettier-project": "npm run prettier-write -- 'source/**/*.{ts,tsx}'"
   },
   "repository": {
     "type": "git",
@@ -70,5 +73,9 @@
       "tsx",
       "js"
     ]
+  },
+  "devDependencies": {
+    "prettier": "^1.4.4",
+    "tslint-config-prettier": "^1.1.0"
   }
 }

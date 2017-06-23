@@ -32,16 +32,18 @@ import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
  */
 
 /** Logs */
-const log = (message: string) => { winston.info(`[runner] - ${message}`) }
+const log = (message: string) => {
+  winston.info(`[runner] - ${message}`)
+}
 
 export interface GitHubRunSettings {
-    commentableID: number | null,
-    isRepoEvent: boolean | null,
-    isTriggeredByUser: boolean,
-    repo: GithubRepo | null,
-    repoName: string | null,
-    triggeredByUsername: string | null,
-    hasRelatedCommentable: boolean,
+  commentableID: number | null
+  isRepoEvent: boolean | null
+  isTriggeredByUser: boolean
+  repo: GithubRepo | null
+  repoName: string | null
+  triggeredByUsername: string | null
+  hasRelatedCommentable: boolean
 }
 
 export const setupForRequest = async (req: express.Request): Promise<GitHubRunSettings> => {
@@ -62,7 +64,7 @@ export const setupForRequest = async (req: express.Request): Promise<GitHubRunSe
   }
 }
 
-export  const githubDangerRunner = async (event: string, req: express.Request, res: express.Response, next: any) => {
+export const githubDangerRunner = async (event: string, req: express.Request, res: express.Response, next: any) => {
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
 
@@ -84,15 +86,20 @@ export  const githubDangerRunner = async (event: string, req: express.Request, r
   await runEverything(runs, settings, installation, req, res, next)
 }
 
-export function runsForEvent(event: string, action: string | null, installation: GitHubInstallation,  settings: any) {
+export function runsForEvent(event: string, action: string | null, installation: GitHubInstallation, settings: any) {
   const installationRun = dangerRunForRules(event, action, installation.rules)
   const repoRun = dangerRunForRules(event, action, settings.repo && settings.repo.rules)
-  return [installationRun, repoRun].filter((r) => !!r) as DangerRun[]
+  return [installationRun, repoRun].filter(r => !!r) as DangerRun[]
 }
 
 export const runEverything = async (
-  runs: DangerRun[], settings: any, installation, req: express.Request, res: express.Response, next: any)  => {
-
+  runs: DangerRun[],
+  settings: any,
+  installation,
+  req: express.Request,
+  res: express.Response,
+  next: any
+) => {
   // We got no runs ( so there were no rules that correspond to the event)
   if (runs.length === 0) {
     res.status(204).send(`No work to do.`)
@@ -153,7 +160,7 @@ export const runEverything = async (
     }
   }
 
-  const commentableRun = runs.find((r) => r.feedback === feedback.commentable)
+  const commentableRun = runs.find(r => r.feedback === feedback.commentable)
   if (commentableRun && allResults.length) {
     const finalResults = mergeResults(allResults)
     log(`Commenting, with results: ${mdResults(finalResults)}`)
@@ -173,14 +180,17 @@ fails: ${results.fails.length}
 }
 
 export const mergeResults = (results: DangerResults[]): DangerResults => {
-  return results.reduce((curr: DangerResults, newResults: DangerResults) => {
-    return {
-      fails: [...curr.fails, ...newResults.fails],
-      markdowns: [...curr.markdowns, ...newResults.markdowns],
-      messages: [...curr.messages, ...newResults.messages],
-      warnings: [...curr.warnings, ...newResults.warnings],
-    }
-  }, { fails: [], markdowns: [], warnings: [], messages: [] })
+  return results.reduce(
+    (curr: DangerResults, newResults: DangerResults) => {
+      return {
+        fails: [...curr.fails, ...newResults.fails],
+        markdowns: [...curr.markdowns, ...newResults.markdowns],
+        messages: [...curr.messages, ...newResults.messages],
+        warnings: [...curr.warnings, ...newResults.warnings],
+      }
+    },
+    { fails: [], markdowns: [], warnings: [], messages: [] }
+  )
 }
 
 export const commentOnResults = async (results: DangerResults, token, settings) => {
@@ -191,19 +201,24 @@ export const commentOnResults = async (results: DangerResults, token, settings) 
 
 // This doesn't feel great, but is OK for now
 const getIssueNumber = (json: any): number | null => {
-  if (json.pull_request) { return json.pull_request.number }
-  if (json.issue) { return json.issue.number }
+  if (json.pull_request) {
+    return json.pull_request.number
+  }
+  if (json.issue) {
+    return json.issue.number
+  }
   return null
 }
 
 // This doesn't feel great, but is OK for now
 const getRepoSlug = (json: any): string | null => {
-  if (json.repository) { return json.repository.full_name }
+  if (json.repository) {
+    return json.repository.full_name
+  }
   return null
 }
 
 const githubAPIForCommentable = (token: string, repoSlug: string, issueNumber: number | null) => {
-
   const githubAPI = new GitHubAPI({ repoSlug, pullRequestID: String(issueNumber) }, token)
   githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 

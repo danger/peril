@@ -1,5 +1,5 @@
 const pingMock = jest.fn()
-jest.mock("../../github/events/ping", () =>  ({ ping: pingMock }))
+jest.mock("../../github/events/ping", () => ({ ping: pingMock }))
 
 const createInstallationMock = jest.fn()
 jest.mock("../../github/events/create_installation", () => ({ createInstallation: createInstallationMock }))
@@ -10,7 +10,6 @@ jest.mock("../../github/events/github_runner", () => ({ githubDangerRunner: gith
 import { githubRouting } from "../router"
 
 describe("routing for GitHub", () => {
-
   it("calls ping when a ping action is sent", () => {
     githubRouting("ping", {}, {}, {})
     expect(pingMock).toBeCalled()
