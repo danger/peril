@@ -6,23 +6,23 @@ I'm assuming you're going to use heroku. Peril is set up for being used in Docke
 
 So, you will need to have:
 
-* A unique GitHub Integration
-* A repo where you can keep Peril settings
-* A heroku instance for Peril
+-   A unique GitHub Integration
+-   A repo where you can keep Peril settings
+-   A heroku instance for Peril
 
 ## Creating your integration
 
 You would go to the URL (with your org): 
 
-> https://github.com/organizations/[my_org]/settings/integrations
+> <https://github.com/organizations/[my_org]/settings/integrations>
 
-Then create a new integration (use `peril-[my-org]`, there is a global namespace.) At the bottom is the option to only allow this integration to run on your org, you want this ticked probably.
+Then create a new integration (use `peril-[my-org]`, there is a global namespace for GitHub apps.) At the bottom is the option to only allow this integration to run on your org, you want this ticked probably.
 
 With respect to permissions, my recommendations are:
 
-* Repo Metadata: Read
-* Issues: Read & Write
-* Pull Requests: Read & Write
+-   Repo Metadata: Read
+-   Issues: Read & Write
+-   Pull Requests: Read & Write
 
 It's trivial to go and change these later as you think of more rules that need different events.
 
@@ -53,15 +53,15 @@ You can look at the both the [pull_request](https://github.com/orta/peril-bootst
 
 This JSON file is split into 3 parts:
 
-* Settings for Peril
-* Rules for the organization 
-* Rules per repo
+-   Settings for Peril
+-   Rules for the organization 
+-   Rules per repo
 
 This setup will:
 
-* Listen for the event `"pull_request"`, and will pull  `"dangerfiles/pr.js"` from the repo: `orta/peril-bootstrap`.
-* Listen for the event `"issue"`, and will pull  `"dangerfiles/issue.js"` from the repo: `orta/peril-bootstrap`.
-* Listen for the event `"issue"` event, and only if the action is `"created"` and will pull `"lock_old_issues.ts"` from the same repo: `orta/ORStackView`. So it would ignore issue updates or deletes.
+-   Listen for the event `"pull_request"`, and will pull  `"dangerfiles/pr.js"` from the repo: `orta/peril-bootstrap`.
+-   Listen for the event `"issue"`, and will pull  `"dangerfiles/issue.js"` from the repo: `orta/peril-bootstrap`.
+-   Listen for the event `"issue"` event, and only if the action is `"created"` and will pull `"lock_old_issues.ts"` from the same repo: `orta/ORStackView`. So it would ignore issue updates or deletes.
 
 You can actually use `orta/example-peril` BTW, I have some dummy Dangerfiles on that repo exactly for this purpose. Save the above JSON as `peril-settings.json`. Add that to a repo, push it to master on your GitHub remote. Here's one [I did earlier](https://github.com/artsy/artsy-danger/commit/03a1745b1f9f83fc2367ed6cdc72dee3f466b75f).
 
@@ -82,7 +82,7 @@ You need to go through adding the environment variables. The `app.json` is self-
 
 # Hooking the integration to your repo
 
-Go to:  https://[your-heroku-app].herokuapp.com/ - it should show a really simple "Hello world" page. That means the server launched.
+Go to:  <https://[your-heroku-app].herokuapp.com/> - it should show a really simple "Hello world" page. That means the server launched.
 
 Back to your integration settings. You can skip the "Setup URL", but you need to set your "Webhook URL". This is the heroku URL for the webhook, it is `https://[your-heroku-app].herokuapp.com/webhook`
 
@@ -109,18 +109,16 @@ import {warning, danger} from "danger"
 // Add a check to see if a changelog exists, then warn if it isn't in modified etc
 ```
 
-
 ### Improve Peril
 
 Well, so far there are a bunch of big interesting unknowns for Peril:
 
-* Using `node_modules` in a Dangerfile via a whitelist
-* TypeScript based Dangerfiles
-* Verify that Org Events work
-* Create rules that occur on a schedule
+-   Using `node_modules` in a Dangerfile via a whitelist
+-   TypeScript based Dangerfiles
+-   Verify that Org Events work
+-   Create rules that occur on a schedule
 
 So if you'd like to take a look at those, they're fun issues. 
-
 
 # Troubleshooting
 
@@ -145,4 +143,3 @@ Then you can scroll down to find the ID of the Peril user account. Set this on y
 ### Peril crashed, so I changed something and want to run the same event
 
 Inside the Integration settings under Advanced, you can get a list of all events sent to Peril. You can open one of them, and then click on "Redeliver" to send it again.
-

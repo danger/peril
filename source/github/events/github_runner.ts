@@ -155,7 +155,7 @@ export const runEverything = async (
       allResults.push(results)
     } else {
       log("Got no github file contents, commenting.")
-      const message = `Could not find Dangerfile at ${run.dangerfilePath} on ${repoForDangerfile}`
+      const message = `Could not find Dangerfile at ${run.dangerfilePath} on ${repoForDangerfile} on branch ${branch}.`
       allResults.push({ fails: [{ message }], markdowns: [], warnings: [], messages: [] })
     }
   }
