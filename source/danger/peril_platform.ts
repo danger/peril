@@ -8,12 +8,12 @@ import { dsl } from "./danger_run"
  * feedback or DSL. To work around that we use the event provided by GitHub and provide it to Danger.
  */
 const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: any): Platform => {
-  if  (type === dsl.pr && github) {
+  if (type === dsl.pr && github) {
     return github
   } else {
     const nullFunc: any = () => ""
 
-    const platform: Platform =  {
+    const platform: Platform = {
       createComment: github ? github.createComment : nullFunc,
       deleteMainComment: github ? github.deleteMainComment : nullFunc,
       editMainComment: github ? github.editMainComment : nullFunc,

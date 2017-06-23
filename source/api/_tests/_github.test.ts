@@ -1,7 +1,9 @@
 import { jwtForGitHubAuth } from "../github"
 
 describe("jwt", () => {
-  it("is an empty test", () => { "Hi" })
+  it("is an empty test", () => {
+    expect("Hi").toEqual("Hi")
+  })
 
   if (process.env.USER === "orta") {
     it("Creates a JWT", () => {

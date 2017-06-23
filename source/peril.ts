@@ -1,13 +1,13 @@
-require("./globals")  // tslint:disable-line
+require("./globals") // tslint:disable-line
 import * as express from "express"
 
-const bodyParser = require("body-parser")  // tslint:disable-line
+const bodyParser = require("body-parser") // tslint:disable-line
 import logger from "./logger"
 import webhook from "./routing/router"
 
 // Error logging
 process.on("unhandledRejection", (reason: string, p: any) => {
-  console.log("Error: ", reason)  // tslint:disable-line
+  console.log("Error: ", reason) // tslint:disable-line
   throw reason
 })
 

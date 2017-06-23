@@ -6,7 +6,6 @@ import { requestAccessTokenForInstallation } from "../../api/github"
 import db, { GitHubInstallation } from "../../db"
 
 export async function createInstallation(installationJSON: Installation, req: express.Request, res: express.Response) {
-
   const installation: GitHubInstallation = {
     id: installationJSON.id,
     rules: {

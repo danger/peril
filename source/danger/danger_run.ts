@@ -23,23 +23,30 @@ export enum feedback {
 /** Represents runs that Danger should do based on Rules and Events */
 export interface DangerRun {
   /** What event name triggered this */
-  event: string,
+  event: string
   /** What action inside that event trigger this run */
-  action: string | null,
+  action: string | null
   /** What slug should this run come from? */
   repoSlug?: string
   /** Where should we look in that repo for the Dangerfile? */
   dangerfilePath: string
   /** What type of DSL should the run use? */
-  dslType: dsl,
+  dslType: dsl
   /** Can Danger provide commentable feedback? */
   feedback: feedback
 }
 
 /** Takes an event and action, and defines whether to do a dangerfile run with it. */
-export const dangerRunForRules = (event: string, action: string | null, rule: RunnerRuleset | undefined | null): DangerRun | null => { // tslint:disable-line
+export const dangerRunForRules = (
+  event: string,
+  action: string | null,
+  rule: RunnerRuleset | undefined | null
+): DangerRun | null => {
+  // tslint:disable-line
   // Can't do anything with nothing
-  if (!rule) { return null }
+  if (!rule) {
+    return null
+  }
 
   // We can just see if anything exists at the right places,
   // and return the first right object
@@ -49,7 +56,9 @@ export const dangerRunForRules = (event: string, action: string | null, rule: Ru
   const path = isDirect || globsAll || eventDotAction
 
   // Bail, we can't do anything
-  if (!path) { return null }
+  if (!path) {
+    return null
+  }
 
   return {
     event,
@@ -74,13 +83,17 @@ export const dangerRepresentationforPath = (value: DangerfileReferenceString) =>
 
 /** What type of DSL should get used for the Dangerfile eval? */
 export const dslTypeForEvent = (event: string): dsl => {
-  if (event === "pull_request") { return dsl.pr }
+  if (event === "pull_request") {
+    return dsl.pr
+  }
   return dsl.import
 }
 
 /** What events can we provide feedback inline with? */
 // Build system mentions?
 export const feedbackTypeForEvent = (event: string): feedback => {
-  if (event === "pull_request" || event === "issues" || event === "issue") { return feedback.commentable }
+  if (event === "pull_request" || event === "issues" || event === "issue") {
+    return feedback.commentable
+  }
   return feedback.silent
 }

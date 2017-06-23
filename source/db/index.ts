@@ -36,7 +36,7 @@ export interface GitHubInstallation {
    */
   settings: {
     /** Should only org members run Danger? */
-    onlyForOrgMembers?: boolean,
+    onlyForOrgMembers?: boolean
   }
 
   /** Having rules in here would mean that it would happen on _any_ event, another JSON type in the DB */
@@ -49,9 +49,9 @@ export interface GithubRepo {
   /** UUID */
   id: number
   /** The installation that this repo is connected to */
-  installationID: number,
+  installationID: number
   /** The full name of the slug for this repo, note these could not be unique (GitHub Enterprise?) */
-  fullName: string,
+  fullName: string
   /** Runner rules ID reference, another JSON type in the DB */
   rules: RunnerRuleset
 }

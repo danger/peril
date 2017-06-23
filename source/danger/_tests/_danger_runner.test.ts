@@ -15,13 +15,15 @@ import { resolve } from "path"
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 
 describe("evaling", () => {
-
   it("runs a typescript dangerfile with fixtured data", async () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
     const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_empty.ts`, executor)
     expect(results).toEqual({
-      fails: [], markdowns: [], messages: [], warnings: [{message: "OK"}],
+      fails: [],
+      markdowns: [],
+      messages: [],
+      warnings: [{ message: "OK" }],
     })
   })
 
@@ -29,19 +31,20 @@ describe("evaling", () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
     const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_insecure.ts`, executor)
-    expect(results.markdowns).toEqual([
-      "`Object.keys(process.env).length` is 0",
-    ])
+    expect(results.markdowns).toEqual(["`Object.keys(process.env).length` is 0"])
   })
 
   // I wonder if the babel setup isn't quite right yet for this test
   it.skip("runs a JS dangerfile with fixtured data", async () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
-      // The executor will return results etc in the next release
+    // The executor will return results etc in the next release
     const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_insecure.js`, executor)
     expect(results).toEqual({
-      fails: [], markdowns: [], messages: [], warnings: [{message: "OK"}],
+      fails: [],
+      markdowns: [],
+      messages: [],
+      warnings: [{ message: "OK" }],
     })
   })
 

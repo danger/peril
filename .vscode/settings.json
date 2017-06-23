@@ -17,5 +17,17 @@
     ],
     "tslint.autoFixOnSave": true,
     "tslint.run": "onType",
-    "tslint.exclude": "node_modules/**/*"
+    "tslint.exclude": "node_modules/**/*",
+    "eslint.enable": false,
+    "flow.enabled": false,
+    "editor.formatOnSave": true,
+    "prettier.singleQuote": false,
+    "prettier.trailingComma": "es5",
+    "prettier.typescriptEnable": [
+        "typescript",
+        "typescriptreact"
+    ],
+    "prettier.semi": false,
+    "prettier.printWidth": 120,
+    "editor.renderWhitespace": "boundary"
 }
