@@ -148,7 +148,7 @@ export const runEverything = async (
     const repoForDangerfile = run.repoSlug || settings.repoName
     const dangerfileBranchForPR = isPR ? req.body.pull_request.head.ref : null
     const neededDangerfileIsSameRepo = isPR ? run.repoSlug === req.body.pull_request.head.repo.full_name : false
-    const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : null
+    const branch = neededDangerfileIsSameRepo ? null : dangerfileBranchForPR
 
     const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
     if (file !== "") {
@@ -168,7 +168,7 @@ export const runEverything = async (
         branch,
       }
       const actualBranch = branch ? branch : "master"
-      const message = `Could not find Dangerfile at ${run.dangerfilePath} on ${repoForDangerfile} on branch ${actualBranch}.  
+      const message = `Could not find Dangerfile at <code>${run.dangerfilePath}</code> on <code>${repoForDangerfile}</code> on branch <code>${actualBranch}</code>.
 \`\`\`json      
 ${JSON.stringify(results, null, "  ")}
 \`\`\`   
