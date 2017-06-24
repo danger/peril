@@ -50,20 +50,23 @@ export const DATABASE_JSON_FILE = getEnv("DATABASE_JSON_FILE")
  */
 export const PERIL_ORG_INSTALLATION_ID = getEnv("PERIL_ORG_INSTALLATION_ID")
 
-/** Postgres db URL  */
+/** Postgres db URL */
 export const DATABASE_URL = getEnv("DATABASE_URL")
 
-/** Should fetch log out to the console?  */
+/** Should fetch log out to the console? */
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
 
-/** Papertrail url  */
+/** Papertrail url */
 export const PAPERTRAIL_URL = getEnv("PAPERTRAIL_URL")
 
-/** Papertrail port  */
+/** Papertrail port */
 export const PAPERTRAIL_PORT = getEnv("PAPERTRAIL_PORT")
 
-/** Papertrail port  */
+/** So that we can comment reliably */
 export const PERIL_BOT_USER_ID = getEnv("PERIL_BOT_USER_ID")
+
+/** Adds some security on the URL */
+export const PERIL_WEBHOOK_SECRET = getEnv("PERIL_WEBHOOK_SECRET")
 
 // Can't run without these
 validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])

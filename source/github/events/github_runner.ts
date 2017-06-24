@@ -153,6 +153,18 @@ export const runEverything = async (
     // Either it's dictated in the run as an external repo, or we use the most natual repo
     const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
 
+    const stateForErrorHandling = {
+      branch,
+      dangerfileBranchForPR,
+      isPR,
+      neededDangerfileIsSameRepo,
+      onlyOrgPR,
+      repoForDangerfile,
+      run,
+      settings,
+      supportGithubCommentAPIs,
+    }
+
     const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
     if (file !== "") {
       const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
@@ -160,21 +172,11 @@ export const runEverything = async (
     } else {
       log("Got no github file contents, commenting.")
       // TODO: Allow this to be triggered via a comment in a PR?
-      const results = {
-        settings,
-        run,
-        repoForDangerfile,
-        dangerfileBranchForPR,
-        neededDangerfileIsSameRepo,
-        onlyOrgPR,
-        supportGithubCommentAPIs,
-        isPR,
-        branch,
-      }
+
       const actualBranch = branch ? branch : "master"
-      const message = `Could not find Dangerfile at <code>${run.dangerfilePath}</code> on <code>${repoForDangerfile}</code> on branch <code>${actualBranch}</code>.
+      const message = `Could not find Dangerfile at <code>${run.dangerfilePath}</code> on <code>${repoForDangerfile}</code> on branch <code>${actualBranch}</code>. Full state at error:
 \`\`\`json      
-${JSON.stringify(results, null, "  ")}
+${JSON.stringify(stateForErrorHandling, null, "  ")}
 \`\`\`   
       `
       allResults.push({ fails: [{ message }], markdowns: [], warnings: [], messages: [] })
@@ -188,7 +190,7 @@ ${JSON.stringify(results, null, "  ")}
     commentOnResults(finalResults, token, settings)
   }
 
-  res.status(200).send(`Run ${runs.length} Dangerfiles`)
+  res.status(200).send(`Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`)
 }
 
 export const mdResults = (results: DangerResults): string => {
