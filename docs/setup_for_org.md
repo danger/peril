@@ -20,11 +20,12 @@ Then create a new integration (use `peril-[my-org]`, there is a global namespace
 
 With respect to permissions, my recommendations are:
 
--   Repo Metadata: Read
--   Issues: Read & Write
--   Pull Requests: Read & Write
+-   `Repo Metadata: Read`
+-   `Issues: Read & Write`
+-   `Pull Requests: Read & Write`
+-   `Commit Statuses: Read`
 
-It's trivial to go and change these later as you think of more rules that need different events.
+And if you want to run Peril only for org members: `Organization Members: Read`. Note: it's trivial to go and change these later as you think of more rules that need different events.
 
 Once this is created, download the integration github signing key and keep track of the integration ID, you'll need this later.
 

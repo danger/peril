@@ -1,5 +1,6 @@
-require("./globals") // tslint:disable-line
 import * as express from "express"
+import * as xhub from "express-x-hub"
+import { PERIL_WEBHOOK_SECRET } from "./globals"
 
 const bodyParser = require("body-parser") // tslint:disable-line
 import logger from "./logger"
@@ -14,6 +15,7 @@ process.on("unhandledRejection", (reason: string, p: any) => {
 const app = express()
 app.set("port", process.env.PORT || 5000)
 app.set("view engine", "ejs")
+app.use(xhub({ algorith: "sha1", secret: PERIL_WEBHOOK_SECRET }))
 app.use(bodyParser.json())
 app.use(express.static("public"))
 

@@ -21,6 +21,15 @@ const router = (req, res, next) => {
 }
 
 export const githubRouting = (event, req, res, next) => {
+  if (!req.isXHub) {
+    return res.status(400).send(`Request did not include x-hub header.`)
+  }
+
+  if (!req.isXHubValid()) {
+    res.status(401).send("Request did not have a valid x-hub header. Perhaps PERIL_WEBHOOK_SECRET is not set up right?")
+    return
+  }
+
   switch (event) {
     case "ping": {
       ping(req, res)

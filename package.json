@@ -44,6 +44,7 @@
     "dotenv": "^4.0.0",
     "ejs": "^2.4.2",
     "express": "^4.13.4",
+    "express-x-hub": "^1.0.4",
     "glob": "^7.1.1",
     "jest": "^20.0.4",
     "json2ts": "orta/json2ts#ts-less",
