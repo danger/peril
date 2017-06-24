@@ -10,13 +10,13 @@ So, you will need to have:
 -   A repo where you can keep Peril settings
 -   A heroku instance for Peril
 
-## Creating your integration
+## Creating your GitHub App
 
 You would go to the URL (with your org): 
 
-> <https://github.com/organizations/[my_org]/settings/integrations>
+> <https://github.com/organizations/[my_org]/settings/apps>
 
-Then create a new integration (use `peril-[my-org]`, there is a global namespace for GitHub apps.) At the bottom is the option to only allow this integration to run on your org, you want this ticked probably.
+Then create a new app (use `peril-[my-org]`, there is a global namespace for GitHub apps.) At the bottom is the option to only allow this integration to run on your org, you want this ticked probably.
 
 With respect to permissions, my recommendations are:
 
@@ -27,7 +27,7 @@ With respect to permissions, my recommendations are:
 
 And if you want to run Peril only for org members: `Organization Members: Read`. Note: it's trivial to go and change these later as you think of more rules that need different events.
 
-Once this is created, download the integration github signing key and keep track of the integration ID, you'll need this later.
+Once this is created, download the App's GitHub signing key and keep track of the numerical ID, you'll need this later.
 
 ## Repo Settings
 
@@ -66,7 +66,7 @@ This setup will:
 
 You can actually use `orta/example-peril` BTW, I have some dummy Dangerfiles on that repo exactly for this purpose. Save the above JSON as `peril-settings.json`. Add that to a repo, push it to master on your GitHub remote. Here's one [I did earlier](https://github.com/artsy/artsy-danger/commit/03a1745b1f9f83fc2367ed6cdc72dee3f466b75f).
 
-Note: when you make updates to this file, you need to restart your Peril server.
+Note: when you make updates to this file, you need to restart your Peril server, until [#88](https://github.com/danger/peril/issues/88) is resolved.
 
 ## Heroku
 
@@ -93,11 +93,7 @@ Go through either adding it to the org, or adding each repo you want. Then go ba
 
 ![](images/events.png)
 
-This 
-
-# Prove it works
-
-If you open a PR on any of your repos, Peril should comment on your PR. 
+This prove it works. If you open a PR on any of your repos, Peril should comment on your PR. 
 
 # What now?
 
