@@ -22,7 +22,7 @@ const router = (req, res, next) => {
 
 export const githubRouting = (event, req, res, next) => {
   if (!req.isXHub) {
-    return res.status(400).send(`Request did not include x-hub header.`)
+    return res.status(400).send("Request did not include x-hub header.")
   }
 
   if (!req.isXHubValid()) {
