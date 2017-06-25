@@ -41,7 +41,7 @@ const database: DatabaseAdaptor = {
 
   /** Gets an Integration */
   getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
-    return db.one("select * from installations where id=$1", [installationID])
+    return db.oneOrNone("select * from installations where id=$1", [installationID])
   },
 
   /** Deletes an Integration */
@@ -61,7 +61,7 @@ const database: DatabaseAdaptor = {
   /** Deletes a Github repo from the DB */
   deleteRepo: (installationID: number, repoName: string) => {
     info(`Deleting github repo ${repoName}`)
-    return db.one("delete from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
+    return db.none("delete from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
   },
 }
 
