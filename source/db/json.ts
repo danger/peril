@@ -31,10 +31,27 @@ const info = (message: string) => {
   winston.info(`[db] - ${message}`)
 }
 
+const installationById = (installationId: string | undefined): GitHubInstallation => {
+  return {
+    id: getInstallationId(installationId),
+    rules: {},
+    settings: {}
+  }
+}
+
+const getInstallationId = (id: string | undefined): number => {
+  let installationId: number | undefined = parseInt(id as string, 10)
+  if (Number.isNaN(installationId)) {
+    installationId = undefined;
+  }
+  return installationId as number
+}
+
 let org: GitHubInstallation = null as any
 
 const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
   setup: async () => {
+
     const repo = dangerFilePath.split("@")[0]
     const path = dangerFilePath.split("@")[1]
     // Try see if we can pull it without an access token
@@ -44,7 +61,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
       if (!PERIL_ORG_INSTALLATION_ID) {
         throwNoPerilInstallationID()
       }
-      const token = await getTemporaryAccessTokenForInstallation(PERIL_ORG_INSTALLATION_ID)
+      const token = await getTemporaryAccessTokenForInstallation(installationById(PERIL_ORG_INSTALLATION_ID))
       file = await getGitHubFileContents(token, repo, path, null)
     }
 
@@ -52,7 +69,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
       throwNoJSONFileFound(dangerFilePath)
     }
     org = JSON.parse(file)
-    org.id = PERIL_ORG_INSTALLATION_ID
+    org.id = getInstallationId(PERIL_ORG_INSTALLATION_ID)
   },
 
   /** Saves an Integration */

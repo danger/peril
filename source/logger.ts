@@ -10,7 +10,7 @@ if (PAPERTRAIL_URL) {
   const transports = winston.transports as any
   winston.add(transports.Papertrail, {
     host: PAPERTRAIL_URL,
-    port: parseInt(PAPERTRAIL_PORT, 10),
+    port: parseInt(PAPERTRAIL_PORT as string, 10),
   })
 } else {
   console.log("Skipping papertrail setup for winston.") // tslint:disable-line

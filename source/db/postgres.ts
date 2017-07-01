@@ -17,7 +17,7 @@ const info = (message: string) => {
 
 const database: DatabaseAdaptor = {
   setup: async () => {
-    db = pg()(DATABASE_URL)
+    db = pg()(DATABASE_URL as string)
   },
 
   /** Saves an Integration */

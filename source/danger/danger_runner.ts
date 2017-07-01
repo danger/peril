@@ -9,7 +9,7 @@ import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { runDangerfileEnvironment } from "danger/distribution/runner/DangerfileRunner"
-import { Executor } from "danger/distribution/runner/Executor"
+import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 
 import { tmpdir } from "os"
 import { basename, resolve } from "path"
@@ -87,9 +87,8 @@ export function executorForInstallation(platform: Platform) {
 
   const execConfig = {
     stdoutOnly: false,
-    verbose: process.env.LOG_FETCH_REQUESTS,
+    verbose: !!process.env.LOG_FETCH_REQUESTS,
   }
-
   // Source can be removed in the next release of Danger
   return new Executor(source, platform, execConfig)
 }

@@ -248,7 +248,7 @@ const githubAPIForCommentable = (token: string, repoSlug: string, issueNumber: n
   // How can I get this from an API, if we cannot use /me ?
   // https://api.github.com/repos/PerilTest/PerilPRTester/issues/5/comments
   // Talked to GH - they know it's an issue.
-  githubAPI.getUserID = () => Promise.resolve(parseInt(PERIL_BOT_USER_ID, 10))
+  githubAPI.getUserID = () => Promise.resolve(parseInt(PERIL_BOT_USER_ID as string, 10))
   return githubAPI
 }
 

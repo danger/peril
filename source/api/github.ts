@@ -40,15 +40,16 @@ export function requestAccessTokenForInstallation(installationID: number) {
 
 export function jwtForGitHubAuth() {
   const now = Math.round(new Date().getTime() / 1000)
-  const expires = now + 60
-  const keyContent = PRIVATE_GITHUB_SIGNING_KEY
+  const expires: number = now + 60
+  const keyContent = PRIVATE_GITHUB_SIGNING_KEY as string
+  const payload: object = {
+    exp: expires,
+    iat: now,
+    iss: PERIL_INTEGRATION_ID,
+  }
 
   return jwt.sign(
-    {
-      exp: expires,
-      iat: now,
-      iss: PERIL_INTEGRATION_ID,
-    },
+    payload,
     keyContent,
     { algorithm: "RS256" }
   )

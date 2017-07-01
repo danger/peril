@@ -43,7 +43,7 @@ export interface GitHubInstallation {
   rules: RunnerRuleset
 }
 
-export type RunnerRuleset = { [name: string]: DangerfileReferenceString }
+export interface RunnerRuleset { [name: string]: DangerfileReferenceString }
 
 export interface GithubRepo {
   /** UUID */
@@ -79,7 +79,7 @@ let exposedDB: DatabaseAdaptor = null as any
 if (DATABASE_URL) {
   exposedDB = postgres
 } else {
-  exposedDB = jsonDB(DATABASE_JSON_FILE)
+  exposedDB = jsonDB(DATABASE_JSON_FILE as string)
 }
 
 exposedDB.setup()
