@@ -12,7 +12,7 @@ import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger
 import { executorForInstallation, runDangerAgainstInstallation } from "../../danger/danger_runner"
 import db, { GitHubInstallation, GithubRepo } from "../../db"
 import { Pull_request } from "../events/types/pull_request_opened.types"
-import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
+import { canUserWriteToRepo, getGitHubFileContents } from "../lib/github_helpers"
 
 /**
  * So, these function have a bunch of responsibilities.
@@ -77,7 +77,8 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
 
   const settings = await setupForRequest(req)
 
-  // TODO: Why did I make this call before?
+  // Some events aren't tied to a repo (like creating a user) and so
+  // right now I've not thought through what is necessary to run those
   if (!settings.isRepoEvent) {
     res.status(404).send(`WIP - not built out support for non-repo related events - sorry`)
     return
@@ -171,21 +172,6 @@ export const runPRRun = async (
   token: string,
   pr: Pull_request
 ): Promise<DangerResults | null> => {
-  // Are we being extra paranoid about running Dangerfiles?
-  // Ideally this can move to detect if the PR changed the Dangerfile also
-  //
-  // This feature is being dropped in favour of https://github.com/danger/peril/issues/95
-  //
-  // const onlyOrgPR = installation.settings.onlyForOrgMembers
-  // if (onlyOrgPR && githubAPI && settings.repoName && settings.triggeredByUsername) {
-  //   const org = settings.repoName.split("/")[0]
-  //   const userInOrg = await isUserInOrg(token, settings.triggeredByUsername, org)
-  //   if (!userInOrg) {
-  //     res.status(403).send(`Not running because ${settings.triggeredByUsername} is not in ${org}.`)
-  //     return null
-  //   }
-  // }
-
   const githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
 
   // In theory only a PR requires a custom branch, so we can check directly for that
@@ -200,7 +186,19 @@ export const runPRRun = async (
   // Either it's dictated in the run as an external repo, or we use the most natural repo
   const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
 
+  const baseDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
+
+  // Shortcut to determine if both Dangerfile exists, and that they have different content
+  if (headDangerfile !== "" && baseDangerfile !== "" && baseDangerfile !== headDangerfile) {
+    // Check to see if they have write access, if they don't then don't run the
+    // Dangerfile, but put out a message that it's not being ran on purpose
+    const userCanWrite = await canUserWriteToRepo(token, settings.triggeredByUsername, dangerfileRepoForPR)
+    if (!userCanWrite) {
+      const message = "Not running Danger rules due to user with no write access changing the Dangerfile."
+      return { fails: [], markdowns: [], warnings: [], messages: [{ message }] }
+    }
+  }
 
   const reportData = reason => {
     const stateForErrorHandling = {
@@ -240,7 +238,7 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
 export const mdResults = (results: DangerResults): string => {
   return `
 mds: ${results.markdowns.length}
-mds: ${results.messages.length}
+messages: ${results.messages.length}
 warns: ${results.warnings.length}
 fails: ${results.fails.length}
   `
