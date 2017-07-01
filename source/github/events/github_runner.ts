@@ -114,7 +114,7 @@ export const runEverything = async (
   const allResults = [] as DangerResults[]
 
   const prRuns = runs.filter(r => r.dslType === dsl.pr)
-  const eventRuns = runs.filter(r => r.dslType !== dsl.pr)
+  const eventRuns = runs.filter(r => r.dslType !== dsl.import)
 
   // Loop through all PRs, which are definitely special cases compare to simple events
   for (const run of prRuns) {
@@ -125,7 +125,7 @@ export const runEverything = async (
   }
 
   for (const run of eventRuns) {
-    const results = await runEventRun(run, settings, token)
+    const results = await runEventRun(run, settings, token, req.body)
     if (results) {
       allResults.push(results)
     }
@@ -141,8 +141,14 @@ export const runEverything = async (
   res.status(200).send(`Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`)
 }
 
-const runEventRun = async (run: DangerRun, settings: any, token: string): Promise<DangerResults | null> => {
-  if (!run.repoSlug) {
+export const runEventRun = async (
+  run: DangerRun,
+  settings: any,
+  token: string,
+  dsl: any
+): Promise<DangerResults | null> => {
+  const repoForDangerfile = run.repoSlug || (dsl.repository && dsl.repository.full_name)
+  if (!repoForDangerfile) {
     return null
   }
 
@@ -155,11 +161,11 @@ const runEventRun = async (run: DangerRun, settings: any, token: string): Promis
     githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
   }
 
-  const headDangerfile = await getGitHubFileContents(token, run.repoSlug, run.dangerfilePath, null)
+  const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
   return await runDangerAgainstInstallation(headDangerfile, run.dangerfilePath, githubAPI, run.dslType)
 }
 
-const runPRRun = async (
+export const runPRRun = async (
   run: DangerRun,
   settings: any,
   token: string,
@@ -194,7 +200,6 @@ const runPRRun = async (
   // Either it's dictated in the run as an external repo, or we use the most natural repo
   const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
 
-  const baseDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
 
   const reportData = reason => {
