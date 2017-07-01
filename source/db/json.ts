@@ -31,6 +31,14 @@ const info = (message: string) => {
   winston.info(`[db] - ${message}`)
 }
 
+const installationById = (installationId: string): GitHubInstallation => {
+  return {
+    id: parseInt(installationId, 10),
+    rules: {},
+    settings: {}
+  }
+}
+
 let org: GitHubInstallation = null as any
 
 const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
@@ -44,7 +52,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
       if (!PERIL_ORG_INSTALLATION_ID) {
         throwNoPerilInstallationID()
       }
-      const token = await getTemporaryAccessTokenForInstallation(PERIL_ORG_INSTALLATION_ID)
+      const token = await getTemporaryAccessTokenForInstallation(installationById(PERIL_ORG_INSTALLATION_ID as string))
       file = await getGitHubFileContents(token, repo, path, null)
     }
 
@@ -52,7 +60,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
       throwNoJSONFileFound(dangerFilePath)
     }
     org = JSON.parse(file)
-    org.id = PERIL_ORG_INSTALLATION_ID
+    org.id = parseInt(PERIL_ORG_INSTALLATION_ID as string, 10);
   },
 
   /** Saves an Integration */
