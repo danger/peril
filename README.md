@@ -60,7 +60,7 @@ PERIL_BOT_USER_ID=1839
 Notes:
 
 - The `PERIL_BOT_USER_ID` you don't need at first, you can get it working with any number (it's used for updating/deleting posts).
-- The `PRIVATE_GITHUB_SIGNING_KEY` can be set with something like `heroku config:add PRIVATE_GITHUB_SIGNING_KEY=(cat /Users/orta/Downloads/peril-staging.2017-03-23.private-key.pem )`.
+- The `PRIVATE_GITHUB_SIGNING_KEY` can be set with something like `heroku config:add PRIVATE_GITHUB_SIGNING_KEY=$(cat /Users/orta/Downloads/peril-staging.2017-03-23.private-key.pem )`.
 - The `WEB_URL` isn't used yet.
 - The `PAPERTRAIL_URL` / `PAPERTRAIL_PORT` vars are optional, but are useful for reading server logs.
 
