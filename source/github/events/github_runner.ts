@@ -202,7 +202,6 @@ const runPRRun = async (
       branch,
       dangerfileBranchForPR,
       neededDangerfileIsSameRepo,
-      onlyOrgPR,
       repoForDangerfile,
       run,
       settings,
