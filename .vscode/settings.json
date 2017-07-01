@@ -18,7 +18,6 @@
     "tslint.autoFixOnSave": true,
     "tslint.run": "onType",
     "tslint.exclude": "node_modules/**/*",
-    "eslint.enable": false,
     "flow.enabled": false,
     "editor.formatOnSave": true,
     "prettier.singleQuote": false,
@@ -27,6 +26,7 @@
         "typescript",
         "typescriptreact"
     ],
+    "prettier.jsonEnable": [],
     "prettier.semi": false,
     "prettier.printWidth": 120,
     "editor.renderWhitespace": "boundary"

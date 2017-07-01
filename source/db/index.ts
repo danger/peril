@@ -43,7 +43,9 @@ export interface GitHubInstallation {
   rules: RunnerRuleset
 }
 
-export interface RunnerRuleset { [name: string]: DangerfileReferenceString }
+export interface RunnerRuleset {
+  [name: string]: DangerfileReferenceString
+}
 
 export interface GithubRepo {
   /** UUID */

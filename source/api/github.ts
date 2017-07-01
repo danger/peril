@@ -48,9 +48,5 @@ export function jwtForGitHubAuth() {
     iss: PERIL_INTEGRATION_ID,
   }
 
-  return jwt.sign(
-    payload,
-    keyContent,
-    { algorithm: "RS256" }
-  )
+  return jwt.sign(payload, keyContent, { algorithm: "RS256" })
 }
