@@ -118,7 +118,7 @@ export const runEverything = async (
 
   // Loop through all PRs, which are definitely special cases compare to simple events
   for (const run of prRuns) {
-    const results = await runPRRun(run, settings, token, req.body)
+    const results = await runPRRun(run, settings, token, req.body.pull_request || req.body)
     if (results) {
       allResults.push(results)
     }
