@@ -11,6 +11,7 @@ import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerAgainstInstallation } from "../../danger/danger_runner"
 import db, { GitHubInstallation, GithubRepo } from "../../db"
+import { Pull_request } from "../events/types/pull_request_opened.types"
 import { getGitHubFileContents, isUserInOrg } from "../lib/github_helpers"
 
 /**
@@ -95,7 +96,7 @@ export function runsForEvent(event: string, action: string | null, installation:
 export const runEverything = async (
   runs: DangerRun[],
   settings: any,
-  installation,
+  installation: GitHubInstallation,
   req: express.Request,
   res: express.Response,
   next: any
@@ -111,75 +112,22 @@ export const runEverything = async (
   const token = await getTemporaryAccessTokenForInstallation(installation)
 
   const allResults = [] as DangerResults[]
-  for (const run of runs) {
-    log(`Running: ${JSON.stringify(run, null, " ")}`)
 
-    const isPR = run.dslType === dsl.pr
-    const supportGithubCommentAPIs = run.feedback === feedback.commentable
+  const prRuns = runs.filter(r => r.dslType === dsl.pr)
+  const eventRuns = runs.filter(r => r.dslType !== dsl.import)
 
-    log(`Use fullDSL: ${isPR}`)
-    log(`supportGithubCommentAPIs: ${supportGithubCommentAPIs}`)
-
-    // Do we need an authenticated Danger GitHubAPI instance so we
-    // can leave feedback on an issue?
-    let githubAPI = null as GitHubAPI | null
-    if (supportGithubCommentAPIs && settings.commentableID && settings.repo) {
-      githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
-      log("Got a GitHub API")
-    }
-
-    // Are we being extra paranoid about running Dangerfiles?
-    // Ideally this can move to detect if the PR changed the Dangerfile also
-    const onlyOrgPR = installation.settings.onlyForOrgMembers && isPR
-    if (onlyOrgPR && githubAPI && settings.repoName && settings.triggeredByUsername) {
-      log("Checking if user is in org")
-      const org = settings.repoName.split("/")[0]
-      const userInOrg = await isUserInOrg(token, settings.triggeredByUsername, org)
-      if (!userInOrg) {
-        res.status(403).send(`Not running because ${settings.triggeredByUsername} is not in ${org}.`)
-        return
-      }
-    }
-
-    // In theory only a PR requires a custom branch, so we can check directly for that
-    // in the event JSON and if it's not there then use master
-    // prioritise the run metadata
-
-    const dangerfileRepoForPR = isPR ? req.body.pull_request.head.repo.full_name : settings.repoName
-    const dangerfileBranchForPR = isPR ? req.body.pull_request.head.ref : null
-    const neededDangerfileIsSameRepo = isPR ? run.repoSlug === req.body.pull_request.head.repo.full_name : false
-    const branch = neededDangerfileIsSameRepo ? null : dangerfileBranchForPR
-
-    // Either it's dictated in the run as an external repo, or we use the most natual repo
-    const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
-
-    const stateForErrorHandling = {
-      branch,
-      dangerfileBranchForPR,
-      isPR,
-      neededDangerfileIsSameRepo,
-      onlyOrgPR,
-      repoForDangerfile,
-      run,
-      settings,
-      supportGithubCommentAPIs,
-    }
-
-    const file = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
-    if (file !== "") {
-      const results = await runDangerAgainstInstallation(file, run.dangerfilePath, githubAPI, run.dslType)
+  // Loop through all PRs, which are definitely special cases compare to simple events
+  for (const run of prRuns) {
+    const results = await runPRRun(run, settings, token, req.body.pull_request || req.body)
+    if (results) {
       allResults.push(results)
-    } else {
-      log("Got no github file contents, commenting.")
-      // TODO: Allow this to be triggered via a comment in a PR?
+    }
+  }
 
-      const actualBranch = branch ? branch : "master"
-      const message = `Could not find Dangerfile at <code>${run.dangerfilePath}</code> on <code>${repoForDangerfile}</code> on branch <code>${actualBranch}</code>. Full state at error:
-\`\`\`json      
-${JSON.stringify(stateForErrorHandling, null, "  ")}
-\`\`\`   
-      `
-      allResults.push({ fails: [{ message }], markdowns: [], warnings: [], messages: [] })
+  for (const run of eventRuns) {
+    const results = await runEventRun(run, settings, token, req.body)
+    if (results) {
+      allResults.push(results)
     }
   }
 
@@ -191,6 +139,102 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
   }
 
   res.status(200).send(`Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`)
+}
+
+export const runEventRun = async (
+  run: DangerRun,
+  settings: any,
+  token: string,
+  dsl: any
+): Promise<DangerResults | null> => {
+  const repoForDangerfile = run.repoSlug || (dsl.repository && dsl.repository.full_name)
+  if (!repoForDangerfile) {
+    return null
+  }
+
+  const supportsGithubCommentAPIs = run.feedback === feedback.commentable
+
+  // Do we need an authenticated Danger GitHubAPI instance so we
+  // can leave feedback on an issue?
+  let githubAPI = null as GitHubAPI | null
+  if (supportsGithubCommentAPIs && settings.commentableID && settings.repo) {
+    githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
+  }
+
+  const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
+  return await runDangerAgainstInstallation(headDangerfile, run.dangerfilePath, githubAPI, run.dslType)
+}
+
+export const runPRRun = async (
+  run: DangerRun,
+  settings: any,
+  token: string,
+  pr: Pull_request
+): Promise<DangerResults | null> => {
+  // Are we being extra paranoid about running Dangerfiles?
+  // Ideally this can move to detect if the PR changed the Dangerfile also
+  //
+  // This feature is being dropped in favour of https://github.com/danger/peril/issues/95
+  //
+  // const onlyOrgPR = installation.settings.onlyForOrgMembers
+  // if (onlyOrgPR && githubAPI && settings.repoName && settings.triggeredByUsername) {
+  //   const org = settings.repoName.split("/")[0]
+  //   const userInOrg = await isUserInOrg(token, settings.triggeredByUsername, org)
+  //   if (!userInOrg) {
+  //     res.status(403).send(`Not running because ${settings.triggeredByUsername} is not in ${org}.`)
+  //     return null
+  //   }
+  // }
+
+  const githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
+
+  // In theory only a PR requires a custom branch, so we can check directly for that
+  // in the event JSON and if it's not there then use master
+  // prioritise the run metadata
+
+  const dangerfileRepoForPR = pr.head.repo.full_name
+  const dangerfileBranchForPR = pr.head.ref
+  const neededDangerfileIsSameRepo = run.repoSlug === pr.head.repo.full_name
+  const branch = neededDangerfileIsSameRepo ? null : dangerfileBranchForPR
+
+  // Either it's dictated in the run as an external repo, or we use the most natural repo
+  const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
+
+  const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
+
+  const reportData = reason => {
+    const stateForErrorHandling = {
+      branch,
+      dangerfileBranchForPR,
+      neededDangerfileIsSameRepo,
+      repoForDangerfile,
+      run,
+      settings,
+    }
+
+    return `${reason}
+
+## Full state of PR run:
+
+\`\`\`json      
+${JSON.stringify(stateForErrorHandling, null, "  ")}
+\`\`\`   
+      `
+  }
+
+  if (headDangerfile !== "") {
+    const results = await runDangerAgainstInstallation(headDangerfile, run.dangerfilePath, githubAPI, run.dslType)
+    if (pr.body.includes("Peril: Debug")) {
+      results.markdowns.push(reportData("Showing PR details due to including 'Peril: Debug'"))
+    }
+    return results
+  } else {
+    const actualBranch = branch ? branch : "master"
+    const message = `Could not find Dangerfile at <code>${run.dangerfilePath}</code> on <code>${repoForDangerfile}</code> on branch <code>${actualBranch}</code>`
+
+    const report = reportData("Could not find a Dangerfile at ")
+    return { fails: [{ message: report }], markdowns: [], warnings: [], messages: [] }
+  }
 }
 
 export const mdResults = (results: DangerResults): string => {
