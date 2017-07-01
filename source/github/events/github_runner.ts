@@ -186,9 +186,16 @@ const runPRRun = async (
   // in the event JSON and if it's not there then use master
   // prioritise the run metadata
 
-  const dangerfileRepoForPR = pr.head.repo.full_name
-  const dangerfileBranchForPR = pr.head.ref
-  const neededDangerfileIsSameRepo = run.repoSlug === pr.head.repo.full_name
+  let dangerfileRepoForPR;
+  let dangerfileBranchForPR;
+  let neededDangerfileIsSameRepo = false;
+  if (pr.head) {
+    if (pr.head.repo) {
+      dangerfileRepoForPR = pr.head.repo.full_name
+    }
+    dangerfileBranchForPR = pr.head.ref
+    neededDangerfileIsSameRepo = run.repoSlug === pr.head.repo.full_name
+  }
   const branch = neededDangerfileIsSameRepo ? null : dangerfileBranchForPR
 
   // Either it's dictated in the run as an external repo, or we use the most natural repo
