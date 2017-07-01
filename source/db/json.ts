@@ -35,14 +35,14 @@ const installationById = (installationId: string | undefined): GitHubInstallatio
   return {
     id: getInstallationId(installationId),
     rules: {},
-    settings: {}
+    settings: {},
   }
 }
 
 const getInstallationId = (id: string | undefined): number => {
   let installationId: number | undefined = parseInt(id as string, 10)
   if (Number.isNaN(installationId)) {
-    installationId = undefined;
+    installationId = undefined
   }
   return installationId as number
 }
@@ -51,7 +51,6 @@ let org: GitHubInstallation = null as any
 
 const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
   setup: async () => {
-
     const repo = dangerFilePath.split("@")[0]
     const path = dangerFilePath.split("@")[1]
     // Try see if we can pull it without an access token

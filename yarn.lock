@@ -1228,9 +1228,9 @@ cycle@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
 
-danger@^0.21.1:
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-0.21.1.tgz#92af5921f9678541c0b64b17aa4e3bfed1813322"
+danger@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-1.0.0.tgz#abad492dcf22f72407c3a96f00082835418040ef"
   dependencies:
     babel-polyfill "^6.20.0"
     chalk "^1.1.1"
@@ -3549,9 +3549,9 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@^1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.4.4.tgz#a8d1447b14c9bf67e6d420dcadd10fb9a4fad65a"
+prettier@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.5.2.tgz#7ea0751da27b93bfb6cecfcec509994f52d83bb3"
 
 pretty-format@^19.0.0:
   version "19.0.0"
