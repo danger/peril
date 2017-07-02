@@ -61,9 +61,9 @@ export const dangerRunForRules = (
   }
 
   return {
-    event,
     action,
     dslType: dslTypeForEvent(event),
+    event,
     ...dangerRepresentationforPath(path),
     feedback: feedbackTypeForEvent(event),
   }

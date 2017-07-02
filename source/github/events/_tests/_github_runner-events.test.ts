@@ -2,12 +2,7 @@ const getRepoFake = () => Promise.resolve({ id: "123", fake: true })
 
 jest.mock("../../../db", () => ({ default: { getRepo: getRepoFake } }))
 
-const contentsMock = jest.fn((token, repo, path) => {
-  if (path === "dangerfile.issue") {
-    return Promise.resolve("warn('issue worked')")
-  }
-})
-
+const contentsMock = jest.fn(() => Promise.resolve("warn('issue worked')"))
 jest.mock("../../../github/lib/github_helpers", () => ({ getGitHubFileContents: contentsMock }))
 
 import { readFileSync } from "fs"
@@ -19,7 +14,7 @@ import { GitHubRunSettings, runEventRun, setupForRequest } from "../github_runne
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = file => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
-it("runs an Dangerfile for an issue with a local", async () => {
+it("runs a Dangerfile for an issue", async () => {
   const body = fixture("issue_comment_created.json")
   const req = { body } as any
   const settings = await setupForRequest(req)
@@ -28,6 +23,6 @@ it("runs an Dangerfile for an issue with a local", async () => {
   const run = dangerRunForRules("issue_comment", "created", { issue_comment: "dangerfile.issue" })!
 
   const result = await runEventRun(run, settings, "token", body)
-  // See above i nthe mock for the link
+
   expect(result!.warnings[0].message).toEqual("issue worked")
 })

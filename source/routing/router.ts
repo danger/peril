@@ -65,7 +65,6 @@ export const githubRouting = (event, req, res, next) => {
 
     default: {
       info(` - passing to Dangerfile rule router`)
-      // throw "NO"
       githubDangerRunner(event, req, res, next)
     }
   }
