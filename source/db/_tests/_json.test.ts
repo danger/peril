@@ -45,6 +45,11 @@ describe("makes the right calls to GitHub", () => {
     const repo = await db.getRepo(1, "orta/ORStackView")
     expect(repo).toMatchSnapshot()
   })
+
+  it("returns null when the db doesn exist", async () => {
+    const repo = await db.getRepo(1, "orta/thing")
+    expect(repo).toBeFalsy()
+  })
 })
 
 // need a unhandled rejection from promises?

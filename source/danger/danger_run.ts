@@ -26,7 +26,7 @@ export interface DangerRun {
   event: string
   /** What action inside that event trigger this run */
   action: string | null
-  /** What slug should this run come from? */
+  /** What slug should this run come from? If null - then it implies same repo */
   repoSlug?: string
   /** Where should we look in that repo for the Dangerfile? */
   dangerfilePath: string

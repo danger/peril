@@ -158,8 +158,8 @@ export const runEventRun = async (
   // Do we need an authenticated Danger GitHubAPI instance so we
   // can leave feedback on an issue?
   let githubAPI = null as GitHubAPI | null
-  if (supportsGithubCommentAPIs && settings.commentableID && settings.repo) {
-    githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
+  if (supportsGithubCommentAPIs && settings.commentableID) {
+    githubAPI = githubAPIForCommentable(token, repoForDangerfile, settings.commentableID)
   }
 
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
@@ -172,19 +172,19 @@ export const runPRRun = async (
   token: string,
   pr: Pull_request
 ): Promise<DangerResults | null> => {
-  const githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
+  const dangerfileRepoForPR = pr.head.repo.full_name
+  const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
+  const githubAPI = githubAPIForCommentable(token, repoForDangerfile, settings.commentableID)
 
   // In theory only a PR requires a custom branch, so we can check directly for that
   // in the event JSON and if it's not there then use master
   // prioritise the run metadata
 
-  const dangerfileRepoForPR = pr.head.repo.full_name
   const dangerfileBranchForPR = pr.head.ref
   const neededDangerfileIsSameRepo = run.repoSlug === pr.head.repo.full_name
   const branch = neededDangerfileIsSameRepo ? null : dangerfileBranchForPR
 
   // Either it's dictated in the run as an external repo, or we use the most natural repo
-  const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
 
   const baseDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)

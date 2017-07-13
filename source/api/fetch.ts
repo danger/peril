@@ -4,6 +4,10 @@ export default function fetch(
   url: string | node_fetch.Request,
   init?: node_fetch.RequestInit
 ): Promise<node_fetch.Response> {
+  if (process.env.NODE_ENV === "test") {
+    console.log(url)
+  }
+
   if (process.env.LOG_FETCH_REQUESTS && init) {
     const output = ["curl", "-i"]
     if (init.method) {

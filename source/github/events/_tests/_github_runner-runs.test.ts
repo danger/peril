@@ -109,3 +109,31 @@ it("gets the expected runs for platform", () => {
     },
   ])
 })
+
+it("only runs once when it's an org-wide rule only", () => {
+  const installation = {
+    id: 12,
+    repos: {
+      "danger/peril": {},
+    },
+    rules: {
+      pull_request: "orta/peril-dangerfiles@pr.ts",
+    },
+    settings: {},
+  }
+
+  const repo = {
+    fullName: "danger/peril",
+    id: 1,
+    installationID: 12,
+    rules: {
+      issues: "pr.ts",
+    },
+  }
+
+  const settings = getSettings({ repo, repoName: repo.fullName })
+
+  const runs = runsForEvent("pull_request", "created", installation, settings)
+  expect(runs.length).toEqual(1)
+  console.log(runs)
+})
