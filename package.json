@@ -62,7 +62,7 @@
     "write-file-promise": "^1.0.0"
   },
   "engines": {
-    "node": "7.2.1"
+    "node": "7.10.1"
   },
   "jest": {
     "transform": {
