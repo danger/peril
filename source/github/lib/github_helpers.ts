@@ -2,10 +2,11 @@ import fetch from "../../api/fetch"
 import { GitHubUser } from "../../db/types"
 import winston from "../../logger"
 
-export async function isUserInOrg(token: string, user: GitHubUser, org: string) {
-  // https://developer.github.com/v3/orgs/members/#check-membership
-  const res = await api(token, `orgs/${org}/members/${user}`)
-  return res.status === 204
+export async function canUserWriteToRepo(token: string, user: GitHubUser, repoSlug: string) {
+  // https://developer.github.com/v3/repos/collaborators/#review-a-users-permission-level
+  const req = await api(token, `repos/${repoSlug}/collaborators/${user.login}/permission`)
+  const res = await req.json()
+  return res.permission === "admin" || res.permission === "write"
 }
 
 /**
