@@ -48,8 +48,19 @@ export async function runDangerAgainstInstallation(contents: string, path: strin
  */
 export async function runDangerAgainstFile(file: string, exec: Executor) {
   const runtimeEnv = await exec.setupDanger()
-
-  return await runDangerfileEnvironment(file, runtimeEnv)
+  let results: DangerResults
+  try {
+    results = await runDangerfileEnvironment(file, runtimeEnv)
+  } catch (error) {
+    const failure = `Danger failed to run ${file}.`
+    const errorMD = `## Error ${error.name}
+    \`\`\`
+    ${error.message}
+    \`\`\`
+    `
+    results = { fails: [{ message: failure }], warnings: [], markdowns: [errorMD], messages: [] }
+  }
+  return results
 }
 
 /**
