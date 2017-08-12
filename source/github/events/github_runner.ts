@@ -147,7 +147,7 @@ export const runEverything = async (
   }
 
   const status = `Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`
-  res.status(200).send({ status, results: allResults })
+  res.status(200).send(JSON.stringify({ status, results: allResults }, null, "  "))
 }
 
 export const runEventRun = async (

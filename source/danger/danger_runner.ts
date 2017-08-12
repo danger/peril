@@ -54,9 +54,11 @@ export async function runDangerAgainstFile(file: string, exec: Executor) {
   } catch (error) {
     const failure = `Danger failed to run ${file}.`
     const errorMD = `## Error ${error.name}
-    \`\`\`
-    ${error.message}
-    \`\`\`
+\`\`\`
+${error.message}
+
+${error.stack}
+\`\`\`
     `
     results = { fails: [{ message: failure }], warnings: [], markdowns: [errorMD], messages: [] }
   }
