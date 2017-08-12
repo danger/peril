@@ -38,7 +38,7 @@ export const WEB_URL = getEnv("WEB_URL")
  * Database JSON File, as a github URL
  * e.g. "orta/peril@settings.json"
  * Which is settings.json in the root of the repo orta/peril
-*/
+ */
 export const DATABASE_JSON_FILE = getEnv("DATABASE_JSON_FILE")
 
 /**

@@ -6,7 +6,7 @@ import { DangerfileReferenceString, DatabaseAdaptor, GitHubInstallation, GithubR
 import { GitHubUser } from "./types"
 
 // Effectively you need to have a JSON file that looks like a GitHubInstallation,
-// but also have a `repos` array of GitHUbRepo -so you can do per repo rules in there.
+// but also have a `repos` array of GitHubRepo -so you can do per repo rules in there.
 
 /*
 For example:
