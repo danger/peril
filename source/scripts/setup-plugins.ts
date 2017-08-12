@@ -3,6 +3,8 @@ import * as child_process from "child_process"
 import jsonDatabase from "../db/json"
 import { DATABASE_JSON_FILE } from "../globals"
 
+const log = console.log
+
 const go = async () => {
   // Download settings
   const db = jsonDatabase(DATABASE_JSON_FILE)
@@ -15,11 +17,15 @@ const go = async () => {
   // Look for plugins
   if (installation.settings.plugins && installation.settings.plugins.length !== 0) {
     const plugins = installation.settings.plugins.join(" ")
-    console.log("Installing: " + plugins) // tslint:disable-line
-    // Install them with yarn
-    child_process.execSync("yarn add " + plugins)
+    log("Installing: " + plugins)
+
+    const ls = child_process.spawn("yarn", ["add", ...plugins])
+
+    ls.stdout.on("data", data => log(`stdout: ${data}`))
+    ls.stderr.on("data", data => log(`stderr: ${data}`))
+    ls.on("close", code => log(`child process exited with code ${code}`))
   } else {
-    console.log("Not adding any plugins") // tslint:disable-line
+    log("Not adding any plugins")
   }
 }
 
