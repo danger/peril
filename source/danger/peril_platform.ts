@@ -25,7 +25,7 @@ const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: a
       },
       name: "",
       updateOrCreateComment: github ? github.updateOrCreateComment : nullFunc,
-      updateStatus: github ? github.updateStatus : nullFunc,
+      updateStatus: nullFunc,
     }
     return platform
   }
