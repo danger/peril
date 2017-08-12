@@ -1,8 +1,7 @@
+import * as bodyParser from "body-parser"
 import * as express from "express"
 import * as xhub from "express-x-hub"
 import { PERIL_WEBHOOK_SECRET } from "./globals"
-
-const bodyParser = require("body-parser") // tslint:disable-line
 import logger from "./logger"
 import webhook from "./routing/router"
 
