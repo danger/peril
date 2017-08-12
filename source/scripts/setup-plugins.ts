@@ -3,6 +3,10 @@ import * as child_process from "child_process"
 import jsonDatabase from "../db/json"
 import { DATABASE_JSON_FILE } from "../globals"
 
+if (process.env.NO_RECURSE) {
+  process.exit(0)
+}
+
 const log = console.log
 
 const go = async () => {
@@ -22,18 +26,12 @@ const go = async () => {
     // This will call `yarn build` which will call this, so we
     // bypass that by providing no ENV - which means `DATABASE_JSON_FILE`
     // won't exist.
-    const ls = child_process.spawn("yarn", ["add", ...plugins], { env: {} })
+    const ls = child_process.spawn("yarn", ["add", ...plugins], { env: { ...process.env, NO_RECURSE: "YES" } })
 
-    ls.stdout.on("data", data => log(`stdout: ${data}`))
-    ls.stderr.on("data", data => log(`stderr: ${data}`))
-
-    ls.on("close", code => {
-      log(`child process exited with code ${code}`)
-      process.exit(code)
-    })
+    ls.stdout.on("data", data => log(`-> : ${data}`))
+    ls.stderr.on("data", data => log(`! -> : ${data}`))
   } else {
     log("Not adding any plugins")
-    process.exit(0)
   }
 }
 
