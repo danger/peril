@@ -19,7 +19,10 @@ const go = async () => {
     const plugins = installation.settings.plugins
     log("Installing: " + plugins.join(", "))
 
-    const ls = child_process.spawn("yarn", ["add", ...plugins])
+    // This will call `yarn build` which will call this, so we
+    // bypass that by providing no ENV - which means `DATABASE_JSON_FILE`
+    // won't exist.
+    const ls = child_process.spawn("yarn", ["add", ...plugins], { env: {} })
 
     ls.stdout.on("data", data => log(`stdout: ${data}`))
     ls.stderr.on("data", data => log(`stderr: ${data}`))
