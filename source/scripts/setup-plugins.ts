@@ -16,16 +16,21 @@ const go = async () => {
   }
   // Look for plugins
   if (installation.settings.plugins && installation.settings.plugins.length !== 0) {
-    const plugins = installation.settings.plugins.join(" ")
-    log("Installing: " + plugins)
+    const plugins = installation.settings.plugins
+    log("Installing: " + plugins.join(", "))
 
     const ls = child_process.spawn("yarn", ["add", ...plugins])
 
     ls.stdout.on("data", data => log(`stdout: ${data}`))
     ls.stderr.on("data", data => log(`stderr: ${data}`))
-    ls.on("close", code => log(`child process exited with code ${code}`))
+
+    ls.on("close", code => {
+      log(`child process exited with code ${code}`)
+      process.exit(code)
+    })
   } else {
     log("Not adding any plugins")
+    process.exit(0)
   }
 }
 
