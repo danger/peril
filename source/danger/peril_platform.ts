@@ -1,4 +1,5 @@
 import { GitHub } from "danger/distribution/platforms/GitHub"
+
 import { Platform } from "danger/distribution/platforms/platform"
 import { dsl } from "./danger_run"
 
@@ -17,7 +18,10 @@ const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: a
       deleteMainComment: github ? github.deleteMainComment : nullFunc,
       editMainComment: github ? github.editMainComment : nullFunc,
       getPlatformDSLRepresentation: async () => {
-        return githubEvent
+        return {
+          ...githubEvent,
+          api: github && github.api.getExternalAPI(),
+        }
       },
       getPlatformGitRepresentation: async () => {
         return {} as any
