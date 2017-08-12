@@ -122,7 +122,7 @@ export const runEverything = async (
   const allResults = [] as DangerResults[]
 
   const prRuns = runs.filter(r => r.dslType === dsl.pr)
-  const eventRuns = runs.filter(r => r.dslType !== dsl.import)
+  const eventRuns = runs.filter(r => r.dslType === dsl.import)
 
   // Loop through all PRs, which are definitely special cases compare to simple events
   for (const run of prRuns) {
