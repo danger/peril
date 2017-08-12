@@ -13,7 +13,6 @@ export const settingsUpdater = async (event: string, req: express.Request, res: 
       const commits = req.body.commits as any[]
       const modifiedPerilSettings = commits.find(c => c.modified.includes(path))
       if (modifiedPerilSettings) {
-        // RESTART
         console.log("Updating JSON settings due to merged changes for " + path) // tslint:disable-line
         db.setup()
       }

@@ -9,9 +9,9 @@ jest.mock("../../github/events/github_runner", () => ({ githubDangerRunner: mock
 
 import { githubRouting } from "../router"
 
-const validRequest = { isXHub: true, isXHubValid: () => true }
-const noXhub = { isXHub: false }
-const badXHub = { isXHub: true, isXHubValid: () => false }
+const validRequest = { isXHub: true, isXHubValid: () => true } as any
+const noXhub = { isXHub: false } as any
+const badXHub = { isXHub: true, isXHubValid: () => false } as any
 
 describe("validating webhooks from GitHub", () => {
   let res: any
@@ -23,13 +23,15 @@ describe("validating webhooks from GitHub", () => {
   })
 
   it("fails when there is is no x-hub", () => {
-    githubRouting("ping", noXhub, res, {})
+    githubRouting("ping", noXhub, res, {} as any)
     expect(res.status).toBeCalledWith(400)
-    expect(res.send).toBeCalledWith("Request did not include x-hub header.")
+    expect(res.send).toBeCalledWith(
+      "Request did not include x-hub header - You need to set a secret in the GitHub App + PERIL_WEBHOOK_SECRET."
+    )
   })
 
   it("fails when there is is no x-hub", () => {
-    githubRouting("ping", badXHub, res, {})
+    githubRouting("ping", badXHub, res, {} as any)
     expect(res.status).toBeCalledWith(401)
 
     const message = res.send.mock.calls[0][0]
@@ -39,24 +41,24 @@ describe("validating webhooks from GitHub", () => {
 
 describe("routing for GitHub", () => {
   it("calls ping when a ping action is sent", () => {
-    githubRouting("ping", validRequest, {}, {})
+    githubRouting("ping", validRequest, {} as any, {} as any)
     expect(mockPing).toBeCalled()
   })
 
   it("creates an installation when an integration is created", () => {
     const body = { action: "created" }
-    githubRouting("integration_installation", { ...validRequest, body }, {}, {})
+    githubRouting("integration_installation", { ...validRequest, body }, {} as any, {} as any)
     expect(mockCreateInstallation).toBeCalled()
   })
 
   it("calls the GitHub runner for any other event", () => {
-    githubRouting("issue", validRequest, {}, {})
+    githubRouting("issue", validRequest, {} as any, {} as any)
     expect(mockGithubRunner).toBeCalledWith("issue", validRequest, {}, {})
 
-    githubRouting("new_user", validRequest, {}, {})
+    githubRouting("new_user", validRequest, {} as any, {} as any)
     expect(mockGithubRunner).toBeCalledWith("new_user", validRequest, {}, {})
 
-    githubRouting("random_thing", validRequest, {}, {})
+    githubRouting("random_thing", validRequest, {} as any, {} as any)
     expect(mockGithubRunner).toBeCalledWith("random_thing", validRequest, {}, {})
   })
 })

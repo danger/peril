@@ -23,12 +23,15 @@ const router = (req: express.Request, res: express.Response, next: express.NextF
   githubRouting(event, req, res, next)
 }
 
-export const githubRouting = (event, req, res, next) => {
-  if (!req.isXHub) {
-    return res.status(400).send("Request did not include x-hub header.")
+export const githubRouting = (event, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const xhubReq = req as any
+  if (!xhubReq.isXHub) {
+    return res
+      .status(400)
+      .send("Request did not include x-hub header - You need to set a secret in the GitHub App + PERIL_WEBHOOK_SECRET.")
   }
 
-  if (!req.isXHubValid()) {
+  if (!xhubReq.isXHubValid()) {
     res.status(401).send("Request did not have a valid x-hub header. Perhaps PERIL_WEBHOOK_SECRET is not set up right?")
     return
   }
