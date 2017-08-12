@@ -14,7 +14,7 @@ const legitSettings = `{
   }
 }`
 
-const contentsMock = jest.fn((token, path) => {
+const mockContents = jest.fn((token, path) => {
   if (path === "orta/peril") {
     return Promise.resolve(legitSettings)
   }
@@ -23,7 +23,7 @@ const contentsMock = jest.fn((token, path) => {
   }
 })
 
-jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContents: contentsMock }))
+jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockContents }))
 
 import { DatabaseAdaptor } from "../index"
 import jsonDB from "../json"

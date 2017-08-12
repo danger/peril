@@ -1,14 +1,14 @@
-const getRepoFake = () => Promise.resolve({ id: "123", fake: true })
+jest.mock("../../../db", () => ({
+  default: { getRepo: () => Promise.resolve({ id: "123", fake: true }) },
+}))
 
-jest.mock("../../../db", () => ({ default: { getRepo: getRepoFake } }))
-
-const contentsMock = jest.fn((token, repo, path) => {
+const mockContents = jest.fn((token, repo, path) => {
   if (path === "dangerfile.issue") {
     return Promise.resolve("warn('issue worked')")
   }
 })
 
-jest.mock("../../../github/lib/github_helpers", () => ({ getGitHubFileContents: contentsMock }))
+jest.mock("../../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockContents }))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"

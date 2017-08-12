@@ -1,11 +1,11 @@
-const pingMock = jest.fn()
-jest.mock("../../github/events/ping", () => ({ ping: pingMock }))
+const mockPing = jest.fn()
+jest.mock("../../github/events/ping", () => ({ ping: mockPing }))
 
-const createInstallationMock = jest.fn()
-jest.mock("../../github/events/create_installation", () => ({ createInstallation: createInstallationMock }))
+const mockCreateInstallation = jest.fn()
+jest.mock("../../github/events/create_installation", () => ({ createInstallation: mockCreateInstallation }))
 
-const githubRunnerMock = jest.fn()
-jest.mock("../../github/events/github_runner", () => ({ githubDangerRunner: githubRunnerMock }))
+const mockGithubRunner = jest.fn()
+jest.mock("../../github/events/github_runner", () => ({ githubDangerRunner: mockGithubRunner }))
 
 import { githubRouting } from "../router"
 
@@ -40,23 +40,23 @@ describe("validating webhooks from GitHub", () => {
 describe("routing for GitHub", () => {
   it("calls ping when a ping action is sent", () => {
     githubRouting("ping", validRequest, {}, {})
-    expect(pingMock).toBeCalled()
+    expect(mockPing).toBeCalled()
   })
 
   it("creates an installation when an integration is created", () => {
     const body = { action: "created" }
     githubRouting("integration_installation", { ...validRequest, body }, {}, {})
-    expect(createInstallationMock).toBeCalled()
+    expect(mockCreateInstallation).toBeCalled()
   })
 
   it("calls the GitHub runner for any other event", () => {
     githubRouting("issue", validRequest, {}, {})
-    expect(githubRunnerMock).toBeCalledWith("issue", validRequest, {}, {})
+    expect(mockGithubRunner).toBeCalledWith("issue", validRequest, {}, {})
 
     githubRouting("new_user", validRequest, {}, {})
-    expect(githubRunnerMock).toBeCalledWith("new_user", validRequest, {}, {})
+    expect(mockGithubRunner).toBeCalledWith("new_user", validRequest, {}, {})
 
     githubRouting("random_thing", validRequest, {}, {})
-    expect(githubRunnerMock).toBeCalledWith("random_thing", validRequest, {}, {})
+    expect(mockGithubRunner).toBeCalledWith("random_thing", validRequest, {}, {})
   })
 })
