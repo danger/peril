@@ -283,7 +283,6 @@ export const commentOnResults = async (dsl: dsl, results: DangerResults, token, 
   const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
   const gh = new GitHub(githubAPI)
   const platform = perilPlatform(dsl, gh, {})
-
   const exec = executorForInstallation(platform)
   await exec.handleResults(results)
 }
