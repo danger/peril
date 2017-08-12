@@ -41,7 +41,7 @@ export interface GitHubRunSettings {
   commentableID: number | null
   isRepoEvent: boolean | null
   isTriggeredByUser: boolean
-  repo: GithubRepo | null
+  repoSpecificRules: any
   repoName: string | null
   triggeredByUsername: string | null
   hasRelatedCommentable: boolean
@@ -53,14 +53,16 @@ export const setupForRequest = async (req: express.Request): Promise<GitHubRunSe
   const installationID = req.body.installation.id as number
   const isTriggeredByUser = !!req.body.sender
   const hasRelatedCommentable = getIssueNumber(req.body) !== null
+  const dbRepo = isRepoEvent ? await db.getRepo(installationID, repoName) : null
+  const repoSpecificRules = dbRepo && dbRepo.rules ? dbRepo.rules : {}
 
   return {
     commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
     hasRelatedCommentable,
     isRepoEvent,
     isTriggeredByUser,
-    repo: isRepoEvent ? await db.getRepo(installationID, repoName) : null,
     repoName,
+    repoSpecificRules,
     triggeredByUsername: isTriggeredByUser ? req.body.sender.login : null,
   }
 }
@@ -88,15 +90,20 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   await runEverything(runs, settings, installation, req, res, next)
 }
 
-export function runsForEvent(event: string, action: string | null, installation: GitHubInstallation, settings: any) {
+export function runsForEvent(
+  event: string,
+  action: string | null,
+  installation: GitHubInstallation,
+  settings: GitHubRunSettings
+) {
   const installationRun = dangerRunForRules(event, action, installation.rules)
-  const repoRun = dangerRunForRules(event, action, settings.repo && settings.repo.rules)
+  const repoRun = dangerRunForRules(event, action, settings.repoSpecificRules)
   return [installationRun, repoRun].filter(r => !!r) as DangerRun[]
 }
 
 export const runEverything = async (
   runs: DangerRun[],
-  settings: any,
+  settings: GitHubRunSettings,
   installation: GitHubInstallation,
   req: express.Request,
   res: express.Response,
@@ -144,7 +151,7 @@ export const runEverything = async (
 
 export const runEventRun = async (
   run: DangerRun,
-  settings: any,
+  settings: GitHubRunSettings,
   token: string,
   dsl: any
 ): Promise<DangerResults | null> => {
@@ -158,8 +165,8 @@ export const runEventRun = async (
   // Do we need an authenticated Danger GitHubAPI instance so we
   // can leave feedback on an issue?
   let githubAPI = null as GitHubAPI | null
-  if (supportsGithubCommentAPIs && settings.commentableID && settings.repo) {
-    githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
+  if (supportsGithubCommentAPIs && settings.commentableID && settings.repoName) {
+    githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
   }
 
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
@@ -168,11 +175,21 @@ export const runEventRun = async (
 
 export const runPRRun = async (
   run: DangerRun,
-  settings: any,
+  settings: GitHubRunSettings,
   token: string,
   pr: Pull_request
 ): Promise<DangerResults | null> => {
-  const githubAPI = githubAPIForCommentable(token, settings.repo.fullName, settings.commentableID)
+  if (!settings.repoName) {
+    console.error("An event without a repo name was passed to runRPRun") // tslint:disable-line
+    return null
+  }
+
+  if (!settings.triggeredByUsername) {
+    console.error("An event without a username was passed to runRPRun") // tslint:disable-line
+    return null
+  }
+
+  const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
 
   // In theory only a PR requires a custom branch, so we can check directly for that
   // in the event JSON and if it's not there then use master
@@ -188,9 +205,10 @@ export const runPRRun = async (
 
   const baseDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, branch)
+  const dangerfilesExist = headDangerfile !== "" && baseDangerfile !== ""
 
   // Shortcut to determine if both Dangerfile exists, and that they have different content
-  if (headDangerfile !== "" && baseDangerfile !== "" && baseDangerfile !== headDangerfile) {
+  if (dangerfilesExist && baseDangerfile !== headDangerfile) {
     // Check to see if they have write access, if they don't then don't run the
     // Dangerfile, but put out a message that it's not being ran on purpose
     const userCanWrite = await canUserWriteToRepo(token, settings.triggeredByUsername, dangerfileRepoForPR)

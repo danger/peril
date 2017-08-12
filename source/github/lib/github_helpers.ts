@@ -2,9 +2,9 @@ import fetch from "../../api/fetch"
 import { GitHubUser } from "../../db/types"
 import winston from "../../logger"
 
-export async function canUserWriteToRepo(token: string, user: GitHubUser, repoSlug: string) {
+export async function canUserWriteToRepo(token: string, user: string, repoSlug: string) {
   // https://developer.github.com/v3/repos/collaborators/#review-a-users-permission-level
-  const req = await api(token, `repos/${repoSlug}/collaborators/${user.login}/permission`)
+  const req = await api(token, `repos/${repoSlug}/collaborators/${user}/permission`)
   const res = await req.json()
   return res.permission === "admin" || res.permission === "write"
 }
