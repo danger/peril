@@ -14,25 +14,25 @@ const noXhub = { isXHub: false }
 const badXHub = { isXHub: true, isXHubValid: () => false }
 
 describe("validating webhooks from GitHub", () => {
-  let req: any
+  let res: any
 
   beforeEach(() => {
-    req = {}
-    req.status = jest.fn(() => req)
-    req.send = jest.fn()
+    res = {}
+    res.status = jest.fn(() => res)
+    res.send = jest.fn()
   })
 
   it("fails when there is is no x-hub", () => {
-    githubRouting("ping", noXhub, req, {})
-    expect(req.status).toBeCalledWith(400)
-    expect(req.send).toBeCalledWith("Request did not include x-hub header.")
+    githubRouting("ping", noXhub, res, {})
+    expect(res.status).toBeCalledWith(400)
+    expect(res.send).toBeCalledWith("Request did not include x-hub header.")
   })
 
   it("fails when there is is no x-hub", () => {
-    githubRouting("ping", badXHub, req, {})
-    expect(req.status).toBeCalledWith(401)
+    githubRouting("ping", badXHub, res, {})
+    expect(res.status).toBeCalledWith(401)
 
-    const message = req.send.mock.calls[0][0]
+    const message = res.send.mock.calls[0][0]
     expect(message).toContain("Request did not have a valid x-hub header")
   })
 })

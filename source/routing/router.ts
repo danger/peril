@@ -5,9 +5,11 @@ import db from "../db"
 import { createInstallation } from "../github/events/create_installation"
 import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"
+import { settingsUpdater } from "./settings_updater"
 
 import { RootObject as InstallationCreated } from "../github/events/types/integration_installation_created.types"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
+import { DATABASE_JSON_FILE } from "../globals"
 
 /** Logs */
 const info = (message: string) => {
@@ -66,7 +68,10 @@ export const githubRouting = (event, req, res, next) => {
 
     default: {
       info(` - passing to Dangerfile rule router`)
-      // throw "NO"
+
+      // Look out for changes to the settting JSON file and update the
+      // db accordingly
+      settingsUpdater(event, req, res, next)
       githubDangerRunner(event, req, res, next)
     }
   }
