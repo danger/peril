@@ -146,7 +146,8 @@ export const runEverything = async (
     commentOnResults(finalResults, token, settings)
   }
 
-  res.status(200).send(`Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`)
+  const status = `Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`
+  res.status(200).send({ status, results: allResults })
 }
 
 export const runEventRun = async (
