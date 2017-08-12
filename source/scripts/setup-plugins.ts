@@ -17,7 +17,7 @@ const go = async () => {
     const plugins = installation.settings.plugins.join(" ")
     console.log("Installing: " + plugins) // tslint:disable-line
     // Install them with yarn
-    child_process.execSync("yarn install " + plugins)
+    child_process.execSync("yarn add " + plugins)
   } else {
     console.log("Not adding any plugins") // tslint:disable-line
   }
