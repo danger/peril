@@ -70,7 +70,7 @@ export const githubRouting = (event, req: express.Request, res: express.Response
     }
 
     default: {
-      info(` - passing ${event} to GH Dangerfile rule router`)
+      info(`Passing ${event} to GH Dangerfile rule router`)
 
       // Look out for changes to the settting JSON file and update the
       // db accordingly

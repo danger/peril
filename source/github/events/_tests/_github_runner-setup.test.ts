@@ -20,8 +20,8 @@ describe("makes the right settings for", () => {
       hasRelatedCommentable: true,
       isRepoEvent: true,
       isTriggeredByUser: true,
-      repo: { fake: true },
       repoName: "danger/peril",
+      repoSpecificRules: {},
       triggeredByUsername: "orta",
     })
   })
@@ -35,8 +35,8 @@ describe("makes the right settings for", () => {
       hasRelatedCommentable: false,
       isRepoEvent: false,
       isTriggeredByUser: true,
-      repo: null,
       repoName: false,
+      repoSpecificRules: {},
       triggeredByUsername: "orta",
     })
   })
