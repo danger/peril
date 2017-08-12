@@ -12,7 +12,7 @@ import originalFetch from "./fetch"
 /** Logs */
 const error = (message: string) => {
   winston.info(`[github auth] - ${message}`)
-  console.error(message)
+  console.error(message) // tslint:disable-line
 }
 
 export async function getTemporaryAccessTokenForInstallation(installation: GitHubInstallation): Promise<string> {

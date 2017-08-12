@@ -5,9 +5,11 @@ import db from "../db"
 import { createInstallation } from "../github/events/create_installation"
 import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"
+import { settingsUpdater } from "./settings_updater"
 
 import { RootObject as InstallationCreated } from "../github/events/types/integration_installation_created.types"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
+import { DATABASE_JSON_FILE } from "../globals"
 
 /** Logs */
 const info = (message: string) => {
@@ -21,12 +23,15 @@ const router = (req: express.Request, res: express.Response, next: express.NextF
   githubRouting(event, req, res, next)
 }
 
-export const githubRouting = (event, req, res, next) => {
-  if (!req.isXHub) {
-    return res.status(400).send("Request did not include x-hub header.")
+export const githubRouting = (event, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const xhubReq = req as any
+  if (!xhubReq.isXHub) {
+    return res
+      .status(400)
+      .send("Request did not include x-hub header - You need to set a secret in the GitHub App + PERIL_WEBHOOK_SECRET.")
   }
 
-  if (!req.isXHubValid()) {
+  if (!xhubReq.isXHubValid()) {
     res.status(401).send("Request did not have a valid x-hub header. Perhaps PERIL_WEBHOOK_SECRET is not set up right?")
     return
   }
@@ -65,8 +70,11 @@ export const githubRouting = (event, req, res, next) => {
     }
 
     default: {
-      info(` - passing to Dangerfile rule router`)
-      // throw "NO"
+      info(` - passing ${event} to GH Dangerfile rule router`)
+
+      // Look out for changes to the settting JSON file and update the
+      // db accordingly
+      settingsUpdater(event, req, res, next)
       githubDangerRunner(event, req, res, next)
     }
   }
