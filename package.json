@@ -51,7 +51,7 @@
     "json2ts": "orta/json2ts#ts-less",
     "jsonwebtoken": "^7.2.1",
     "node-fetch": "^1.6.3",
-    "node-pg-migrate": "^1.2.1",
+    "node-pg-migrate": "^2.7.0",
     "pg-promise": "^6.1.0",
     "ts-jest": "^19.0.0",
     "ts-node": "^3.0.2",
@@ -63,7 +63,7 @@
     "write-file-promise": "^1.0.0"
   },
   "engines": {
-    "node": "7.2.1"
+    "node": "7.10.1"
   },
   "jest": {
     "transform": {
