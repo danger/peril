@@ -78,10 +78,10 @@ export interface DatabaseAdaptor {
 }
 
 let exposedDB: DatabaseAdaptor = null as any
-if (DATABASE_URL) {
-  exposedDB = postgres
-} else {
+if (DATABASE_JSON_FILE) {
   exposedDB = jsonDB(DATABASE_JSON_FILE as string)
+} else {
+  exposedDB = postgres
 }
 
 exposedDB.setup()
