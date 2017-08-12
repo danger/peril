@@ -1,61 +1,56 @@
-it("passes", () => {
-  // this file when uncommented will not let jest close
-  // so... that needs fixing sometime.
+const legitSettings = `{
+  "id": 1,
+  "settings": {
+    "onlyForOrgMembers": false
+  },
+  "rules": {
+   "pull_request": "orta/peril@pr.ts",
+   "issue": "orta/peril@issue.ts"
+  },
+  "repos" : {
+    "orta/ORStackView": {
+      "issue.created": "orta/peril@lock_issues.ts"
+    }
+  }
+}`
+
+const mockContents = jest.fn((token, path) => {
+  if (path === "orta/peril") {
+    return Promise.resolve(legitSettings)
+  }
+  if (path === "orta/other") {
+    return Promise.resolve("")
+  }
 })
 
-// const legitSettings = `{
-//   "id": 1,
-//   "settings": {
-//     "onlyForOrgMembers": false
-//   },
-//   "rules": {
-//    "pull_request": "orta/peril@pr.ts",
-//    "issue": "orta/peril@issue.ts"
-//   },
-//   "repos" : {
-//     "orta/ORStackView": {
-//       "issue.created": "orta/peril@lock_issues.ts"
-//     }
-//   }
-// }`
+jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockContents }))
 
-// const mockContents = jest.fn((token, path) => {
-//   if (path === "orta/peril") {
-//     return Promise.resolve(legitSettings)
-//   }
-//   if (path === "orta/other") {
-//     return Promise.resolve("")
-//   }
-// })
+import { DatabaseAdaptor } from "../index"
+import jsonDB from "../json"
 
-// jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockContents }))
+describe("makes the right calls to GitHub", () => {
+  let db: DatabaseAdaptor = null as any
 
-// import { DatabaseAdaptor } from "../index"
-// import jsonDB from "../json"
+  beforeEach(async () => {
+    db = jsonDB("orta/peril@settings.json")
+    await db.setup()
+  })
 
-// describe.skip("makes the right calls to GitHub", () => {
-//   let db: DatabaseAdaptor = null as any
+  it("with a legit stubbed JSON file", async () => {
+    const org = await db.getInstallation(1)
+    expect(org).toMatchSnapshot()
+  })
 
-//   beforeEach(async () => {
-//     db = jsonDB("orta/peril@settings.json")
-//     await db.setup()
-//   })
+  it("gets repo rules correct", async () => {
+    const repo = await db.getRepo(1, "orta/ORStackView")
+    expect(repo).toMatchSnapshot()
+  })
+})
 
-//   it("with a legit stubbed JSON file", async () => {
-//     const org = await db.getInstallation(1)
-//     expect(org).toMatchSnapshot()
-//   })
-
-//   it("gets repo rules correct", async () => {
-//     const repo = await db.getRepo(1, "orta/ORStackView")
-//     expect(repo).toMatchSnapshot()
-//   })
-// })
-
-// // need a unhandled rejection from promises?
-// it.skip("Raises with a bad URL", () => {
-//   const db = jsonDB("orta/other@settings.json")
-//   expect(async () => {
-//     await db.setup()
-//   }).toThrowErrorMatchingSnapshot()
-// })
+// need a unhandled rejection from promises?
+it.skip("Raises with a bad URL", () => {
+  const db = jsonDB("orta/other@settings.json")
+  expect(async () => {
+    await db.setup()
+  }).toThrowErrorMatchingSnapshot()
+})
