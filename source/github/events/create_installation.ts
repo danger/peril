@@ -11,9 +11,7 @@ export async function createInstallation(installationJSON: Installation, req: ex
     rules: {
       pull_request: "dangerfile.js",
     },
-    settings: {
-      onlyForOrgMembers: true,
-    },
+    settings: {},
   }
 
   // Default to no runnerRules

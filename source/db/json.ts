@@ -12,7 +12,6 @@ import { GitHubUser } from "./types"
 For example:
 {
   "settings": {
-    "onlyForOrgMembers": false
   },
   "rules": {
    "pull_request": "orta/peril@pr.ts",

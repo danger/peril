@@ -36,7 +36,7 @@ You need to have a repo which Peril has access to. This repo needs to have a set
 ```json
 {
   "settings": {
-    "onlyForOrgMembers": false
+    [your settings]
   },
   "rules": {
     "pull_request": "orta/peril-bootstrap@dangerfiles/pr.js",

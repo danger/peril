@@ -1,7 +1,6 @@
 const legitSettings = `{
   "id": 1,
   "settings": {
-    "onlyForOrgMembers": false
   },
   "rules": {
    "pull_request": "orta/peril@pr.ts",

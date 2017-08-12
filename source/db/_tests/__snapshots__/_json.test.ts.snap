@@ -23,8 +23,6 @@ Object {
     "issue": "orta/peril@issue.ts",
     "pull_request": "orta/peril@pr.ts",
   },
-  "settings": Object {
-    "onlyForOrgMembers": false,
-  },
+  "settings": Object {},
 }
 `;

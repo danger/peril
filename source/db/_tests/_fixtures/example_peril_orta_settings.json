@@ -1,7 +1,10 @@
 {
   "id": 1,
   "settings": {
-    "onlyForOrgMembers": false
+    "plugins": [
+      "danger-plugin-yarn",
+      "danger-plugin-spellcheck"
+    ]
   },
   "rules": {
     "pull_request": "orta/peril@pr.ts",
