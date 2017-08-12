@@ -248,7 +248,7 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
     const actualBranch = branch ? branch : "master"
     const message = `Could not find Dangerfile at <code>${run.dangerfilePath}</code> on <code>${repoForDangerfile}</code> on branch <code>${actualBranch}</code>`
 
-    const report = reportData("Could not find a Dangerfile at ")
+    const report = reportData(message)
     return { fails: [{ message: report }], markdowns: [], warnings: [], messages: [] }
   }
 }
