@@ -10,6 +10,7 @@ import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerAgainstInstallation } from "../../danger/danger_runner"
+import perilPlatform from "../../danger/peril_platform"
 import db, { GitHubInstallation, GithubRepo } from "../../db"
 import { Pull_request } from "../events/types/pull_request_opened.types"
 import { canUserWriteToRepo, getGitHubFileContents } from "../lib/github_helpers"
@@ -143,7 +144,8 @@ export const runEverything = async (
   if (commentableRun && allResults.length) {
     const finalResults = mergeResults(allResults)
     log(`Commenting, with results: ${mdResults(finalResults)}`)
-    commentOnResults(finalResults, token, settings)
+    const isPRDSL = runs.find(r => r.dslType === dsl.pr) ? dsl.pr : dsl.import
+    commentOnResults(isPRDSL, finalResults, token, settings)
   }
 
   const status = `Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`
@@ -277,9 +279,12 @@ export const mergeResults = (results: DangerResults[]): DangerResults => {
   )
 }
 
-export const commentOnResults = async (results: DangerResults, token, settings) => {
+export const commentOnResults = async (dsl: dsl, results: DangerResults, token, settings) => {
   const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
-  const exec = executorForInstallation(new GitHub(githubAPI))
+  const gh = new GitHub(githubAPI)
+  const platform = perilPlatform(dsl, gh, {})
+
+  const exec = executorForInstallation(platform)
   await exec.handleResults(results)
 }
 

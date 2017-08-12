@@ -12,7 +12,6 @@ const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: a
     return github
   } else {
     const nullFunc: any = () => ""
-
     const platform: Platform = {
       createComment: github ? github.createComment : nullFunc,
       deleteMainComment: github ? github.deleteMainComment : nullFunc,
