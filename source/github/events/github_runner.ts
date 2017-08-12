@@ -283,7 +283,7 @@ const getRepoSlug = (json: any): string | null => {
   return null
 }
 
-const githubAPIForCommentable = (token: string, repoSlug: string, issueNumber: number | null) => {
+export const githubAPIForCommentable = (token: string, repoSlug: string, issueNumber: number | null) => {
   const githubAPI = new GitHubAPI({ repoSlug, pullRequestID: String(issueNumber) }, token)
   githubAPI.additionalHeaders = { Accept: "application/vnd.github.machine-man-preview+json" }
 

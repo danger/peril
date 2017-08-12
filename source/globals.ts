@@ -68,6 +68,9 @@ export const PERIL_BOT_USER_ID = getEnv("PERIL_BOT_USER_ID")
 /** Adds some security on the URL */
 export const PERIL_WEBHOOK_SECRET = getEnv("PERIL_WEBHOOK_SECRET")
 
+/** Is this a public facing instance of Peril? E.g. is it the definitive server */
+export const PUBLIC_FACING_API = !!getEnv("PUBLIC_FACING_API")
+
 // Can't run without these
 validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
 

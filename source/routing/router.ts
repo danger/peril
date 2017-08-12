@@ -1,3 +1,4 @@
+import * as express from "express"
 import winston from "../logger"
 
 import db from "../db"
@@ -13,7 +14,7 @@ const info = (message: string) => {
   winston.info(`[router] - ${message}`)
 }
 
-const router = (req, res, next) => {
+const router = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   const event = req.header("X-GitHub-Event")
   winston.log("router", `Recieved ${event}:`)
 

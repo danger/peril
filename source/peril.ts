@@ -1,8 +1,11 @@
 import * as bodyParser from "body-parser"
 import * as express from "express"
 import * as xhub from "express-x-hub"
-import { PERIL_WEBHOOK_SECRET } from "./globals"
+
+import { PERIL_WEBHOOK_SECRET, PUBLIC_FACING_API } from "./globals"
 import logger from "./logger"
+
+import prDSLRunner from "./api/pr/dsl"
 import webhook from "./routing/router"
 
 // Error logging
@@ -19,6 +22,11 @@ app.use(bodyParser.json())
 app.use(express.static("public"))
 
 app.post("/webhook", webhook)
+
+if (PUBLIC_FACING_API) {
+  console.log("This is a public facing Peril instance.")
+  app.get("/api/v1/pr/dsl", prDSLRunner)
+}
 
 // Start server
 app.listen(app.get("port"), () => {
