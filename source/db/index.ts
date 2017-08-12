@@ -35,8 +35,8 @@ export interface GitHubInstallation {
    * as a nullable type. These are the entire installation settings.
    */
   settings: {
-    /** Should only org members run Danger? */
-    onlyForOrgMembers?: boolean
+    /** A set of space separated plugins for Danger to run, requires a re-deploy of the server to update. */
+    plugins?: string[]
   }
 
   /** Having rules in here would mean that it would happen on _any_ event, another JSON type in the DB */

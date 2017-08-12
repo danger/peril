@@ -106,6 +106,20 @@ In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING
 
   This will return the DSL JSON for a specific Pull Request. Supports JSONP.
 
+### Danger Plugins
+
+Right now you can add Danger plugins by adding a key `plugins` with an array of string inside the settings object of your database. If you're using a JSON db, it'd look like this:
+
+```json
+{
+  "settings": {
+    "plugins": ["danger-plugin-yarn", "danger-plugin-spellcheck"]
+  }
+  ...
+}
+```
+
+These will be added to your install via `yarn add [plugins]` at heroku build-time.
 
 ### Using a Danger fork
 If you want to also make changes to Danger JS, and use the local version to make changes

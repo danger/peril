@@ -6,7 +6,7 @@
     "start": "node out/peril.js",
     "compile": "tsc -watch -p ./",
     "build": "yarn tsc",
-    "postinstall": "yarn build",
+    "postinstall": "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup:plugins; fi",
     "test": "jest && yarn lint",
     "lint": "tslint source/**/**/**.ts",
     "test:watch": "jest --watch",
@@ -14,7 +14,8 @@
     "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
     "prettier": "prettier",
     "prettier-write": "npm run prettier -- --parser typescript --no-semi --trailing-comma es5 --write --print-width 120 ",
-    "prettier-project": "npm run prettier-write -- 'source/**/*.{ts,tsx}'"
+    "prettier-project": "npm run prettier-write -- 'source/**/*.{ts,tsx}'",
+    "setup:plugins": "ts-node source/scripts/setup-plugins.ts"
   },
   "repository": {
     "type": "git",
