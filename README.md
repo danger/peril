@@ -96,8 +96,16 @@ There are three files where the magic happens:
 - [source/githubevents/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
 - [source/routing/router.ts](source/routing/router.ts) - Any unique work on GitHub events
 
+This is an _alrightish tested_ project, there's a lot in places where the code isn't going to change much now so they're slowly getting covered.
 
-This is a _just barely tested_ project, there's a lot in places where the code isn't going to change much.
+### Exposing Peril to the public
+
+In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING_API"` that when truthy will expose an extra API route.
+
+- `GET /api/v1/pr/dsl?owner=danger&repo=peril&number=14`
+
+  This will return the DSL JSON for a specific Pull Request. Supports JSONP.
+
 
 ### Using a Danger fork
 If you want to also make changes to Danger JS, and use the local version to make changes
