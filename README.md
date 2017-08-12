@@ -100,7 +100,7 @@ This is an _alrightish tested_ project, there's a lot in places where the code i
 
 ### Exposing Peril to the public
 
-In order to support danger.systems features, there is an ENV var `"PUBLIC_INSTANCE"` that when truthy will expose an extra API route.
+In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING_API"` that when truthy will expose an extra API route.
 
 - `GET /api/v1/pr/dsl?owner=danger&repo=peril&number=14`
 

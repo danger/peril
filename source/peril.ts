@@ -24,7 +24,7 @@ app.use(express.static("public"))
 app.post("/webhook", webhook)
 
 if (PUBLIC_FACING_API) {
-  console.log("This is a public facing Peril instance.")
+  console.log("This is a public facing Peril instance.") // tslint:disable-line
   app.get("/api/v1/pr/dsl", prDSLRunner)
 }
 
