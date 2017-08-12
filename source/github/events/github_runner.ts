@@ -156,9 +156,9 @@ export const runEventRun = async (
   run: DangerRun,
   settings: GitHubRunSettings,
   token: string,
-  dsl: any
+  dangerDSL: any
 ): Promise<DangerResults | null> => {
-  const repoForDangerfile = run.repoSlug || (dsl.repository && dsl.repository.full_name)
+  const repoForDangerfile = run.repoSlug || (dangerDSL.repository && dangerDSL.repository.full_name)
   if (!repoForDangerfile) {
     return null
   }
@@ -173,7 +173,7 @@ export const runEventRun = async (
   }
 
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
-  return await runDangerAgainstInstallation(headDangerfile, run.dangerfilePath, githubAPI, run.dslType)
+  return await runDangerAgainstInstallation(headDangerfile, run.dangerfilePath, githubAPI, run.dslType, dangerDSL)
 }
 
 export const runPRRun = async (

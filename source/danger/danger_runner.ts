@@ -26,13 +26,19 @@ const log = (message: string) => {
 /**
  * The single function to run danger against an installation
  */
-export async function runDangerAgainstInstallation(contents: string, path: string, api: GitHubAPI | null, type: dsl) {
+export async function runDangerAgainstInstallation(
+  contents: string,
+  path: string,
+  api: GitHubAPI | null,
+  type: dsl,
+  dangerDSL?: any
+) {
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
   log(`Running Danger: got API? ${api}`)
   const gh = api ? new GitHub(api) : null
-  const platform = perilPlatform(type, gh, {})
+  const platform = perilPlatform(type, gh, dangerDSL)
 
   const exec = await executorForInstallation(platform)
 
