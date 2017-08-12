@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/body-parser": "^1.16.4",
-    "@types/debug": "^0.0.29",
+    "@types/debug": "^0.0.30",
     "@types/ejs": "^2.3.33",
     "@types/express": "^4.0.34",
     "@types/jest": "^20.0.1",
@@ -52,7 +52,7 @@
     "jsonwebtoken": "^7.2.1",
     "node-fetch": "^1.6.3",
     "node-pg-migrate": "^2.7.0",
-    "pg-promise": "^5.6.4",
+    "pg-promise": "^6.1.0",
     "ts-jest": "^19.0.0",
     "ts-node": "^3.0.2",
     "tslint": "^5.4.3",
