@@ -49,15 +49,6 @@ export async function runDangerAgainstInstallation(contents: string, path: strin
 export async function runDangerAgainstFile(file: string, exec: Executor) {
   const runtimeEnv = await exec.setupDanger()
 
-  // This is where we can hook in and do sandboxing
-  runtimeEnv.environment.global.process = {
-    argv: [],
-    env: {}, // TODO: this could have stuff about repo/PR in it.
-    stderr: process.stderr,
-    stdin: process.stdin,
-    stdout: process.stdout,
-  }
-
   return await runDangerfileEnvironment(file, runtimeEnv)
 }
 
