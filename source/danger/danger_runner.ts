@@ -11,8 +11,8 @@ import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { runDangerfileEnvironment } from "danger/distribution/runner/DangerfileRunner"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 
-import { tmpdir } from "os"
-import { basename, resolve } from "path"
+import * as os from "os"
+import * as path from "path"
 import * as write from "write-file-promise"
 import { dsl } from "./danger_run"
 
@@ -28,7 +28,7 @@ const log = (message: string) => {
  */
 export async function runDangerAgainstInstallation(
   contents: string,
-  path: string,
+  filepath: string,
   api: GitHubAPI | null,
   type: dsl,
   dangerDSL?: any
@@ -36,14 +36,14 @@ export async function runDangerAgainstInstallation(
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
-  log(`Running Danger: got API? ${api}`)
+  log(`Running Danger`)
   const gh = api ? new GitHub(api) : null
   const platform = perilPlatform(type, gh, dangerDSL)
 
   const exec = await executorForInstallation(platform)
 
-  const randomFolder = Math.random().toString(36)
-  const localDangerfile = resolve(tmpdir(), randomFolder, basename(path))
+  const randomName = Math.random().toString(36)
+  const localDangerfile = path.resolve("../../dangerfile_runtime_env", "danger-" + randomName + path.extname(filepath))
   await write(localDangerfile, contents)
 
   return await runDangerAgainstFile(localDangerfile, exec)
@@ -54,21 +54,27 @@ export async function runDangerAgainstInstallation(
  */
 export async function runDangerAgainstFile(file: string, exec: Executor) {
   const runtimeEnv = await exec.setupDanger()
+  // runtimeEnv.rquire.root = dangerfile_runtime_env
   let results: DangerResults
   try {
     results = await runDangerfileEnvironment(file, runtimeEnv)
   } catch (error) {
-    const failure = `Danger failed to run ${file}.`
-    const errorMD = `## Error ${error.name}
+    results = resultsForCaughtError(file, error)
+  }
+  return results
+}
+
+/** Returns Markdown results to post if an exception is raised during the danger run */
+const resultsForCaughtError = (file: string, error: Error): DangerResults => {
+  const failure = `Danger failed to run ${file}.`
+  const errorMD = `## Error ${error.name}
 \`\`\`
 ${error.message}
 
 ${error.stack}
 \`\`\`
-    `
-    results = { fails: [{ message: failure }], warnings: [], markdowns: [errorMD], messages: [] }
-  }
-  return results
+  `
+  return { fails: [{ message: failure }], warnings: [], markdowns: [errorMD], messages: [] }
 }
 
 /**
