@@ -18,8 +18,10 @@ const requestWithFixturedContent = (path: string): (() => Promise<string>) => ()
 
 /** Returns a fxitured GitHub instance */
 
-export default (): GitHub => {
-  const api = new GitHubAPI({ repoSlug: "artsy/emission", pullRequestID: "1" }, "ABCDE")
+export default (repoSlug?: string, pullRequestID?: string): GitHub => {
+  repoSlug = repoSlug || "artsy/emission"
+  pullRequestID = pullRequestID || "1"
+  const api = new GitHubAPI({ repoSlug, pullRequestID }, "ABCDE")
   const platform = new GitHub(api)
 
   api.getPullRequestInfo = requestWithFixturedJSON("github_pr.json")

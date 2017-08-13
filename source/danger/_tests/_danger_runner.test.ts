@@ -11,7 +11,10 @@ import {
   runDangerAgainstInstallation,
 } from "../danger_runner"
 
-import { resolve } from "path"
+import { existsSync, readFileSync, writeFileSync } from "fs"
+import { tmpdir } from "os"
+import { basename, resolve } from "path"
+
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 
 describe("evaling", () => {
@@ -32,6 +35,28 @@ describe("evaling", () => {
     const executor = executorForInstallation(platform)
     const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_insecure.ts`, executor)
     expect(results.markdowns).toEqual(["`Object.keys(process.env).length` is 0"])
+  })
+
+  it("allows external modules", async () => {
+    const platform = fixturedGitHub()
+    const executor = executorForInstallation(platform)
+    const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_import_module.ts`, executor)
+    expect(results.markdowns).toEqual([":tada:"])
+  })
+
+  it("allows external modules when in a sandbox'd folder", async () => {
+    const platform = fixturedGitHub()
+    const executor = executorForInstallation(platform)
+
+    const randomName = Math.random().toString(36)
+    const localDangerfile = resolve("./dangerfile_runtime_env", "danger-testing-import.ts")
+    const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
+    if (!existsSync(localDangerfile)) {
+      writeFileSync(localDangerfile, contents, { encoding: "utf8" })
+    }
+
+    const results = await runDangerAgainstFile(localDangerfile, executor)
+    expect(results.markdowns).toEqual([":tada:"])
   })
 
   // I wonder if the babel setup isn't quite right yet for this test
