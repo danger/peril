@@ -43,23 +43,25 @@ export async function runDangerAgainstInstallation(
   const exec = await executorForInstallation(platform)
 
   const randomName = Math.random().toString(36)
-  const localDangerfile = path.resolve("../../dangerfile_runtime_env", "danger-" + randomName + path.extname(filepath))
-  await write(localDangerfile, contents)
+  const localDangerfilePath = path.resolve(
+    "../../dangerfile_runtime_env",
+    "danger-" + randomName + path.extname(filepath)
+  )
 
-  return await runDangerAgainstFile(localDangerfile, exec)
+  return await runDangerAgainstFile(localDangerfilePath, contents, exec)
 }
 
 /**
  * Sets up the custom peril environment and runs danger against a local file
  */
-export async function runDangerAgainstFile(file: string, exec: Executor) {
+export async function runDangerAgainstFile(filepath: string, contents: string, exec: Executor) {
   const runtimeEnv = await exec.setupDanger()
   // runtimeEnv.rquire.root = dangerfile_runtime_env
   let results: DangerResults
   try {
-    results = await runDangerfileEnvironment(file, runtimeEnv)
+    results = await runDangerfileEnvironment(filepath, contents, runtimeEnv)
   } catch (error) {
-    results = resultsForCaughtError(file, error)
+    results = resultsForCaughtError(filepath, error)
   }
   return results
 }
