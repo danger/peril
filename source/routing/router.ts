@@ -36,6 +36,8 @@ export const githubRouting = (event, req: express.Request, res: express.Response
     return
   }
 
+  // res.setHeader("X-Peril-Commit", process.env.COMMIT || "N/A")
+
   switch (event) {
     case "ping": {
       ping(req, res)
