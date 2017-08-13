@@ -43,10 +43,7 @@ export async function runDangerAgainstInstallation(
   const exec = await executorForInstallation(platform)
 
   const randomName = Math.random().toString(36)
-  const localDangerfilePath = path.resolve(
-    "../../dangerfile_runtime_env",
-    "danger-" + randomName + path.extname(filepath)
-  )
+  const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(filepath))
 
   return await runDangerAgainstFile(localDangerfilePath, contents, exec)
 }
@@ -58,23 +55,31 @@ export async function runDangerAgainstFile(filepath: string, contents: string, e
   const runtimeEnv = await exec.setupDanger()
   // runtimeEnv.rquire.root = dangerfile_runtime_env
   let results: DangerResults
+  console.log("Running:", filepath)
   try {
     results = await runDangerfileEnvironment(filepath, contents, runtimeEnv)
   } catch (error) {
-    results = resultsForCaughtError(filepath, error)
+    results = resultsForCaughtError(filepath, contents, error)
   }
   return results
 }
 
 /** Returns Markdown results to post if an exception is raised during the danger run */
-const resultsForCaughtError = (file: string, error: Error): DangerResults => {
-  const failure = `Danger failed to run ${file}.`
+const resultsForCaughtError = (file: string, contents: string, error: Error): DangerResults => {
+  const failure = `Danger failed to run \`${file}\`.`
   const errorMD = `## Error ${error.name}
 \`\`\`
 ${error.message}
 
 ${error.stack}
 \`\`\`
+
+### Dangerfile
+
+\`\`\`ts
+${contents}
+\`\`\`
+
   `
   return { fails: [{ message: failure }], warnings: [], markdowns: [errorMD], messages: [] }
 }
