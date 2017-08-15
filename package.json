@@ -80,7 +80,7 @@
     ]
   },
   "devDependencies": {
-    "danger-plugin-spellcheck": "^0.6.0",
+    "danger-plugin-spellcheck": "^0.7.4",
     "danger-plugin-yarn": "^0.3.0",
     "prettier": "^1.5.2",
     "tslint-config-prettier": "^1.1.0"
