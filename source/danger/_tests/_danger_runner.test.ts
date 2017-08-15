@@ -53,12 +53,19 @@ describe("evaling", () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
 
-    const randomName = Math.random().toString(36)
     const localDangerfile = resolve("./dangerfile_runtime_env", "danger-testing-import.ts")
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
-    if (!existsSync(localDangerfile)) {
-      writeFileSync(localDangerfile, contents, { encoding: "utf8" })
-    }
+
+    const results = await runDangerAgainstFile(localDangerfile, contents, executor)
+    expect(results.markdowns).toEqual([":tada:"])
+  })
+
+  it("allows external modules with internal resolving ", async () => {
+    const platform = fixturedGitHub()
+    const executor = executorForInstallation(platform)
+
+    const localDangerfile = resolve("./dangerfile_runtime_env", "dangerfile_import_complex_module.ts")
+    const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
     const results = await runDangerAgainstFile(localDangerfile, contents, executor)
     expect(results.markdowns).toEqual([":tada:"])
