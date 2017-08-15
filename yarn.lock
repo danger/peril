@@ -1404,17 +1404,17 @@ cycle@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
 
-danger-plugin-spellcheck@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/danger-plugin-spellcheck/-/danger-plugin-spellcheck-0.6.0.tgz#2e46950424d0f055e9ef35da6a662df011808674"
+danger-plugin-spellcheck@^0.7.4:
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/danger-plugin-spellcheck/-/danger-plugin-spellcheck-0.7.6.tgz#4d9e5fd028407e5c2c43ff2a6a4123e8fd485c90"
   dependencies:
     markdown-spellcheck "^0.11.0"
   optionalDependencies:
     esdoc "^0.5.2"
 
-danger-plugin-yarn@^0.2.10:
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/danger-plugin-yarn/-/danger-plugin-yarn-0.2.10.tgz#4bd2b7860cd970b786b31df7c8e7ed396695e010"
+danger-plugin-yarn@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/danger-plugin-yarn/-/danger-plugin-yarn-0.3.0.tgz#a594274b20ca51a223bc046b92d652620917dad8"
   dependencies:
     date-fns "^1.28.5"
     lodash.flatten "^4.4.0"
@@ -1423,9 +1423,9 @@ danger-plugin-yarn@^0.2.10:
   optionalDependencies:
     esdoc "^0.5.2"
 
-danger@2.0.0-alpha.5:
-  version "2.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-2.0.0-alpha.5.tgz#3692428fe3ada49d0712a47d123f3e7b9bcc9066"
+danger@2.0.0-alpha.8:
+  version "2.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-2.0.0-alpha.8.tgz#b915b16ac5fcd5315142da5d560a3e774cc61693"
   dependencies:
     babel-polyfill "^6.20.0"
     chalk "^2.0.0"
@@ -4716,7 +4716,7 @@ verror@1.3.6:
   dependencies:
     extsprintf "1.0.2"
 
-vm2@patriksimek/vm2:
+"vm2@github:patriksimek/vm2":
   version "3.4.6"
   resolved "https://codeload.github.com/patriksimek/vm2/tar.gz/0711926ba6e6fbfb89277d8033cfd11b69888e46"
 

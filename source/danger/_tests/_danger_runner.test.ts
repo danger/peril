@@ -86,5 +86,12 @@ describe("evaling", () => {
     })
   })
 
-  it("does not allow access to the `process` global")
+  it("generates the correct modified/deleted/created paths", async () => {
+    const platform = fixturedGitHub()
+    const executor = executorForInstallation(platform)
+    const dsl = await executor.dslForDanger()
+    expect(dsl.git.created_files.length).toBeGreaterThan(0)
+    expect(dsl.git.modified_files.length).toBeGreaterThan(0)
+    expect(dsl.git.deleted_files.length).toBeGreaterThan(0)
+  })
 })
