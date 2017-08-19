@@ -15,11 +15,11 @@ const go = async () => {
     return
   }
   // Look for plugins
-  if (installation.settings.plugins && installation.settings.plugins.length !== 0) {
-    const plugins = installation.settings.plugins
-    log("Installing: " + plugins.join(", "))
+  if (installation.settings.modules && installation.settings.modules.length !== 0) {
+    const modules = installation.settings.modules
+    log("Installing: " + modules.join(", "))
 
-    const yarn = child_process.spawn("yarn", ["add", ...plugins, "--ignore-scripts"], {
+    const yarn = child_process.spawn("yarn", ["add", ...modules, "--ignore-scripts"], {
       env: { ...process.env, NO_RECURSE: "YES" },
     })
 

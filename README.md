@@ -108,12 +108,12 @@ In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING
 
 ### Danger Plugins
 
-Right now you can add Danger plugins by adding a key `plugins` with an array of string inside the settings object of your database. If you're using a JSON db, it'd look like this:
+Right now you can add Danger plugins by adding a key `modules` with an array of string inside the settings object of your database. If you're using a JSON db, it'd look like this:
 
 ```json
 {
   "settings": {
-    "plugins": ["danger-plugin-yarn", "danger-plugin-spellcheck"]
+    "modules": ["danger-plugin-yarn", "danger-plugin-spellcheck"]
   }
   ...
 }
