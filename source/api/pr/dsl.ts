@@ -36,7 +36,11 @@ const prDSLRunner = async (req: express.Request, res: express.Response, next: ex
     return res.status(422).jsonp({ error: "No `number` query param sent." })
   }
 
-  const token = await getTemporaryAccessTokenForInstallation({ id: PERIL_ORG_INSTALLATION_ID, settings: {}, rules: {} })
+  const token = await getTemporaryAccessTokenForInstallation({
+    id: parseInt(PERIL_ORG_INSTALLATION_ID, 10),
+    rules: {},
+    settings: {},
+  })
 
   const ghDetails = {
     fullName: query.owner + "/" + query.repo,
