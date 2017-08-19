@@ -117,6 +117,12 @@ export const runEverything = async (
     return
   }
 
+  if (!req.body.installation || !req.body.installation.id) {
+    res.status(204).send(`No installation ID sent from GitHub.`)
+    next()
+    return
+  }
+
   log(`Event Settings: ${JSON.stringify(settings, null, " ")}`)
   const token = await getTemporaryAccessTokenForInstallation(req.body.installation.id)
 

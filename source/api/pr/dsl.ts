@@ -37,6 +37,10 @@ const prDSLRunner = async (req: express.Request, res: express.Response, next: ex
   }
 
   // This has to be set for public usage.
+  if (!PERIL_ORG_INSTALLATION_ID) {
+    throw new Error("You can't support PR DSLs without setting up the PERIL_ORG_INSTALLATION_ID")
+  }
+
   const token = await getTemporaryAccessTokenForInstallation(parseInt(PERIL_ORG_INSTALLATION_ID, 10))
 
   const ghDetails = {
