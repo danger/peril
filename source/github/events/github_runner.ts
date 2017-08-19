@@ -118,7 +118,7 @@ export const runEverything = async (
   }
 
   log(`Event Settings: ${JSON.stringify(settings, null, " ")}`)
-  const token = await getTemporaryAccessTokenForInstallation(installation)
+  const token = await getTemporaryAccessTokenForInstallation(req.body.installation.id)
 
   const allResults = [] as DangerResults[]
 

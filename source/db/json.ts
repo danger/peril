@@ -59,7 +59,9 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
       if (!PERIL_ORG_INSTALLATION_ID) {
         throwNoPerilInstallationID()
       }
-      const token = await getTemporaryAccessTokenForInstallation(installationById(PERIL_ORG_INSTALLATION_ID))
+
+      const globalInstallation = installationById(PERIL_ORG_INSTALLATION_ID)
+      const token = await getTemporaryAccessTokenForInstallation(globalInstallation.id)
       file = await getGitHubFileContents(token, repo, path, null)
     }
 
