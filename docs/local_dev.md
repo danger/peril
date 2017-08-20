@@ -92,7 +92,7 @@ Assuming that the GitHub Integration is already set up:
 
 3. Go to `http://localhost:4040` to get the ngrok url.
 
-4. Update your Github Integration **webhook url** and **callback url** with the new ngrok url.
+4. Update your GitHub Integration **webhook url** and **callback url** with the new ngrok url.
 
 :whale:
 
