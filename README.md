@@ -119,7 +119,9 @@ Right now you can add Danger plugins by adding a key `modules` with an array of 
 }
 ```
 
-These will be added to your install via `yarn add [plugins]` at heroku build-time.
+These will be added to your install via `yarn add [plugins]` at heroku build-time. This means that to update your modules
+you will need to ship a new commit to heroku. I'd recommend [this gist's](https://gist.github.com/csu/d22e60114051a0a182d2)
+technique.
 
 ### Using a Danger fork
 If you want to also make changes to Danger JS, and use the local version to make changes
