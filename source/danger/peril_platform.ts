@@ -1,3 +1,4 @@
+import { GitHubUtilsDSL } from "danger/distribution/dsl/GitHubDSL"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 
 import { Platform } from "danger/distribution/platforms/platform"
@@ -12,6 +13,14 @@ const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: a
   if (type === dsl.pr && github) {
     return github
   } else {
+    // This bit of faffing ensures that as the gh utils expands we get
+    // compiler errors in peril
+    const utils: GitHubUtilsDSL | null = github && {
+      fileContents: github && github.api.fileContents,
+      // Not sure what this looks like for non-PR events
+      fileLinks: (paths, useBasename, repoSlug, branch) => paths.join(", "),
+    }
+
     const nullFunc: any = () => ""
     const platform: Platform | any = {
       createComment: github ? github.createComment.bind(github) : nullFunc,
@@ -21,6 +30,7 @@ const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: a
         return {
           ...githubEvent,
           api: github && github.api.getExternalAPI(),
+          utils,
         }
       },
       getPlatformGitRepresentation: async () => {
