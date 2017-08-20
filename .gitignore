@@ -6,4 +6,3 @@ node_modules
 *.dat
 out
 .env
-dangerfile_runtime_env/danger*

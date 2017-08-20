@@ -25,7 +25,7 @@ import { dsl } from "../danger_run"
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 
 describe("paths", () => {
-  it("passes an absolute sting to runDangerfileEnvironment", async () => {
+  it("passes an absolute string to runDangerfileEnvironment", async () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
     const results = await runDangerAgainstInstallation(`dangerfile_empty.ts`, "", null, dsl.pr)
