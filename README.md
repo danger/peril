@@ -12,8 +12,7 @@ OK, I made a quick tutorial for [running a private Peril against your org](./doc
 
 ### I want to hack on Peril!
 
-Ace, great, cool. So, it's a bit of a process. I'm not sure if this will get easier in time. It's a complex app.
-
+Ace, great, cool. So, it's a bit of a process. I'm not sure if this will get easier in time. It's a complex app. You can find out [more here](./docs/local_dev.md)
 
 ## Code Overview
 
@@ -23,7 +22,7 @@ There are three files where the magic happens:
 - [source/githubevents/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
 - [source/routing/router.ts](source/routing/router.ts) - Any unique work on GitHub events
 
-This is an _alrightish tested_ project, there's a lot in places where the code isn't going to change much now so they're slowly getting covered.
+This is an _reasonably tested_ project, there's a lot in places where the code isn't going to change much now so they're slowly getting covered.
 
 ### Exposing Peril to the public
 
