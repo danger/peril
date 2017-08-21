@@ -24,7 +24,8 @@ it("runs an Dangerfile for an issue with a local", async () => {
   mockGetRepo.mockImplementationOnce(() => Promise.resolve({ id: "123", fake: true }))
 
   const body = fixture("issue_comment_created.json")
-  const req = { body } as any
+  const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
+
   const settings = await setupForRequest(req)
   expect(settings.commentableID).toBeTruthy()
 
@@ -39,7 +40,7 @@ it("can handle a db returning nil for the repo with an Dangerfile for an issue w
   mockGetRepo.mockImplementationOnce(() => Promise.resolve(null))
 
   const body = fixture("issue_comment_created.json")
-  const req = { body } as any
+  const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
   const settings = await setupForRequest(req)
   expect(settings.commentableID).toBeTruthy()
 

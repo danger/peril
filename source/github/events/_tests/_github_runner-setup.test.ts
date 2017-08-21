@@ -7,7 +7,7 @@ import { setupForRequest } from "../github_runner"
 /** Returns JSON from the fixtured dir */
 const requestWithFixturedJSON = (name: string): any => {
   const path = resolve(__dirname, "fixtures", `${name}.json`)
-  return { body: JSON.parse(readFileSync(path, "utf8")) }
+  return { body: JSON.parse(readFileSync(path, "utf8")), headers: { "X-GitHub-Delivery": "12345" } }
 }
 
 describe("makes the right settings for", () => {
@@ -17,6 +17,7 @@ describe("makes the right settings for", () => {
 
     expect(settings).toEqual({
       commentableID: 2,
+      eventID: "12345",
       hasRelatedCommentable: true,
       isRepoEvent: true,
       isTriggeredByUser: true,
@@ -32,6 +33,7 @@ describe("makes the right settings for", () => {
 
     expect(settings).toEqual({
       commentableID: null,
+      eventID: "12345",
       hasRelatedCommentable: false,
       isRepoEvent: false,
       isTriggeredByUser: true,

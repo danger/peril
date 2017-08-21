@@ -46,6 +46,7 @@ export interface GitHubRunSettings {
   repoName: string | null
   triggeredByUsername: string | null
   hasRelatedCommentable: boolean
+  eventID: string
 }
 
 export const setupForRequest = async (req: express.Request): Promise<GitHubRunSettings> => {
@@ -59,6 +60,7 @@ export const setupForRequest = async (req: express.Request): Promise<GitHubRunSe
 
   return {
     commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
+    eventID: req.headers["X-GitHub-Delivery"] || "Unknown",
     hasRelatedCommentable,
     isRepoEvent,
     isTriggeredByUser,
