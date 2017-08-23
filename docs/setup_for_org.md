@@ -111,7 +111,6 @@ import {warning, danger} from "danger"
 Well, so far there are a bunch of big interesting unknowns for Peril:
 
 -   Using `node_modules` in a Dangerfile via a whitelist
--   TypeScript based Dangerfiles
 -   Verify that Org Events work
 -   Create rules that occur on a schedule
 

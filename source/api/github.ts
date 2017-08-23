@@ -15,11 +15,11 @@ const error = (message: string) => {
   console.error(message) // tslint:disable-line
 }
 
-export async function getTemporaryAccessTokenForInstallation(installation: GitHubInstallation): Promise<string> {
-  const newToken = await requestAccessTokenForInstallation(installation.id)
+export async function getTemporaryAccessTokenForInstallation(installationID: number): Promise<string> {
+  const newToken = await requestAccessTokenForInstallation(installationID)
   const credentials = await newToken.json()
   if (!newToken.ok) {
-    error(`Could not get an access token for ${installation.id}`)
+    error(`Could not get an access token for ${installationID}`)
     error(`GitHub returned: ${JSON.stringify(credentials)}`)
   }
   return credentials.token

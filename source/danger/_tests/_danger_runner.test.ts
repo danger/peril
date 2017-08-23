@@ -53,7 +53,7 @@ describe("evaling", () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
 
-    const localDangerfile = resolve("./dangerfile_runtime_env", "danger-testing-import.ts")
+    const localDangerfile = resolve(`${dangerfilesFixtures}/dangerfile_import_module.ts`)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
     const results = await runDangerAgainstFile(localDangerfile, contents, executor)
@@ -71,12 +71,23 @@ describe("evaling", () => {
     expect(results.markdowns).toEqual([":tada:"])
   })
 
+  it("has a peril object defined in global scope", async () => {
+    const platform = fixturedGitHub()
+    const executor = executorForInstallation(platform)
+
+    const localDangerfile = resolve(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`)
+    const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`, "utf8")
+
+    const results = await runDangerAgainstFile(localDangerfile, contents, executor)
+    expect(results.markdowns).toEqual(["{}"])
+  })
+
   // I wonder if the babel setup isn't quite right yet for this test
   it.skip("runs a JS dangerfile with fixtured data", async () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
     // The executor will return results etc in the next release
-    const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_insecure.ts`, "utf8")
+    const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_insecure.js`, "utf8")
     const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_insecure.js`, contents, executor)
     expect(results).toEqual({
       fails: [],

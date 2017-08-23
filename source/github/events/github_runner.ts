@@ -46,6 +46,7 @@ export interface GitHubRunSettings {
   repoName: string | null
   triggeredByUsername: string | null
   hasRelatedCommentable: boolean
+  eventID: string
 }
 
 export const setupForRequest = async (req: express.Request): Promise<GitHubRunSettings> => {
@@ -59,6 +60,7 @@ export const setupForRequest = async (req: express.Request): Promise<GitHubRunSe
 
   return {
     commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
+    eventID: req.headers["X-GitHub-Delivery"] || "Unknown",
     hasRelatedCommentable,
     isRepoEvent,
     isTriggeredByUser,
@@ -117,8 +119,14 @@ export const runEverything = async (
     return
   }
 
+  if (!req.body.installation || !req.body.installation.id) {
+    res.status(204).send(`No installation ID sent from GitHub.`)
+    next()
+    return
+  }
+
   log(`Event Settings: ${JSON.stringify(settings, null, " ")}`)
-  const token = await getTemporaryAccessTokenForInstallation(installation)
+  const token = await getTemporaryAccessTokenForInstallation(req.body.installation.id)
 
   const allResults = [] as DangerResults[]
 

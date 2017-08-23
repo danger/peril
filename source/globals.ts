@@ -8,7 +8,7 @@ dotenv.config()
  * @param {string} configName Config key
  * @returns {string}
  */
-function getEnv(configName) {
+function getEnv(configName): string {
   return process.env[configName]
 }
 
@@ -24,7 +24,8 @@ function validates(keys: string[]) {
  *
  * To set it on heroku: heroku config:add PRIVATE_GITHUB_SIGNING_KEY="$(cat thekey.pem)"
  */
-export const PRIVATE_GITHUB_SIGNING_KEY = getEnv("PRIVATE_GITHUB_SIGNING_KEY")
+export const PRIVATE_GITHUB_SIGNING_KEY =
+  getEnv("PRIVATE_GITHUB_SIGNING_KEY") && getEnv("PRIVATE_GITHUB_SIGNING_KEY").trim()
 
 /**
  * The ID for the GitHub integration

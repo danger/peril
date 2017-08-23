@@ -13,6 +13,10 @@
       "description": "The ID for your custom Peril GitHub App. You can find this inside the 'General' setting of your Integration, down under 'Basic information'.",
       "value": "19"
     },
+    "PERIL_ORG_INSTALLATION_ID": {
+      "description": "The ID for the installation of your Peril GitHub App. You can find it in the URL for the installations of your app (where you pick the repos) or by looking at any event JSON from GitHub.",
+      "value": "23"
+    },
     "PRIVATE_GITHUB_SIGNING_KEY": {
       "description": "This is your key from the GitHub App. First download the private key, then type this into terminal `cat '` then drag your file in to the terminal, then add `' | pbcopy` to the end. Press enter, and it will copy the contents to your pasteboard. The command should look like: `cat '/Users/orta/Downloads/artsy-peril.2017-05-05.private-key.pem' | pbcopy`"
     },

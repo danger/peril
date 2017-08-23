@@ -53,9 +53,15 @@ export async function runDangerAgainstInstallation(
  */
 export async function runDangerAgainstFile(filepath: string, contents: string, exec: Executor) {
   const runtimeEnv = await exec.setupDanger()
+
+  // This can expand with time.
+  if (runtimeEnv.sandbox) {
+    runtimeEnv.sandbox.peril = {}
+  }
+
   // runtimeEnv.rquire.root = dangerfile_runtime_env
   let results: DangerResults
-  console.log("Running:", filepath)
+
   try {
     results = await runDangerfileEnvironment(filepath, contents, runtimeEnv)
   } catch (error) {

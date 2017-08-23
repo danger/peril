@@ -4,6 +4,7 @@ import { GitHubRunSettings, runsForEvent } from "../github_runner"
 // Default settings
 const defaultRun: GitHubRunSettings = {
   commentableID: 2,
+  eventID: "09876",
   hasRelatedCommentable: true,
   isRepoEvent: true,
   isTriggeredByUser: true,

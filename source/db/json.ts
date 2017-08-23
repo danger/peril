@@ -49,45 +49,19 @@ const getInstallationId = (id: string | undefined): number => {
 let org: GitHubInstallation = null as any
 
 const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
-  setup: async () => {
-    const repo = dangerFilePath.split("@")[0]
-    const path = dangerFilePath.split("@")[1]
-    // Try see if we can pull it without an access token
-    let file = await getGitHubFileContents(null, repo, path, null)
-    // Might be private, in this case you have to have set up PERIL_ORG_INSTALLATION_ID
-    if (file === "") {
-      if (!PERIL_ORG_INSTALLATION_ID) {
-        throwNoPerilInstallationID()
-      }
-      const token = await getTemporaryAccessTokenForInstallation(installationById(PERIL_ORG_INSTALLATION_ID))
-      file = await getGitHubFileContents(token, repo, path, null)
-    }
-
-    if (file === "") {
-      throwNoJSONFileFound(dangerFilePath)
-    }
-    org = JSON.parse(file)
-    org.id = getInstallationId(PERIL_ORG_INSTALLATION_ID)
+  /** Deletes an Integration */
+  deleteInstallation: async (installationID: number) => {
+    info(`Skipping saving github repo with slug.`)
   },
 
-  /** Saves an Integration */
-  saveInstallation: async (installation: GitHubInstallation) => {
-    info(`Skipping saving installation due to no db: ${installation.id}`)
-  },
-
-  /** Saves a repo */
-  saveGitHubRepo: async (repo: GithubRepo) => {
-    info(`Skipping saving github repo with slug: ${repo.fullName} due to no db`)
+  /** Deletes a Github repo from the DB */
+  deleteRepo: async (installationID: number, repoName: string) => {
+    info(`Skipping deleting github repo ${repoName} due to no db`)
   },
 
   /** Gets an Integration */
   getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
     return org
-  },
-
-  /** Deletes an Integration */
-  deleteInstallation: async (installationID: number) => {
-    info(`Skipping saving github repo with slug.`)
   },
 
   /** Gets a Github repo from the DB */
@@ -107,9 +81,37 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
     return repo
   },
 
-  /** Deletes a Github repo from the DB */
-  deleteRepo: async (installationID: number, repoName: string) => {
-    info(`Skipping deleting github repo ${repoName} due to no db`)
+  /** Saves a repo */
+  saveGitHubRepo: async (repo: GithubRepo) => {
+    info(`Skipping saving github repo with slug: ${repo.fullName} due to no db`)
+  },
+
+  /** Saves an Integration */
+  saveInstallation: async (installation: GitHubInstallation) => {
+    info(`Skipping saving installation due to no db: ${installation.id}`)
+  },
+
+  setup: async () => {
+    const repo = dangerFilePath.split("@")[0]
+    const path = dangerFilePath.split("@")[1]
+    // Try see if we can pull it without an access token
+    let file = await getGitHubFileContents(null, repo, path, null)
+    // Might be private, in this case you have to have set up PERIL_ORG_INSTALLATION_ID
+    if (file === "") {
+      if (!PERIL_ORG_INSTALLATION_ID) {
+        throwNoPerilInstallationID()
+      }
+
+      const token = await getTemporaryAccessTokenForInstallation(getInstallationId(PERIL_ORG_INSTALLATION_ID))
+      file = await getGitHubFileContents(token, repo, path, null)
+    }
+
+    if (file === "") {
+      throwNoJSONFileFound(dangerFilePath)
+    }
+
+    org = JSON.parse(file)
+    org.id = getInstallationId(PERIL_ORG_INSTALLATION_ID)
   },
 })
 

@@ -24,7 +24,7 @@ it("runs an Dangerfile for a PR with a local", async () => {
   mockContents.mockImplementationOnce(() => Promise.resolve("fail('dangerfile')"))
 
   const body = fixture("pull_request_opened.json")
-  const settings = await setupForRequest({ body } as any)
+  const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any)
 
   const run = dangerRunForRules("pull_request", "opened", { pull_request: "dangerfile.pr" })!
 
@@ -46,7 +46,7 @@ describe("when someone edits the dangerfile", () => {
     mockUserRepoAccess.mockImplementationOnce(() => Promise.resolve(false))
 
     const body = fixture("pull_request_opened.json")
-    const settings = await setupForRequest({ body } as any)
+    const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any)
 
     const run = dangerRunForRules("pull_request", "opened", { pull_request: "dangerfile.no.access.pr" })!
 
@@ -61,7 +61,7 @@ describe("when someone edits the dangerfile", () => {
     mockUserRepoAccess.mockImplementationOnce(() => Promise.resolve(true))
 
     const body = fixture("pull_request_opened.json")
-    const settings = await setupForRequest({ body } as any)
+    const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any)
 
     const run = dangerRunForRules("pull_request", "opened", { pull_request: "dangerfile.no.access.pr" })!
 
