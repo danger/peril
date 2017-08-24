@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Warning Danger! Danger!",
   "scripts": {
-    "start": "node out/peril.js",
+    "start": "node out/index.js",
     "compile": "tsc -watch -p ./",
     "build": "yarn tsc",
     "postinstall": "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
