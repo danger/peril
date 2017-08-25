@@ -134,7 +134,11 @@ The GitHub API doesn't let the bot know what it's user ID is yet, so you'll need
 
 > `https://api.github.com/repos/[org]/[repo]/issues/[pr_or_issue_id]/comments`
 
-Then you can scroll down to find the ID of the Peril user account. Set this on your server using: `heroku config:add PERIL_BOT_USER_ID="[bot-id]" --app [my_heroku_peril_app]`.
+Check [Github API docs](https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue) or [here](https://platform.github.community/t/obtaining-the-id-of-the-bot-user/2076/5) if you need more info on how to perform the request or [here](https://developer.github.com/v3/auth/#basic-authentication) if you are having trouble authenticating.
+
+Then you can scroll down on the API JSON response to find the `"user"."id"` of the Peril user account. It will be a comment where the `"user"."type"` value is `"Bot"`.
+
+Set this on your server using: `heroku config:add PERIL_BOT_USER_ID="[bot-id]" --app [my_heroku_peril_app]`.
 
 ### Peril crashed, so I changed something and want to run the same event
 
