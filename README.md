@@ -32,19 +32,27 @@ In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING
 
   This will return the DSL JSON for a specific Pull Request. Supports JSONP.
 
-### Danger Plugins
+### Peril Settings
 
-Right now you can add Danger plugins by adding a key `modules` with an array of string inside the settings object of your database. If you're using a JSON db, it'd look like this:
 
 ```json
 {
   "settings": {
-    "modules": ["danger-plugin-yarn", "danger-plugin-spellcheck"]
+    "modules": ["danger-plugin-yarn", "danger-plugin-spellcheck"],
+    "env_vars": ["MY_CUSTOM_ENV_VAR]
   }
   ...
 }
 ```
 
+#### Plugins / Modules
+
+Right now you can add Danger plugins by adding a key `modules` with an array of string inside the settings object of your database.
+
 These will be added to your install via `yarn add [plugins]` at heroku build-time. This means that to update your modules
 you will need to ship a new commit to heroku. I'd recommend [this gist's](https://gist.github.com/csu/d22e60114051a0a182d2)
 technique.
+
+#### Env Vars
+
+You might want to expose specific ENV VARs to your Dangerfiles, this will take the values from your `process.env` and put them on `peril.env` inside the Dangerfiles.

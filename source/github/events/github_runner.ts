@@ -9,7 +9,7 @@ import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
-import { executorForInstallation, runDangerAgainstInstallation } from "../../danger/danger_runner"
+import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
 import perilPlatform from "../../danger/peril_platform"
 import db, { GitHubInstallation, GithubRepo } from "../../db"
 import { Pull_request } from "../events/types/pull_request_opened.types"
@@ -47,9 +47,10 @@ export interface GitHubRunSettings {
   triggeredByUsername: string | null
   hasRelatedCommentable: boolean
   eventID: string
+  installationSettings: any
 }
 
-export const setupForRequest = async (req: express.Request): Promise<GitHubRunSettings> => {
+export const setupForRequest = async (req: express.Request, installationSettings: any): Promise<GitHubRunSettings> => {
   const isRepoEvent = !!req.body.repository
   const repoName = isRepoEvent && req.body.repository.full_name
   const installationID = req.body.installation.id as number
@@ -62,6 +63,7 @@ export const setupForRequest = async (req: express.Request): Promise<GitHubRunSe
     commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
     eventID: req.headers["X-GitHub-Delivery"] || "Unknown",
     hasRelatedCommentable,
+    installationSettings,
     isRepoEvent,
     isTriggeredByUser,
     repoName,
@@ -80,7 +82,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
     return
   }
 
-  const settings = await setupForRequest(req)
+  const settings = await setupForRequest(req, installation.settings)
 
   // Some events aren't tied to a repo (like creating a user) and so
   // right now I've not thought through what is necessary to run those
@@ -181,7 +183,14 @@ export const runEventRun = async (
   }
 
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
-  return await runDangerAgainstInstallation(headDangerfile, run.dangerfilePath, githubAPI, run.dslType, dangerDSL)
+  return await runDangerForInstallation(
+    headDangerfile,
+    run.dangerfilePath,
+    githubAPI,
+    run.dslType,
+    settings.installationSettings,
+    dangerDSL
+  )
 }
 
 export const runPRRun = async (
@@ -250,7 +259,13 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
   }
 
   if (headDangerfile !== "") {
-    const results = await runDangerAgainstInstallation(headDangerfile, run.dangerfilePath, githubAPI, run.dslType)
+    const results = await runDangerForInstallation(
+      headDangerfile,
+      run.dangerfilePath,
+      githubAPI,
+      run.dslType,
+      settings.installationSettings
+    )
     if (pr.body.includes("Peril: Debug")) {
       results.markdowns.push(reportData("Showing PR details due to including 'Peril: Debug'"))
     }
