@@ -1,7 +1,7 @@
 import { Platform } from "danger/distribution/platforms/platform"
 import winston from "../logger"
 
-import { GitHubInstallation } from "../db"
+import { GitHubInstallation, GitHubInstallationSettings } from "../db"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
 import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
@@ -23,14 +23,22 @@ const log = (message: string) => {
   winston.info(`[runner] - ${message}`)
 }
 
+// What does the Peril object look like inside the runtime
+// TODO: Expose this usefully somehow
+export interface PerilDSL {
+  // A list of accepted ENV vars into the peril runtime, configurable in settings.
+  env: any | false
+}
+
 /**
  * The single function to run danger against an installation
  */
-export async function runDangerAgainstInstallation(
+export async function runDangerForInstallation(
   contents: string,
   filepath: string,
   api: GitHubAPI | null,
   type: dsl,
+  installationSettings: GitHubInstallationSettings,
   dangerDSL?: any
 ) {
   // We need this for things like repo slugs, PR IDs etc
@@ -44,19 +52,24 @@ export async function runDangerAgainstInstallation(
 
   const randomName = Math.random().toString(36)
   const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(filepath))
+  const peril = perilObjectForInstallation(installationSettings, process.env)
 
-  return await runDangerAgainstFile(localDangerfilePath, contents, exec)
+  return await runDangerAgainstFile(localDangerfilePath, contents, exec, peril)
 }
+
+export const perilObjectForInstallation = (settings: GitHubInstallationSettings, environment: any): PerilDSL => ({
+  env: settings.env_vars && Object.assign({}, ...settings.env_vars.map(k => ({ [k]: environment[k] }))),
+})
 
 /**
  * Sets up the custom peril environment and runs danger against a local file
  */
-export async function runDangerAgainstFile(filepath: string, contents: string, exec: Executor) {
+export async function runDangerAgainstFile(filepath: string, contents: string, exec: Executor, peril: PerilDSL) {
   const runtimeEnv = await exec.setupDanger()
 
-  // This can expand with time.
+  // This can expand with time
   if (runtimeEnv.sandbox) {
-    runtimeEnv.sandbox.peril = {}
+    runtimeEnv.sandbox.peril = peril
   }
 
   // runtimeEnv.rquire.root = dangerfile_runtime_env

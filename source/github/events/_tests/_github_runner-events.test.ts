@@ -26,7 +26,7 @@ it("runs an Dangerfile for an issue with a local", async () => {
   const body = fixture("issue_comment_created.json")
   const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
 
-  const settings = await setupForRequest(req)
+  const settings = await setupForRequest(req, {})
   expect(settings.commentableID).toBeTruthy()
 
   const run = dangerRunForRules("issue_comment", "created", { issue_comment: "dangerfile.issue" })!
@@ -41,7 +41,7 @@ it("can handle a db returning nil for the repo with an Dangerfile for an issue w
 
   const body = fixture("issue_comment_created.json")
   const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
-  const settings = await setupForRequest(req)
+  const settings = await setupForRequest(req, {})
   expect(settings.commentableID).toBeTruthy()
 
   const run = dangerRunForRules("issue_comment", "created", { issue_comment: "dangerfile.issue" })!

@@ -14,7 +14,7 @@ import {
   executorForInstallation,
   handleDangerResults,
   runDangerAgainstFile,
-  runDangerAgainstInstallation,
+  runDangerForInstallation,
 } from "../danger_runner"
 
 import { existsSync, readFileSync, writeFileSync } from "fs"
@@ -28,7 +28,7 @@ describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
-    const results = await runDangerAgainstInstallation(`dangerfile_empty.ts`, "", null, dsl.pr)
+    const results = await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, {})
 
     const firstArgCalled = mockRunDangerfileEnvironment.mock.calls[0][0]
     expect(firstArgCalled).toContain("/peril/")

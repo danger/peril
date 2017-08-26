@@ -13,12 +13,13 @@ const requestWithFixturedJSON = (name: string): any => {
 describe("makes the right settings for", () => {
   it("a pull_request_opened event", async () => {
     const pr = requestWithFixturedJSON("pull_request_opened")
-    const settings = await setupForRequest(pr)
+    const settings = await setupForRequest(pr, {})
 
     expect(settings).toEqual({
       commentableID: 2,
       eventID: "12345",
       hasRelatedCommentable: true,
+      installationSettings: {},
       isRepoEvent: true,
       isTriggeredByUser: true,
       repoName: "danger/peril",
@@ -29,12 +30,13 @@ describe("makes the right settings for", () => {
 
   it("an integration_installation_created event", async () => {
     const pr = requestWithFixturedJSON("integration_installation_created")
-    const settings = await setupForRequest(pr)
+    const settings = await setupForRequest(pr, {})
 
     expect(settings).toEqual({
       commentableID: null,
       eventID: "12345",
       hasRelatedCommentable: false,
+      installationSettings: {},
       isRepoEvent: false,
       isTriggeredByUser: true,
       repoName: false,

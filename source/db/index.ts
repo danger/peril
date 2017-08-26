@@ -23,6 +23,13 @@ export type DangerfileReferenceString = string
  */
 export type PerilEventString = string
 
+export interface GitHubInstallationSettings {
+  /** An array of modules for Peril to install, requires a re-deploy of the server to update. */
+  modules?: string[]
+  /** A array of allowed ENV vars. */
+  env_vars?: string[]
+}
+
 /** An individual integration of Danger via Peril, this is like the org */
 export interface GitHubInstallation {
   /**
@@ -34,10 +41,7 @@ export interface GitHubInstallation {
    * In our DB this is represented as a JSON type, so you should always have settings
    * as a nullable type. These are the entire installation settings.
    */
-  settings: {
-    /** A set of space separated modules for Peril to install, requires a re-deploy of the server to update. */
-    modules?: string[]
-  }
+  settings: GitHubInstallationSettings
 
   /** Having rules in here would mean that it would happen on _any_ event, another JSON type in the DB */
   rules: RunnerRuleset
