@@ -217,8 +217,8 @@ export const runPRRun = async (
 
   const dangerfileRepoForPR = pr.head.repo.full_name
   const dangerfileBranchForPR = pr.head.ref
-  const neededDangerfileIsSameRepo = run.repoSlug === pr.head.repo.full_name
-  const branch = neededDangerfileIsSameRepo ? dangerfileBranchForPR : null
+  const neededDangerfileIsLocalRepo = !run.repoSlug
+  const branch = neededDangerfileIsLocalRepo ? dangerfileBranchForPR : null
 
   // Either it's dictated in the run as an external repo, or we use the most natural repo
   const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
@@ -242,7 +242,7 @@ export const runPRRun = async (
     const stateForErrorHandling = {
       branch,
       dangerfileBranchForPR,
-      neededDangerfileIsSameRepo,
+      neededDangerfileIsLocalRepo,
       repoForDangerfile,
       run,
       settings,
