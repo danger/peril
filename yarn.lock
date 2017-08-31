@@ -1654,9 +1654,9 @@ danger-plugin-yarn@^0.3.0:
   optionalDependencies:
     esdoc "^0.5.2"
 
-danger@2.0.0-alpha.12:
-  version "2.0.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-2.0.0-alpha.12.tgz#788cdb6d4e2618a9e3915ac4ec62c9715b528453"
+danger@2.0.0-alpha.13:
+  version "2.0.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-2.0.0-alpha.13.tgz#2a1ce1bb9618878c0782fef030d9af153be880f6"
   dependencies:
     babel-polyfill "7.0.0-alpha.19"
     chalk "^2.0.0"
