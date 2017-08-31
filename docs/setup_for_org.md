@@ -40,7 +40,7 @@ You need to have a repo which Peril has access to. This repo needs to have a set
   },
   "rules": {
     "pull_request": "orta/peril-bootstrap@dangerfiles/pr.js",
-    "issue": "orta/example-peril@dangerfiles/issue.js"
+    "issue": "orta/peril-bootstrap@dangerfiles/issue.js"
   },
   "repos" : {
     "orta/ORStackView": {
