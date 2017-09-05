@@ -57,7 +57,7 @@
     "node-fetch": "^1.6.3",
     "node-pg-migrate": "^2.7.0",
     "pg-promise": "^6.1.0",
-    "ts-jest": "^20.0.10",
+    "ts-jest": "^21.0.0",
     "ts-node": "^3.0.2",
     "tslint": "^5.4.3",
     "typescript": "^2.3.2",
