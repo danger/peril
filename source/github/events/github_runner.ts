@@ -252,9 +252,9 @@ export const runPRRun = async (
 
 ## Full state of PR run:
 
-\`\`\`json      
+\`\`\`json
 ${JSON.stringify(stateForErrorHandling, null, "  ")}
-\`\`\`   
+\`\`\`
       `
   }
 
@@ -266,7 +266,7 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
       run.dslType,
       settings.installationSettings
     )
-    if (pr.body.includes("Peril: Debug")) {
+    if (pr.body !== null && pr.body.includes("Peril: Debug")) {
       results.markdowns.push(reportData("Showing PR details due to including 'Peril: Debug'"))
     }
     return results

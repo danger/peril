@@ -311,7 +311,7 @@ export interface Pull_request {
   locked: boolean
   title: string
   user: User
-  body: string
+  body: string | null
   created_at: string
   updated_at: string
   closed_at?: any
