@@ -50,7 +50,7 @@ describe("evaling", () => {
 
     const contents = readFileSync(path, "utf8")
     const results = await runDangerAgainstFile(path, contents, executor, peril)
-    expect(results.markdowns).toEqual([":tada:"])
+    expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
   })
 
   it("allows external modules with internal resolving ", async () => {
@@ -61,7 +61,7 @@ describe("evaling", () => {
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
     const results = await runDangerAgainstFile(localDangerfile, contents, executor, peril)
-    expect(results.markdowns).toEqual([":tada:"])
+    expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
   })
 
   it("has a peril object defined in global scope", async () => {

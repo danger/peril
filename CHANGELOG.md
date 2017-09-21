@@ -1,8 +1,8 @@
 ## 2017-09-21
 
-* Updated node to 8.4
-* Updated Danger to 2.0a16
-* Added the ability 
+* Updated node to 8.4 - orta
+* Updated Danger to 2.0a16 - orta
+* Added the ability to skip specific repos - orta
 
 ## 2017-08-25
 
