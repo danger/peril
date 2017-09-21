@@ -34,6 +34,7 @@ In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING
 
 ### Peril Settings
 
+The `"settings"` section of the JSON file is how you can configure peril at a global level. It looks something like this:
 
 ```json
 {
@@ -44,6 +45,8 @@ In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING
   ...
 }
 ```
+
+The full DSL is available inside [this file](/danger/peril/blob/master/source/db/GitHubRepoSettings.ts).
 
 #### Plugins / Modules
 

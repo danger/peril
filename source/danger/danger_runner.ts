@@ -1,7 +1,8 @@
 import { Platform } from "danger/distribution/platforms/platform"
 import winston from "../logger"
 
-import { GitHubInstallation, GitHubInstallationSettings } from "../db"
+import { GitHubInstallation } from "../db"
+import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
 import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"

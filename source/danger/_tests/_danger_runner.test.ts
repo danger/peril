@@ -14,6 +14,7 @@ import {
 import { existsSync, readFileSync, writeFileSync } from "fs"
 import { tmpdir } from "os"
 import { basename, resolve } from "path"
+import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 const peril = { env: {} }
@@ -49,7 +50,7 @@ describe("evaling", () => {
 
     const contents = readFileSync(path, "utf8")
     const results = await runDangerAgainstFile(path, contents, executor, peril)
-    expect(results.markdowns).toEqual([":tada:"])
+    expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
   })
 
   it("allows external modules with internal resolving ", async () => {
@@ -60,7 +61,7 @@ describe("evaling", () => {
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
     const results = await runDangerAgainstFile(localDangerfile, contents, executor, peril)
-    expect(results.markdowns).toEqual([":tada:"])
+    expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
   })
 
   it("has a peril object defined in global scope", async () => {
@@ -102,8 +103,10 @@ describe("evaling", () => {
 })
 
 it("exposes specific process env vars via the peril object ", async () => {
-  const installationSettings = {
+  const installationSettings: GitHubInstallationSettings = {
     env_vars: ["TEST_ENV", "NON_EXISTANT"],
+    ignored_repos: [],
+    modules: [],
   }
 
   const fakeProcess = {

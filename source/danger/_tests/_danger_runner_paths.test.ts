@@ -24,11 +24,17 @@ import { dsl } from "../danger_run"
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 
+const defaultSettings = {
+  env_vars: [],
+  ignored_repos: [],
+  modules: [],
+}
+
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
-    const results = await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, {})
+    const results = await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, defaultSettings)
 
     const firstArgCalled = mockRunDangerfileEnvironment.mock.calls[0][0]
     expect(firstArgCalled).toContain("/peril/")

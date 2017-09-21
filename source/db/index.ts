@@ -3,6 +3,7 @@ import { DATABASE_JSON_FILE, DATABASE_URL } from "../globals"
 import winston from "../logger"
 import { GitHubUser } from "./types"
 
+import { GitHubInstallationSettings } from "./GitHubRepoSettings"
 import jsonDB from "./json"
 import postgres from "./postgres"
 
@@ -22,13 +23,6 @@ export type DangerfileReferenceString = string
  * - "issue.*"
  */
 export type PerilEventString = string
-
-export interface GitHubInstallationSettings {
-  /** An array of modules for Peril to install, requires a re-deploy of the server to update. */
-  modules?: string[]
-  /** A array of allowed ENV vars. */
-  env_vars?: string[]
-}
 
 /** An individual integration of Danger via Peril, this is like the org */
 export interface GitHubInstallation {

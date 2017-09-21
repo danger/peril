@@ -16,6 +16,12 @@ const defaultRun: GitHubRunSettings = {
   triggeredByUsername: "orta",
 }
 
+const defaultSettings = {
+  env_vars: [],
+  ignored_repos: [],
+  modules: [],
+}
+
 // A function to override defaults
 const getSettings = (overwrites: Partial<GitHubRunSettings>) => ({
   ...defaultRun,
@@ -28,7 +34,7 @@ it("handles a platform only run", () => {
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
-    settings: {},
+    settings: defaultSettings,
   }
 
   const settings = getSettings({ repoSpecificRules: {} })
@@ -52,7 +58,7 @@ it("gets the expected runs for platform + repo rules", () => {
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
-    settings: {},
+    settings: defaultSettings,
   }
 
   const settings = getSettings({})
@@ -83,7 +89,7 @@ it("gets the expected runs for platform", () => {
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
-    settings: {},
+    settings: defaultSettings,
   }
 
   const repo = {
