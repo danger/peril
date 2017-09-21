@@ -11,7 +11,11 @@ export async function createInstallation(installationJSON: Installation, req: ex
     rules: {
       pull_request: "dangerfile.js",
     },
-    settings: {},
+    settings: {
+      env_vars: [],
+      ignored_repos: [],
+      modules: [],
+    },
   }
 
   // Default to no runnerRules

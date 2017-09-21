@@ -26,17 +26,7 @@ For example:
 */
 
 /** Logs */
-const info = (message: string) => {
-  winston.info(`[db] - ${message}`)
-}
-
-const installationById = (installationId: string | undefined): GitHubInstallation => {
-  return {
-    id: getInstallationId(installationId),
-    rules: {},
-    settings: {},
-  }
-}
+const info = (message: string) => winston.info(`[db] - ${message}`)
 
 const getInstallationId = (id: string | undefined): number => {
   let installationId: number | undefined = parseInt(id as string, 10)
@@ -94,6 +84,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
   setup: async () => {
     const repo = dangerFilePath.split("@")[0]
     const path = dangerFilePath.split("@")[1]
+
     // Try see if we can pull it without an access token
     let file = await getGitHubFileContents(null, repo, path, null)
     // Might be private, in this case you have to have set up PERIL_ORG_INSTALLATION_ID
@@ -111,6 +102,10 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
     }
 
     org = JSON.parse(file)
+    // Ensure settings are non-null
+    org.settings.env_vars = org.settings.env_vars || []
+    org.settings.ignored_repos = org.settings.ignored_repos || []
+    org.settings.modules = org.settings.modules || []
     org.id = getInstallationId(PERIL_ORG_INSTALLATION_ID)
   },
 })

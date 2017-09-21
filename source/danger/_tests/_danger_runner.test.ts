@@ -14,6 +14,7 @@ import {
 import { existsSync, readFileSync, writeFileSync } from "fs"
 import { tmpdir } from "os"
 import { basename, resolve } from "path"
+import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 const peril = { env: {} }
@@ -102,8 +103,10 @@ describe("evaling", () => {
 })
 
 it("exposes specific process env vars via the peril object ", async () => {
-  const installationSettings = {
+  const installationSettings: GitHubInstallationSettings = {
     env_vars: ["TEST_ENV", "NON_EXISTANT"],
+    ignored_repos: [],
+    modules: [],
   }
 
   const fakeProcess = {

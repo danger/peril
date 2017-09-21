@@ -33,10 +33,7 @@ import { canUserWriteToRepo, getGitHubFileContents } from "../lib/github_helpers
  * As you can imagine, this does indeed make it ripe for a good refactoring in the future.
  */
 
-/** Logs */
-const log = (message: string) => {
-  winston.info(`[runner] - ${message}`)
-}
+const log = (message: string) => winston.info(`[runner] - ${message}`)
 
 export interface GitHubRunSettings {
   commentableID: number | null
@@ -83,6 +80,13 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   }
 
   const settings = await setupForRequest(req, installation.settings)
+
+  // Allow edge-case repos to skip Danger rules. E.g. in Artsy, our analytics and marketing repos
+  // do not need the same level of thought as an larger engineering project would.
+  if (settings.repoName && installation.settings.ignored_repos.includes(settings.repoName)) {
+    res.status(200).send(`Skipping peril run due to repo being in ignored`)
+    return
+  }
 
   // Some events aren't tied to a repo (like creating a user) and so
   // right now I've not thought through what is necessary to run those

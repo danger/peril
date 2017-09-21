@@ -23,6 +23,10 @@ Object {
     "issue": "orta/peril@issue.ts",
     "pull_request": "orta/peril@pr.ts",
   },
-  "settings": Object {},
+  "settings": Object {
+    "env_vars": Array [],
+    "ignored_repos": Array [],
+    "modules": Array [],
+  },
 }
 `;

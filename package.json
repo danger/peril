@@ -45,7 +45,7 @@
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-stage-3": "^6.22.0",
     "body-parser": "^1.15.2",
-    "danger": "2.0.0-alpha.13",
+    "danger": "2.0.0-alpha.16",
     "dotenv": "^4.0.0",
     "ejs": "^2.4.2",
     "express": "^4.13.4",
@@ -67,7 +67,7 @@
     "write-file-promise": "^1.0.0"
   },
   "engines": {
-    "node": "7.10.1"
+    "node": "8.4"
   },
   "jest": {
     "transform": {
