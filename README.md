@@ -46,7 +46,7 @@ The `"settings"` section of the JSON file is how you can configure peril at a gl
 }
 ```
 
-The full DSL is available inside [this file](/danger/peril/blob/master/source/db/GitHubRepoSettings.ts).
+The full DSL is available inside [this file](https://github.com/danger/peril/blob/master/source/db/GitHubRepoSettings.ts).
 
 #### Plugins / Modules
 
