@@ -6,6 +6,7 @@ const defaultRun: GitHubRunSettings = {
   commentableID: 2,
   eventID: "09876",
   hasRelatedCommentable: true,
+  installationID: 123,
   installationSettings: {},
   isRepoEvent: true,
   isTriggeredByUser: true,

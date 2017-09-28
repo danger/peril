@@ -19,12 +19,31 @@ import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 const peril = { env: {} }
 
+jest.mock("../../api/github.ts", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("123") }))
+
+const emptySettings = {
+  env_vars: [],
+  ignored_repos: [],
+  modules: [],
+}
+
+const installationSettings = {
+  id: 123,
+  settings: emptySettings,
+}
+
 describe("evaling", () => {
   it("runs a typescript dangerfile with fixtured data", async () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_empty.ts`, "utf8")
-    const results = await runDangerAgainstFile(`${dangerfilesFixtures}/dangerfile_empty.ts`, contents, executor, peril)
+    const results = await runDangerAgainstFile(
+      `${dangerfilesFixtures}/dangerfile_empty.ts`,
+      contents,
+      installationSettings,
+      executor,
+      peril
+    )
     expect(results).toEqual({
       fails: [],
       markdowns: [],
@@ -39,7 +58,7 @@ describe("evaling", () => {
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
     const contents = readFileSync(path, "utf8")
 
-    const results = await runDangerAgainstFile(path, contents, executor, peril)
+    const results = await runDangerAgainstFile(path, contents, installationSettings, executor, peril)
     expect(results.markdowns).toEqual(["`Object.keys(process.env).length` is 0"])
   })
 
@@ -49,7 +68,7 @@ describe("evaling", () => {
     const path = `${dangerfilesFixtures}/dangerfile_import_module.ts`
 
     const contents = readFileSync(path, "utf8")
-    const results = await runDangerAgainstFile(path, contents, executor, peril)
+    const results = await runDangerAgainstFile(path, contents, installationSettings, executor, peril)
     expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
   })
 
@@ -60,7 +79,7 @@ describe("evaling", () => {
     const localDangerfile = resolve("./dangerfile_runtime_env", "dangerfile_import_complex_module.ts")
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
-    const results = await runDangerAgainstFile(localDangerfile, contents, executor, peril)
+    const results = await runDangerAgainstFile(localDangerfile, contents, installationSettings, executor, peril)
     expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
   })
 
@@ -71,7 +90,7 @@ describe("evaling", () => {
     const localDangerfile = resolve(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`, "utf8")
 
-    const results = await runDangerAgainstFile(localDangerfile, contents, executor, peril)
+    const results = await runDangerAgainstFile(localDangerfile, contents, installationSettings, executor, peril)
     expect(results.markdowns).toEqual([JSON.stringify(peril, null, "  ")])
   })
 
@@ -83,7 +102,7 @@ describe("evaling", () => {
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
 
     const contents = readFileSync(path, "utf8")
-    const results = await runDangerAgainstFile(path, contents, executor, peril)
+    const results = await runDangerAgainstFile(path, contents, installationSettings, executor, peril)
     expect(results).toEqual({
       fails: [],
       markdowns: [],
@@ -103,7 +122,7 @@ describe("evaling", () => {
 })
 
 it("exposes specific process env vars via the peril object ", async () => {
-  const installationSettings: GitHubInstallationSettings = {
+  const processInstallationSettings: GitHubInstallationSettings = {
     env_vars: ["TEST_ENV", "NON_EXISTANT"],
     ignored_repos: [],
     modules: [],
@@ -114,6 +133,6 @@ it("exposes specific process env vars via the peril object ", async () => {
     TEST_ENV: "123",
   }
 
-  const perilObj = perilObjectForInstallation(installationSettings, fakeProcess)
+  const perilObj = perilObjectForInstallation(processInstallationSettings, fakeProcess)
   expect(perilObj).toEqual({ env: { TEST_ENV: "123" } })
 })

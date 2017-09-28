@@ -37,9 +37,9 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
-"@types/jest@^20.0.6":
-  version "20.0.6"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-20.0.6.tgz#7e0ba76ddfacb42ee9bb0d8833e5208cf0680431"
+"@types/jest@^21.1.0":
+  version "21.1.1"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.1.tgz#70008ecce439774a45c7d0b543d879ec58a1b332"
 
 "@types/jsonwebtoken@^7.1.33":
   version "7.2.0"
@@ -2302,7 +2302,7 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-github@^11:
+github@^11, github@^11.0.0:
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/github/-/github-11.0.0.tgz#edb32df5efb33cad004ebf0bdd2a4b30bb63a854"
   dependencies:

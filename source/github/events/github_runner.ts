@@ -44,6 +44,7 @@ export interface GitHubRunSettings {
   triggeredByUsername: string | null
   hasRelatedCommentable: boolean
   eventID: string
+  installationID: number
   installationSettings: any
 }
 
@@ -60,6 +61,7 @@ export const setupForRequest = async (req: express.Request, installationSettings
     commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
     eventID: req.headers["X-GitHub-Delivery"] || "Unknown",
     hasRelatedCommentable,
+    installationID,
     installationSettings,
     isRepoEvent,
     isTriggeredByUser,
@@ -187,12 +189,18 @@ export const runEventRun = async (
   }
 
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
+
+  const installationSettings = {
+    id: settings.installationID,
+    settings: settings.installationSettings,
+  }
+
   return await runDangerForInstallation(
     headDangerfile,
     run.dangerfilePath,
     githubAPI,
     run.dslType,
-    settings.installationSettings,
+    installationSettings,
     dangerDSL
   )
 }

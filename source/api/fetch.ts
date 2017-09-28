@@ -4,6 +4,11 @@ export default function fetch(
   url: string | node_fetch.Request,
   init?: node_fetch.RequestInit
 ): Promise<node_fetch.Response> {
+  // TODO: Uncomment this
+  // const isTests = typeof jest !== "undefined"
+  // if (isTests) {
+  //   throw new Error("No API calls in tests please")
+  // }
   if (process.env.LOG_FETCH_REQUESTS && init) {
     const output = ["curl", "-i"]
     if (init.method) {

@@ -12,11 +12,15 @@ import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { runDangerfileEnvironment } from "danger/distribution/runner/DangerfileRunner"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 
+import * as NodeGithub from "github"
+
 import * as os from "os"
 import * as path from "path"
 import * as write from "write-file-promise"
 import { dsl } from "./danger_run"
 
+import { DangerContext } from "danger/distribution/runner/Dangerfile"
+import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import perilPlatform from "./peril_platform"
 
 /** Logs */
@@ -31,6 +35,11 @@ export interface PerilDSL {
   env: any | false
 }
 
+export interface InstallationToRun {
+  id: number
+  settings: GitHubInstallationSettings
+}
+
 /**
  * The single function to run danger against an installation
  */
@@ -39,7 +48,7 @@ export async function runDangerForInstallation(
   filepath: string,
   api: GitHubAPI | null,
   type: dsl,
-  installationSettings: GitHubInstallationSettings,
+  installation: InstallationToRun,
   dangerDSL?: any
 ) {
   // We need this for things like repo slugs, PR IDs etc
@@ -53,9 +62,9 @@ export async function runDangerForInstallation(
 
   const randomName = Math.random().toString(36)
   const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(filepath))
-  const peril = perilObjectForInstallation(installationSettings, process.env)
+  const peril = perilObjectForInstallation(installation.settings, process.env)
 
-  return await runDangerAgainstFile(localDangerfilePath, contents, exec, peril)
+  return await runDangerAgainstFile(localDangerfilePath, contents, installation, exec, peril)
 }
 
 export const perilObjectForInstallation = (settings: GitHubInstallationSettings, environment: any): PerilDSL => ({
@@ -65,12 +74,18 @@ export const perilObjectForInstallation = (settings: GitHubInstallationSettings,
 /**
  * Sets up the custom peril environment and runs danger against a local file
  */
-export async function runDangerAgainstFile(filepath: string, contents: string, exec: Executor, peril: PerilDSL) {
+export async function runDangerAgainstFile(
+  filepath: string,
+  contents: string,
+  installation: InstallationToRun,
+  exec: Executor,
+  peril: PerilDSL
+) {
   const runtimeEnv = await exec.setupDanger()
 
   // This can expand with time
   if (runtimeEnv.sandbox) {
-    runtimeEnv.sandbox.peril = peril
+    await appendPerilContextToDSL(installation.id, runtimeEnv.sandbox, peril)
   }
 
   // runtimeEnv.rquire.root = dangerfile_runtime_env
@@ -134,4 +149,18 @@ export function executorForInstallation(platform: Platform) {
   }
   // Source can be removed in the next release of Danger
   return new Executor(source, platform, execConfig)
+}
+
+export async function appendPerilContextToDSL(installationID: number, sandbox: DangerContext, peril: PerilDSL) {
+  const token = await getTemporaryAccessTokenForInstallation(installationID)
+  const api = new NodeGithub()
+  api.authenticate({
+    token,
+    type: "integration",
+  })
+  sandbox.danger.github.api = api
+
+  // TODO: Add this to the Danger DSL in Danger, as an optional
+  const anySandbox = sandbox as any
+  anySandbox.peril = peril
 }
