@@ -1,5 +1,5 @@
 const mockGetRepo = jest.fn()
-jest.mock("../../../db", () => ({
+jest.mock("../../../db/getDB", () => ({
   default: { getRepo: mockGetRepo },
 }))
 
@@ -9,6 +9,7 @@ const mockGHContents = jest.fn((token, repo, path) => {
   }
 })
 
+jest.mock("../../../api/github.ts", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("token") }))
 jest.mock("../../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockGHContents }))
 
 import { readFileSync } from "fs"
@@ -20,7 +21,7 @@ import { GitHubRunSettings, runEventRun, setupForRequest } from "../github_runne
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = file => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
-it.skip("runs an Dangerfile for an issue with a local", async () => {
+it("runs an Dangerfile for an issue with a local", async () => {
   mockGetRepo.mockImplementationOnce(() => Promise.resolve({ id: "123", fake: true }))
 
   const body = fixture("issue_comment_created.json")

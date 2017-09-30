@@ -1,7 +1,7 @@
 const mockDbInstallation = jest.fn()
 const mockGetRepos = jest.fn()
 
-jest.mock("../../../db", () => ({ default: { getInstallation: mockDbInstallation, getRepo: mockGetRepos } }))
+jest.mock("../../../db/getDB", () => ({ default: { getInstallation: mockDbInstallation, getRepo: mockGetRepos } }))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"

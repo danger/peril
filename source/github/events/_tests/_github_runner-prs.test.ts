@@ -1,4 +1,4 @@
-jest.mock("../../../db", () => ({ default: { getRepo: () => Promise.resolve({ id: "123", fake: true }) } }))
+jest.mock("../../../db/getDB", () => ({ default: { getRepo: () => Promise.resolve({ id: "123", fake: true }) } }))
 
 const mockContents = jest.fn(() => Promise.resolve("// empty"))
 const mockUserRepoAccess = jest.fn(() => Promise.resolve(true))

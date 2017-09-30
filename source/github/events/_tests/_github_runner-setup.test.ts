@@ -1,4 +1,4 @@
-jest.mock("../../../db", () => ({ default: { getRepo: () => Promise.resolve({ fake: true }) } }))
+jest.mock("../../../db/getDB", () => ({ default: { getRepo: () => Promise.resolve({ fake: true }) } }))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"

@@ -13,16 +13,9 @@ const legitSettings = `{
   }
 }`
 
-const mockContents = jest.fn((token, path) => {
-  if (path === "orta/peril") {
-    return Promise.resolve(legitSettings)
-  }
-  if (path === "orta/other") {
-    return Promise.resolve("")
-  }
-})
-
-jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockContents }))
+const mockGHContents = jest.fn()
+jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockGHContents }))
+jest.mock("../../api/github.ts", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("123") }))
 
 import { DatabaseAdaptor } from "../index"
 import jsonDB from "../json"
@@ -30,26 +23,36 @@ import jsonDB from "../json"
 describe("makes the right calls to GitHub", () => {
   let db: DatabaseAdaptor = null as any
 
-  beforeEach(async () => {
+  const setup = async () => {
+    mockGHContents.mockImplementationOnce(() => Promise.resolve(legitSettings))
+
     db = jsonDB("orta/peril@settings.json")
-    await db.setup()
-  })
+    return db.setup()
+  }
 
   it("with a legit stubbed JSON file", async () => {
+    await setup()
+
     const org = await db.getInstallation(1)
     expect(org).toMatchSnapshot()
   })
 
   it("gets repo rules correct", async () => {
+    await setup()
+
     const repo = await db.getRepo(1, "orta/ORStackView")
     expect(repo).toMatchSnapshot()
   })
 })
 
-// need a unhandled rejection from promises?
-it.skip("Raises with a bad URL", () => {
-  const db = jsonDB("orta/other@settings.json")
-  expect(async () => {
+it("Raises with a bad URL", async () => {
+  mockGHContents.mockImplementationOnce(() => Promise.resolve(""))
+  expect.assertions(1)
+
+  try {
+    const db = jsonDB("orta/other@settings.json")
     await db.setup()
-  }).toThrowErrorMatchingSnapshot()
+  } catch (error) {
+    expect(error).toMatchSnapshot()
+  }
 })

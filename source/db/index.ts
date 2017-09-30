@@ -1,5 +1,3 @@
-import { getGitHubFileContents } from "../github/lib/github_helpers"
-import { DATABASE_JSON_FILE, DATABASE_URL } from "../globals"
 import winston from "../logger"
 import { GitHubUser } from "./types"
 
@@ -74,14 +72,3 @@ export interface DatabaseAdaptor {
   /** Deletes a repo from the  */
   deleteRepo: (installationID: number, repoName: string) => Promise<void>
 }
-
-let exposedDB: DatabaseAdaptor = null as any
-if (DATABASE_JSON_FILE) {
-  exposedDB = jsonDB(DATABASE_JSON_FILE as string)
-} else {
-  exposedDB = postgres
-}
-
-exposedDB.setup()
-
-export default exposedDB
