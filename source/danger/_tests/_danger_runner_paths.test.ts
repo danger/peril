@@ -30,11 +30,18 @@ const defaultSettings = {
   modules: [],
 }
 
+const installationSettings = {
+  id: 123,
+  settings: defaultSettings,
+}
+
+jest.mock("../../api/github.ts", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("123") }))
+
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform)
-    const results = await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, defaultSettings)
+    const results = await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, installationSettings)
 
     const firstArgCalled = mockRunDangerfileEnvironment.mock.calls[0][0]
     expect(firstArgCalled).toContain("/peril/")

@@ -11,7 +11,8 @@ import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
 import perilPlatform from "../../danger/peril_platform"
-import db, { GitHubInstallation, GithubRepo } from "../../db"
+import { GitHubInstallation, GithubRepo } from "../../db"
+import db from "../../db/getDB"
 import { Pull_request } from "../events/types/pull_request_opened.types"
 import { canUserWriteToRepo, getGitHubFileContents } from "../lib/github_helpers"
 
@@ -44,6 +45,7 @@ export interface GitHubRunSettings {
   triggeredByUsername: string | null
   hasRelatedCommentable: boolean
   eventID: string
+  installationID: number
   installationSettings: any
 }
 
@@ -60,6 +62,7 @@ export const setupForRequest = async (req: express.Request, installationSettings
     commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
     eventID: req.headers["X-GitHub-Delivery"] || "Unknown",
     hasRelatedCommentable,
+    installationID,
     installationSettings,
     isRepoEvent,
     isTriggeredByUser,
@@ -187,12 +190,18 @@ export const runEventRun = async (
   }
 
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
+
+  const installationSettings = {
+    id: settings.installationID,
+    settings: settings.installationSettings,
+  }
+
   return await runDangerForInstallation(
     headDangerfile,
     run.dangerfilePath,
     githubAPI,
     run.dslType,
-    settings.installationSettings,
+    installationSettings,
     dangerDSL
   )
 }

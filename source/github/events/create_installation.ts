@@ -3,7 +3,8 @@ import * as express from "express"
 import { Installation } from "../events/types/integration_installation_created.types"
 
 import { requestAccessTokenForInstallation } from "../../api/github"
-import db, { GitHubInstallation } from "../../db"
+import { GitHubInstallation } from "../../db"
+import db from "../../db/getDB"
 
 export async function createInstallation(installationJSON: Installation, req: express.Request, res: express.Response) {
   const installation: GitHubInstallation = {

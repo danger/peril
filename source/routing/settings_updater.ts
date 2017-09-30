@@ -1,5 +1,5 @@
 import * as express from "express"
-import db from "../db"
+import db from "../db/getDB"
 import { DATABASE_JSON_FILE } from "../globals"
 
 export const settingsUpdater = async (event: string, req: express.Request, res: express.Response, next: any) => {

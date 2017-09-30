@@ -1,7 +1,7 @@
 import * as express from "express"
 import winston from "../logger"
 
-import db from "../db"
+import db from "../db/getDB"
 import { createInstallation } from "../github/events/create_installation"
 import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"

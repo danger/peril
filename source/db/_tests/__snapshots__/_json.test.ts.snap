@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Raises with a bad URL 1`] = `[SyntaxError: Unexpected token u in JSON at position 0]`;
+
 exports[`makes the right calls to GitHub gets repo rules correct 1`] = `
 Object {
   "fullName": "orta/ORStackView",
@@ -13,7 +15,7 @@ Object {
 
 exports[`makes the right calls to GitHub with a legit stubbed JSON file 1`] = `
 Object {
-  "id": undefined,
+  "id": 23511,
   "repos": Object {
     "orta/ORStackView": Object {
       "issue.created": "orta/peril@lock_issues.ts",

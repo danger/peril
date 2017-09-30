@@ -1,4 +1,4 @@
-jest.mock("../../../db", () => ({ default: { getRepo: () => Promise.resolve({ fake: true }) } }))
+jest.mock("../../../db/getDB", () => ({ default: { getRepo: () => Promise.resolve({ fake: true }) } }))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
@@ -19,6 +19,7 @@ describe("makes the right settings for", () => {
       commentableID: 2,
       eventID: "12345",
       hasRelatedCommentable: true,
+      installationID: 4766,
       installationSettings: {},
       isRepoEvent: true,
       isTriggeredByUser: true,
@@ -36,6 +37,7 @@ describe("makes the right settings for", () => {
       commentableID: null,
       eventID: "12345",
       hasRelatedCommentable: false,
+      installationID: 4766,
       installationSettings: {},
       isRepoEvent: false,
       isTriggeredByUser: true,
