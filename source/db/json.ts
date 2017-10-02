@@ -26,7 +26,8 @@ For example:
 */
 
 /** Logs */
-const info = (message: string) => winston.info(`[db] - ${message}`)
+const info = (message: string) => winston.info(`[json db] - ${message}`)
+const error = (message: string) => winston.error(`[json db] - ${message}`)
 
 const getInstallationId = (id: string | undefined): number => {
   let installationId: number | undefined = parseInt(id as string, 10)
@@ -101,18 +102,29 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
       throwNoJSONFileFound(dangerFilePath)
     }
 
-    org = JSON.parse(file)
-    // Ensure settings are non-null
-    org.settings.env_vars = org.settings.env_vars || []
-    org.settings.ignored_repos = org.settings.ignored_repos || []
-    org.settings.modules = org.settings.modules || []
-    org.id = getInstallationId(PERIL_ORG_INSTALLATION_ID)
+    const parsedOrg = JSON.parse(file) as Partial<GitHubInstallation>
+    if (!parsedOrg) {
+      error(`Could not run JSON.parse on the contents of ${dangerFilePath}.`)
+      process.exitCode = 1
+    } else {
+      // Set our write-once org variable that is then re-used for all of the different
+      // installation related calls
+
+      org = {
+        id: getInstallationId(PERIL_ORG_INSTALLATION_ID),
+        rules: parsedOrg.rules || {},
+        scheduler: parsedOrg.scheduler || {},
+        settings: {
+          env_vars: (parsedOrg.settings && parsedOrg.settings.env_vars) || [],
+          ignored_repos: (parsedOrg.settings && parsedOrg.settings.ignored_repos) || [],
+          modules: (parsedOrg.settings && parsedOrg.settings.modules) || [],
+        },
+      }
+    }
   },
 })
 
 export default jsonDatabase
-
-// Some error handling.
 
 const throwNoPerilInstallationID = () => {
   /* tslint:disable: max-line-length */
