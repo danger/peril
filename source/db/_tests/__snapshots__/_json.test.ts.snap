@@ -16,6 +16,11 @@ Object {
 exports[`makes the right calls to GitHub with a legit stubbed JSON file 1`] = `
 Object {
   "id": 23511,
+  "repos": Object {
+    "orta/ORStackView": Object {
+      "issue.created": "orta/peril@lock_issues.ts",
+    },
+  },
   "rules": Object {
     "issue": "orta/peril@issue.ts",
     "pull_request": "orta/peril@pr.ts",

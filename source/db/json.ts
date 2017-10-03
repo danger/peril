@@ -57,8 +57,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
 
   /** Gets a Github repo from the DB */
   getRepo: async (installationID: number, repoName: string): Promise<GithubRepo | null> => {
-    // Type this?
-    const repos = (org as any).repos
+    const repos = org.repos
     if (!repos[repoName]) {
       return null
     }
@@ -112,6 +111,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
 
       org = {
         id: getInstallationId(PERIL_ORG_INSTALLATION_ID),
+        repos: parsedOrg.repos || {},
         rules: parsedOrg.rules || {},
         scheduler: parsedOrg.scheduler || {},
         settings: {

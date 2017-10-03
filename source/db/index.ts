@@ -64,6 +64,24 @@ export interface GitHubInstallation {
    * in practice. There's a lot of great resources on the net showing the general syntax.
    */
   scheduler: RunnerRuleset
+
+  /**
+   * A set of repos and their additional event hooks, these are
+   * in addition to the ones provided by `"rules"` which are applied
+   * to every repo.
+   *
+   *     "repos" : {
+   *       "orta/ORStackView": {
+   *          "issue.created": "orta/peril@lock_issues.ts"
+   *       }
+   *     }
+   *
+   */
+  repos: UniqueRepoRuleset
+}
+
+export interface UniqueRepoRuleset {
+  [name: string]: RunnerRuleset
 }
 
 export interface RunnerRuleset {

@@ -24,9 +24,7 @@ import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import perilPlatform from "./peril_platform"
 
 /** Logs */
-const log = (message: string) => {
-  winston.info(`[runner] - ${message}`)
-}
+const log = (message: string) => winston.info(`[runner] - ${message}`)
 
 // What does the Peril object look like inside the runtime
 // TODO: Expose this usefully somehow
