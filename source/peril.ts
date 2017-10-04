@@ -7,6 +7,7 @@ import { PERIL_WEBHOOK_SECRET, PUBLIC_FACING_API } from "./globals"
 import prDSLRunner from "./api/pr/dsl"
 import logger from "./logger"
 import webhook from "./routing/router"
+import startScheduler from "./scheduler/startScheduler"
 
 const peril = () => {
   // Error logging

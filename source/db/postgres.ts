@@ -16,10 +16,6 @@ const info = (message: string) => {
 }
 
 const database: DatabaseAdaptor = {
-  setup: async () => {
-    db = pg()(DATABASE_URL as string)
-  },
-
   /** Saves an Integration */
   saveInstallation: async (installation: GitHubInstallation) => {
     info(`Saving installation with id: ${installation.id}`)
@@ -39,6 +35,9 @@ const database: DatabaseAdaptor = {
     )
   },
 
+  setup: async () => {
+    db = pg()(DATABASE_URL as string)
+  },
   /** Gets an Integration */
   getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
     return db.oneOrNone("select * from installations where id=$1", [installationID])
