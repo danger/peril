@@ -7,7 +7,11 @@ const defaultRun: GitHubRunSettings = {
   eventID: "09876",
   hasRelatedCommentable: true,
   installationID: 123,
-  installationSettings: {},
+  installationSettings: {
+    env_vars: [],
+    ignored_repos: [],
+    modules: [],
+  },
   isRepoEvent: true,
   isTriggeredByUser: true,
   repoName: "danger/peril",

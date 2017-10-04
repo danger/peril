@@ -13,6 +13,7 @@ import { executorForInstallation, runDangerForInstallation } from "../../danger/
 import perilPlatform from "../../danger/peril_platform"
 import { GitHubInstallation, GithubRepo } from "../../db"
 import db from "../../db/getDB"
+import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 import { Pull_request } from "../events/types/pull_request_opened.types"
 import { canUserWriteToRepo, getGitHubFileContents } from "../lib/github_helpers"
 
@@ -46,7 +47,7 @@ export interface GitHubRunSettings {
   hasRelatedCommentable: boolean
   eventID: string
   installationID: number
-  installationSettings: any
+  installationSettings: GitHubInstallationSettings
 }
 
 export const setupForRequest = async (req: express.Request, installationSettings: any): Promise<GitHubRunSettings> => {
@@ -272,13 +273,10 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
   }
 
   if (headDangerfile !== "") {
-    const results = await runDangerForInstallation(
-      headDangerfile,
-      run.dangerfilePath,
-      githubAPI,
-      run.dslType,
-      settings.installationSettings
-    )
+    const results = await runDangerForInstallation(headDangerfile, run.dangerfilePath, githubAPI, run.dslType, {
+      id: settings.installationID,
+      settings: settings.installationSettings,
+    })
     if (pr.body !== null && pr.body.includes("Peril: Debug")) {
       results.markdowns.push(reportData("Showing PR details due to including 'Peril: Debug'"))
     }
