@@ -107,7 +107,7 @@ describe("dangerRepresentationforPath", () => {
     expect(dangerRepresentationforPath(path)).toEqual({
       branch: "branch",
       dangerfilePath: "dangerfile.ts",
-      repoSlug: undfined,
+      repoSlug: undefined,
     })
   })
 })
