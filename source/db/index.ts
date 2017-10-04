@@ -30,13 +30,58 @@ export interface GitHubInstallation {
    */
   id: number
   /**
-   * In our DB this is represented as a JSON type, so you should always have settings
+   * In our DB this is represented as a JSON type, so you should anticipate have settings
    * as a nullable type. These are the entire installation settings.
    */
   settings: GitHubInstallationSettings
 
   /** Having rules in here would mean that it would happen on _any_ event, another JSON type in the DB */
   rules: RunnerRuleset
+
+  /** 
+   * Scheduled tasks to run using a cron-like syntax. 
+   * 
+   * This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The 
+   * object is similar to the rules section, in that you define a cron-string with the following format:
+   * 
+   *    *    *    *    *    *    *
+   *    ┬    ┬    ┬    ┬    ┬    ┬
+   *    │    │    │    │    │    |
+   *    │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+   *    │    │    │    │    └───── month (1 - 12)
+   *    │    │    │    └────────── day of month (1 - 31)
+   *    │    │    └─────────────── hour (0 - 23)
+   *    │    └──────────────────── minute (0 - 59)
+   *    └───────────────────────── second (0 - 59, OPTIONAL)
+   *
+   * Which would look something like:
+   * 
+   *    "scheduler": {
+   *      "0 0 12 * * ?": "schedule/daily_at_twelve.ts",
+   *      "0 9 * * 1-5": "schedule/weekday_wakeup_email.ts"
+   *    }
+   *
+   * in practice. There's a lot of great resources on the net showing the general syntax.
+   */
+  scheduler: RunnerRuleset
+
+  /**
+   * A set of repos and their additional event hooks, these are
+   * in addition to the ones provided by `"rules"` which are applied
+   * to every repo.
+   *
+   *     "repos" : {
+   *       "orta/ORStackView": {
+   *          "issue.created": "orta/peril@lock_issues.ts"
+   *       }
+   *     }
+   *
+   */
+  repos: UniqueRepoRuleset
+}
+
+export interface UniqueRepoRuleset {
+  [name: string]: RunnerRuleset
 }
 
 export interface RunnerRuleset {

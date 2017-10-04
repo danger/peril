@@ -21,15 +21,11 @@ export enum feedback {
 }
 
 /** Represents runs that Danger should do based on Rules and Events */
-export interface DangerRun {
+export interface DangerRun extends RepresentationForURL {
   /** What event name triggered this */
   event: string
   /** What action inside that event trigger this run */
   action: string | null
-  /** What slug should this run come from? */
-  repoSlug?: string
-  /** Where should we look in that repo for the Dangerfile? */
-  dangerfilePath: string
   /** What type of DSL should the run use? */
   dslType: dsl
   /** Can Danger provide commentable feedback? */
@@ -69,15 +65,19 @@ export const dangerRunForRules = (
   }
 }
 
+interface RepresentationForURL {
+  dangerfilePath: string
+  branch: string
+  repoSlug: string | undefined
+}
+
 /** Takes a DangerfileReferenceString and lets you know where to find it globally */
-export const dangerRepresentationforPath = (value: DangerfileReferenceString) => {
-  if (!value.includes("@")) {
-    return { dangerfilePath: value }
-  } else {
-    return {
-      dangerfilePath: value.split("@")[1] as string,
-      repoSlug: value.split("@")[0] as string,
-    }
+export const dangerRepresentationforPath = (value: DangerfileReferenceString): RepresentationForURL => {
+  const afterAt = value.includes("@") ? value.split("@")[1] : value
+  return {
+    branch: value.includes("#") ? value.split("#")[1] : "master",
+    dangerfilePath: afterAt.split("#")[0],
+    repoSlug: value.includes("@") ? value.split("@")[0] : undefined,
   }
 }
 

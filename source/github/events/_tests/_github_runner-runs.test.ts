@@ -32,9 +32,11 @@ const getSettings = (overwrites: Partial<GitHubRunSettings>) => ({
 it("handles a platform only run", () => {
   const installation = {
     id: 12,
+    repos: {},
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
+    scheduler: {},
     settings: defaultSettings,
   }
 
@@ -44,6 +46,7 @@ it("handles a platform only run", () => {
   expect(runs).toEqual([
     {
       action: "created",
+      branch: "master",
       dangerfilePath: "pr.ts",
       dslType: 0,
       event: "pull_request",
@@ -56,9 +59,11 @@ it("handles a platform only run", () => {
 it("gets the expected runs for platform + repo rules", () => {
   const installation: GitHubInstallation = {
     id: 12,
+    repos: {},
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
+    scheduler: {},
     settings: defaultSettings,
   }
 
@@ -68,6 +73,7 @@ it("gets the expected runs for platform + repo rules", () => {
   expect(runs).toEqual([
     {
       action: "created",
+      branch: "master",
       dangerfilePath: "pr.ts",
       dslType: 0,
       event: "pull_request",
@@ -76,10 +82,12 @@ it("gets the expected runs for platform + repo rules", () => {
     },
     {
       action: "created",
+      branch: "master",
       dangerfilePath: "pr.ts",
       dslType: 0,
       event: "pull_request",
       feedback: 0,
+      repoSlug: undefined,
     },
   ])
 })
@@ -87,9 +95,11 @@ it("gets the expected runs for platform + repo rules", () => {
 it("gets the expected runs for platform", () => {
   const installation = {
     id: 12,
+    repos: {},
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
+    scheduler: {},
     settings: defaultSettings,
   }
 
@@ -108,10 +118,12 @@ it("gets the expected runs for platform", () => {
   expect(runs).toEqual([
     {
       action: "created",
+      branch: "master",
       dangerfilePath: "pr.ts",
       dslType: 1,
       event: "issues",
       feedback: 0,
+      repoSlug: undefined,
     },
   ])
 })

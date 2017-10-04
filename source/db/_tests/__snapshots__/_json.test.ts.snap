@@ -25,6 +25,7 @@ Object {
     "issue": "orta/peril@issue.ts",
     "pull_request": "orta/peril@pr.ts",
   },
+  "scheduler": Object {},
   "settings": Object {
     "env_vars": Array [],
     "ignored_repos": Array [],

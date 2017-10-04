@@ -19,7 +19,9 @@ it("Does not run a dangerfile in an ignored repo", async () => {
 
   const installationSettings: GitHubInstallation = {
     id: 123,
+    repos: {},
     rules: {},
+    scheduler: {},
     settings: {
       env_vars: [],
       ignored_repos: [body.pull_request.head.repo.full_name],
