@@ -40,7 +40,7 @@ The `"settings"` section of the JSON file is how you can configure peril at a gl
 {
   "settings": {
     "modules": ["danger-plugin-yarn", "danger-plugin-spellcheck"],
-    "env_vars": ["MY_CUSTOM_ENV_VAR]
+    "env_vars": ["MY_CUSTOM_ENV_VAR"]
   }
   ...
 }
