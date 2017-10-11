@@ -16,6 +16,10 @@ You would go to the URL (with your org):
 
 > <https://github.com/organizations/[my_org]/settings/apps>
 
+or 
+
+> https://github.com/settings/apps (for adding it to a user)
+
 Then create a new app (use `peril-[my-org]`, there is a global namespace for GitHub apps.) At the bottom is the option to only allow this integration to run on your org, you want this ticked probably.
 
 With respect to permissions, my recommendations are:
