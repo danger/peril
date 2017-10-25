@@ -51,7 +51,7 @@
     "ejs": "^2.4.2",
     "express": "^4.13.4",
     "express-x-hub": "^1.0.4",
-    "github": "^11.0.0",
+    "github": "^12.0.0",
     "glob": "^7.1.1",
     "jest": "^21",
     "json2ts": "orta/json2ts#ts-less",
