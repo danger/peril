@@ -38,9 +38,7 @@
     "merged_at": "2016-12-21T19:56:10Z",
     "merge_commit_sha": "bede691d1e1c673298693f4c5dd7d5aee93b3099",
     "assignee": null,
-    "assignees": [
-
-    ],
+    "assignees": [],
     "milestone": null,
     "commits_url": "https://api.github.com/repos/danger/peril/pulls/3/commits",
     "review_comments_url": "https://api.github.com/repos/danger/peril/pulls/3/comments",

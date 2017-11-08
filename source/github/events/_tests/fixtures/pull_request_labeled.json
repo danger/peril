@@ -31,7 +31,8 @@
       "type": "User",
       "site_admin": false
     },
-    "body": "Corresponds to this peril settings change: https://github.com/artsy/artsy-danger/commit/89c76058e4c44f3dc75a9c58d95f06eff1b7e3f9",
+    "body":
+      "Corresponds to this peril settings change: https://github.com/artsy/artsy-danger/commit/89c76058e4c44f3dc75a9c58d95f06eff1b7e3f9",
     "created_at": "2017-08-21T15:03:28Z",
     "updated_at": "2017-08-21T15:03:32Z",
     "closed_at": null,

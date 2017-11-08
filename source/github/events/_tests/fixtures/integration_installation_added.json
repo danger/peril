@@ -33,9 +33,7 @@
       "full_name": "danger/danger-gitlab-gem"
     }
   ],
-  "repositories_removed": [
-
-  ],
+  "repositories_removed": [],
   "sender": {
     "login": "orta",
     "id": 49038,
