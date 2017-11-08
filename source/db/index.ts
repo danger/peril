@@ -38,12 +38,12 @@ export interface GitHubInstallation {
   /** Having rules in here would mean that it would happen on _any_ event, another JSON type in the DB */
   rules: RunnerRuleset
 
-  /** 
-   * Scheduled tasks to run using a cron-like syntax. 
-   * 
-   * This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The 
+  /**
+   * Scheduled tasks to run using a cron-like syntax.
+   *
+   * This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The
    * object is similar to the rules section, in that you define a cron-string with the following format:
-   * 
+   *
    *    *    *    *    *    *    *
    *    ┬    ┬    ┬    ┬    ┬    ┬
    *    │    │    │    │    │    |
@@ -55,7 +55,7 @@ export interface GitHubInstallation {
    *    └───────────────────────── second (0 - 59, OPTIONAL)
    *
    * Which would look something like:
-   * 
+   *
    *    "scheduler": {
    *      "0 0 12 * * ?": "schedule/daily_at_twelve.ts",
    *      "0 9 * * 1-5": "schedule/weekday_wakeup_email.ts"

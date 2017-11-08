@@ -83,7 +83,8 @@
       "diff_url": "https://github.com/artsy/emission/pull/631.diff",
       "patch_url": "https://github.com/artsy/emission/pull/631.patch"
     },
-    "body": "This PR adds Pull to refresh support to the (Inbox) Active Bids + Messages view. It also fixes pagination.\r\n\r\nSkip New Tests"
+    "body":
+      "This PR adds Pull to refresh support to the (Inbox) Active Bids + Messages view. It also fixes pagination.\r\n\r\nSkip New Tests"
   },
   "comment": {
     "url": "https://api.github.com/repos/artsy/emission/issues/comments/312325112",

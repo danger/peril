@@ -27,9 +27,7 @@
       },
       "added": [],
       "removed": [],
-      "modified": [
-        "peril.settings.json"
-      ]
+      "modified": ["peril.settings.json"]
     }
   ],
   "head_commit": {
@@ -51,9 +49,7 @@
     },
     "added": [],
     "removed": [],
-    "modified": [
-      "peril.settings.json"
-    ]
+    "modified": ["peril.settings.json"]
   },
   "repository": {
     "id": 100119965,

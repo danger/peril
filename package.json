@@ -13,8 +13,7 @@
     "type-check": "tsc --noEmit --pretty",
     "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
     "prettier": "prettier",
-    "prettier-write": "npm run prettier -- --parser typescript --no-semi --trailing-comma es5 --write --print-width 120 ",
-    "prettier-project": "npm run prettier-write -- 'source/**/*.{ts,tsx}'",
+    "prettier-project": "prettier --write 'source/**/*.{ts,tsx,md,json}'",
     "setup": "yarn run setup:plugins && yarn run setup:env",
     "setup:env": "ts-node source/scripts/setup-env.ts",
     "setup:plugins": "ts-node source/scripts/setup-plugins.ts"
@@ -83,9 +82,16 @@
       "js"
     ]
   },
+  "prettier": {
+    "printWidth": 120,
+    "semi": false,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "bracketSpacing": true
+  },
   "devDependencies": {
     "danger-plugin-spellcheck": "^1.0.1",
-    "prettier": "^1.5.2",
+    "prettier": "^1.8.0",
     "tslint-config-prettier": "^1.1.0"
   }
 }
