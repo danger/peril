@@ -1,0 +1,7 @@
+{
+  "lambda": {
+    "role": "peril-staging-1-executor",
+    "name": "peril-staging-1",
+    "region": "us-east-1"
+  }
+}
