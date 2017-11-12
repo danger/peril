@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Raises with a bad URL 1`] = `[SyntaxError: Unexpected token u in JSON at position 0]`;
+exports[`Raises with a bad URL 1`] = `[Error: Sorry, if you have a Peril JSON setttings file in a private repo, you will need an installation ID for your integration. You can find this inside the integration_installation event sent when you installed the integration into your org. Set this as "PERIL_ORG_INSTALLATION_ID" in your ENV vars.]`;
 
 exports[`makes the right calls to GitHub gets repo rules correct 1`] = `
 Object {
@@ -15,7 +15,7 @@ Object {
 
 exports[`makes the right calls to GitHub with a legit stubbed JSON file 1`] = `
 Object {
-  "id": 23511,
+  "id": undefined,
   "repos": Object {
     "orta/ORStackView": Object {
       "issue.created": "orta/peril@lock_issues.ts",

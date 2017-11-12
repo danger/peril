@@ -29,5 +29,6 @@
     "prettier.jsonEnable": [],
     "prettier.semi": false,
     "prettier.printWidth": 120,
-    "editor.renderWhitespace": "boundary"
+    "editor.renderWhitespace": "boundary",
+    "jest.autoEnable": false
 }
