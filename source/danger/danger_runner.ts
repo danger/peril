@@ -9,8 +9,8 @@ import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import { runDangerfileEnvironment } from "danger/distribution/runner/DangerfileRunner"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
+import vmRunner from "danger/distribution/runner/runners/vm2"
 
 import * as NodeGithub from "github"
 
@@ -21,6 +21,7 @@ import { dsl } from "./danger_run"
 
 import { DangerContext } from "danger/distribution/runner/Dangerfile"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
+import { runner } from "../peril-runner"
 import perilPlatform from "./peril_platform"
 
 /** Logs */
@@ -79,7 +80,8 @@ export async function runDangerAgainstFile(
   exec: Executor,
   peril: PerilDSL
 ) {
-  const runtimeEnv = await exec.setupDanger()
+  const context = await exec.setupDanger()
+  const runtimeEnv = await vmRunner.createDangerfileRuntimeEnvironment(context)
 
   // This can expand with time
   if (runtimeEnv.sandbox) {
@@ -90,7 +92,7 @@ export async function runDangerAgainstFile(
   let results: DangerResults
 
   try {
-    results = await runDangerfileEnvironment(filepath, contents, runtimeEnv)
+    results = await vmRunner.runDangerfileEnvironment(filepath, contents, runtimeEnv)
   } catch (error) {
     results = resultsForCaughtError(filepath, contents, error)
   }
@@ -141,12 +143,14 @@ export function executorForInstallation(platform: Platform) {
     supportedPlatforms: [],
   }
 
-  const execConfig = {
+  const execConfig: ExecutorOptions = {
+    jsonOnly: false,
     stdoutOnly: false,
     verbose: !!process.env.LOG_FETCH_REQUESTS,
   }
+
   // Source can be removed in the next release of Danger
-  return new Executor(source, platform, execConfig)
+  return new Executor(source, platform, vmRunner, execConfig)
 }
 
 export async function appendPerilContextToDSL(installationID: number, sandbox: DangerContext, peril: PerilDSL) {
