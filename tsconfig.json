@@ -17,9 +17,7 @@
         "dangerfile_runtime_env",
         "node_modules",
         "out",
-        "peril-runner-dist.js",
         "dangerfile.js",
-        "migrations",
-        "webpack.config.js"
+        "migrations"
     ]
 }

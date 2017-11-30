@@ -16,28 +16,14 @@ const info = (message: string) => {
 }
 
 const database: DatabaseAdaptor = {
-  /** Deletes an Integration */
-  deleteInstallation: (installationID: number) => {
-    return db.one("select * from installations where id=$1", [installationID])
-  },
-  /** Deletes a Github repo from the DB */
-  deleteRepo: (installationID: number, repoName: string) => {
-    info(`Deleting github repo ${repoName}`)
-    return db.none("delete from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
-  },
-
-  /** Gets an installation form the db */
-  getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
-    return db.oneOrNone("select * from installations where id=$1", [installationID])
-  },
-
-  /** Gets a Github repo from the DB */
-  getRepo: async (installationID: number, repoName: string): Promise<GithubRepo | null> => {
-    const results = await db.any("select * from github_repos where installations_id=$1 and full_name=$2", [
-      installationID,
-      repoName,
+  /** Saves an Integration */
+  saveInstallation: async (installation: GitHubInstallation) => {
+    info(`Saving installation with id: ${installation.id}`)
+    return db.one("insert into installations(id, settings, rules) values($1, $2, $3) returning *", [
+      installation.id,
+      JSON.stringify(installation.settings),
+      JSON.stringify(installation.rules),
     ])
-    return results.length === 0 ? null : results[0]
   },
 
   /** Saves a repo */
@@ -49,18 +35,32 @@ const database: DatabaseAdaptor = {
     )
   },
 
-  /** Saves an Integration */
-  saveInstallation: async (installation: GitHubInstallation) => {
-    info(`Saving installation with id: ${installation.id}`)
-    return db.one("insert into installations(id, settings, rules) values($1, $2, $3) returning *", [
-      installation.id,
-      JSON.stringify(installation.settings),
-      JSON.stringify(installation.rules),
-    ])
-  },
-
   setup: async () => {
     db = pg()(DATABASE_URL as string)
+  },
+  /** Gets an Integration */
+  getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
+    return db.oneOrNone("select * from installations where id=$1", [installationID])
+  },
+
+  /** Deletes an Integration */
+  deleteInstallation: (installationID: number) => {
+    return db.one("select * from installations where id=$1", [installationID])
+  },
+
+  /** Gets a Github repo from the DB */
+  getRepo: async (installationID: number, repoName: string): Promise<GithubRepo | null> => {
+    const results = await db.any("select * from github_repos where installations_id=$1 and full_name=$2", [
+      installationID,
+      repoName,
+    ])
+    return results.length === 0 ? null : results[0]
+  },
+
+  /** Deletes a Github repo from the DB */
+  deleteRepo: (installationID: number, repoName: string) => {
+    info(`Deleting github repo ${repoName}`)
+    return db.none("delete from github_repos where installations_id=$1 and full_name=$2", [installationID, repoName])
   },
 }
 

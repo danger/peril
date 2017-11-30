@@ -5,5 +5,4 @@ node_modules
 .npm
 *.dat
 out
-peril-runner-dist.js
 .env

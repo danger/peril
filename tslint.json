@@ -7,7 +7,6 @@
     "interface-name": [
       true,
       "never-prefix"
-    ],
-    "class-name": false
+    ]
   }
 }
