@@ -14,8 +14,7 @@ const legitSettings = `{
 }`
 
 const mockGHContents = jest.fn()
-jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockGHContents }))
-jest.mock("../../api/github.ts", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("123") }))
+jest.mock("../../github/lib/github_helpers", () => ({ getGitHubFileContentsWithoutToken: mockGHContents }))
 
 import { DatabaseAdaptor } from "../index"
 import jsonDB from "../json"
