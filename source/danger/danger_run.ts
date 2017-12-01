@@ -37,11 +37,11 @@ export const dangerRunForRules = (
   event: string,
   action: string | null,
   rule: RunnerRuleset | undefined | null
-): DangerRun | null => {
+): DangerRun[] => {
   // tslint:disable-line
   // Can't do anything with nothing
   if (!rule) {
-    return null
+    return []
   }
 
   // We can just see if anything exists at the right places,
@@ -49,20 +49,14 @@ export const dangerRunForRules = (
   const isDirect = rule[event]
   const globsAll = rule[event + ".*"]
   const eventDotAction = action && rule[event + "." + action]
-  const path = isDirect || globsAll || eventDotAction
-
-  // Bail, we can't do anything
-  if (!path) {
-    return null
-  }
-
-  return {
+  const possibilities = [isDirect, globsAll, eventDotAction].filter(p => p) as string[]
+  return possibilities.map(path => ({
     action,
     dslType: dslTypeForEvent(event),
     event,
     ...dangerRepresentationforPath(path),
     feedback: feedbackTypeForEvent(event),
-  }
+  }))
 }
 
 interface RepresentationForURL {

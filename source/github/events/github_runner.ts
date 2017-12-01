@@ -111,7 +111,7 @@ export function runsForEvent(
 ) {
   const installationRun = dangerRunForRules(event, action, installation.rules)
   const repoRun = dangerRunForRules(event, action, settings.repoSpecificRules)
-  return [installationRun, repoRun].filter(r => !!r) as DangerRun[]
+  return [...installationRun, ...repoRun].filter(r => !!r) as DangerRun[]
 }
 
 export const runEverything = async (
