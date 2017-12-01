@@ -29,14 +29,6 @@ For example:
 const info = (message: string) => winston.info(`[json db] - ${message}`)
 const error = (message: string) => winston.error(`[json db] - ${message}`)
 
-const getInstallationId = (id: string | undefined): number => {
-  let installationId: number | undefined = parseInt(id as string, 10)
-  if (Number.isNaN(installationId)) {
-    installationId = undefined
-  }
-  return installationId as number
-}
-
 let org: GitHubInstallation = null as any
 
 const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
@@ -93,7 +85,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
         throwNoPerilInstallationID()
       }
 
-      const token = await getTemporaryAccessTokenForInstallation(getInstallationId(PERIL_ORG_INSTALLATION_ID))
+      const token = await getTemporaryAccessTokenForInstallation(PERIL_ORG_INSTALLATION_ID)
       file = await getGitHubFileContents(token, repo, path, null)
     }
 
@@ -110,7 +102,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
       // installation related calls
 
       org = {
-        id: getInstallationId(PERIL_ORG_INSTALLATION_ID),
+        id: PERIL_ORG_INSTALLATION_ID,
         repos: parsedOrg.repos || {},
         rules: parsedOrg.rules || {},
         scheduler: parsedOrg.scheduler || {},

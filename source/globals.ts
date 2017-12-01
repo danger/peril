@@ -42,6 +42,14 @@ export const WEB_URL = getEnv("WEB_URL")
  */
 export const DATABASE_JSON_FILE = getEnv("DATABASE_JSON_FILE")
 
+const getInstallationId = (id: string | undefined): number => {
+  let installationId: number | undefined = parseInt(id as string, 10)
+  if (Number.isNaN(installationId)) {
+    installationId = undefined
+  }
+  return installationId as number
+}
+
 /**
  * The ID for the GitHub installation, you can find this in the
  * `integration_installation` event sent by GitHub. Only needed if
@@ -49,7 +57,7 @@ export const DATABASE_JSON_FILE = getEnv("DATABASE_JSON_FILE")
  *
  * In theory this can be optional if the repo is OSS.
  */
-export const PERIL_ORG_INSTALLATION_ID = getEnv("PERIL_ORG_INSTALLATION_ID")
+export const PERIL_ORG_INSTALLATION_ID = getInstallationId(getEnv("PERIL_ORG_INSTALLATION_ID"))
 
 /** Postgres db URL */
 export const DATABASE_URL = getEnv("DATABASE_URL")

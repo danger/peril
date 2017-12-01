@@ -41,7 +41,7 @@ const prDSLRunner = async (req: express.Request, res: express.Response, next: ex
     throw new Error("You can't support PR DSLs without setting up the PERIL_ORG_INSTALLATION_ID")
   }
 
-  const token = await getTemporaryAccessTokenForInstallation(parseInt(PERIL_ORG_INSTALLATION_ID, 10))
+  const token = await getTemporaryAccessTokenForInstallation(PERIL_ORG_INSTALLATION_ID)
 
   const ghDetails = {
     fullName: query.owner + "/" + query.repo,
