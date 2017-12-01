@@ -1,5 +1,4 @@
-import { getTemporaryAccessTokenForInstallation } from "../api/github"
-import { getGitHubFileContents } from "../github/lib/github_helpers"
+import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { PERIL_ORG_INSTALLATION_ID } from "../globals"
 import winston from "../logger"
 import { DangerfileReferenceString, DatabaseAdaptor, GitHubInstallation, GithubRepo } from "./index"
@@ -77,17 +76,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
     const repo = dangerFilePath.split("@")[0]
     const path = dangerFilePath.split("@")[1]
 
-    // Try see if we can pull it without an access token
-    let file = await getGitHubFileContents(null, repo, path, null)
-    // Might be private, in this case you have to have set up PERIL_ORG_INSTALLATION_ID
-    if (file === "") {
-      if (!PERIL_ORG_INSTALLATION_ID) {
-        throwNoPerilInstallationID()
-      }
-
-      const token = await getTemporaryAccessTokenForInstallation(PERIL_ORG_INSTALLATION_ID)
-      file = await getGitHubFileContents(token, repo, path, null)
-    }
+    const file = await getGitHubFileContentsWithoutToken(repo, path)
 
     if (file === "") {
       throwNoJSONFileFound(dangerFilePath)
@@ -117,17 +106,6 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
 })
 
 export default jsonDatabase
-
-const throwNoPerilInstallationID = () => {
-  /* tslint:disable: max-line-length */
-  const msg =
-    "Sorry, if you have a Peril JSON setttings file in a private repo, you will need an installation ID for your integration."
-  const subtitle =
-    "You can find this inside the integration_installation event sent when you installed the integration into your org."
-  const action = `Set this as "PERIL_ORG_INSTALLATION_ID" in your ENV vars.`
-  throw new Error([msg, subtitle, action].join(" "))
-  /* tslint:enable: max-line-length */
-}
 
 const throwNoJSONFileFound = (dangerFilePath: DangerfileReferenceString) => {
   /* tslint:disable: max-line-length */
