@@ -10,67 +10,85 @@ import {
 describe("for ping", () => {
   it("returns an action when ping is in the rules", () => {
     const rules = { ping: "dangerfile.js" }
-    expect(dangerRunForRules("ping", null, rules)).toEqual({
-      action: null,
-      branch: "master",
-      dangerfilePath: "dangerfile.js",
-      dslType: dsl.import,
-      event: "ping",
-      feedback: feedback.silent,
-      repoSlug: undefined,
-    })
+    expect(dangerRunForRules("ping", null, rules)).toEqual([
+      {
+        action: null,
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: dsl.import,
+        event: "ping",
+        feedback: feedback.silent,
+        repoSlug: undefined,
+      },
+    ])
   })
 
   it("returns nothing when ping is not in the rules", () => {
     const rules = {}
-    expect(dangerRunForRules("ping", null, rules)).toBeNull()
+    expect(dangerRunForRules("ping", null, rules)).toEqual([])
   })
 })
 
 describe("for PRs", () => {
   it("returns a PR when PR is in the rules", () => {
     const rules = { pull_request: "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual({
-      action: "created",
-      branch: "master",
-      dangerfilePath: "dangerfile.js",
-      dslType: dsl.pr,
-      event: "pull_request",
-      feedback: feedback.commentable,
-      repoSlug: undefined,
-    })
+    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+      {
+        action: "created",
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: dsl.pr,
+        event: "pull_request",
+        feedback: feedback.commentable,
+        repoSlug: undefined,
+      },
+    ])
   })
 
   // Same semantics
   it("returns a PR run when all sub events are globbed in the rules", () => {
     const rules = { "pull_request.*": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "updated", rules)).toEqual({
-      action: "updated",
-      branch: "master",
-      dangerfilePath: "dangerfile.js",
-      dslType: dsl.pr,
-      event: "pull_request",
-      feedback: feedback.commentable,
-      repoSlug: undefined,
-    })
+    expect(dangerRunForRules("pull_request", "updated", rules)).toEqual([
+      {
+        action: "updated",
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: dsl.pr,
+        event: "pull_request",
+        feedback: feedback.commentable,
+        repoSlug: undefined,
+      },
+    ])
   })
 
   it("returns null when you only ask for a specific action", () => {
     const rules = { "pull_request.created": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "updated", rules)).toBeNull()
+    expect(dangerRunForRules("pull_request", "updated", rules)).toEqual([])
   })
 
   it("returns a PR run when all sub events are globbed in the rules", () => {
     const rules = { "pull_request.deleted": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "deleted", rules)).toEqual({
-      action: "deleted",
-      branch: "master",
-      dangerfilePath: "dangerfile.js",
-      dslType: dsl.pr,
-      event: "pull_request",
-      feedback: feedback.commentable,
-      repoSlug: undefined,
-    })
+    expect(dangerRunForRules("pull_request", "deleted", rules)).toEqual([
+      {
+        action: "deleted",
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: dsl.pr,
+        event: "pull_request",
+        feedback: feedback.commentable,
+        repoSlug: undefined,
+      },
+    ])
+  })
+
+  it("returns many runs when there are mutliple potential matches", () => {
+    const rules = {
+      issue: "dangerfile.js",
+      pull_request: "dangerfile.js",
+      "pull_request.*": "dangerfile.js",
+      "pull_request.updated": "dangerfile.js",
+    }
+    expect(dangerRunForRules("pull_request", "updated", rules).length).toEqual(3)
   })
 })
 
