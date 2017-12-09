@@ -203,7 +203,7 @@ export const runEventRun = async (
     githubAPI,
     run.dslType,
     installationSettings,
-    dangerDSL
+    { github: dangerDSL }
   )
 }
 

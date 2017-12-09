@@ -9,8 +9,8 @@ import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import { runDangerfileEnvironment } from "danger/distribution/runner/DangerfileRunner"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
+import inlineRunner from "danger/distribution/runner/runners/vm2"
 
 import * as NodeGithub from "github"
 
@@ -19,7 +19,7 @@ import * as path from "path"
 import * as write from "write-file-promise"
 import { dsl } from "./danger_run"
 
-import { DangerContext } from "danger/distribution/runner/Dangerfile"
+import { contextForDanger, DangerContext } from "danger/distribution/runner/Dangerfile"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import perilPlatform from "./peril_platform"
 
@@ -62,7 +62,7 @@ export async function runDangerForInstallation(
   const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(filepath))
   const peril = perilObjectForInstallation(installation.settings, process.env)
 
-  return await runDangerAgainstFile(localDangerfilePath, contents, installation, exec, peril)
+  return await runDangerAgainstFile(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
 }
 
 export const perilObjectForInstallation = (settings: GitHubInstallationSettings, environment: any): PerilDSL => ({
@@ -77,9 +77,13 @@ export async function runDangerAgainstFile(
   contents: string,
   installation: InstallationToRun,
   exec: Executor,
-  peril: PerilDSL
+  peril: PerilDSL,
+  dangerDSL?: any
 ) {
-  const runtimeEnv = await exec.setupDanger()
+  const context = contextForDanger(dangerDSL)
+  const runtimeEnv = await exec.runner.createDangerfileRuntimeEnvironment(context)
+
+  debugger
 
   // This can expand with time
   if (runtimeEnv.sandbox) {
@@ -90,7 +94,7 @@ export async function runDangerAgainstFile(
   let results: DangerResults
 
   try {
-    results = await runDangerfileEnvironment(filepath, contents, runtimeEnv)
+    results = await exec.runner.runDangerfileEnvironment(filepath, contents, runtimeEnv)
   } catch (error) {
     results = resultsForCaughtError(filepath, contents, error)
   }
@@ -141,12 +145,16 @@ export function executorForInstallation(platform: Platform) {
     supportedPlatforms: [],
   }
 
-  const execConfig = {
+  const config: ExecutorOptions = {
+    // dangerID: "peril",
+    jsonOnly: false,
     stdoutOnly: false,
     verbose: !!process.env.LOG_FETCH_REQUESTS,
   }
+
+  const execConfig = {}
   // Source can be removed in the next release of Danger
-  return new Executor(source, platform, execConfig)
+  return new Executor(source, platform, inlineRunner, config)
 }
 
 export async function appendPerilContextToDSL(installationID: number, sandbox: DangerContext, peril: PerilDSL) {
