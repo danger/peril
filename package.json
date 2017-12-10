@@ -60,7 +60,7 @@
     "node-schedule": "^1.2.5",
     "pg-promise": "^6.1.0",
     "ts-jest": "^21",
-    "ts-node": "^3.0.2",
+    "ts-node": "^4.0.0",
     "tslint": "^5.4.3",
     "typescript": "^2.3.2",
     "typings": "^2.0.0",
