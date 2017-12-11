@@ -1,13 +1,10 @@
 const mockRunDangerfileEnvironment = jest.fn()
-jest.mock("danger/distribution/runner/DangerfileRunner", () => ({
-  createDangerfileRuntimeEnvironment: () => ({}),
-  runDangerfileEnvironment: mockRunDangerfileEnvironment,
+jest.mock("danger/distribution/runner/runners/vm2", () => ({
+  default: {
+    createDangerfileRuntimeEnvironment: () => ({}),
+    runDangerfileEnvironment: mockRunDangerfileEnvironment,
+  },
 }))
-
-import { FakeCI } from "danger/distribution/ci_source/providers/Fake"
-import { GitHub } from "danger/distribution/platforms/GitHub"
-import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import { Platform } from "danger/distribution/platforms/platform"
 
 import fixturedGitHub from "../../api/_tests/fixtureAPI"
 import {
@@ -17,12 +14,7 @@ import {
   runDangerForInstallation,
 } from "../danger_runner"
 
-import { existsSync, readFileSync, writeFileSync } from "fs"
-import { tmpdir } from "os"
-import { basename, resolve } from "path"
 import { dsl } from "../danger_run"
-
-const dangerfilesFixtures = resolve(__dirname, "fixtures")
 
 const defaultSettings = {
   env_vars: [],

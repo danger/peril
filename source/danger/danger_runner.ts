@@ -83,8 +83,6 @@ export async function runDangerAgainstFile(
   const context = contextForDanger(dangerDSL)
   const runtimeEnv = await exec.runner.createDangerfileRuntimeEnvironment(context)
 
-  debugger
-
   // This can expand with time
   if (runtimeEnv.sandbox) {
     await appendPerilContextToDSL(installation.id, runtimeEnv.sandbox, peril)
@@ -158,16 +156,19 @@ export function executorForInstallation(platform: Platform) {
 }
 
 export async function appendPerilContextToDSL(installationID: number, sandbox: DangerContext, peril: PerilDSL) {
-  const token = await getTemporaryAccessTokenForInstallation(installationID)
-  const api = new NodeGithub({
-    requestMedia: "application/vnd.github.machine-man-preview+json",
-  })
-  api.authenticate({
-    token,
-    type: "integration",
-  })
+  if (sandbox.danger && sandbox.danger.github) {
+    const token = await getTemporaryAccessTokenForInstallation(installationID)
+    const api = new NodeGithub({
+      requestMedia: "application/vnd.github.machine-man-preview+json",
+    })
 
-  sandbox.danger.github.api = api
+    api.authenticate({
+      token,
+      type: "integration",
+    })
+
+    sandbox.danger.github.api = api
+  }
 
   // TODO: Add this to the Danger DSL in Danger, as an optional
   const anySandbox = sandbox as any
