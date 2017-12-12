@@ -144,7 +144,7 @@ export function executorForInstallation(platform: Platform) {
   }
 
   const config: ExecutorOptions = {
-    // dangerID: "peril",
+    dangerID: "peril", // TODO: multiple Peril runs?
     jsonOnly: false,
     stdoutOnly: false,
     verbose: !!process.env.LOG_FETCH_REQUESTS,
