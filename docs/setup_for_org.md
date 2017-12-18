@@ -138,6 +138,8 @@ Note: when you make updates to this file, you need to restart your Peril server,
 
 ### Write your own org Dangerfiles
 
+Read: [Settings Repo Info](settings_repo_info.md).
+
 Inside your repo create a new file for your first Dangerfile. Maybe have something like:
 
 ```js
