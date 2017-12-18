@@ -52,7 +52,7 @@
     "express-x-hub": "^1.0.4",
     "github": "^11.0.0",
     "glob": "^7.1.1",
-    "jest": "^21",
+    "jest": "^22.0.0",
     "json2ts": "orta/json2ts#ts-less",
     "jsonwebtoken": "^7.2.1",
     "node-fetch": "^1.6.3",
