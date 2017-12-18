@@ -59,7 +59,7 @@
     "node-pg-migrate": "^2.7.0",
     "node-schedule": "^1.2.5",
     "pg-promise": "^6.1.0",
-    "ts-jest": "^21",
+    "ts-jest": "^22.0.0",
     "ts-node": "^3.0.2",
     "tslint": "^5.4.3",
     "typescript": "^2.3.2",
