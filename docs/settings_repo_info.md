@@ -10,7 +10,7 @@
 
 Let's deep dive into the JSON:
 
-```json
+```
 {
   "settings": {
     [your settings]
@@ -58,12 +58,14 @@ docs](https://developer.github.com/v3/activity/events/types/).
 For a Pull Request, there are [a lot of
 actions](https://developer.github.com/v3/activity/events/types/#pullrequestevent): It can be one of `assigned`,
 `unassigned`, `review_requested`, `review_request_removed`, `labeled`, `unlabeled`, `opened`, `edited`, `closed`, or
-`reopened`. You can specify a Dangerfile to run either on **all** events by using `"pull_request"` or only a specific
-action on a pull request with `"pull_request.[action]"`.
+`reopened`.
+
+You can specify a Dangerfile to run either on **all** events by using `"pull_request"` or only a specific action on a
+pull request with `"pull_request.[action]"`.
 
 For example:
 
-```json
+```
 {
   "rules": {
     "pull_request": "...", // all
