@@ -31,9 +31,9 @@ Let's deep dive into the JSON:
 
 **@see** - [source/db/GitHubRepoSettings.ts](https://github.com/danger/peril/master/source/db/GitHubRepoSettings.ts)
 
-I'm hesitatnt to add the specific settings which are supported inside this document, as it'll always end up out of date.
+I'm hesitant to add the specific settings which are supported inside this document, as it'll always end up out of date.
 
-https://github.com/orta/github-webhook-event-types
+The source code above should be a reasonable read.
 
 ### `rules`
 
@@ -138,6 +138,56 @@ You can write your Dangerfiles in JavaScript or TypeScript. It will be transpile
 * [.babelrc](https://github.com/danger/peril/blob/master/.babelrc)
 
 These are not set in stone. You're welcome to improve them.
+
+### PR vs Event
+
+There are two types of Dangerfile runs.
+
+* _PR_ runs, which are related to PR events. This is the normal DSL in the [Danger JS
+  Reference](http://danger.systems/js/reference.html)
+* _Event_ runs, which are anything other than PR events. In these cases the `github` instance in the DSL is replaced
+  with the JSON that came in from the event.
+
+Not all events have something they can comment on, only `pull_request` and `issues`. So `fail`, `warn`, `markdown` and
+`message` won't work. In practice we've used a slack webhook to pass information back to our dev channel. It's just
+JavaScript, so you can use any module you want.
+
+### Types
+
+If you're writing in TypeScript, I have [a node module](https://github.com/orta/github-webhook-event-types) that just
+contains the types of all the events. This is really useful in an event run.
+
+For example, this is a Dangerfile for an issue event:
+
+```ts
+import { schedule, danger } from "danger"
+import { IncomingWebhook } from "@slack/client"
+import { Issues } from "github-webhook-event-types"
+
+declare const peril: any // danger/danger#351
+const gh = (danger.github as any) as Issues
+const issue = gh.issue
+
+if (issue.title.includes("RFC:")) {
+  var url = peril.env.SLACK_RFC_WEBHOOK_URL || ""
+  var webhook = new IncomingWebhook(url)
+  schedule(async () => {
+    await webhook.send({
+      unfurl_links: false,
+      attachments: [
+        {
+          pretext: "🎉 A new Peril RFC has been published.",
+          color: "good",
+          title: issue.title,
+          title_link: issue.html_url,
+          author_name: issue.user.login,
+          author_icon: issue.user.avatar_url,
+        },
+      ],
+    })
+  })
+}
+```
 
 ### Known limitations
 
