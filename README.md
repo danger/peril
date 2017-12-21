@@ -1,6 +1,6 @@
 ### Peril
 
-The centralized Danger server, freeing Danger from her CI confines. 👍
+The centralized Danger server, freeing Danger from its CI confines. 👍
 
 Want to understand what the plan is? Consult the [VISION.md](/VISION.md) 
 
