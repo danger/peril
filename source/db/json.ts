@@ -1,3 +1,4 @@
+import * as JSON5 from "json5"
 import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { PERIL_ORG_INSTALLATION_ID } from "../globals"
 import winston from "../logger"
@@ -82,7 +83,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
       throwNoJSONFileFound(dangerFilePath)
     }
 
-    const parsedOrg = JSON.parse(file) as Partial<GitHubInstallation>
+    const parsedOrg = JSON5.parse(file) as Partial<GitHubInstallation>
     if (!parsedOrg) {
       error(`Could not run JSON.parse on the contents of ${dangerFilePath}.`)
       process.exitCode = 1
