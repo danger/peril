@@ -26,18 +26,20 @@ const installation: GitHubInstallation = {
   },
 }
 
+const contents = getGitHubFileContents as any
+
 it("runs a dangerfile", async () => {
-  ;(getGitHubFileContents as any).mockImplementationOnce(() => Promise.resolve("file"))
+  contents.mockImplementationOnce(() => Promise.resolve("file"))
 
   await runJob(installation, "danger/danger-repo@hello.ts")
 
   expect(runDangerForInstallation).toBeCalledWith("file", "hello.ts", null, dsl.import, installation, {})
 })
 
-jest.mock("../../globals.ts", () => ({ DATABASE_JSON_FILE: "private/repo" }))
+jest.mock("../../globals", () => ({ DATABASE_JSON_FILE: "private/repo" }))
 
 it("uses the project settings repo when no repo is passsed", async () => {
-  ;(getGitHubFileContents as any).mockImplementationOnce(() => Promise.resolve("file"))
+  contents.mockImplementationOnce(() => Promise.resolve("file"))
 
   await runJob(installation, "weekly.ts")
 

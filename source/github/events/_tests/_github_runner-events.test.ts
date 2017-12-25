@@ -9,7 +9,7 @@ const mockGHContents = jest.fn((token, repo, path) => {
   }
 })
 
-jest.mock("../../../api/github.ts", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("token") }))
+jest.mock("../../../api/github", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("token") }))
 jest.mock("../../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockGHContents }))
 
 import { readFileSync } from "fs"

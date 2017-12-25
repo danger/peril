@@ -19,7 +19,7 @@ import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 const peril = { env: {} }
 
-jest.mock("../../api/github.ts", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("123") }))
+jest.mock("../../api/github", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("123") }))
 
 const emptySettings = {
   env_vars: [],
@@ -62,26 +62,29 @@ describe("evaling", () => {
     expect(results.markdowns).toEqual(["`Object.keys(process.env).length` is 0"])
   })
 
-  it("allows external modules", async () => {
-    const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
-    const path = `${dangerfilesFixtures}/dangerfile_import_module.ts`
+  // Wallaby can't resolve these
+  if (!process.env.WALLABY_PRODUCTION) {
+    it("allows external modules", async () => {
+      const platform = fixturedGitHub()
+      const executor = executorForInstallation(platform)
+      const path = `${dangerfilesFixtures}/dangerfile_import_module.ts`
 
-    const contents = readFileSync(path, "utf8")
-    const results = await runDangerAgainstFile(path, contents, installationSettings, executor, peril)
-    expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
-  })
+      const contents = readFileSync(path, "utf8")
+      const results = await runDangerAgainstFile(path, contents, installationSettings, executor, peril)
+      expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
+    })
 
-  it("allows external modules with internal resolving ", async () => {
-    const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
+    it("allows external modules with internal resolving ", async () => {
+      const platform = fixturedGitHub()
+      const executor = executorForInstallation(platform)
 
-    const localDangerfile = resolve("./dangerfile_runtime_env", "dangerfile_import_complex_module.ts")
-    const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
+      const localDangerfile = resolve("./dangerfile_runtime_env", "dangerfile_import_complex_module.ts")
+      const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
-    const results = await runDangerAgainstFile(localDangerfile, contents, installationSettings, executor, peril)
-    expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
-  })
+      const results = await runDangerAgainstFile(localDangerfile, contents, installationSettings, executor, peril)
+      expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
+    })
+  }
 
   it("has a peril object defined in global scope", async () => {
     const platform = fixturedGitHub()
