@@ -1,5 +1,7 @@
 import * as dotenv from "dotenv"
-dotenv.config()
+const isJest = typeof jest !== "undefined"
+const config = isJest ? { path: ".env.sample" } : {}
+dotenv.config(config)
 
 /**
  * Pulls out an env var from either the host ENV, or a config file
