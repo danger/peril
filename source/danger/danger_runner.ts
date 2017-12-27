@@ -156,11 +156,13 @@ export function executorForInstallation(platform: Platform) {
 }
 
 export async function appendPerilContextToDSL(installationID: number, sandbox: DangerContext, peril: PerilDSL) {
+  console.log("Sandbox:", Object.keys(sandbox))
+  console.log("Danger:", Object.keys(sandbox.danger))
+  console.log("GH:", Object.keys(sandbox.danger && sandbox.danger.github))
+
   if (sandbox.danger && sandbox.danger.github) {
     const token = await getTemporaryAccessTokenForInstallation(installationID)
-    const api = new NodeGithub({
-      requestMedia: "application/vnd.github.machine-man-preview+json",
-    })
+    const api = new NodeGithub()
 
     api.authenticate({
       token,
