@@ -70,18 +70,14 @@
     "write-file-promise": "^1.0.0"
   },
   "engines": {
-    "node": "8.4"
+    "node": "8.9"
   },
   "jest": {
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/_tests/.*.test.ts$)",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js"]
   },
   "prettier": {
     "printWidth": 120,

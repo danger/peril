@@ -18,6 +18,7 @@
         "node_modules",
         "out",
         "dangerfile.js",
+        "wallaby.js",
         "migrations"
     ]
 }
