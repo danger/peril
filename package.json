@@ -63,7 +63,7 @@
     "ts-jest": "^22.0.0",
     "ts-node": "^4.1.0",
     "tslint": "^5.4.3",
-    "typescript": "^2.3.2",
+    "typescript": "^2.6.2",
     "typings": "^2.0.0",
     "winston": "^2.3.1",
     "winston-papertrail": "^1.0.4",
@@ -93,7 +93,7 @@
   "devDependencies": {
     "@types/json5": "^0.0.29",
     "danger-plugin-spellcheck": "^1.0.1",
-    "prettier": "^1.8.0",
-    "tslint-config-prettier": "^1.1.0"
+    "prettier": "^1.9.2",
+    "tslint-config-prettier": "^1.6.0"
   }
 }

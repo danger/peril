@@ -111,9 +111,7 @@ export default jsonDatabase
 const throwNoJSONFileFound = (dangerFilePath: DangerfileReferenceString) => {
   /* tslint:disable: max-line-length */
   const msg = "Could not find find a JSON file for Peril settings."
-  const subtitle = `It's likely that Peril cannot connect to ${
-    dangerFilePath
-  }, check the logs for more info above here.`
+  const subtitle = `It's likely that Peril cannot connect to ${dangerFilePath}, check the logs for more info above here.`
   const action = `You'll probably need to make changes to your  "DATABASE_JSON_FILE" in your ENV vars.`
   throw new Error([msg, subtitle, action].join(" "))
   /* tslint:enable: max-line-length */
