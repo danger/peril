@@ -104,7 +104,7 @@ example JSON file which runs some Dangerfiles:
   },
   "repos" : {
     "orta/ORStackView": {
-      "issue.created": "lock_old_issues.ts"
+      "issues.opened": "lock_old_issues.ts"
     }
   }
 }
@@ -123,8 +123,8 @@ This JSON file is split into 3 parts:
 This setup will:
 
 * Listen for the event `"pull_request"`, and will pull `"dangerfiles/pr.js"` from the repo: `orta/peril-bootstrap`.
-* Listen for the event `"issue"`, and will pull `"dangerfiles/issue.js"` from the repo: `orta/peril-bootstrap`.
-* Listen for the event `"issue"` event, and only if the action is `"created"` and will pull `"lock_old_issues.ts"` from
+* Listen for the event `"issues"`, and will pull `"dangerfiles/issue.js"` from the repo: `orta/peril-bootstrap`.
+* Listen for the event `"issues"` event, and only if the action is `"opened"` and will pull `"lock_old_issues.ts"` from
   the same repo: `orta/ORStackView`. So it would ignore issue updates or deletes.
 
 You can actually use `orta/example-peril` BTW, I have some dummy Dangerfiles on that repo exactly for this purpose. Save
@@ -143,7 +143,7 @@ Read: [Settings Repo Info](settings_repo_info.md).
 Inside your repo create a new file for your first Dangerfile. Maybe have something like:
 
 ```js
-import { warning, danger } from "danger"
+import { warn, danger } from "danger"
 // Add a check to see if a changelog exists, then warn if it isn't in modified etc
 ```
 
