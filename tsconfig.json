@@ -9,16 +9,13 @@
         ],
         "sourceMap": true,
         "rootDir": "source",
-        "allowJs": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
     },
     "exclude": [
         "source/danger/_tests/fixtures",
         "dangerfile_runtime_env",
         "node_modules",
         "out",
-        "dangerfile.js",
-        "wallaby.js",
         "migrations"
     ]
 }
