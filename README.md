@@ -1,6 +1,8 @@
-### Peril
+<p align="center">
+  <img src="http://danger.systems/images/js/peril-logo-hero-cachable@2x.png" width=250 />
+</p>
 
-The centralized Danger server, freeing Danger from its CI confines. 👍
+The centralized Danger server, freeing Danger from running on CI. 👍
 
 Want to understand what the plan is? Consult the [VISION.md](/VISION.md) 
 
