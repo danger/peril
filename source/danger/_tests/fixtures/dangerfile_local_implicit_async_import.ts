@@ -1,5 +1,5 @@
 declare function markdown(params: string): void
 
-// @ts-ignore: I know what I'm doing thanks
+// @ts-ignore
 const { hello } = await import("./returns_string")
 markdown(hello)

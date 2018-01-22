@@ -10,10 +10,12 @@ import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
+import transpile from "danger/distribution/runner/runners/utils/transpiler"
 import inlineRunner from "danger/distribution/runner/runners/vm2"
 
 import * as NodeGithub from "github"
 
+import * as fs from "fs"
 import * as os from "os"
 import * as path from "path"
 import * as write from "write-file-promise"
@@ -91,7 +93,30 @@ export async function runDangerAgainstFile(
   // runtimeEnv.rquire.root = dangerfile_runtime_env
   let results: DangerResults
 
+  // https://gist.github.com/jamestalmage/df922691475cff66c7e6
   try {
+    const customModuleHandler = async (module: any, filename: string) => {
+      let fileContent = ""
+      // All local calls
+      if (filename.startsWith(".") || filename.startsWith("..")) {
+        return new Promise(res => {
+          fileContent = await exec.platform.getContents()
+          const compiled = transpile(fileContent, filename)
+          res(module._compile(compiled, filename))
+        })
+      } else {
+        fileContent = fs.readFileSync(filename, "utf8")
+        const compiled = transpile(fileContent, filename)
+        return module._compile(compiled, filename)
+      }
+    }
+
+    // Tell all these filetypes to ge the custom compilation
+    require.extensions[".ts"] = customModuleHandler
+    require.extensions[".tsx"] = customModuleHandler
+    require.extensions[".js"] = customModuleHandler
+    require.extensions[".jsx"] = customModuleHandler
+
     results = await exec.runner.runDangerfileEnvironment(filepath, contents, runtimeEnv)
   } catch (error) {
     results = resultsForCaughtError(filepath, contents, error)
