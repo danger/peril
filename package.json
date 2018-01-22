@@ -25,6 +25,7 @@
   "author": "Orta",
   "license": "MIT",
   "dependencies": {
+    "@octokit/rest": "^14.0.4",
     "@types/body-parser": "^1.16.8",
     "@types/debug": "^0.0.30",
     "@types/ejs": "^2.5.0",
@@ -50,7 +51,6 @@
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "express-x-hub": "^1.0.4",
-    "github": "^13.1.0",
     "glob": "^7.1.2",
     "jest": "^22.1.4",
     "json2ts": "orta/json2ts#ts-less",

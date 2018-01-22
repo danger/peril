@@ -12,7 +12,7 @@ import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 import inlineRunner from "danger/distribution/runner/runners/vm2"
 
-import * as NodeGithub from "github"
+import * as NodeGithub from "@octokit/rest"
 
 import * as os from "os"
 import * as path from "path"
