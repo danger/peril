@@ -26,6 +26,7 @@ const installation: GitHubInstallation = {
     ignored_repos: [],
     modules: [],
   },
+  tasks: {},
 }
 
 const contents = getGitHubFileContents as any

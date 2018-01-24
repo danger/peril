@@ -21,6 +21,7 @@ import { dsl } from "./danger_run"
 
 import { contextForDanger, DangerContext } from "danger/distribution/runner/Dangerfile"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
+import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import perilPlatform from "./peril_platform"
 
 /** Logs */
@@ -60,13 +61,19 @@ export async function runDangerForInstallation(
 
   const randomName = Math.random().toString(36)
   const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(filepath))
-  const peril = perilObjectForInstallation(installation.settings, process.env)
+  const peril = perilObjectForInstallation(installation.settings, process.env, dangerDSL && dangerDSL.peril)
 
   return await runDangerAgainstFile(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
 }
 
-export const perilObjectForInstallation = (settings: GitHubInstallationSettings, environment: any): PerilDSL => ({
+export const perilObjectForInstallation = (
+  settings: GitHubInstallationSettings,
+  environment: any,
+  peril: any
+): PerilDSL => ({
+  ...peril,
   env: settings.env_vars && Object.assign({}, ...settings.env_vars.map(k => ({ [k]: environment[k] }))),
+  runTask: generateTaskSchedulerForInstallation,
 })
 
 /**

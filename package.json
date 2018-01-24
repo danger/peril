@@ -28,6 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@octokit/rest": "^14.0.4",
+    "@types/agenda": "^1.0.1",
     "@types/body-parser": "^1.16.8",
     "@types/debug": "^0.0.30",
     "@types/ejs": "^2.5.0",
@@ -38,6 +39,7 @@
     "@types/pg": "^7.4.1",
     "@types/pg-promise": "^5.4.3",
     "@types/winston": "^2.3.7",
+    "agenda": "^1.0.3",
     "babel-cli": "~6.26.0",
     "babel-core": "7.0.0-alpha.19",
     "babel-plugin-syntax-async-functions": "^6.13.0",

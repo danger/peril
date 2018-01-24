@@ -10,6 +10,7 @@ const emptyInstallation: GitHubInstallation = {
     ignored_repos: [],
     modules: [],
   },
+  tasks: {},
 }
 
 export default (diff: Partial<GitHubInstallation>): GitHubInstallation => Object.assign({}, this.state, diff)

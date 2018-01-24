@@ -138,6 +138,26 @@ it("exposes specific process env vars via the peril object ", async () => {
     TEST_ENV: "123",
   }
 
-  const perilObj = perilObjectForInstallation(processInstallationSettings, fakeProcess)
-  expect(perilObj).toEqual({ env: { TEST_ENV: "123" } })
+  const perilObj = perilObjectForInstallation(processInstallationSettings, fakeProcess, false)
+  expect(perilObj.env).toEqual({ TEST_ENV: "123" })
+})
+
+it("allows passing through Peril DSL attributes ", async () => {
+  const processInstallationSettings: GitHubInstallationSettings = {
+    env_vars: ["TEST_ENV", "NON_EXISTANT"],
+    ignored_repos: [],
+    modules: [],
+  }
+
+  const fakeProcess = {
+    SECRET_ENV: "432",
+    TEST_ENV: "123",
+  }
+
+  const perilDSL = {
+    a: "b",
+  }
+
+  const perilObj = perilObjectForInstallation(processInstallationSettings, fakeProcess, perilDSL) as any
+  expect(perilObj.a).toEqual("b")
 })

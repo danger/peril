@@ -29,6 +29,7 @@ it("Does not run a dangerfile in an ignored repo", async () => {
       ignored_repos: [body.pull_request.head.repo.full_name],
       modules: [],
     },
+    tasks: {},
   }
 
   const repo: GithubRepo = body.pull_request.head.repo
