@@ -116,7 +116,12 @@ ${contents}
 \`\`\`
 
   `
-  return { fails: [{ message: failure }], warnings: [], markdowns: [errorMD], messages: [] }
+  return {
+    fails: [{ message: failure }],
+    warnings: [],
+    markdowns: [errorMD],
+    messages: [],
+  }
 }
 
 /**

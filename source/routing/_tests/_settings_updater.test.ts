@@ -1,7 +1,9 @@
 import { settingsUpdater } from "../settings_updater"
 
 jest.mock("../../db/getDB", () => ({ default: { setup: jest.fn() } }))
-jest.mock("../../globals", () => ({ DATABASE_JSON_FILE: "PerilTest/settings@peril.settings.json" }))
+jest.mock("../../globals", () => ({
+  DATABASE_JSON_FILE: "PerilTest/settings@peril.settings.json",
+}))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"

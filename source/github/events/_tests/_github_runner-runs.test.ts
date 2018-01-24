@@ -116,7 +116,10 @@ it("gets the expected runs for platform", () => {
     },
   }
 
-  const settings = getSettings({ repoSpecificRules: repo.rules, repoName: repo.fullName })
+  const settings = getSettings({
+    repoSpecificRules: repo.rules,
+    repoName: repo.fullName,
+  })
 
   const runs = runsForEvent("issues", "created", installation, settings)
   expect(runs).toEqual([

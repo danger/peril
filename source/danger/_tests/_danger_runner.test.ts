@@ -19,7 +19,9 @@ import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 const peril = { env: {} }
 
-jest.mock("../../api/github", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("123") }))
+jest.mock("../../api/github", () => ({
+  getTemporaryAccessTokenForInstallation: () => Promise.resolve("123"),
+}))
 
 const emptySettings = {
   env_vars: [],

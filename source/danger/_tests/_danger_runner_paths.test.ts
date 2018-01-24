@@ -27,7 +27,9 @@ const installationSettings = {
   settings: defaultSettings,
 }
 
-jest.mock("../../api/github", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("123") }))
+jest.mock("../../api/github", () => ({
+  getTemporaryAccessTokenForInstallation: () => Promise.resolve("123"),
+}))
 
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {

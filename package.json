@@ -6,14 +6,12 @@
     "start": "node out/index.js",
     "compile": "tsc -watch -p ./",
     "build": "yarn tsc",
-    "postinstall":
-      "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
+    "postinstall": "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
     "test": "jest && yarn lint",
     "lint": "tslint source/**/**/**.ts",
     "test:watch": "jest --watch",
     "type-check": "tsc --noEmit --pretty",
-    "types:json":
-      "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
+    "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
     "prettier": "prettier",
     "prettier-project": "prettier --write 'source/**/*.{ts,tsx,md,json}'",
     "setup": "yarn run setup:plugins && yarn run setup:env",
@@ -60,6 +58,7 @@
     "json2ts": "orta/json2ts#ts-less",
     "json5": "^0.5.1",
     "jsonwebtoken": "^8.1.0",
+    "mongoose": "^5.0.1",
     "node-fetch": "^1.7.3",
     "node-pg-migrate": "^2.15.0",
     "node-schedule": "^1.3.0",
@@ -88,12 +87,21 @@
     "*.@(ts|tsx)": ["tslint --fix", "yarn prettier --write", "git add"],
     "*.md": ["yarn prettier --write", "git add"]
   },
+  "prettier": {
+    "printWidth": 120,
+    "semi": false,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "bracketSpacing": true
+  },
   "devDependencies": {
     "@types/json5": "^0.0.29",
+    "@types/mongodb": "^3.0.4",
+    "@types/mongoose": "^4.7.33",
     "danger-plugin-spellcheck": "^1.2.2",
-    "prettier": "^1.10.2",
-    "tslint-config-prettier": "^1.6.0",
     "husky": "^0.14.0",
-    "lint-staged": "^6.0.1"
+    "lint-staged": "^6.0.1",
+    "prettier": "^1.10.2",
+    "tslint-config-prettier": "^1.6.0"
   }
 }

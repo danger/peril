@@ -9,8 +9,12 @@ const mockGHContents = jest.fn((token, repo, path) => {
   }
 })
 
-jest.mock("../../../api/github", () => ({ getTemporaryAccessTokenForInstallation: () => Promise.resolve("token") }))
-jest.mock("../../../github/lib/github_helpers", () => ({ getGitHubFileContents: mockGHContents }))
+jest.mock("../../../api/github", () => ({
+  getTemporaryAccessTokenForInstallation: () => Promise.resolve("token"),
+}))
+jest.mock("../../../github/lib/github_helpers", () => ({
+  getGitHubFileContents: mockGHContents,
+}))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
@@ -30,7 +34,9 @@ it("runs an Dangerfile for an issue with a local", async () => {
   const settings = await setupForRequest(req, {})
   expect(settings.commentableID).toBeTruthy()
 
-  const run = dangerRunForRules("issue_comment", "created", { issue_comment: "dangerfile.issue" })[0]
+  const run = dangerRunForRules("issue_comment", "created", {
+    issue_comment: "dangerfile.issue",
+  })[0]
 
   const result = await runEventRun(run, settings, "token", body)
   // See above in the mock for the link
@@ -46,7 +52,9 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
 
   const dangerfileForRun = "warn(danger.github.api)"
   mockGHContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
-  const run = dangerRunForRules("issue_comment", "created", { issue_comment: "warn_with_api" })[0]
+  const run = dangerRunForRules("issue_comment", "created", {
+    issue_comment: "warn_with_api",
+  })[0]
 
   const result = await runEventRun(run, settings, "token", body)
   expect(result!.warnings[0].message).not.toEqual("null")
@@ -60,7 +68,9 @@ it("can handle a db returning nil for the repo with an Dangerfile for an issue w
   const settings = await setupForRequest(req, {})
   expect(settings.commentableID).toBeTruthy()
 
-  const run = dangerRunForRules("issue_comment", "created", { issue_comment: "dangerfile.issue" })[0]
+  const run = dangerRunForRules("issue_comment", "created", {
+    issue_comment: "dangerfile.issue",
+  })[0]
 
   const result = await runEventRun(run, settings, "token", body)
   // See above i nthe mock for the link

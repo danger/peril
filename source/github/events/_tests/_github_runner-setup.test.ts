@@ -1,4 +1,6 @@
-jest.mock("../../../db/getDB", () => ({ default: { getRepo: () => Promise.resolve({ fake: true }) } }))
+jest.mock("../../../db/getDB", () => ({
+  default: { getRepo: () => Promise.resolve({ fake: true }) },
+}))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
@@ -7,7 +9,10 @@ import { setupForRequest } from "../github_runner"
 /** Returns JSON from the fixtured dir */
 const requestWithFixturedJSON = (name: string): any => {
   const path = resolve(__dirname, "fixtures", `${name}.json`)
-  return { body: JSON.parse(readFileSync(path, "utf8")), headers: { "X-GitHub-Delivery": "12345" } }
+  return {
+    body: JSON.parse(readFileSync(path, "utf8")),
+    headers: { "X-GitHub-Delivery": "12345" },
+  }
 }
 
 describe("makes the right settings for", () => {
