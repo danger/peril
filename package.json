@@ -6,17 +6,21 @@
     "start": "node out/index.js",
     "compile": "tsc -watch -p ./",
     "build": "yarn tsc",
-    "postinstall": "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
+    "postinstall":
+      "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
     "test": "jest && yarn lint",
     "lint": "tslint source/**/**/**.ts",
     "test:watch": "jest --watch",
     "type-check": "tsc --noEmit --pretty",
-    "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
+    "types:json":
+      "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
     "prettier": "prettier",
     "prettier-project": "prettier --write 'source/**/*.{ts,tsx,md,json}'",
     "setup": "yarn run setup:plugins && yarn run setup:env",
     "setup:env": "ts-node source/scripts/setup-env.ts",
-    "setup:plugins": "ts-node source/scripts/setup-plugins.ts"
+    "setup:plugins": "ts-node source/scripts/setup-plugins.ts",
+    "precommit": "lint-staged",
+    "prepush": "yarn build; yarn danger:prepush"
   },
   "repository": {
     "type": "git",
@@ -77,23 +81,19 @@
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/_tests/.*.test.ts$)",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js"]
   },
-  "prettier": {
-    "printWidth": 120,
-    "semi": false,
-    "singleQuote": false,
-    "trailingComma": "es5",
-    "bracketSpacing": true
+  "lint-staged": {
+    "*.json": ["yarn prettier --write", "git add"],
+    "*.@(ts|tsx)": ["tslint --fix", "yarn prettier --write", "git add"],
+    "*.md": ["yarn prettier --write", "git add"]
   },
   "devDependencies": {
     "@types/json5": "^0.0.29",
     "danger-plugin-spellcheck": "^1.2.2",
     "prettier": "^1.10.2",
-    "tslint-config-prettier": "^1.6.0"
+    "tslint-config-prettier": "^1.6.0",
+    "husky": "^0.14.0",
+    "lint-staged": "^6.0.1"
   }
 }
