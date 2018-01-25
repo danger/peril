@@ -66,6 +66,11 @@ export interface GitHubInstallation {
   scheduler: RunnerRuleset
 
   /**
+   * Individual tasks which a Dangerfile can schedule against
+   */
+  tasks: RunnerRuleset
+
+  /**
    * A set of repos and their additional event hooks, these are
    * in addition to the ones provided by `"rules"` which are applied
    * to every repo.

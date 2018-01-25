@@ -2,17 +2,18 @@ import * as bodyParser from "body-parser"
 import * as express from "express"
 import * as xhub from "express-x-hub"
 
-import { PERIL_WEBHOOK_SECRET, PUBLIC_FACING_API } from "./globals"
+import { MONGODB_URI, PERIL_WEBHOOK_SECRET, PUBLIC_FACING_API } from "./globals"
 
 import prDSLRunner from "./api/pr/dsl"
 import logger from "./logger"
 import webhook from "./routing/router"
 import startScheduler from "./scheduler/startScheduler"
+import { startTaskScheduler } from "./tasks/startTaskScheduler"
 
 const peril = () => {
   // Error logging
   process.on("unhandledRejection", (reason: string, p: any) => {
-    console.log("Error: ", reason) // tslint:disable-line
+    logger.error("Error: ", reason)
     throw reason
   })
 
@@ -25,14 +26,19 @@ const peril = () => {
 
   app.post("/webhook", webhook)
 
+  if (MONGODB_URI) {
+    logger.info("Starting up the task scheduler.")
+    startTaskScheduler()
+  }
+
   if (PUBLIC_FACING_API) {
-    console.log("This is a public facing Peril instance.") // tslint:disable-line
+    logger.info("This is a public facing Peril instance.")
     app.get("/api/v1/pr/dsl", prDSLRunner)
   }
 
   // Start server
   app.listen(app.get("port"), () => {
-    logger.info(`Started server at http://localhost:${process.env.PORT || 5000}`) // tslint:disable-line
+    logger.info(`Started server at http://localhost:${process.env.PORT || 5000}`)
     startScheduler()
   })
 }

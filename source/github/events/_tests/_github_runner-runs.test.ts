@@ -42,6 +42,7 @@ it("handles a platform only run", () => {
     },
     scheduler: {},
     settings: defaultSettings,
+    tasks: {},
   }
 
   const settings = getSettings({ repoSpecificRules: {} })
@@ -69,6 +70,7 @@ it("gets the expected runs for platform + repo rules", () => {
     },
     scheduler: {},
     settings: defaultSettings,
+    tasks: {},
   }
 
   const settings = getSettings({})
@@ -105,6 +107,7 @@ it("gets the expected runs for platform", () => {
     },
     scheduler: {},
     settings: defaultSettings,
+    tasks: {},
   }
 
   const repo = {
@@ -116,7 +119,10 @@ it("gets the expected runs for platform", () => {
     },
   }
 
-  const settings = getSettings({ repoSpecificRules: repo.rules, repoName: repo.fullName })
+  const settings = getSettings({
+    repoSpecificRules: repo.rules,
+    repoName: repo.fullName,
+  })
 
   const runs = runsForEvent("issues", "created", installation, settings)
   expect(runs).toEqual([

@@ -19,6 +19,7 @@ export async function createInstallation(installationJSON: Installation, req: ex
       ignored_repos: [],
       modules: [],
     },
+    tasks: {},
   }
 
   // Default to no runnerRules

@@ -1,7 +1,9 @@
 const mockSchedule = { scheduleJob: jest.fn() }
 jest.mock("node-schedule", () => mockSchedule)
 
-jest.mock("../../db/getDB", () => ({ default: { getInstallation: jest.fn() } }))
+jest.mock("../../db/getDB", () => ({
+  default: { getInstallation: jest.fn() },
+}))
 import db from "../../db/getDB"
 
 const mockInstallation: jest.Mock<any> = db.getInstallation as any

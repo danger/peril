@@ -31,5 +31,6 @@ Object {
     "ignored_repos": Array [],
     "modules": Array [],
   },
+  "tasks": Object {},
 }
 `;

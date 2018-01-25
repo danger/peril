@@ -1,7 +1,9 @@
 const mockDbInstallation = jest.fn()
 const mockGetRepos = jest.fn()
 
-jest.mock("../../../db/getDB", () => ({ default: { getInstallation: mockDbInstallation, getRepo: mockGetRepos } }))
+jest.mock("../../../db/getDB", () => ({
+  default: { getInstallation: mockDbInstallation, getRepo: mockGetRepos },
+}))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
@@ -27,6 +29,7 @@ it("Does not run a dangerfile in an ignored repo", async () => {
       ignored_repos: [body.pull_request.head.repo.full_name],
       modules: [],
     },
+    tasks: {},
   }
 
   const repo: GithubRepo = body.pull_request.head.repo

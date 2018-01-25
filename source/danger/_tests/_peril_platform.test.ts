@@ -12,12 +12,19 @@ it("Provides the Danger GitHub DSL for a PR", () => {
 })
 
 it("Uses the event json when it's a non-PR event", async () => {
-  const gh = new GitHub({ getExternalAPI: () => ({ api: true }), fileContents: () => "" } as any)
+  const gh = new GitHub({
+    getExternalAPI: () => ({ api: true }),
+    fileContents: () => "",
+  } as any)
 
   const myEvent = { event: true }
 
   const platform = getPerilPlatformForDSL(dsl.import, gh, myEvent)
   const platformDSL = await platform.getPlatformDSLRepresentation()
 
-  expect(platformDSL).toEqual({ api: { api: true }, event: true, utils: expect.anything() })
+  expect(platformDSL).toEqual({
+    api: { api: true },
+    event: true,
+    utils: expect.anything(),
+  })
 })

@@ -2,10 +2,14 @@ const mockPing = jest.fn()
 jest.mock("../../github/events/ping", () => ({ ping: mockPing }))
 
 const mockCreateInstallation = jest.fn()
-jest.mock("../../github/events/create_installation", () => ({ createInstallation: mockCreateInstallation }))
+jest.mock("../../github/events/create_installation", () => ({
+  createInstallation: mockCreateInstallation,
+}))
 
 const mockGithubRunner = jest.fn()
-jest.mock("../../github/events/github_runner", () => ({ githubDangerRunner: mockGithubRunner }))
+jest.mock("../../github/events/github_runner", () => ({
+  githubDangerRunner: mockGithubRunner,
+}))
 
 import { githubRouting } from "../router"
 
