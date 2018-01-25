@@ -61,19 +61,21 @@ export async function runDangerForInstallation(
 
   const randomName = Math.random().toString(36)
   const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(filepath))
-  const peril = perilObjectForInstallation(installation.settings, process.env, dangerDSL && dangerDSL.peril)
+  const peril = perilObjectForInstallation(installation, process.env, dangerDSL && dangerDSL.peril)
 
   return await runDangerAgainstFile(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
 }
 
 export const perilObjectForInstallation = (
-  settings: GitHubInstallationSettings,
+  installation: InstallationToRun,
   environment: any,
   peril: any
 ): PerilDSL => ({
   ...peril,
-  env: settings.env_vars && Object.assign({}, ...settings.env_vars.map(k => ({ [k]: environment[k] }))),
-  runTask: generateTaskSchedulerForInstallation,
+  env:
+    installation.settings.env_vars &&
+    Object.assign({}, ...installation.settings.env_vars.map(k => ({ [k]: environment[k] }))),
+  runTask: generateTaskSchedulerForInstallation(installation.id),
 })
 
 /**

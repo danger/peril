@@ -138,7 +138,7 @@ it("exposes specific process env vars via the peril object ", async () => {
     TEST_ENV: "123",
   }
 
-  const perilObj = perilObjectForInstallation(processInstallationSettings, fakeProcess, false)
+  const perilObj = perilObjectForInstallation({ id: 1, settings: processInstallationSettings }, fakeProcess, false)
   expect(perilObj.env).toEqual({ TEST_ENV: "123" })
 })
 
@@ -158,6 +158,10 @@ it("allows passing through Peril DSL attributes ", async () => {
     a: "b",
   }
 
-  const perilObj = perilObjectForInstallation(processInstallationSettings, fakeProcess, perilDSL) as any
+  const perilObj = perilObjectForInstallation(
+    { id: 1, settings: processInstallationSettings },
+    fakeProcess,
+    perilDSL
+  ) as any
   expect(perilObj.a).toEqual("b")
 })
