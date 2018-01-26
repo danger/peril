@@ -29,7 +29,7 @@ Let's deep dive into the JSON:
 
 ### `settings`
 
-**@see** - [source/db/GitHubRepoSettings.ts](https://github.com/danger/peril/master/source/db/GitHubRepoSettings.ts)
+**@see** - [source/db/GitHubRepoSettings.ts](https://github.com/danger/peril/blob/master/source/db/GitHubRepoSettings.ts)
 
 I'm hesitant to add the specific settings which are supported inside this document, as it'll always end up out of date.
 
@@ -37,7 +37,7 @@ The source code above should be a reasonable read.
 
 ### `rules`
 
-**@see** - [source/db/index.ts](https://github.com/danger/peril/master/source/db/index.ts)
+**@see** - [source/db/index.ts](https://github.com/danger/peril/blob/master/source/db/index.ts)
 
 These are globally applied rules, e.g. to every repo. It's a set of `event names`, to `dangerfiles`.
 
