@@ -1,0 +1,12 @@
+FROM node:9-slim
+
+ADD runner /app
+ADD package.json /app/
+RUN ["mv", "/app/package.json", "/app/original-package.json"]
+WORKDIR /app
+
+RUN ls
+RUN yarn global add danger
+
+RUN yarn init -y
+RUN node install_deps.js
