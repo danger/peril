@@ -1,24 +1,22 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
-        "outDir": "out",
-        "lib": [
-            "es2016",
-            "es2016.array.include"
-        ],
-        "sourceMap": true,
-        "rootDir": "source",
-        "allowJs": true,
-        "strictNullChecks": true
-    },
-    "exclude": [
-        "source/danger/_tests/fixtures",
-        "dangerfile_runtime_env",
-        "node_modules",
-        "out",
-        "dangerfile.js",
-        "wallaby.js",
-        "migrations"
-    ]
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "out",
+    "lib": ["es2016", "es2016.array.include"],
+    "sourceMap": true,
+    "rootDir": "source",
+    "allowJs": true,
+    "strictNullChecks": true
+  },
+  "exclude": [
+    "source/danger/_tests/fixtures",
+    "runner/*",
+    "dangerfile_runtime_env",
+    "node_modules",
+    "out",
+    "dangerfile.js",
+    "wallaby.js",
+    "migrations"
+  ]
 }
