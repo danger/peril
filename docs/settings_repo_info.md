@@ -152,6 +152,83 @@ Not all events have something they can comment on, only `pull_request` and `issu
 `message` won't work. In practice we've used a slack webhook to pass information back to our dev channel. It's just
 JavaScript, so you can use any module you want.
 
+### Scheduler
+
+Scheduled tasks to run using a cron-like syntax.
+
+This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The
+object is similar to the rules section, in that you define a cron-string with the following format:
+
+```
+    *    *    *    *    *    *
+    ┬    ┬    ┬    ┬    ┬    ┬
+    │    │    │    │    │    |
+    │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+    │    │    │    │    └───── month (1 - 12)
+    │    │    │    └────────── day of month (1 - 31)
+    │    │    └─────────────── hour (0 - 23)
+    │    └──────────────────── minute (0 - 59)
+    └───────────────────────── second (0 - 59, OPTIONAL)
+```
+
+Which, inside the Peril settings, would look something like:
+
+```json
+    "scheduler": {
+      "0 0 12 * * ?": "schedule/daily_at_twelve.ts",
+      "0 9 * * 1-5": "schedule/weekday_wakeup_email.ts"
+    }
+```
+
+There's a lot of great resources on the net showing the general syntax for the cron format.
+
+### Tasks
+
+If you have Peril hooked up to a Mongo DB instance (via the ENV var `MONGODB_URI` (there's a free heroku add-on which
+works with no config)) then you can schedule jobs to run in the future. An example of this is in the Artsy peril, where
+creating an RFC issue will send notifications for a few days into our slack.
+
+This works by defining tasks in your `peril.settings.json`:
+
+```json
+  "tasks": {
+    "slack-dev-channel": "artsy/artsy-danger@tasks/slack-dev-channel.ts"
+  },
+```
+
+Which maps a task name to a file in a repo. You schedule tasks using the Peril object inside a Dangerfile:
+
+```ts
+import { danger, peril } from "danger"
+import { Issues } from "github-webhook-event-types"
+
+const gh = (danger.github as any) as Issues
+const issue = gh.issue
+
+const slackify = (text: string) => ({})
+
+if (issue.title.includes("RFC:") || issue.title.includes("[RFC]")) {
+  peril.runTask("slack-dev-channel", "in 5 minutes", slackify("🎉: A new RFC has been published."))
+  peril.runTask("slack-dev-channel", "in 3 days", slackify("🕰: A new RFC was published 3 days ago."))
+  peril.runTask("slack-dev-channel", "in 7 days", slackify("🕰: A new RFC is ready to be resolved."))
+}
+```
+
+This schedules three jobs using [agenda](https://github.com/agenda/agenda) under the hood. The params are a task name, a
+strings based on [human-interval](https://github.com/agenda/human-interval), then data which will be passed through to
+your job later.
+
+When your task starts running, you can access that data via `peril.data`:
+
+```ts
+import { schedule, peril } from "danger"
+import { IncomingWebhook } from "@slack/client"
+
+const url = peril.env.SLACK_RFC_WEBHOOK_URL || ""
+const webhook = new IncomingWebhook(url)
+schedule(webhook.send(peril.data))
+```
+
 ### Types
 
 If you're writing in TypeScript, I have [a node module](https://github.com/orta/github-webhook-event-types) that just
