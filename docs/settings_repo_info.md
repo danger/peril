@@ -221,12 +221,12 @@ your job later.
 When your task starts running, you can access that data via `peril.data`:
 
 ```ts
-import { schedule, peril } from "danger"
+import { peril } from "danger"
 import { IncomingWebhook } from "@slack/client"
 
 const url = peril.env.SLACK_RFC_WEBHOOK_URL || ""
 const webhook = new IncomingWebhook(url)
-schedule(webhook.send(peril.data))
+webhook.send(peril.data)
 ```
 
 ### Types
