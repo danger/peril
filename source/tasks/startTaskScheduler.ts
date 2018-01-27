@@ -16,9 +16,14 @@ export const runDangerfileTaskName = "runDangerfile"
 
 export const startTaskScheduler = async () => {
   agenda = new Agenda({ db: { address: MONGODB_URI } })
+  agenda.on("ready", () => {
+    logger.info("Task runner ready")
+    agenda.start()
+  })
 
   agenda.define(runDangerfileTaskName, async (job, done) => {
     const data = job.attrs.data as DangerFileTaskConfig
+    logger.info(`Recieved a new task, ${data.taskName}`)
 
     const installation = await db.getInstallation(data.installationID)
     if (!installation) {
