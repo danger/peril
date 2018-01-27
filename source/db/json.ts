@@ -96,7 +96,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
         repos: parsedOrg.repos || {},
         rules: parsedOrg.rules || {},
         scheduler: parsedOrg.scheduler || {},
-        tasks: parsedOrg.scheduler || {},
+        tasks: parsedOrg.tasks || {},
         settings: {
           env_vars: (parsedOrg.settings && parsedOrg.settings.env_vars) || [],
           ignored_repos: (parsedOrg.settings && parsedOrg.settings.ignored_repos) || [],

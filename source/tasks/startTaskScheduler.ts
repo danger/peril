@@ -34,6 +34,7 @@ export const startTaskScheduler = async () => {
     const taskString = installation.tasks[data.taskName]
     if (!taskString) {
       logger.error(`Could not find the task: ${data.taskName} on installation ${data.installationID}`)
+      logger.error(`All tasks: ${Object.keys(installation.tasks)}`)
       return
     }
 
