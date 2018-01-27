@@ -99,7 +99,7 @@
   "devDependencies": {
     "@types/json5": "^0.0.29",
     "@types/mongodb": "^3.0.4",
-    "@types/mongoose": "^4.7.33",
+    "@types/mongoose": "^5.0.0",
     "danger-plugin-spellcheck": "^1.2.2",
     "husky": "^0.14.0",
     "lint-staged": "^6.0.1",
