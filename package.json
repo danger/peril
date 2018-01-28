@@ -15,8 +15,8 @@
     "prettier": "prettier",
     "prettier-project": "prettier --write 'source/**/*.{ts,tsx,md,json}'",
     "setup": "yarn run setup:plugins && yarn run setup:env",
-    "setup:env": "ts-node source/scripts/setup-env.ts",
-    "setup:plugins": "ts-node source/scripts/setup-plugins.ts",
+    "setup:env": "node out/scripts/setup-env.js",
+    "setup:plugins": "node out/scripts/setup-plugins.js",
     "precommit": "lint-staged",
     "prepush": "yarn build; yarn danger:prepush"
   },
