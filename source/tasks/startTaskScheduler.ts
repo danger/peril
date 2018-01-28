@@ -39,12 +39,15 @@ export const startTaskScheduler = async () => {
     }
 
     const results = await runTask(installation, taskString, data.data)
-    if (!results.fails.length) {
-      logger.info("Task completed successfully")
-    } else {
-      logger.error("Task failed:")
-      logger.error(results.fails.map(f => f.message).join("\n"))
-      logger.error(results.markdowns.join("\n"))
+    // There aren't results when it's process separated
+    if (results) {
+      if (!results.fails.length) {
+        logger.info("Task completed successfully")
+      } else {
+        logger.error("Task failed:")
+        logger.error(results.fails.map(f => f.message).join("\n"))
+        logger.error(results.markdowns.join("\n"))
+      }
     }
     done()
   })
