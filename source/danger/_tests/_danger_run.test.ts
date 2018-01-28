@@ -18,6 +18,7 @@ describe("for ping", () => {
         dslType: dsl.import,
         event: "ping",
         feedback: feedback.silent,
+        referenceString: "dangerfile.js",
         repoSlug: undefined,
       },
     ])
@@ -40,6 +41,7 @@ describe("for PRs", () => {
         dslType: dsl.pr,
         event: "pull_request",
         feedback: feedback.commentable,
+        referenceString: "dangerfile.js",
         repoSlug: undefined,
       },
     ])
@@ -56,6 +58,7 @@ describe("for PRs", () => {
         dslType: dsl.pr,
         event: "pull_request",
         feedback: feedback.commentable,
+        referenceString: "dangerfile.js",
         repoSlug: undefined,
       },
     ])
@@ -76,6 +79,7 @@ describe("for PRs", () => {
         dslType: dsl.pr,
         event: "pull_request",
         feedback: feedback.commentable,
+        referenceString: "dangerfile.js",
         repoSlug: undefined,
       },
     ])
@@ -98,6 +102,7 @@ describe("dangerRepresentationforPath", () => {
     expect(dangerRepresentationforPath(path)).toEqual({
       branch: "master",
       dangerfilePath: "dangerfile.ts",
+      referenceString: "dangerfile.ts",
       repoSlug: undefined,
     })
   })
@@ -107,6 +112,7 @@ describe("dangerRepresentationforPath", () => {
     expect(dangerRepresentationforPath(path)).toEqual({
       branch: "master",
       dangerfilePath: "dangerfile.ts",
+      referenceString: "orta/eigen@dangerfile.ts",
       repoSlug: "orta/eigen",
     })
   })
@@ -116,6 +122,7 @@ describe("dangerRepresentationforPath", () => {
     expect(dangerRepresentationforPath(path)).toEqual({
       branch: "branch",
       dangerfilePath: "dangerfile.ts",
+      referenceString: "orta/eigen@dangerfile.ts#branch",
       repoSlug: "orta/eigen",
     })
   })
@@ -125,6 +132,7 @@ describe("dangerRepresentationforPath", () => {
     expect(dangerRepresentationforPath(path)).toEqual({
       branch: "branch",
       dangerfilePath: "dangerfile.ts",
+      referenceString: "dangerfile.ts#branch",
       repoSlug: undefined,
     })
   })

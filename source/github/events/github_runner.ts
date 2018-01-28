@@ -9,9 +9,8 @@ import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { jsonDSLGenerator } from "danger/distribution/runner/dslGenerator"
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 
-import vm2 from "danger/distribution/runner/runners/vm2"
-
 import { getTemporaryAccessTokenForInstallation } from "api/github"
+import vm2 from "danger/distribution/runner/runners/vm2"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
 import perilPlatform from "../../danger/peril_platform"
@@ -204,7 +203,7 @@ export const runEventRun = async (
 
   return await runDangerForInstallation(
     headDangerfile,
-    run.dangerfilePath,
+    run.referenceString,
     githubAPI,
     run.dslType,
     installationSettings,
@@ -306,7 +305,7 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
     const dangerDSL = await createPRDSL(githubAPI)
     const results = await runDangerForInstallation(
       headDangerfile,
-      run.dangerfilePath,
+      run.referenceString,
       githubAPI,
       run.dslType,
       installationSettings,

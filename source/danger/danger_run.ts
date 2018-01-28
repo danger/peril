@@ -63,6 +63,7 @@ export interface RepresentationForURL {
   dangerfilePath: string
   branch: string
   repoSlug: string | undefined
+  referenceString: DangerfileReferenceString
 }
 
 /** Takes a DangerfileReferenceString and lets you know where to find it globally */
@@ -72,6 +73,7 @@ export const dangerRepresentationforPath = (value: DangerfileReferenceString): R
     branch: value.includes("#") ? value.split("#")[1] : "master",
     dangerfilePath: afterAt.split("#")[0],
     repoSlug: value.includes("@") ? value.split("@")[0] : undefined,
+    referenceString: value,
   }
 }
 

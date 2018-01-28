@@ -1,7 +1,7 @@
 import { Platform } from "danger/distribution/platforms/platform"
 import winston from "../logger"
 
-import { GitHubInstallation } from "../db"
+import { DangerfileReferenceString, GitHubInstallation } from "../db"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
@@ -23,6 +23,8 @@ import { dsl } from "./danger_run"
 
 import { getTemporaryAccessTokenForInstallation } from "api/github"
 import { contextForDanger, DangerContext } from "danger/distribution/runner/Dangerfile"
+import { HYPER_ACCESS_KEY } from "globals"
+import { triggerSandboxDangerRun } from "runner"
 import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import perilPlatform from "./peril_platform"
@@ -40,7 +42,7 @@ export interface InstallationToRun {
  */
 export async function runDangerForInstallation(
   contents: string,
-  filepath: string,
+  reference: DangerfileReferenceString,
   api: GitHubAPI | null,
   type: dsl,
   installation: InstallationToRun,
@@ -56,16 +58,20 @@ export async function runDangerForInstallation(
   const exec = await executorForInstallation(platform, vm2)
 
   const randomName = Math.random().toString(36)
-  const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(filepath))
+  const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(reference))
   const peril = perilObjectForInstallation(installation, process.env, dangerDSL && dangerDSL.peril)
 
-  return await runDangerAgainstFile(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
+  if (HYPER_ACCESS_KEY) {
+    return await triggerSandboxDangerRun(type, installation.id, reference, dangerDSL, peril)
+  } else {
+    return await runDangerAgainstFileInline(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
+  }
 }
 
 /**
  * Sets up the custom peril environment and runs danger against a local file
  */
-export async function runDangerAgainstFile(
+export async function runDangerAgainstFileInline(
   filepath: string,
   contents: string,
   installation: InstallationToRun,

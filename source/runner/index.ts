@@ -43,7 +43,7 @@ interface PerilRunnerObject {
 }
 
 /** This function is used inside Peril */
-const triggerSandboxDangerRun = async (
+export const triggerSandboxDangerRun = async (
   type: dsl,
   installationID: number,
   path: DangerfileReferenceString,
@@ -87,10 +87,12 @@ const run = async (stdin: string) => {
   const dslMode = input.dslType === "pr" ? dsl.pr : dsl.import
 
   if (dslMode === dsl.pr) {
-    runDangerPR(installation, input)
+    await runDangerPR(installation, input)
   } else {
-    runDangerEvent(installation, input)
+    await runDangerEvent(installation, input)
   }
+
+  return null
 }
 
 // There's a lot of redundnacy between these, but at least they're somewhat separated in their mental

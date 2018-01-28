@@ -10,7 +10,7 @@ import fixturedGitHub from "../../api/_tests/fixtureAPI"
 import {
   executorForInstallation,
   handleDangerResults,
-  runDangerAgainstFile,
+  runDangerAgainstFileInline,
   runDangerForInstallation,
 } from "../danger_runner"
 

@@ -5,7 +5,7 @@ import { Platform } from "danger/distribution/platforms/platform"
 
 import { perilObjectForInstallation } from "danger/append_peril"
 import fixturedGitHub from "../../api/_tests/fixtureAPI"
-import { executorForInstallation, handleDangerResults, runDangerAgainstFile } from "../danger_runner"
+import { executorForInstallation, handleDangerResults, runDangerAgainstFileInline } from "../danger_runner"
 
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import vm2 from "danger/distribution/runner/runners/vm2"
@@ -37,7 +37,7 @@ describe("evaling", () => {
     const platform = fixturedGitHub()
     const executor = executorForInstallation(platform, vm2)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_empty.ts`, "utf8")
-    const results = await runDangerAgainstFile(
+    const results = await runDangerAgainstFileInline(
       `${dangerfilesFixtures}/dangerfile_empty.ts`,
       contents,
       installationSettings,
@@ -58,7 +58,7 @@ describe("evaling", () => {
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
     const contents = readFileSync(path, "utf8")
 
-    const results = await runDangerAgainstFile(path, contents, installationSettings, executor, peril)
+    const results = await runDangerAgainstFileInline(path, contents, installationSettings, executor, peril)
     expect(results.markdowns).toEqual(["`Object.keys(process.env).length` is 0"])
   })
 
@@ -70,7 +70,7 @@ describe("evaling", () => {
       const path = `${dangerfilesFixtures}/dangerfile_import_module.ts`
 
       const contents = readFileSync(path, "utf8")
-      const results = await runDangerAgainstFile(path, contents, installationSettings, executor, peril)
+      const results = await runDangerAgainstFileInline(path, contents, installationSettings, executor, peril)
       expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
     })
 
@@ -81,7 +81,7 @@ describe("evaling", () => {
       const localDangerfile = resolve("./dangerfile_runtime_env", "dangerfile_import_complex_module.ts")
       const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
-      const results = await runDangerAgainstFile(localDangerfile, contents, installationSettings, executor, peril)
+      const results = await runDangerAgainstFileInline(localDangerfile, contents, installationSettings, executor, peril)
       expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
     })
   }
@@ -93,7 +93,7 @@ describe("evaling", () => {
     const localDangerfile = resolve(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`, "utf8")
 
-    const results = await runDangerAgainstFile(localDangerfile, contents, installationSettings, executor, peril)
+    const results = await runDangerAgainstFileInline(localDangerfile, contents, installationSettings, executor, peril)
     expect(results.markdowns).toEqual([JSON.stringify(peril, null, "  ")])
   })
 
@@ -105,7 +105,7 @@ describe("evaling", () => {
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
 
     const contents = readFileSync(path, "utf8")
-    const results = await runDangerAgainstFile(path, contents, installationSettings, executor, peril)
+    const results = await runDangerAgainstFileInline(path, contents, installationSettings, executor, peril)
     expect(results).toEqual({
       fails: [],
       markdowns: [],
