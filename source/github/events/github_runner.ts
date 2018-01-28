@@ -9,6 +9,8 @@ import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { jsonDSLGenerator } from "danger/distribution/runner/dslGenerator"
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 
+import vm2 from "danger/distribution/runner/runners/vm2"
+
 import { getTemporaryAccessTokenForInstallation } from "api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
@@ -345,7 +347,7 @@ export const commentOnResults = async (dslType: dsl, results: DangerResults, tok
   const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
   const gh = new GitHub(githubAPI)
   const platform = perilPlatform(dslType, gh, {})
-  const exec = executorForInstallation(platform)
+  const exec = executorForInstallation(platform, vm2)
   await exec.handleResults(results)
 }
 

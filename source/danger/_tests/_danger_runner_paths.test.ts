@@ -14,6 +14,7 @@ import {
   runDangerForInstallation,
 } from "../danger_runner"
 
+import vm2 from "danger/distribution/runner/runners/vm2"
 import { dsl } from "../danger_run"
 
 const defaultSettings = {
@@ -34,7 +35,7 @@ jest.mock("api/github", () => ({
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
     const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
+    const executor = executorForInstallation(platform, vm2)
     const results = await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, installationSettings)
 
     const path = mockRunDangerfileEnvironment.mock.calls[0][0]
