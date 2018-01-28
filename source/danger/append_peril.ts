@@ -15,8 +15,8 @@ import inlineRunner from "danger/distribution/runner/runners/vm2"
 
 import * as NodeGithub from "@octokit/rest"
 
-import { getTemporaryAccessTokenForInstallation } from "api/github"
 import { contextForDanger, DangerContext } from "danger/distribution/runner/Dangerfile"
+import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import { InstallationToRun } from "./danger_runner"
 

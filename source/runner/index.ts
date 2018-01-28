@@ -13,7 +13,7 @@ import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 import inlineRunner from "danger/distribution/runner/runners/inline"
 
-import { getTemporaryAccessTokenForInstallation } from "api/github"
+import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { perilObjectForInstallation } from "../danger/append_peril"
 import { dangerRepresentationforPath, dsl } from "../danger/danger_run"
 import { executorForInstallation } from "../danger/danger_runner"
@@ -21,8 +21,8 @@ import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import db from "../db/getDB"
 import { getGitHubFileContents, getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 
-import { HYPER_FUNC_NAME } from "globals"
-import { callHyperFunction } from "runner/hyper-api"
+import { HYPER_FUNC_NAME } from "../globals"
+import { callHyperFunction } from "../runner/hyper-api"
 
 interface PerilRunnerObject {
   /** The DSL for JSON, could be a DangerDSLJSON type or the raw webhook */

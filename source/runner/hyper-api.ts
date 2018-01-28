@@ -1,6 +1,6 @@
-import { HYPER_ACCESS_KEY, HYPER_FUNC_NAME, HYPER_SECRET_KEY } from "globals"
 import * as aws4 from "hyper-aws4"
 import fetch from "node-fetch"
+import { HYPER_ACCESS_KEY, HYPER_FUNC_NAME, HYPER_SECRET_KEY } from "../globals"
 
 // For usage, check out these tests, https://github.com/Tim-Zhang/hyper-aws4/blob/master/test/unit.js
 

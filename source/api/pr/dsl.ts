@@ -3,7 +3,7 @@ import winston from "../../logger"
 
 import * as fs from "fs"
 
-import { getTemporaryAccessTokenForInstallation } from "api/github"
+import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 
 import { PERIL_ORG_INSTALLATION_ID } from "../../globals"
 

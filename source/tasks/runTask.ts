@@ -1,4 +1,4 @@
-import { getTemporaryAccessTokenForInstallation } from "api/github"
+import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { dangerRepresentationforPath, dangerRunForRules, dsl } from "../danger/danger_run"
 import { runDangerForInstallation } from "../danger/danger_runner"
 import { DangerfileReferenceString, GitHubInstallation } from "../db/index"

@@ -1,5 +1,5 @@
-import { getTemporaryAccessTokenForInstallation } from "api/github"
 import fetch from "../../api/fetch"
+import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { RepresentationForURL } from "../../danger/danger_run"
 import { GitHubUser } from "../../db/types"
 import { PERIL_ORG_INSTALLATION_ID } from "../../globals"

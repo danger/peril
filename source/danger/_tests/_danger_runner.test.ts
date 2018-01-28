@@ -3,8 +3,8 @@ import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { Platform } from "danger/distribution/platforms/platform"
 
-import { perilObjectForInstallation } from "danger/append_peril"
 import fixturedGitHub from "../../api/_tests/fixtureAPI"
+import { perilObjectForInstallation } from "../../danger/append_peril"
 import { executorForInstallation, handleDangerResults, runDangerAgainstFileInline } from "../danger_runner"
 
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"

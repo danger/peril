@@ -6,7 +6,6 @@
     "lib": ["es2016", "es2016.array.include"],
     "sourceMap": true,
     "rootDir": "source",
-    "baseUrl": "source",
     "allowJs": true,
     "strictNullChecks": true,
     "alwaysStrict": true,
