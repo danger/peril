@@ -23,9 +23,9 @@
     proxy-from-env "^1.0.0"
     url-template "^2.0.8"
 
-"@octokit/rest@^14.0.6":
-  version "14.0.6"
-  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-14.0.6.tgz#92d18601ecc346b0349ad4a3219ccc5bc00e6254"
+"@octokit/rest@^14.0.7":
+  version "14.0.7"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-14.0.7.tgz#fef887a79c59c9add0ce66491ab8a990f2462681"
   dependencies:
     before-after-hook "^1.1.0"
     debug "^3.1.0"
@@ -111,9 +111,9 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/jest@^22.0.1":
-  version "22.0.1"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.0.1.tgz#6370a6d60cce3845e4cd5d00bf65f654264685bc"
+"@types/jest@^22.1.0":
+  version "22.1.0"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.1.0.tgz#c1de03bbac66fac4cc741f7a69cb73bc01a1707c"
 
 "@types/json5@^0.0.29":
   version "0.0.29"
@@ -133,7 +133,7 @@
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
 
-"@types/mongodb@*", "@types/mongodb@^3.0.4":
+"@types/mongodb@*":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.0.4.tgz#5f9e7f368aab176e66b5eb1513815f6f0202600a"
   dependencies:
@@ -141,9 +141,17 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/mongoose@^4.7.33":
-  version "4.7.33"
-  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-4.7.33.tgz#de77cd613f261c7662bb175102ebc128dce71250"
+"@types/mongodb@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.0.5.tgz#0143e0838a8260c7312773457f4d2ea1465ccada"
+  dependencies:
+    "@types/bson" "*"
+    "@types/events" "*"
+    "@types/node" "*"
+
+"@types/mongoose@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.0.0.tgz#b6f150a37541556f51fdfefdfe4e0da8fd3b95d7"
   dependencies:
     "@types/events" "*"
     "@types/mongodb" "*"
@@ -3959,9 +3967,9 @@ jsonpointer@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.0.1.tgz#4fd92cb34e0e9db3c89c8622ecf51f9b978c6cb9"
 
-jsonwebtoken@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.1.0.tgz#c6397cd2e5fd583d65c007a83dc7bb78e6982b83"
+jsonwebtoken@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.1.1.tgz#b04d8bb2ad847bc93238c3c92170ffdbdd1cb2ea"
   dependencies:
     jws "^3.1.4"
     lodash.includes "^4.3.0"
@@ -3971,7 +3979,7 @@ jsonwebtoken@^8.1.0:
     lodash.isplainobject "^4.0.6"
     lodash.isstring "^4.0.1"
     lodash.once "^4.0.0"
-    ms "^2.0.0"
+    ms "^2.1.1"
     xtend "^4.0.1"
 
 jspm-config@^0.3.0:
@@ -4065,9 +4073,9 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lint-staged@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-6.0.1.tgz#855f2993ab4a265430e2fd9828427e648d65e6b4"
+lint-staged@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-6.1.0.tgz#28f600c10a6cbd249ceb003118a1552e53544a93"
   dependencies:
     app-root-path "^2.0.0"
     chalk "^2.1.0"
@@ -4542,7 +4550,7 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
-ms@^2.0.0:
+ms@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
 
@@ -4993,6 +5001,10 @@ pg-minify@~0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/pg-minify/-/pg-minify-0.5.3.tgz#aa09befa3cbe29fab6461bf819100e0471215011"
 
+pg-minify@~0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/pg-minify/-/pg-minify-0.5.4.tgz#89d5261cacfd44dd7927fa052222a404e9b2a3c9"
+
 pg-pool@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.3.tgz#c022032c8949f312a4f91fb6409ce04076be3257"
@@ -5006,14 +5018,14 @@ pg-promise@*:
     pg-minify "~0.5.3"
     spex "~2.0.1"
 
-pg-promise@^7.4.0:
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/pg-promise/-/pg-promise-7.4.0.tgz#f2e787c8963a5bd0f8e24c65505fce30ec010853"
+pg-promise@^7.4.1:
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/pg-promise/-/pg-promise-7.4.1.tgz#bb20e39d2d0e6d45d92f0bbab3389d1e6117971a"
   dependencies:
     manakin "~0.5.1"
     pg "~7.4.1"
-    pg-minify "~0.5.3"
-    spex "~2.0.1"
+    pg-minify "~0.5.4"
+    spex "~2.0.2"
 
 pg-types@~1.12.1:
   version "1.12.1"
@@ -5851,6 +5863,10 @@ spdx-license-ids@^1.0.2:
 spex@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/spex/-/spex-2.0.1.tgz#928c5c75b1a490f7203f49bccd967622dba4d3d3"
+
+spex@~2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/spex/-/spex-2.0.2.tgz#e8c8d633a4c67af642dded701ec2350c9de964a0"
 
 split@^1.0.0:
   version "1.0.0"
