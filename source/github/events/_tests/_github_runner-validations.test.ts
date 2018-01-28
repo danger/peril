@@ -13,7 +13,7 @@ import { GitHubInstallationSettings } from "../../../db/GitHubRepoSettings"
 import { githubDangerRunner, GitHubRunSettings, runPRRun, setupForRequest } from "../github_runner"
 
 const apiFixtures = resolve(__dirname, "fixtures")
-const fixture = file => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
+const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
 it("Does not run a dangerfile in an ignored repo", async () => {
   const body = fixture("pull_request_opened.json")

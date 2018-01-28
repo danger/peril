@@ -7,6 +7,7 @@ import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"
 import { settingsUpdater } from "./settings_updater"
 
+import { requestAccessTokenForInstallation } from "api/github"
 import { RootObject as InstallationCreated } from "../github/events/types/integration_installation_created.types"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 import { DATABASE_JSON_FILE } from "../globals"
@@ -23,7 +24,12 @@ const router = (req: express.Request, res: express.Response, next: express.NextF
   githubRouting(event, req, res, next)
 }
 
-export const githubRouting = (event, req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const githubRouting = (
+  event: string,
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   const xhubReq = req as any
   if (!xhubReq.isXHub) {
     return res
@@ -32,8 +38,9 @@ export const githubRouting = (event, req: express.Request, res: express.Response
   }
 
   if (!xhubReq.isXHubValid()) {
-    res.status(401).send("Request did not have a valid x-hub header. Perhaps PERIL_WEBHOOK_SECRET is not set up right?")
-    return
+    return res
+      .status(401)
+      .send("Request did not have a valid x-hub header. Perhaps PERIL_WEBHOOK_SECRET is not set up right?")
   }
 
   // res.setHeader("X-Peril-Commit", process.env.COMMIT || "N/A")
@@ -80,6 +87,7 @@ export const githubRouting = (event, req: express.Request, res: express.Response
       githubDangerRunner(event, req, res, next)
     }
   }
+  return
 }
 
 export default router

@@ -1,6 +1,6 @@
 import { agenda, DangerFileTaskConfig, runDangerfileTaskName } from "./startTaskScheduler"
 
-export const generateTaskSchedulerForInstallation = installationID => {
+export const generateTaskSchedulerForInstallation = (installationID: number) => {
   // Awkward JS so that I can get the types set up correct
 
   /**

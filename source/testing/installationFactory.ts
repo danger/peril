@@ -13,4 +13,4 @@ const emptyInstallation: GitHubInstallation = {
   tasks: {},
 }
 
-export default (diff: Partial<GitHubInstallation>): GitHubInstallation => Object.assign({}, this.state, diff)
+export default (diff: Partial<GitHubInstallation>): GitHubInstallation => Object.assign({}, emptyInstallation, diff)

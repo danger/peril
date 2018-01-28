@@ -1,5 +1,5 @@
 import * as getSTDIN from "get-stdin"
-import * as nodeCleanup from "node-cleanup"
+import nodeCleanup = require("node-cleanup")
 import { extname, resolve } from "path"
 import uuid from "uuid/v1"
 
@@ -151,13 +151,14 @@ const runDangerPR = async (installation: GitHubInstallation, input: PerilRunnerO
 // Wait till the end of the process to print out the results. Will
 // only post the results when the process has succeeded, leaving the
 // host process to create a message from the logs.
-nodeCleanup((exitCode: number, signal: string) => {
+nodeCleanup((exitCode, signal) => {
   logger.info(`Process has finished with ${exitCode} ${signal}, sending the results back to the host process`)
   if (foundDSL) {
     // TODO: Failure cases?
     logger.info("TODO")
     // runtimeEnv.results
   }
+  return undefined
 })
 
 // Add a timeout so that CI doesn't run forever if something has broken.

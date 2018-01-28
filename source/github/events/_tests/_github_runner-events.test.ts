@@ -7,6 +7,7 @@ const mockGHContents = jest.fn((token, repo, path) => {
   if (path === "dangerfile.issue") {
     return Promise.resolve("warn('issue worked')")
   }
+  return ""
 })
 
 jest.mock("api/github", () => ({
@@ -23,7 +24,7 @@ import { GitHubInstallation } from "../../../db"
 import { GitHubRunSettings, runEventRun, setupForRequest } from "../github_runner"
 
 const apiFixtures = resolve(__dirname, "fixtures")
-const fixture = file => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
+const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
 it("runs an Dangerfile for an issue with a local", async () => {
   mockGetRepo.mockImplementationOnce(() => Promise.resolve({ id: "123", fake: true }))

@@ -264,7 +264,7 @@ export const runPRRun = async (
     }
   }
 
-  const reportData = reason => {
+  const reportData = (reason: string) => {
     const stateForErrorHandling = {
       branch,
       dangerfileBranchForPR,
@@ -345,8 +345,13 @@ export const mergeResults = (results: DangerResults[]): DangerResults => {
   )
 }
 
-export const commentOnResults = async (dslType: dsl, results: DangerResults, token, settings) => {
-  const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
+export const commentOnResults = async (
+  dslType: dsl,
+  results: DangerResults,
+  token: string,
+  settings: GitHubRunSettings
+) => {
+  const githubAPI = githubAPIForCommentable(token, settings.repoName!, settings.commentableID)
   const gh = new GitHub(githubAPI)
   const platform = perilPlatform(dslType, gh, {})
   const exec = executorForInstallation(platform, vm2)

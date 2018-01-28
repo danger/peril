@@ -62,6 +62,12 @@
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.30.tgz#dc1e40f7af3b9c815013a7860e6252f6352a84df"
 
+"@types/dotenv@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-4.0.2.tgz#f2983f0afe9fd7f6eb8aef515a4d77f4cbaa0597"
+  dependencies:
+    "@types/node" "*"
+
 "@types/ejs@^2.5.0":
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-2.5.0.tgz#e8f76bef977666f3d71730208bcb6bbcc172a080"
@@ -91,6 +97,20 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/get-stdin@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/get-stdin/-/get-stdin-5.0.1.tgz#46afbcaf09e94fe025afa07ae994ac3168adbdf3"
+  dependencies:
+    "@types/node" "*"
+
+"@types/glob@^5.0.35":
+  version "5.0.35"
+  resolved "https://registry.yarnpkg.com/@types/glob/-/glob-5.0.35.tgz#1ae151c802cece940443b5ac246925c85189f32a"
+  dependencies:
+    "@types/events" "*"
+    "@types/minimatch" "*"
+    "@types/node" "*"
+
 "@types/jest@^22.0.1":
   version "22.0.1"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.0.1.tgz#6370a6d60cce3845e4cd5d00bf65f654264685bc"
@@ -109,6 +129,10 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-0.0.29.tgz#fbcfd330573b912ef59eeee14602bface630754b"
 
+"@types/minimatch@*":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
+
 "@types/mongodb@*", "@types/mongodb@^3.0.4":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.0.4.tgz#5f9e7f368aab176e66b5eb1513815f6f0202600a"
@@ -125,10 +149,21 @@
     "@types/mongodb" "*"
     "@types/node" "*"
 
+"@types/node-cleanup@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/node-cleanup/-/node-cleanup-2.1.0.tgz#e9aabbe167907b0fafbb6155305824040c4d25c1"
+
 "@types/node-fetch@^1.6.6":
   version "1.6.7"
   resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-1.6.7.tgz#521078e8f0c69a158e5022005aca92d2620f6d57"
   dependencies:
+    "@types/node" "*"
+
+"@types/node-schedule@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@types/node-schedule/-/node-schedule-1.2.2.tgz#bb5beae99b7327b4f2ddc1834f1fdae4378891b0"
+  dependencies:
+    "@types/events" "*"
     "@types/node" "*"
 
 "@types/node@*":
@@ -6580,10 +6615,6 @@ write-file-atomic@^2.1.0:
     graceful-fs "^4.1.11"
     imurmurhash "^0.1.4"
     signal-exit "^3.0.2"
-
-write-file-promise@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/write-file-promise/-/write-file-promise-1.0.0.tgz#26720198825efa2d2d122c265f2dac971f2355ef"
 
 xdg-basedir@^2.0.0:
   version "2.0.0"
