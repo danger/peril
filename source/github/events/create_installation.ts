@@ -2,7 +2,7 @@ import * as express from "express"
 
 import { Installation } from "../events/types/integration_installation_created.types"
 
-import { requestAccessTokenForInstallation } from "../../api/github"
+import { requestAccessTokenForInstallation } from "api/github"
 import { GitHubInstallation } from "../../db"
 import db from "../../db/getDB"
 

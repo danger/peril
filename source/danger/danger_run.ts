@@ -59,7 +59,7 @@ export const dangerRunForRules = (
   }))
 }
 
-interface RepresentationForURL {
+export interface RepresentationForURL {
   dangerfilePath: string
   branch: string
   repoSlug: string | undefined

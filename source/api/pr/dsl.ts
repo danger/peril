@@ -3,7 +3,7 @@ import winston from "../../logger"
 
 import * as fs from "fs"
 
-import { getTemporaryAccessTokenForInstallation } from "../../api/github"
+import { getTemporaryAccessTokenForInstallation } from "api/github"
 
 import { PERIL_ORG_INSTALLATION_ID } from "../../globals"
 
@@ -19,6 +19,8 @@ import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 import { createDangerfileRuntimeEnvironment, runDangerfileEnvironment } from "danger/distribution/runner/runners/vm2"
 import { executorForInstallation } from "../../danger/danger_runner"
 import { githubAPIForCommentable } from "../../github/events/github_runner"
+
+import inline from "danger/distribution/runner/runners/inline"
 
 const prDSLRunner = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   winston.log("router", `Recieved OK`)
@@ -53,7 +55,7 @@ const prDSLRunner = async (req: express.Request, res: express.Response, next: ex
   const gh = new GitHub(githubAPI)
   const platform = perilPlatform(dsl.pr, gh, {})
 
-  const exec = await executorForInstallation(platform)
+  const exec = await executorForInstallation(platform, inline)
   const dangerDSL = await exec.dslForDanger()
 
   // Remove this to reduce data

@@ -9,7 +9,7 @@ import { dsl } from "./danger_run"
  * however, an event like an issue comment or a user creation has no way to provide any kind of
  * feedback or DSL. To work around that we use the event provided by GitHub and provide it to Danger.
  */
-const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: any): Platform => {
+export const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: any): Platform => {
   if (type === dsl.pr && github) {
     return github
   } else {

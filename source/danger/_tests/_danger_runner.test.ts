@@ -3,23 +3,21 @@ import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { Platform } from "danger/distribution/platforms/platform"
 
+import { perilObjectForInstallation } from "danger/append_peril"
 import fixturedGitHub from "../../api/_tests/fixtureAPI"
-import {
-  executorForInstallation,
-  handleDangerResults,
-  perilObjectForInstallation,
-  runDangerAgainstFile,
-} from "../danger_runner"
+import { executorForInstallation, handleDangerResults, runDangerAgainstFile } from "../danger_runner"
 
+import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
+import inline from "danger/distribution/runner/runners/inline"
 import { existsSync, readFileSync, writeFileSync } from "fs"
 import { tmpdir } from "os"
 import { basename, resolve } from "path"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
-const peril = { env: {} }
+const peril: PerilDSL = { env: {}, runTask: () => null }
 
-jest.mock("../../api/github", () => ({
+jest.mock("api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("123"),
 }))
 
@@ -37,7 +35,7 @@ const installationSettings = {
 describe("evaling", () => {
   it("runs a typescript dangerfile with fixtured data", async () => {
     const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
+    const executor = executorForInstallation(platform, inline)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_empty.ts`, "utf8")
     const results = await runDangerAgainstFile(
       `${dangerfilesFixtures}/dangerfile_empty.ts`,
@@ -56,7 +54,7 @@ describe("evaling", () => {
 
   it("highlights some of the security measures", async () => {
     const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
+    const executor = executorForInstallation(platform, inline)
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
     const contents = readFileSync(path, "utf8")
 
@@ -68,7 +66,7 @@ describe("evaling", () => {
   if (!process.env.WALLABY_PRODUCTION) {
     it("allows external modules", async () => {
       const platform = fixturedGitHub()
-      const executor = executorForInstallation(platform)
+      const executor = executorForInstallation(platform, inline)
       const path = `${dangerfilesFixtures}/dangerfile_import_module.ts`
 
       const contents = readFileSync(path, "utf8")
@@ -78,7 +76,7 @@ describe("evaling", () => {
 
     it("allows external modules with internal resolving ", async () => {
       const platform = fixturedGitHub()
-      const executor = executorForInstallation(platform)
+      const executor = executorForInstallation(platform, inline)
 
       const localDangerfile = resolve("./dangerfile_runtime_env", "dangerfile_import_complex_module.ts")
       const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
@@ -90,7 +88,7 @@ describe("evaling", () => {
 
   it("has a peril object defined in global scope", async () => {
     const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
+    const executor = executorForInstallation(platform, inline)
 
     const localDangerfile = resolve(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`, "utf8")
@@ -102,7 +100,7 @@ describe("evaling", () => {
   // I wonder if the babel setup isn't quite right yet for this test
   it.skip("runs a JS dangerfile with fixtured data", async () => {
     const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
+    const executor = executorForInstallation(platform, inline)
     // The executor will return results etc in the next release
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
 
@@ -118,7 +116,7 @@ describe("evaling", () => {
 
   it("generates the correct modified/deleted/created paths", async () => {
     const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
+    const executor = executorForInstallation(platform, inline)
     const dsl = await executor.dslForDanger()
     expect(dsl.git.created_files.length).toBeGreaterThan(0)
     expect(dsl.git.modified_files.length).toBeGreaterThan(0)
