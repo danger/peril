@@ -9,7 +9,9 @@ import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { jsonDSLGenerator } from "danger/distribution/runner/dslGenerator"
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 
-import { getTemporaryAccessTokenForInstallation } from "../../api/github"
+import { getTemporaryAccessTokenForInstallation } from "api/github"
+import vm2 from "danger/distribution/runner/runners/vm2"
+import { resolve } from "dns"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
 import perilPlatform from "../../danger/peril_platform"
@@ -200,14 +202,16 @@ export const runEventRun = async (
     settings: settings.installationSettings,
   }
 
-  return await runDangerForInstallation(
+  const results = await runDangerForInstallation(
     headDangerfile,
-    run.dangerfilePath,
+    run.referenceString,
     githubAPI,
     run.dslType,
     installationSettings,
     { github: dangerDSL }
   )
+
+  return results || null
 }
 
 export const runPRRun = async (
@@ -304,17 +308,17 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
     const dangerDSL = await createPRDSL(githubAPI)
     const results = await runDangerForInstallation(
       headDangerfile,
-      run.dangerfilePath,
+      run.referenceString,
       githubAPI,
       run.dslType,
       installationSettings,
       dangerDSL
     )
 
-    if (pr.body !== null && pr.body.includes("Peril: Debug")) {
+    if (results && pr.body !== null && pr.body.includes("Peril: Debug")) {
       results.markdowns.push(reportData("Showing PR details due to including 'Peril: Debug'"))
     }
-    return results
+    return results ? results : null
   }
 }
 
@@ -345,7 +349,7 @@ export const commentOnResults = async (dslType: dsl, results: DangerResults, tok
   const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
   const gh = new GitHub(githubAPI)
   const platform = perilPlatform(dslType, gh, {})
-  const exec = executorForInstallation(platform)
+  const exec = executorForInstallation(platform, vm2)
   await exec.handleResults(results)
 }
 

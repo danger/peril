@@ -1,16 +1,18 @@
 import { Platform } from "danger/distribution/platforms/platform"
 import winston from "../logger"
 
-import { GitHubInstallation } from "../db"
+import { DangerfileReferenceString, GitHubInstallation } from "../db"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
 import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
+import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
-import inlineRunner from "danger/distribution/runner/runners/vm2"
+import { DangerRunner } from "danger/distribution/runner/runners/runner"
+import vm2 from "danger/distribution/runner/runners/vm2"
 
 import * as NodeGithub from "@octokit/rest"
 
@@ -19,20 +21,16 @@ import * as path from "path"
 import * as write from "write-file-promise"
 import { dsl } from "./danger_run"
 
+import { getTemporaryAccessTokenForInstallation } from "api/github"
 import { contextForDanger, DangerContext } from "danger/distribution/runner/Dangerfile"
-import { getTemporaryAccessTokenForInstallation } from "../api/github"
+import { HYPER_ACCESS_KEY } from "globals"
+import { triggerSandboxDangerRun } from "runner"
 import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
+import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import perilPlatform from "./peril_platform"
 
 /** Logs */
 const log = (message: string) => winston.info(`[runner] - ${message}`)
-
-// What does the Peril object look like inside the runtime
-// TODO: Expose this usefully somehow
-export interface PerilDSL {
-  // A list of accepted ENV vars into the peril runtime, configurable in settings.
-  env: any | false
-}
 
 export interface InstallationToRun {
   id: number
@@ -44,7 +42,7 @@ export interface InstallationToRun {
  */
 export async function runDangerForInstallation(
   contents: string,
-  filepath: string,
+  reference: DangerfileReferenceString,
   api: GitHubAPI | null,
   type: dsl,
   installation: InstallationToRun,
@@ -57,31 +55,23 @@ export async function runDangerForInstallation(
   const gh = api ? new GitHub(api) : null
   const platform = perilPlatform(type, gh, dangerDSL)
 
-  const exec = await executorForInstallation(platform)
+  const exec = await executorForInstallation(platform, vm2)
 
   const randomName = Math.random().toString(36)
-  const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(filepath))
+  const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(reference))
   const peril = perilObjectForInstallation(installation, process.env, dangerDSL && dangerDSL.peril)
 
-  return await runDangerAgainstFile(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
+  if (HYPER_ACCESS_KEY) {
+    return await triggerSandboxDangerRun(type, installation.id, reference, dangerDSL, peril)
+  } else {
+    return await runDangerAgainstFileInline(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
+  }
 }
-
-export const perilObjectForInstallation = (
-  installation: InstallationToRun,
-  environment: any,
-  peril: any
-): PerilDSL => ({
-  ...peril,
-  env:
-    installation.settings.env_vars &&
-    Object.assign({}, ...installation.settings.env_vars.map(k => ({ [k]: environment[k] }))),
-  runTask: generateTaskSchedulerForInstallation(installation.id),
-})
 
 /**
  * Sets up the custom peril environment and runs danger against a local file
  */
-export async function runDangerAgainstFile(
+export async function runDangerAgainstFileInline(
   filepath: string,
   contents: string,
   installation: InstallationToRun,
@@ -97,7 +87,6 @@ export async function runDangerAgainstFile(
     await appendPerilContextToDSL(installation.id, runtimeEnv.sandbox, peril)
   }
 
-  // runtimeEnv.rquire.root = dangerfile_runtime_env
   let results: DangerResults
 
   try {
@@ -109,7 +98,7 @@ export async function runDangerAgainstFile(
 }
 
 /** Returns Markdown results to post if an exception is raised during the danger run */
-const resultsForCaughtError = (file: string, contents: string, error: Error): DangerResults => {
+export const resultsForCaughtError = (file: string, contents: string, error: Error): DangerResults => {
   const failure = `Danger failed to run \`${file}\`.`
   const errorMD = `## Error ${error.name}
 \`\`\`
@@ -143,7 +132,7 @@ export async function handleDangerResults(results: DangerResults, exec: Executor
 /**
  * Generates a Danger Executor based on the installation's context
  */
-export function executorForInstallation(platform: Platform) {
+export function executorForInstallation(platform: Platform, runner: DangerRunner) {
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
@@ -166,23 +155,5 @@ export function executorForInstallation(platform: Platform) {
 
   const execConfig = {}
   // Source can be removed in the next release of Danger
-  return new Executor(source, platform, inlineRunner, config)
-}
-
-export async function appendPerilContextToDSL(installationID: number, sandbox: DangerContext, peril: PerilDSL) {
-  if (sandbox.danger && sandbox.danger.github) {
-    const token = await getTemporaryAccessTokenForInstallation(installationID)
-    const api = new NodeGithub()
-
-    api.authenticate({
-      token,
-      type: "integration",
-    })
-
-    sandbox.danger.github.api = api
-  }
-
-  // TODO: Add this to the Danger DSL in Danger, as an optional
-  const anySandbox = sandbox as any
-  anySandbox.peril = peril
+  return new Executor(source, platform, runner, config)
 }

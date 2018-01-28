@@ -10,10 +10,11 @@ import fixturedGitHub from "../../api/_tests/fixtureAPI"
 import {
   executorForInstallation,
   handleDangerResults,
-  runDangerAgainstFile,
+  runDangerAgainstFileInline,
   runDangerForInstallation,
 } from "../danger_runner"
 
+import vm2 from "danger/distribution/runner/runners/vm2"
 import { dsl } from "../danger_run"
 
 const defaultSettings = {
@@ -27,14 +28,14 @@ const installationSettings = {
   settings: defaultSettings,
 }
 
-jest.mock("../../api/github", () => ({
+jest.mock("api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("123"),
 }))
 
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
     const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform)
+    const executor = executorForInstallation(platform, vm2)
     const results = await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, installationSettings)
 
     const path = mockRunDangerfileEnvironment.mock.calls[0][0]

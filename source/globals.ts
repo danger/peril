@@ -85,6 +85,17 @@ export const PUBLIC_FACING_API = !!getEnv("PUBLIC_FACING_API")
 /** The URL for a Mongo DB instance, currently used for  */
 export const MONGODB_URI = getEnv("MONGODB_URI")
 
+/** Optional: the hyper access key, adding this will convert
+ *  Peril to run in a process separated mode.
+ */
+export const HYPER_ACCESS_KEY = getEnv("HYPER_ACCESS_KEY")
+
+/** Optional: the hyper secret key from hyper.sh. */
+export const HYPER_SECRET_KEY = getEnv("HYPER_SECRET_KEY")
+
+/** Optional: the function name that represents a danger run */
+export const HYPER_FUNC_NAME = getEnv("HYPER_FUNC_NAME")
+
 // Can't run without these
 validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
 
