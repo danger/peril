@@ -8,7 +8,12 @@
     "rootDir": "source",
     "baseUrl": "source",
     "allowJs": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "strict": true
   },
   "exclude": [
     "source/danger/_tests/fixtures",

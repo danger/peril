@@ -21,7 +21,7 @@ import { GitHubInstallation } from "../../../db"
 import { GitHubRunSettings, runPRRun, setupForRequest } from "../github_runner"
 
 const apiFixtures = resolve(__dirname, "fixtures")
-const fixture = file => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
+const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
 jest.mock("../createPRDSL", () => ({
   createPRDSL: () => Promise.resolve({}),

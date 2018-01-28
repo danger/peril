@@ -19,6 +19,7 @@ export default function fetch(
     if (init.headers) {
       for (const prop in init.headers) {
         if (init.headers.hasOwnProperty(prop)) {
+          // @ts-ignore
           output.push("-H", `"${prop}: ${init.headers[prop]}"`)
         }
       }

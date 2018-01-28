@@ -10,7 +10,7 @@ dotenv.config(config)
  * @param {string} configName Config key
  * @returns {string}
  */
-function getEnv(configName): string {
+function getEnv(configName: string): string {
   return process.env[configName]
 }
 

@@ -18,7 +18,6 @@ import * as NodeGithub from "@octokit/rest"
 
 import * as os from "os"
 import * as path from "path"
-import * as write from "write-file-promise"
 import { dsl } from "./danger_run"
 
 import { getTemporaryAccessTokenForInstallation } from "api/github"
