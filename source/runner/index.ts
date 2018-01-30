@@ -75,7 +75,12 @@ let runtimeEnv = {} as any
 
 const run = async (stdin: string) => {
   foundDSL = true
-  logger.info("Got STDIN: " + stdin)
+  if (stdin.length) {
+    logger.error("Got no STDIN")
+  } else {
+    logger.info("Got STDIN: " + stdin)
+  }
+
   let input: PerilRunnerObject
   try {
     input = JSON.parse(stdin) as PerilRunnerObject

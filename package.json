@@ -18,7 +18,8 @@
     "setup:env": "node out/scripts/setup-env.js",
     "setup:plugins": "node out/scripts/setup-plugins.js",
     "precommit": "lint-staged",
-    "prepush": "yarn build; yarn danger:prepush"
+    "prepush": "yarn build; yarn danger:prepush",
+    "hyper:staging:recreate": "hyper pull dangersystems/peril"
   },
   "repository": {
     "type": "git",
@@ -97,7 +98,8 @@
   },
   "lint-staged": {
     "*.json": ["yarn prettier --write", "git add"],
-    "*.@(ts|tsx)": ["tslint --fix", "yarn prettier --write", "git add"],
+    "*.ts": ["tslint --fix", "yarn prettier --write", "git add"],
+    "*test.ts": ["jest -u"],
     "*.md": ["yarn prettier --write", "git add"]
   },
   "prettier": {
