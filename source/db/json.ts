@@ -3,7 +3,6 @@ import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { PERIL_ORG_INSTALLATION_ID } from "../globals"
 import winston from "../logger"
 import { DangerfileReferenceString, DatabaseAdaptor, GitHubInstallation, GithubRepo } from "./index"
-import { GitHubUser } from "./types"
 
 // Effectively you need to have a JSON file that looks like a GitHubInstallation,
 // but also have a `repos` array of GitHubRepo -so you can do per repo rules in there.
@@ -33,22 +32,22 @@ let org: GitHubInstallation = null as any
 
 const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
   /** Deletes an Integration */
-  deleteInstallation: async (installationID: number) => {
+  deleteInstallation: async (_: number) => {
     info(`Skipping saving github repo with slug.`)
   },
 
   /** Deletes a Github repo from the DB */
-  deleteRepo: async (installationID: number, repoName: string) => {
+  deleteRepo: async (_: number, repoName: string) => {
     info(`Skipping deleting github repo ${repoName} due to no db`)
   },
 
   /** Gets an Integration */
-  getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
+  getInstallation: async (_: number): Promise<GitHubInstallation | null> => {
     return org
   },
 
   /** Gets a Github repo from the DB */
-  getRepo: async (installationID: number, repoName: string): Promise<GithubRepo | null> => {
+  getRepo: async (_: number, repoName: string): Promise<GithubRepo | null> => {
     const repos = org.repos
     if (!repos[repoName]) {
       return null

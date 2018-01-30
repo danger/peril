@@ -1,7 +1,6 @@
 import { jsonDSLGenerator } from "danger/distribution/runner/dslGenerator"
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 import perilPlatform from "../../danger/peril_platform"
-import { GitHubInstallation, GithubRepo } from "../../db"
 
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"

@@ -1,28 +1,17 @@
 import * as express from "express"
 import winston from "../../logger"
 
-import * as fs from "fs"
-
-import { getTemporaryAccessTokenForInstallation } from "../../api/github"
-
-import { PERIL_ORG_INSTALLATION_ID } from "../../globals"
-
-import perilPlatform from "../../danger/peril_platform"
-
-import { dsl } from "../../danger/danger_run"
-
-import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
-import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
-import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
-import { createDangerfileRuntimeEnvironment, runDangerfileEnvironment } from "danger/distribution/runner/runners/vm2"
-import { executorForInstallation } from "../../danger/danger_runner"
-import { githubAPIForCommentable } from "../../github/events/github_runner"
-
 import inline from "danger/distribution/runner/runners/inline"
 
-const prDSLRunner = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+import { getTemporaryAccessTokenForInstallation } from "../../api/github"
+import { dsl } from "../../danger/danger_run"
+import { executorForInstallation } from "../../danger/danger_runner"
+import perilPlatform from "../../danger/peril_platform"
+import { githubAPIForCommentable } from "../../github/events/github_runner"
+import { PERIL_ORG_INSTALLATION_ID } from "../../globals"
+
+const prDSLRunner = async (req: express.Request, res: express.Response, _: express.NextFunction) => {
   winston.log("router", `Recieved OK`)
 
   const query = req.query

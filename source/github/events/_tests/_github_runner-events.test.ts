@@ -3,7 +3,7 @@ jest.mock("../../../db/getDB", () => ({
   default: { getRepo: mockGetRepo },
 }))
 
-const mockGHContents = jest.fn((token, repo, path) => {
+const mockGHContents = jest.fn((_, __, path) => {
   if (path === "dangerfile.issue") {
     return Promise.resolve("warn('issue worked')")
   }
@@ -19,9 +19,8 @@ jest.mock("../../../github/lib/github_helpers", () => ({
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
-import { DangerRun, dangerRunForRules } from "../../../danger/danger_run"
-import { GitHubInstallation } from "../../../db"
-import { GitHubRunSettings, runEventRun, setupForRequest } from "../github_runner"
+import { dangerRunForRules } from "../../../danger/danger_run"
+import { runEventRun, setupForRequest } from "../github_runner"
 
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))

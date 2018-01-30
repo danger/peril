@@ -15,14 +15,19 @@ export const hyper = (path: string, method: "GET" | "PUT" | "POST", body?: any) 
       secretKey: HYPER_SECRET_KEY,
     },
   }
+  const headers = aws4.sign(signOption)
 
   if (body) {
     signOption.body = JSON.stringify(body)
   }
 
-  const headers = aws4.sign(signOption)
   const options: any = { method: signOption.method, headers }
-  return fetch(signOption.url).then(res => res.json())
+
+  if (body) {
+    options.body = JSON.stringify(body)
+  }
+
+  return fetch(signOption.url, options).then(res => res.json())
 }
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/update.html

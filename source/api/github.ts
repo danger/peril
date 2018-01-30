@@ -1,11 +1,6 @@
-import * as node_fetch from "node-fetch"
-import { LOG_FETCH_REQUESTS, PERIL_INTEGRATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
-
-import * as fs from "fs"
-import * as os from "os"
+import { PERIL_INTEGRATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../globals"
 
 import * as jwt from "jsonwebtoken"
-import { GitHubInstallation } from "../db"
 import winston from "../logger"
 import originalFetch from "./fetch"
 

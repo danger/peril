@@ -1,9 +1,4 @@
-import winston from "../logger"
-import { GitHubUser } from "./types"
-
 import { GitHubInstallationSettings } from "./GitHubRepoSettings"
-import jsonDB from "./json"
-import postgres from "./postgres"
 
 /**
  * Should look like one of the following:

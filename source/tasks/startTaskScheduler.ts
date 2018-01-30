@@ -1,4 +1,4 @@
-import { MONGODB_URI, PERIL_WEBHOOK_SECRET, PUBLIC_FACING_API } from "../globals"
+import { MONGODB_URI } from "../globals"
 
 import * as Agenda from "agenda"
 import db from "../db/getDB"

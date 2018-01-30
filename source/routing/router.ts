@@ -7,10 +7,7 @@ import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"
 import { settingsUpdater } from "./settings_updater"
 
-import { requestAccessTokenForInstallation } from "../api/github"
 import { RootObject as InstallationCreated } from "../github/events/types/integration_installation_created.types"
-import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
-import { DATABASE_JSON_FILE } from "../globals"
 
 /** Logs */
 const info = (message: string) => {

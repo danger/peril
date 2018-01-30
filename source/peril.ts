@@ -12,7 +12,7 @@ import { startTaskScheduler } from "./tasks/startTaskScheduler"
 
 const peril = () => {
   // Error logging
-  process.on("unhandledRejection", (reason: string, p: any) => {
+  process.on("unhandledRejection", (reason: string, _: any) => {
     logger.error("Error: ", reason)
     throw reason
   })

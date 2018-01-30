@@ -1,8 +1,6 @@
-import { getGitHubFileContents } from "../github/lib/github_helpers"
-import { DATABASE_JSON_FILE, DATABASE_URL } from "../globals"
+import { DATABASE_URL } from "../globals"
 import winston from "../logger"
 import { DatabaseAdaptor, GitHubInstallation, GithubRepo } from "./index"
-import { GitHubUser } from "./types"
 
 // Docs: https://github.com/vitaly-t/pg-promise
 // Examples: https://github.com/vitaly-t/pg-promise/wiki/Learn-by-Example

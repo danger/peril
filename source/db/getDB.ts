@@ -1,10 +1,9 @@
-import { GitHubInstallationSettings } from "./GitHubRepoSettings"
 import jsonDB from "./json"
 import postgres from "./postgres"
 
 import { DatabaseAdaptor } from "./index"
 
-import { DATABASE_JSON_FILE, DATABASE_URL } from "../globals"
+import { DATABASE_JSON_FILE } from "../globals"
 
 let exposedDB: DatabaseAdaptor = null as any
 if (DATABASE_JSON_FILE) {

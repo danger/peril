@@ -2,7 +2,7 @@ import * as express from "express"
 import db from "../db/getDB"
 import { DATABASE_JSON_FILE } from "../globals"
 
-export const settingsUpdater = async (event: string, req: express.Request, res: express.Response, next: any) => {
+export const settingsUpdater = async (event: string, req: express.Request, _: express.Response, __: any) => {
   if (event === "push" && DATABASE_JSON_FILE) {
     const ref = req.body.ref
     const hookRepo = req.body.repository.full_name

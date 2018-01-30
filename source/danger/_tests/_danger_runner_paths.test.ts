@@ -6,16 +6,8 @@ jest.mock("danger/distribution/runner/runners/vm2", () => ({
   },
 }))
 
-import fixturedGitHub from "../../api/_tests/fixtureAPI"
-import {
-  executorForInstallation,
-  handleDangerResults,
-  runDangerAgainstFileInline,
-  runDangerForInstallation,
-} from "../danger_runner"
-
-import vm2 from "danger/distribution/runner/runners/vm2"
 import { dsl } from "../danger_run"
+import { runDangerForInstallation } from "../danger_runner"
 
 const defaultSettings = {
   env_vars: [],
@@ -34,9 +26,7 @@ jest.mock("api/github", () => ({
 
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
-    const platform = fixturedGitHub()
-    const executor = executorForInstallation(platform, vm2)
-    const results = await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, installationSettings)
+    await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, installationSettings)
 
     const path = mockRunDangerfileEnvironment.mock.calls[0][0]
     expect(path.startsWith("/")).toBeTruthy()

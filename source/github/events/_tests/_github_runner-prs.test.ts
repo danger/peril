@@ -16,9 +16,8 @@ jest.mock("../../../danger/danger_runner", () => ({
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
-import { DangerRun, dangerRunForRules } from "../../../danger/danger_run"
-import { GitHubInstallation } from "../../../db"
-import { GitHubRunSettings, runPRRun, setupForRequest } from "../github_runner"
+import { dangerRunForRules } from "../../../danger/danger_run"
+import { runPRRun, setupForRequest } from "../github_runner"
 
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
@@ -79,7 +78,7 @@ describe("when someone edits the dangerfile", () => {
       pull_request: "dangerfile.no.access.pr",
     })[0]
 
-    const results = await runPRRun(run, settings, "token", body.pull_request)
+    await runPRRun(run, settings, "token", body.pull_request)
     expect(mockRunner).toBeCalled()
   })
 })

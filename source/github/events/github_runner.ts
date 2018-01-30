@@ -6,16 +6,13 @@ import { PERIL_BOT_USER_ID } from "../../globals"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import { jsonDSLGenerator } from "danger/distribution/runner/dslGenerator"
-import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 
 import vm2 from "danger/distribution/runner/runners/vm2"
-import { resolve } from "dns"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
 import perilPlatform from "../../danger/peril_platform"
-import { GitHubInstallation, GithubRepo } from "../../db"
+import { GitHubInstallation } from "../../db"
 import db from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 import { Pull_request } from "../events/types/pull_request_opened.types"
@@ -122,7 +119,7 @@ export function runsForEvent(
 export const runEverything = async (
   runs: DangerRun[],
   settings: GitHubRunSettings,
-  installation: GitHubInstallation,
+  _: GitHubInstallation,
   req: express.Request,
   res: express.Response,
   next: any
@@ -365,14 +362,6 @@ const getIssueNumber = (json: any): number | null => {
   }
   if (json.issue) {
     return json.issue.number
-  }
-  return null
-}
-
-// This doesn't feel great, but is OK for now
-const getRepoSlug = (json: any): string | null => {
-  if (json.repository) {
-    return json.repository.full_name
   }
   return null
 }

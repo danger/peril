@@ -7,10 +7,8 @@ jest.mock("../../../db/getDB", () => ({
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
-import { DangerRun, dangerRunForRules } from "../../../danger/danger_run"
 import { GitHubInstallation, GithubRepo } from "../../../db"
-import { GitHubInstallationSettings } from "../../../db/GitHubRepoSettings"
-import { githubDangerRunner, GitHubRunSettings, runPRRun, setupForRequest } from "../github_runner"
+import { githubDangerRunner } from "../github_runner"
 
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))

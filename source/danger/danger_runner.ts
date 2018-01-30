@@ -1,11 +1,9 @@
 import { Platform } from "danger/distribution/platforms/platform"
 import winston from "../logger"
 
-import { DangerfileReferenceString, GitHubInstallation } from "../db"
+import { DangerfileReferenceString } from "../db"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
-import { RootObject as PR } from "../github/events/types/pull_request_opened.types"
 
-import { getCISourceForEnv } from "danger/distribution/ci_source/get_ci_source"
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
@@ -14,17 +12,12 @@ import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 import { DangerRunner } from "danger/distribution/runner/runners/runner"
 import vm2 from "danger/distribution/runner/runners/vm2"
 
-import * as NodeGithub from "@octokit/rest"
-
-import * as os from "os"
 import * as path from "path"
 import { dsl } from "./danger_run"
 
-import { contextForDanger, DangerContext } from "danger/distribution/runner/Dangerfile"
-import { getTemporaryAccessTokenForInstallation } from "../api/github"
+import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 import { HYPER_ACCESS_KEY } from "../globals"
-import { triggerSandboxDangerRun } from "../runner"
-import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
+import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import perilPlatform from "./peril_platform"
 
@@ -152,7 +145,6 @@ export function executorForInstallation(platform: Platform, runner: DangerRunner
     verbose: !!process.env.LOG_FETCH_REQUESTS,
   }
 
-  const execConfig = {}
   // Source can be removed in the next release of Danger
   return new Executor(source, platform, runner, config)
 }

@@ -18,7 +18,7 @@ export const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubE
     const utils: GitHubUtilsDSL | null = github && {
       fileContents: github && github.api.fileContents,
       // Not sure what this looks like for non-PR events
-      fileLinks: (paths, useBasename, repoSlug, branch) => paths.join(", "),
+      fileLinks: (paths, _, __, ___) => paths.join(", "),
     }
 
     const nullFunc: any = () => ""

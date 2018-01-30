@@ -6,7 +6,6 @@ import { readFileSync } from "fs"
 import { resolve } from "path"
 
 const githubFixtures = resolve(__dirname, "..", "..", "github", "_tests", "fixtures")
-const dangerfilesFixtures = resolve(__dirname, "fixtures")
 
 /** Returns JSON from the fixtured dir */
 const requestWithFixturedJSON = (path: string): (() => Promise<any>) => () =>

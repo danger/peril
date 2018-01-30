@@ -1,11 +1,4 @@
-import {
-  dangerRepresentationforPath,
-  DangerRun,
-  dangerRunForRules,
-  dsl,
-  dslTypeForEvent,
-  feedback,
-} from "../danger_run"
+import { dangerRepresentationforPath, dangerRunForRules, dsl, dslTypeForEvent, feedback } from "../danger_run"
 
 describe("for ping", () => {
   it("returns an action when ping is in the rules", () => {

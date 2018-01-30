@@ -1,17 +1,11 @@
-import { FakeCI } from "danger/distribution/ci_source/providers/Fake"
-import { GitHub } from "danger/distribution/platforms/GitHub"
-import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import { Platform } from "danger/distribution/platforms/platform"
-
 import fixturedGitHub from "../../api/_tests/fixtureAPI"
 import { perilObjectForInstallation } from "../../danger/append_peril"
-import { executorForInstallation, handleDangerResults, runDangerAgainstFileInline } from "../danger_runner"
+import { executorForInstallation, runDangerAgainstFileInline } from "../danger_runner"
 
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import vm2 from "danger/distribution/runner/runners/vm2"
-import { existsSync, readFileSync, writeFileSync } from "fs"
-import { tmpdir } from "os"
-import { basename, resolve } from "path"
+import { readFileSync } from "fs"
+import { resolve } from "path"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
