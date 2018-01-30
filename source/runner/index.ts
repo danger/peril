@@ -76,8 +76,14 @@ let runtimeEnv = {} as any
 const run = async (stdin: string) => {
   foundDSL = true
   logger.info("Got STDIN: " + stdin)
+  let input: PerilRunnerObject
+  try {
+    input = JSON.parse(stdin) as PerilRunnerObject
+  } catch (error) {
+    logger.error("STDIN was not JSON: ", stdin)
+    return
+  }
 
-  const input = JSON.parse(stdin) as PerilRunnerObject
   const installation = await db.getInstallation(input.installationID)
   if (!installation) {
     logger.error("Could not find an installation")
