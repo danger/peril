@@ -73,10 +73,11 @@ export const triggerSandboxDangerRun = async (
 let foundDSL = false
 let runtimeEnv = {} as any
 
-const run = async (stdin: string) => {
+export const run = async (stdin: string) => {
   foundDSL = true
-  if (stdin.length) {
+  if (stdin.trim().length === 0) {
     logger.error("Got no STDIN")
+    return
   } else {
     logger.info("Got STDIN: " + stdin)
   }
