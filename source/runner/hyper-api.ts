@@ -9,9 +9,11 @@ let funcUUID: string | null = null
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/index.html
 
+// Path is either an absolute URL, or relative to the hyper API
+
 export const hyper = (path: string, method: "GET" | "PUT" | "POST", body?: any) => {
   const signOption: any = {
-    url: "https://us-west-1.hyper.sh/" + path,
+    url: path.startsWith("http") ? path : "https://us-west-1.hyper.sh/" + path,
     method,
     credential: {
       accessKey: HYPER_ACCESS_KEY,
@@ -57,22 +59,27 @@ export const callHyperFunction = async (body: any) => {
   if (!funcUUID) {
     logger.info("Getting uuid for hyper func")
     const funcInfo = await getHyperFuncInfo()
-    funcUUID = extractUUID(funcInfo)
-    logger.info("Set up UUID", funcUUID)
+    logger.info("Got: " + funcInfo.UUID)
+    funcUUID = funcInfo.UUID
   }
 
-  return hyper(`func/call/${HYPER_FUNC_NAME}/${funcUUID}`, "POST", body)
+  // Note: different API host:
+  const host = "https://us-west-1.hyperfunc.io"
+  return hyper(host + `/call/${HYPER_FUNC_NAME}/${funcUUID}`, "POST", body)
 }
 
-// interface FuncInfo {
-//   Name: string
-//   ContainerSize: string
-//   Timeout: number
-//   UUID: string
-//   Created: string
-// }
+interface FuncInfo {
+  Name: string
+  ContainerSize: string
+  Timeout: number
+  UUID: string
+  Created: string
+}
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20%5BVer.%201.23%5D/Func/inspect.html
-export const getHyperFuncInfo = () => hyper(`funcs/${HYPER_FUNC_NAME}`, "GET") as Promise<string>
+export const getHyperFuncInfo = () => hyper(`funcs/${HYPER_FUNC_NAME}`, "GET") as Promise<FuncInfo>
 
-export const extractUUID = (info: string) => info.match(/UUID=(.*) /)![1]
+// In case you want to iterate faster
+// ;(function() {
+//   callHyperFunction({})
+// })()
