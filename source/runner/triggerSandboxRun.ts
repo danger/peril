@@ -1,4 +1,3 @@
-import * as uuid from "uuid/v1"
 import logger from "../logger"
 
 import { HYPER_FUNC_NAME } from "../globals"
@@ -46,9 +45,8 @@ export const triggerSandboxDangerRun = async (
     path,
   }
 
-  const runUUID = uuid()
-  logger.info(`Calling hyper function with id ${runUUID}`)
-  const call = await callHyperFunction(runUUID, stdOUT)
+  logger.info(`Calling hyper function`)
+  const call = await callHyperFunction(stdOUT)
   logger.info(`Response: ${call}`)
   if (call.CallId) {
     logger.info(`Check logs via:`)
