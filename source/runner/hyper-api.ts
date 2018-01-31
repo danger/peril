@@ -15,12 +15,12 @@ export const hyper = (path: string, method: "GET" | "PUT" | "POST", body?: any) 
       secretKey: HYPER_SECRET_KEY,
     },
   }
-  const headers = aws4.sign(signOption)
 
   if (body) {
     signOption.body = JSON.stringify(body)
   }
 
+  const headers = aws4.sign(signOption)
   const options: any = { method: signOption.method, headers }
 
   if (body) {
