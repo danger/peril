@@ -50,7 +50,8 @@ export const callHyperFunction = async (body: any) => {
   // Use the API to grab the UUID needed for the hyper call
   if (!funcUUID) {
     const deets = await getHyperFuncInfo()
-    funcUUID = deets[0].UUID
+    logger.info("d", deets)
+    funcUUID = deets.UUID
   }
 
   return hyper(`func/call/${HYPER_FUNC_NAME}/${funcUUID}`, "POST", body)
@@ -65,4 +66,4 @@ interface FuncInfo {
 }
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20%5BVer.%201.23%5D/Func/inspect.html
-export const getHyperFuncInfo = () => hyper(`funcs/${HYPER_FUNC_NAME}`, "GET") as Promise<FuncInfo[]>
+export const getHyperFuncInfo = () => hyper(`funcs/${HYPER_FUNC_NAME}`, "GET") as Promise<FuncInfo>
