@@ -1,4 +1,4 @@
-import uuid from "uuid/v1"
+import * as uuid from "uuid/v1"
 import logger from "../logger"
 
 import { HYPER_FUNC_NAME } from "../globals"
