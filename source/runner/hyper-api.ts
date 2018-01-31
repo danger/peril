@@ -17,6 +17,8 @@ export const hyper = (path: string, method: "GET" | "PUT" | "POST", body?: any) 
       accessKey: HYPER_ACCESS_KEY,
       secretKey: HYPER_SECRET_KEY,
     },
+    Accept: "application/json",
+    "Content-Type": "application/json",
   }
 
   if (body) {
@@ -32,10 +34,14 @@ export const hyper = (path: string, method: "GET" | "PUT" | "POST", body?: any) 
 
   return fetch(signOption.url, options).then(res => {
     if (res.ok) {
-      return res.json()
+      if (res.headers.get("Content-Type") === "application/json") {
+        return res.json()
+      } else {
+        return res.text()
+      }
     } else {
       return res.text().then(err => {
-        logger.error(err)
+        logger.error("HTTP Error from Hyper:", err)
         throw err
       })
     }
@@ -49,21 +55,24 @@ export const callHyperFuncUpdate = () => hyper(`func/${HYPER_FUNC_NAME}`, "PUT")
 export const callHyperFunction = async (body: any) => {
   // Use the API to grab the UUID needed for the hyper call
   if (!funcUUID) {
-    const deets = await getHyperFuncInfo()
-    logger.info("d", deets)
-    funcUUID = deets.UUID
+    logger.info("Getting uuid for hyper func")
+    const funcInfo = await getHyperFuncInfo()
+    funcUUID = extractUUID(funcInfo)
+    logger.info("Set up UUID", funcUUID)
   }
 
   return hyper(`func/call/${HYPER_FUNC_NAME}/${funcUUID}`, "POST", body)
 }
 
-interface FuncInfo {
-  Name: string
-  ContainerSize: string
-  Timeout: number
-  UUID: string
-  Created: string
-}
+// interface FuncInfo {
+//   Name: string
+//   ContainerSize: string
+//   Timeout: number
+//   UUID: string
+//   Created: string
+// }
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20%5BVer.%201.23%5D/Func/inspect.html
-export const getHyperFuncInfo = () => hyper(`funcs/${HYPER_FUNC_NAME}`, "GET") as Promise<FuncInfo>
+export const getHyperFuncInfo = () => hyper(`funcs/${HYPER_FUNC_NAME}`, "GET") as Promise<string>
+
+export const extractUUID = (info: string) => info.match(/UUID=(.*) /)![1]
