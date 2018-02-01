@@ -8,8 +8,8 @@
     "build": "yarn tsc",
     "postinstall": "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
     "test": "jest && yarn lint",
-    "lint": "tslint source/**/**/**.ts",
     "test:watch": "jest --watch",
+    "lint": "tslint source/**/**/**.ts",
     "type-check": "tsc --noEmit --pretty",
     "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
     "prettier": "prettier",
@@ -19,6 +19,7 @@
     "setup:plugins": "node out/scripts/setup-plugins.js",
     "precommit": "lint-staged",
     "prepush": "yarn build; yarn danger:prepush",
+    "runner": "node out/runner/index.js",
     "hyper:staging:recreate": "hyper pull dangersystems/peril"
   },
   "repository": {

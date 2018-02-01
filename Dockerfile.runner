@@ -1,12 +1,9 @@
-FROM node:9-slim
+FROM node:8.9-slim
 
-ADD runner /app
-ADD package.json /app/
-RUN ["mv", "/app/package.json", "/app/original-package.json"]
+ADD . /app
 WORKDIR /app
 
-RUN ls
-RUN yarn global add danger
+# This will also trigger the build process
+RUN yarn install
 
-RUN yarn init -y
-RUN node install_deps.js
+# TODO: Get the additional node modules installed
