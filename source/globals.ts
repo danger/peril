@@ -96,10 +96,12 @@ export const HYPER_SECRET_KEY = getEnv("HYPER_SECRET_KEY")
 /** Optional: the function name that represents a danger run */
 export const HYPER_FUNC_NAME = getEnv("HYPER_FUNC_NAME")
 
-// Can't run without these
-validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
+export const validateENVForPerilServer = () => {
+  // Can't run without these
+  validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
 
-// Validate the db
-if (!DATABASE_URL && !DATABASE_JSON_FILE) {
-  throw new Error("Peril cannot work without either a DATABASE_URL or a DATABASE_JSON_FILE")
+  // Validate the db
+  if (!DATABASE_URL && !DATABASE_JSON_FILE) {
+    throw new Error("Peril cannot work without either a DATABASE_URL or a DATABASE_JSON_FILE")
+  }
 }

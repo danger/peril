@@ -2,7 +2,7 @@ import * as bodyParser from "body-parser"
 import * as express from "express"
 import * as xhub from "express-x-hub"
 
-import { MONGODB_URI, PERIL_WEBHOOK_SECRET, PUBLIC_FACING_API } from "./globals"
+import { MONGODB_URI, PERIL_WEBHOOK_SECRET, PUBLIC_FACING_API, validateENVForPerilServer } from "./globals"
 
 import prDSLRunner from "./api/pr/dsl"
 import logger from "./logger"
@@ -11,6 +11,8 @@ import startScheduler from "./scheduler/startScheduler"
 import { startTaskScheduler } from "./tasks/startTaskScheduler"
 
 const peril = () => {
+  validateENVForPerilServer()
+
   // Error logging
   process.on("unhandledRejection", (reason: string, _: any) => {
     logger.error("Error: ", reason)
