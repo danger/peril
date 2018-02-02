@@ -1,9 +1,10 @@
 import * as getSTDIN from "get-stdin"
 import nodeCleanup = require("node-cleanup")
-
 import logger from "../logger"
 
 import { run } from "./run"
+
+let foundDSL = false
 
 // Wait till the end of the process to print out the results. Will
 // only post the results when the process has succeeded, leaving the
@@ -19,4 +20,16 @@ nodeCleanup((exitCode, signal) => {
 })
 
 // Start waiting on STDIN for the DSL
-getSTDIN().then(run)
+getSTDIN().then(stdin => {
+  foundDSL = true
+  run(stdin)
+})
+
+// Add a timeout so that CI doesn't run forever if something has broken.
+setTimeout(() => {
+  if (!foundDSL) {
+    logger.error("Timeout: Failed to get the Peril DSL after 2 seconds")
+    process.exitCode = 1
+    process.exit(1)
+  }
+}, 2000)
