@@ -7,3 +7,4 @@ WORKDIR /app
 RUN yarn install
 
 # TODO: Get the additional node modules installed
+RUN node out/scripts/hyper/install-hyper-deps.js

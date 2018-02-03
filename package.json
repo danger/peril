@@ -33,7 +33,8 @@
     "danger-plugin-spellcheck": "1.2.2",
     "danger-plugin-yarn": "1.2.1",
     "lodash": "4.17.4",
-    "danger": "^3"
+    "danger": "^3",
+    "semver-sort": "^0.0.4"
   },
   "dependencies": {
     "@octokit/rest": "^14.0.7",
