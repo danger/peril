@@ -27,6 +27,11 @@ export interface PerilRunnerObject {
   // TODO: Validate the source came from Peril - public key based on the GH private one?
 }
 
+// You can fake this by doing something like:
+//
+// cat source/runner/fixtures/branch-push.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | hyper func call danger-peril-staging
+//
+
 /** This function is used inside Peril */
 export const triggerSandboxDangerRun = async (
   type: dsl,

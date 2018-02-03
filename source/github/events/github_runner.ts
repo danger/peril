@@ -15,6 +15,7 @@ import perilPlatform from "../../danger/peril_platform"
 import { GitHubInstallation } from "../../db"
 import db from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
+import logger from "../../logger"
 import { Pull_request } from "../events/types/pull_request_opened.types"
 import { canUserWriteToRepo, getGitHubFileContents } from "../lib/github_helpers"
 import { createPRDSL } from "./createPRDSL"
@@ -102,6 +103,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   }
 
   const runs = runsForEvent(event, action, installation, settings)
+  logger.info(`Found ${runs.length} runs for ${action}`)
   await runEverything(runs, settings, installation, req, res, next)
 }
 

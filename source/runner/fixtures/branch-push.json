@@ -139,7 +139,7 @@
     }
   },
   "dslType": "run",
-  "token": "v1.1234",
+  "token": "12345",
   "peril": { "env": {} },
   "path": "danger/peril-settings@org/new_tag.ts"
 }
