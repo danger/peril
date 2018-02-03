@@ -14,7 +14,8 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strict": true
+    "strict": true,
+    "pretty": true
   },
   "exclude": [
     "source/danger/_tests/fixtures",

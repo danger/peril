@@ -1,10 +1,9 @@
-import * as getSTDIN from "get-stdin"
 import nodeCleanup = require("node-cleanup")
 import logger from "../logger"
 
 import { run } from "./run"
 
-let foundDSL = false
+const foundDSL = false
 
 logger.info("0.")
 
@@ -23,14 +22,6 @@ nodeCleanup((exitCode, signal) => {
 
 logger.info("1.")
 
-// Start waiting on STDIN for the DSL
-getSTDIN().then(stdin => {
-  foundDSL = true
-  run(stdin)
-})
-
-logger.info("2.")
-
 // Add a timeout so that CI doesn't run forever if something has broken.
 setTimeout(() => {
   logger.info("In the setTimeout")
@@ -46,3 +37,4 @@ import { readFileSync } from "fs"
 const stdin1 = readFileSync("/dev/stdin").toString()
 
 logger.info("Got 1:", stdin1)
+run(stdin1)

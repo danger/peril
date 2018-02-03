@@ -7,10 +7,8 @@ import inlineRunner from "danger/distribution/runner/runners/inline"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { perilObjectForInstallation } from "../danger/append_peril"
 import { dangerRepresentationforPath, dsl } from "../danger/danger_run"
-import { executorForInstallation } from "../danger/danger_runner"
+import { executorForInstallation, InstallationToRun } from "../danger/danger_runner"
 import { getPerilPlatformForDSL } from "../danger/peril_platform"
-import db from "../db/getDB"
-import { GitHubInstallation } from "../db/index"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import { PerilRunnerObject } from "./triggerSandboxRun"
 
@@ -32,11 +30,7 @@ export const run = async (stdin: string) => {
     return
   }
 
-  const installation = await db.getInstallation(input.installationID)
-  if (!installation) {
-    logger.error("Could not find an installation")
-    return
-  }
+  const installation = input.installation
 
   const dslMode = input.dslType === "pr" ? dsl.pr : dsl.import
 
@@ -52,7 +46,7 @@ export const run = async (stdin: string) => {
 // There's a lot of redundnacy between these, but at least they're somewhat separated in their mental
 // model, used to be much harder to keep track of their diffferences
 
-const runDangerEvent = async (installation: GitHubInstallation, input: PerilRunnerObject) => {
+const runDangerEvent = async (installation: InstallationToRun, input: PerilRunnerObject) => {
   const token = await getTemporaryAccessTokenForInstallation(installation.id)
 
   // const platform = getPerilPlatformForDSL(dsl.import, null, input.dsl)
@@ -75,7 +69,7 @@ const runDangerEvent = async (installation: GitHubInstallation, input: PerilRunn
   await inlineRunner.runDangerfileEnvironment(dangerfile, undefined, runtimeEnv)
 }
 
-const runDangerPR = async (installation: GitHubInstallation, input: PerilRunnerObject) => {
+const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerObject) => {
   const token = await getTemporaryAccessTokenForInstallation(installation.id)
 
   const platform = getPerilPlatformForDSL(dsl.pr, null, input.dsl)

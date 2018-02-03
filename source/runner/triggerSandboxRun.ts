@@ -8,6 +8,7 @@ import { DangerfileReferenceString } from "../db/index"
 
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { dsl } from "../danger/danger_run"
+import { InstallationToRun } from "../danger/danger_runner"
 
 export interface PerilRunnerObject {
   /** The DSL for JSON, could be a DangerDSLJSON type or the raw webhook */
@@ -17,7 +18,7 @@ export interface PerilRunnerObject {
   /** github token */
   token: string
   /** Installation number */
-  installationID: number
+  installation: InstallationToRun
   /** DSL type */
   dslType: "pr" | "run"
   /** Optional Peril settings? (think like task) */
@@ -35,14 +36,14 @@ export interface PerilRunnerObject {
 /** This function is used inside Peril */
 export const triggerSandboxDangerRun = async (
   type: dsl,
-  installationID: number,
+  installation: InstallationToRun,
   path: DangerfileReferenceString,
   dslJSON: any,
   peril: any
 ) => {
-  const token = await getTemporaryAccessTokenForInstallation(installationID)
+  const token = await getTemporaryAccessTokenForInstallation(installation.id)
   const stdOUT: PerilRunnerObject = {
-    installationID,
+    installation,
     dsl: dslJSON,
     dslType: type === dsl.pr ? "pr" : "run",
     token,

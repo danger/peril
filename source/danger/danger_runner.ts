@@ -54,7 +54,7 @@ export async function runDangerForInstallation(
   const peril = perilObjectForInstallation(installation, process.env, dangerDSL && dangerDSL.peril)
 
   if (HYPER_ACCESS_KEY) {
-    return await triggerSandboxDangerRun(type, installation.id, reference, dangerDSL, peril)
+    return await triggerSandboxDangerRun(type, installation, reference, dangerDSL, peril)
   } else {
     return await runDangerAgainstFileInline(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
   }

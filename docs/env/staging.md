@@ -13,5 +13,5 @@
 **Scripts:**
 
 * Logs: `heroku logs --app peril-danger-staging --tail`
-* Creating the hyper func: `hyper func create --name danger-peril-staging dangersystems/peril "node out/scripts/runner/index.js"`
-* Updating the container for a func: `hyper pull dangersystems/peril` - it will call with the new peril docker image on the next run
+* Creating the hyper func: `hyper func create --size s1 --name danger-peril-staging dangersystems/peril node out/scripts/runner/index.js`
+* Updating the container for a func: `hyper pull dangersystems/peril:runner` - it will call with the new peril docker image on the next func run
