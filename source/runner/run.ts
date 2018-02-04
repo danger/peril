@@ -5,7 +5,7 @@ import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 logger.info("-01")
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 logger.info("-02")
-import inlineRunner from "danger/distribution/runner/runners/inline"
+// import inlineRunner from "danger/distribution/runner/runners/inline"
 logger.info("-1")
 
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
@@ -24,6 +24,7 @@ import { PerilRunnerObject } from "./triggerSandboxRun"
 logger.info("-2")
 
 let runtimeEnv = {} as any
+const inlineRunner = {} as any
 
 export const run = async (stdin: string) => {
   if (stdin.trim().length === 0) {
