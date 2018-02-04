@@ -1,13 +1,25 @@
-import { readFileSync } from "fs"
+import * as getSTDIN from "get-stdin"
 import nodeCleanup = require("node-cleanup")
 import logger from "../logger"
 
 try {
-  logger.info(".")
+  // We do not trust that the import paths will not provide errors
+  // this is my fault for being smart, and can slowly get fixed in the
+  // future. Today however, running Peril's runner in the process
+  // with no env vars can be drastically different, and cause unforeseen crashes
+  // which don't show up in hyper.
+  //
+  // So we catch all errors, and thus the upcoming require instead of an import.
 
-  const foundDSL = false
+  // tslint:disable-next-line:no-var-requires
+  const run = require("./run").run
 
-  logger.info("0.")
+  // Provide a timeout mechanism for the STDIN from the hyper func host
+  let foundDSL = false
+  getSTDIN().then(stdin => {
+    foundDSL = true
+    run(stdin)
+  })
 
   // Wait till the end of the process to print out the results. Will
   // only post the results when the process has succeeded, leaving the
@@ -22,26 +34,19 @@ try {
     return undefined
   })
 
-  logger.info("1.")
+  process.on("unhandledRejection", (error: Error) => {
+    logger.error("unhandledRejection:", error.message, error.stack)
+    process.exitCode = 1
+  })
 
   // Add a timeout so that CI doesn't run forever if something has broken.
   setTimeout(() => {
-    logger.info("In the setTimeout")
     if (!foundDSL) {
       logger.error("Timeout: Failed to get the Peril DSL after 2 seconds")
       process.exitCode = 1
       process.exit(1)
     }
   }, 2000)
-
-  logger.info("Waiting on the STDIN now.")
-  const stdin1 = readFileSync("/dev/stdin").toString()
-
-  logger.info("Got 1:", stdin1)
-  // tslint:disable-next-line:no-var-requires
-  const run = require("./run").run
-
-  run(stdin1)
 } catch (error) {
   const err = error as Error
   logger.error(`Error ${err.name} in the runner: ${err.message}\n${err.stack}`)

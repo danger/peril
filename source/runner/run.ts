@@ -1,30 +1,18 @@
 import logger from "../logger"
 
-logger.info("-0")
 import { contextForDanger } from "danger/distribution/runner/Dangerfile"
-logger.info("-01")
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
-logger.info("-02")
-// import inlineRunner from "danger/distribution/runner/runners/inline"
-logger.info("-1")
+import inlineRunner from "danger/distribution/runner/runners/inline"
 
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
-logger.info("-11")
 import { perilObjectForInstallation } from "../danger/append_peril"
-logger.info("-12")
 import { dangerRepresentationforPath, dsl } from "../danger/danger_run"
-logger.info("-13")
 import { executorForInstallation, InstallationToRun } from "../danger/danger_runner"
-logger.info("-14")
 import { getPerilPlatformForDSL } from "../danger/peril_platform"
-logger.info("-15")
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
-logger.info("-16")
 import { PerilRunnerObject } from "./triggerSandboxRun"
-logger.info("-2")
 
 let runtimeEnv = {} as any
-const inlineRunner = {} as any
 
 export const run = async (stdin: string) => {
   if (stdin.trim().length === 0) {
@@ -104,4 +92,3 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   await exec.handleResultsPostingToPlatform(results)
   logger.info("Done")
 }
-logger.info("-3")
