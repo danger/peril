@@ -1,17 +1,17 @@
 import * as express from "express"
 import logger from "../logger"
-import { updateHyperFuncImageUpdate } from "../runner/hyper-api"
+import { deleteHyperImage, getAllHyperImages, updateHyperFuncImageUpdate } from "../runner/hyper-api"
 
 // https://docs.docker.com/docker-hub/webhooks/
 
-export interface PushData {
+interface PushData {
   images: string[]
   pushed_at: number
   pusher: string
   tag: string
 }
 
-export interface Repository {
+interface Repository {
   comment_count: string
   date_created: number
   description: string
@@ -29,16 +29,36 @@ export interface Repository {
   status: string
 }
 
-export interface DockerHubWebhook {
+interface DockerHubWebhook {
   callback_url: string
   push_data: PushData
   repository: Repository
+}
+
+//
+
+interface HyperImage {
+  RepoTags: string[]
+  Id: string
+  Created: number
+  Size: number
+  VirtualSize: number
+  Labels: {}
 }
 
 export const hyperUpdater = async (req: express.Request, res: express.Response, __: any) => {
   const webhook = req.body as DockerHubWebhook
   const image = `${webhook.repository.repo_name}:${webhook.push_data.tag}`
   logger.info(`Updating hyper image for ${image}`)
-  updateHyperFuncImageUpdate(image)
   res.status(200).json({ ok: true })
+
+  // Pulls down the new version from dockerhub
+  await updateHyperFuncImageUpdate(image)
+
+  // Deletes anything that's not the right tag
+  const allImages: HyperImage[] = await getAllHyperImages()
+  const notDanger = allImages.filter(i => i.RepoTags.some(t => t.includes("danger")))
+  for (const iterator of notDanger) {
+    deleteHyperImage(iterator.Id)
+  }
 }

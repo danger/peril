@@ -77,6 +77,9 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
   const dangerfile = await getGitHubFileContentsFromLocation(token, dangerfileLocation, dangerfileLocation.repoSlug!)
 
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
+  // if (runtimeEnv.sandbox) {
+  //   await appendPerilContextToDSL(installation.id, undefined, runtimeEnv.sandbox, peril)
+  // }
   await inlineRunner.runDangerfileEnvironment(dangerfile, undefined, runtimeEnv)
 }
 

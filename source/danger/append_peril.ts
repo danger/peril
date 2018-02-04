@@ -13,9 +13,25 @@ logger.info("--6")
 import { InstallationToRun } from "./danger_runner"
 logger.info("--7")
 
-export async function appendPerilContextToDSL(installationID: number, sandbox: DangerContext, peril: PerilDSL) {
+/**
+ * Basically adds a re-authenticated GH API client for the Dangerfile
+ * can either happen by passing in the installation ID to generate a new token, or
+ * by passing in an existing token.
+ *
+ * Then adds the peril object into the DSL sandbox
+ *
+ * @param installationID
+ * @param sandbox
+ * @param peril
+ */
+export async function appendPerilContextToDSL(
+  installationID: number,
+  authToken: string | undefined,
+  sandbox: DangerContext,
+  peril: PerilDSL
+) {
   if (sandbox.danger && sandbox.danger.github) {
-    const token = await getTemporaryAccessTokenForInstallation(installationID)
+    const token = authToken || (await getTemporaryAccessTokenForInstallation(installationID))
     const api = new NodeGithub()
 
     api.authenticate({
@@ -26,11 +42,17 @@ export async function appendPerilContextToDSL(installationID: number, sandbox: D
     sandbox.danger.github.api = api
   }
 
-  // TODO: Add this to the Danger DSL in Danger, as an optional
   const anySandbox = sandbox as any
   anySandbox.peril = peril
 }
 
+/**
+ *  The main function for generating the Peril object for the DSL
+ *
+ * @param installation used to grab settings like the env vars
+ * @param environment nearly always process.env in prod
+ * @param peril an existing peril object, which will be splatted in
+ */
 export const perilObjectForInstallation = (
   installation: InstallationToRun,
   environment: any,

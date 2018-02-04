@@ -76,7 +76,7 @@ export async function runDangerAgainstFileInline(
 
   // This can expand with time
   if (runtimeEnv.sandbox) {
-    await appendPerilContextToDSL(installation.id, runtimeEnv.sandbox, peril)
+    await appendPerilContextToDSL(installation.id, undefined, runtimeEnv.sandbox, peril)
   }
 
   let results: DangerResults

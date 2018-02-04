@@ -11,7 +11,7 @@ let funcUUID: string | null = null
 
 // Path is either an absolute URL, or relative to the hyper API
 
-export const hyper = (path: string, method: "GET" | "PUT" | "POST", body?: any) => {
+export const hyper = (path: string, method: "GET" | "PUT" | "POST" | "DELETE", body?: any) => {
   const signOption: any = {
     url: path.startsWith("http") ? path : "https://us-west-1.hyper.sh/" + path,
     method,
@@ -55,6 +55,12 @@ export const updateHyperFuncImageUpdate = (name: string) => hyper(`images/create
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/update.html
 export const callHyperFuncUpdate = () => hyper(`func/${HYPER_FUNC_NAME}`, "PUT")
+
+// https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Image/list.html
+export const getAllHyperImages = () => hyper("/images/json?all=0", "GET")
+
+// https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Image/remove.html
+export const deleteHyperImage = (name: string) => hyper(`/images/${name}`, "DELETE")
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/call.html
 export const callHyperFunction = async (body: any) => {
