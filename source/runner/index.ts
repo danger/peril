@@ -1,6 +1,8 @@
 import nodeCleanup = require("node-cleanup")
 import logger from "../logger"
 
+logger.info(".")
+
 import { run } from "./run"
 
 const foundDSL = false
