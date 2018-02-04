@@ -4,7 +4,6 @@ import * as xhub from "express-x-hub"
 
 import {
   HYPER_ACCESS_KEY,
-  HYPER_FUNC_NAME,
   MONGODB_URI,
   PERIL_WEBHOOK_SECRET,
   PUBLIC_FACING_API,
