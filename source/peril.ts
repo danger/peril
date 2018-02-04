@@ -52,7 +52,7 @@ const peril = () => {
     // This is mainly so you don't need to remember to do a `hyper pull` after
     // an update.
     const url = `/api/v1/webook/dockerhub/${HYPER_ACCESS_KEY}`
-    logger.info(`Started up the dockerhub webhook for: ${url}`)
+    logger.info(`Started up the dockerhub webhook on ${url}`)
     app.post(url, hyperUpdater)
   }
 
