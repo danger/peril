@@ -18,6 +18,7 @@ if (DATABASE_JSON_FILE) {
   logger.info(`Using ${DATABASE_URL} as a postgres db`)
   exposedDB = postgres
 } else {
+  logger.info(`Throwing due to db accessed without ENV vars`)
   throw new Error("No DATABASE_JSON_FILE or DATABASE_URL set up in ENV, this is likely an accident.")
 }
 
