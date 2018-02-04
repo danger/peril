@@ -35,9 +35,10 @@ export interface DockerHubWebhook {
   repository: Repository
 }
 
-export const hyperUpdater = async (req: express.Request, _: express.Response, __: any) => {
+export const hyperUpdater = async (req: express.Request, res: express.Response, __: any) => {
   const webhook = req.body as DockerHubWebhook
   const image = `${webhook.repository.repo_name}:${webhook.push_data.tag}`
   logger.info(`Updating hyper image for ${image}`)
   updateHyperFuncImageUpdate(image)
+  res.status(200).json({ ok: true })
 }
