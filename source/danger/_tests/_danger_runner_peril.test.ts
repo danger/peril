@@ -9,7 +9,7 @@ it("adds peril to the DSL", async () => {
   const sandbox = { danger: { github: {} } } as any
   const perilDSL = { perilDSL: true } as any
 
-  await appendPerilContextToDSL(123, sandbox, perilDSL)
+  await appendPerilContextToDSL(123, undefined, sandbox, perilDSL)
   expect(sandbox.peril).toEqual({ perilDSL: true })
 })
 
@@ -17,7 +17,7 @@ it("adds a GH API object to the DSL", async () => {
   const sandbox = { danger: { github: {} } } as any
   const perilDSL = { perilDSL: true } as any
 
-  await appendPerilContextToDSL(123, sandbox, perilDSL)
+  await appendPerilContextToDSL(123, undefined, sandbox, perilDSL)
 
   expect(sandbox.danger.github.api).toBeTruthy()
 
