@@ -50,6 +50,9 @@ export const hyper = (path: string, method: "GET" | "PUT" | "POST", body?: any) 
   })
 }
 
+// https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Image/create.html
+export const updateHyperFuncImageUpdate = (name: string) => hyper(`images/create?fromImage=${name}`, "POST")
+
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/update.html
 export const callHyperFuncUpdate = () => hyper(`func/${HYPER_FUNC_NAME}`, "PUT")
 

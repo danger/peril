@@ -2,10 +2,18 @@ import * as bodyParser from "body-parser"
 import * as express from "express"
 import * as xhub from "express-x-hub"
 
-import { MONGODB_URI, PERIL_WEBHOOK_SECRET, PUBLIC_FACING_API, validateENVForPerilServer } from "./globals"
+import {
+  HYPER_ACCESS_KEY,
+  HYPER_FUNC_NAME,
+  MONGODB_URI,
+  PERIL_WEBHOOK_SECRET,
+  PUBLIC_FACING_API,
+  validateENVForPerilServer,
+} from "./globals"
 
 import prDSLRunner from "./api/pr/dsl"
 import logger from "./logger"
+import { hyperUpdater } from "./routing/hyper_updater"
 import webhook from "./routing/router"
 import startScheduler from "./scheduler/startScheduler"
 import { startTaskScheduler } from "./tasks/startTaskScheduler"
@@ -36,6 +44,15 @@ const peril = () => {
   if (PUBLIC_FACING_API) {
     logger.info("This is a public facing Peril instance.")
     app.get("/api/v1/pr/dsl", prDSLRunner)
+  }
+
+  if (HYPER_ACCESS_KEY) {
+    // You need to set up a dockerhub webhook that is your peril address
+    // with you hyper access key as a secret for your URL.
+    //
+    // This is mainly so you don't need to remember to do a `hyper pull` after
+    // an update.
+    app.get(`/api/v1/webook/dockerhub/${HYPER_ACCESS_KEY}`, hyperUpdater)
   }
 
   // Start server
