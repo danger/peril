@@ -1,5 +1,12 @@
 {
-  "installationID": 74679,
+  "installation": {
+    "id": 74679,
+    "settings": {
+      "env_vars": [],
+      "ignored_repos": [],
+      "modules": ["danger-plugin-spellcheck", "danger-plugin-yarn", "@slack/client", "semver-sort"]
+    }
+  },
   "dsl": {
     "github": {
       "ref": "greenkeeper/typedoc-0.10.0",
