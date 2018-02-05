@@ -57,7 +57,9 @@ export const hyperUpdater = async (req: express.Request, res: express.Response, 
 
   // Deletes anything that's not the right tag
   const allImages: HyperImage[] = await getAllHyperImages()
-  const notDanger = allImages.filter(i => i.RepoTags.some(t => t.includes("danger")))
+  logger.info(`Found ${allImages.length} images`)
+  const notDanger = allImages.filter(i => i.RepoTags.some(t => !t.includes("danger")))
+  logger.info(`Removing ${notDanger.length} images`)
   for (const iterator of notDanger) {
     deleteHyperImage(iterator.Id)
   }
