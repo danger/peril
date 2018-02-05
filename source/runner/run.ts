@@ -56,7 +56,7 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
 
   // Create a DSL that is basically just the webhook
   // TODO: This probably needs expanding to the util funcs etc
-  const context = contextForDanger({ github: input.dsl } as any)
+  const context = contextForDanger({ github: input.dsl.github } as any)
   const peril = perilObjectForInstallation(installation, process.env, input.peril)
   await appendPerilContextToDSL(installation.id, input.token, context, peril)
 
