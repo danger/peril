@@ -9,7 +9,7 @@
   },
   "dsl": {
     "github": {
-      "Hello": "World"
+      "hello": "Hi there, from the DSL"
     }
   },
   "dslType": "run",

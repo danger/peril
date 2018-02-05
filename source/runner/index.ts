@@ -1,10 +1,13 @@
 import * as getSTDIN from "get-stdin"
 import nodeCleanup = require("node-cleanup")
-import logger from "../logger"
 
 try {
+  // tslint:disable-next-line:no-var-requires
+  const logger = require("../logger")
+  logger.info("Started Runner")
+
   // We do not trust that the import paths will not provide errors
-  // this is my fault for being smart, and can slowly get fixed in the
+  // this is my fault for being too smart, and can slowly get fixed in the
   // future. Today however, running Peril's runner in the process
   // with no env vars can be drastically different, and cause unforeseen crashes
   // which don't show up in hyper.
@@ -13,6 +16,7 @@ try {
 
   // tslint:disable-next-line:no-var-requires
   const run = require("./run").run
+  logger.info("Getting STDIN")
 
   // Provide a timeout mechanism for the STDIN from the hyper func host
   let foundDSL = false
@@ -28,7 +32,7 @@ try {
     logger.info(`Process has finished with ${exitCode} ${signal}`)
 
     // TODO: Failure cases?
-    logger.info("TODO")
+    // logger.info("TODO")
     // runtimeEnv.results
 
     return undefined
@@ -49,6 +53,8 @@ try {
   }, 2000)
 } catch (error) {
   const err = error as Error
+  // tslint:disable-next-line:no-var-requires
+  const logger = require("../logger")
   logger.error(`Error ${err.name} in the runner: ${err.message}\n${err.stack}`)
   throw error
 }
