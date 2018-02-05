@@ -1,0 +1,19 @@
+{
+  "installation": {
+    "id": 74679,
+    "settings": {
+      "env_vars": [],
+      "ignored_repos": [],
+      "modules": ["danger-plugin-spellcheck", "danger-plugin-yarn", "@slack/client", "semver-sort"]
+    }
+  },
+  "dsl": {
+    "github": {
+      "Hello": "World"
+    }
+  },
+  "dslType": "run",
+  "token": "12345",
+  "peril": { "env": {} },
+  "path": "danger/peril@source/runner/fixtures/dangerfile/hello_world.ts"
+}
