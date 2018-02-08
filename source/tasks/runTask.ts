@@ -1,11 +1,3 @@
-const originalRequire = require
-// @ts-ignore
-require = path => {
-  // tslint:disable-next-line:no-console
-  console.log("Req rt: ", path)
-  return originalRequire(path)
-}
-
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { dangerRepresentationforPath, dsl } from "../danger/danger_run"
 import { runDangerForInstallation } from "../danger/danger_runner"

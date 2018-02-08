@@ -1,9 +1,14 @@
-const originalRequire = require
 // @ts-ignore
-require = path => {
-  // tslint:disable-next-line:no-console
-  console.log("Req run/ind: ", path)
-  return originalRequire(path)
+const Module = require("module")
+
+const oldRequire = Module.prototype.require
+
+Module.prototype.require = function(id: string) {
+  const ts = process.hrtime()
+  const res = oldRequire.call(this, id)
+  const t = process.hrtime(ts)
+  console.log("require('%s') took %s ms", id, t[0] * 1000 + t[1] / 1e6)
+  return res
 }
 
 import * as getSTDIN from "get-stdin"
