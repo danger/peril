@@ -1,3 +1,11 @@
+const originalRequire = require
+// @ts-ignore
+require = path => {
+  // tslint:disable-next-line:no-console
+  console.log("Req: ", path)
+  return originalRequire(path)
+}
+
 import * as getSTDIN from "get-stdin"
 import nodeCleanup = require("node-cleanup")
 
