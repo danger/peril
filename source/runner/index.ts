@@ -1,4 +1,5 @@
 // @ts-ignore
+// tslint:disable-next-line:no-var-requires
 const Module = require("module")
 
 const oldRequire = Module.prototype.require
@@ -7,6 +8,7 @@ Module.prototype.require = function(id: string) {
   const ts = process.hrtime()
   const res = oldRequire.call(this, id)
   const t = process.hrtime(ts)
+  // tslint:disable-next-line:no-console
   console.log("require('%s') took %s ms", id, t[0] * 1000 + t[1] / 1e6)
   return res
 }
