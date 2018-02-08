@@ -1,11 +1,3 @@
-const originalRequire = require
-// @ts-ignore
-require = path => {
-  // tslint:disable-next-line:no-console
-  console.log("Req runrun: ", path)
-  return originalRequire(path)
-}
-
 // I test this locally by renaming the .env file, then running:
 //
 // ❯ yarn build; cat source/runner/fixtures/branch-push.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | env DEBUG="*" node out/runner/index.js

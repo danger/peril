@@ -1,11 +1,3 @@
-const originalRequire = require
-// @ts-ignore
-require = path => {
-  // tslint:disable-next-line:no-console
-  console.log("Req ap: ", path)
-  return originalRequire(path)
-}
-
 import * as NodeGithub from "@octokit/rest"
 
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"

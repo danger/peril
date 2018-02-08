@@ -1,18 +1,3 @@
-// @ts-ignore
-// tslint:disable-next-line:no-var-requires
-const Module = require("module")
-
-const oldRequire = Module.prototype.require
-
-Module.prototype.require = function(id: string) {
-  const ts = process.hrtime()
-  const res = oldRequire.call(this, id)
-  const t = process.hrtime(ts)
-  // tslint:disable-next-line:no-console
-  console.log("require('%s') took %s ms", id, t[0] * 1000 + t[1] / 1e6)
-  return res
-}
-
 import * as getSTDIN from "get-stdin"
 import nodeCleanup = require("node-cleanup")
 
@@ -31,7 +16,6 @@ try {
 
   // tslint:disable-next-line:no-var-requires
   const run = require("./run").run
-  logger.info("Getting STDIN")
 
   // Provide a timeout mechanism for the STDIN from the hyper func host
   let foundDSL = false
