@@ -235,6 +235,7 @@ export const runPRRun = async (
   // in the event JSON and if it's not there then use master
   // prioritise the run metadata
 
+  // TODO: this check can crash during a non-repo event
   const dangerfileRepoForPR = pr.head.repo.full_name
   const dangerfileBranchForPR = pr.head.ref
   const neededDangerfileIsLocalRepo = !run.repoSlug

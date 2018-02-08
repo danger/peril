@@ -3,7 +3,7 @@ import nodeCleanup = require("node-cleanup")
 
 try {
   // tslint:disable-next-line:no-var-requires
-  const logger = require("../logger")
+  const logger = require("../logger").default
   logger.info("Started Runner")
 
   // We do not trust that the import paths will not provide errors
@@ -54,7 +54,7 @@ try {
 } catch (error) {
   const err = error as Error
   // tslint:disable-next-line:no-var-requires
-  const logger = require("../logger")
+  const logger = require("../logger").default
   logger.error(`Error ${err.name} in the runner: ${err.message}\n${err.stack}`)
   throw error
 }
