@@ -1,3 +1,11 @@
+const originalRequire = require
+// @ts-ignore
+require = path => {
+  // tslint:disable-next-line:no-console
+  console.log("Req sts: ", path)
+  return originalRequire(path)
+}
+
 import { MONGODB_URI } from "../globals"
 
 import * as Agenda from "agenda"
