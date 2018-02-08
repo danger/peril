@@ -2,7 +2,7 @@ const originalRequire = require
 // @ts-ignore
 require = path => {
   // tslint:disable-next-line:no-console
-  console.log("Req: ", path)
+  console.log("Req runrun: ", path)
   return originalRequire(path)
 }
 

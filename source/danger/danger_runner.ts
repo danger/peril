@@ -1,3 +1,11 @@
+const originalRequire = require
+// @ts-ignore
+require = rpath => {
+  // tslint:disable-next-line:no-console
+  console.log("Req dr: ", rpath)
+  return originalRequire(rpath)
+}
+
 import { Platform } from "danger/distribution/platforms/platform"
 import winston from "../logger"
 
