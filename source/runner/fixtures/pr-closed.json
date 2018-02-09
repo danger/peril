@@ -538,10 +538,18 @@
       },
       "utils": {}
     },
-    "utils": {}
+    "utils": {},
+    "settings": {
+      "github": {
+        "accessToken": "12345",
+        "baseURL": null,
+        "additionalHeaders": {
+          "Accept": "application/vnd.github.machine-man-preview+json"
+        }
+      }
+    }
   },
   "dslType": "pr",
-  "token": "123456123",
   "peril": { "env": {} },
   "path": "danger/peril-settings@org/aeryn.ts"
 }

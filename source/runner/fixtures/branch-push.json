@@ -143,10 +143,18 @@
         "site_admin": false
       },
       "installation": { "id": 74679 }
+    },
+    "settings": {
+      "github": {
+        "accessToken": "12345",
+        "baseURL": null,
+        "additionalHeaders": {
+          "Accept": "application/vnd.github.machine-man-preview+json"
+        }
+      }
     }
   },
   "dslType": "run",
-  "token": "12345",
   "peril": { "env": {} },
   "path": "danger/peril-settings@org/new_tag.ts"
 }
