@@ -56,9 +56,10 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
 
   // Create a DSL that is basically just the webhook
   // TODO: This probably needs expanding to the util funcs etc
+  const token = input.dsl.settings.github.accessToken
   const context = contextForDanger({ github: input.dsl.github } as any)
   const peril = perilObjectForInstallation(installation, process.env, input.peril)
-  await appendPerilContextToDSL(installation.id, input.token, context, peril)
+  await appendPerilContextToDSL(installation.id, token, context, peril)
 
   const dangerfileLocation = dangerRepresentationforPath(input.path)
   if (!dangerfileLocation.repoSlug) {
@@ -67,7 +68,7 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
   }
 
   const dangerfileContent = await getGitHubFileContentsFromLocation(
-    input.token,
+    token,
     dangerfileLocation,
     dangerfileLocation.repoSlug!
   )
@@ -77,18 +78,20 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
 }
 
 const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerObject) => {
+  const token = input.dsl.settings.github.accessToken
+
   const platform = getPerilPlatformForDSL(dsl.pr, null, input.dsl)
   const exec = await executorForInstallation(platform, inlineRunner)
 
   const runtimeDSL = await jsonToDSL(input.dsl)
   const context = contextForDanger(runtimeDSL)
   const peril = perilObjectForInstallation(installation, process.env, input.peril)
-  await appendPerilContextToDSL(installation.id, input.token, context, peril)
+  await appendPerilContextToDSL(installation.id, token, context, peril)
 
   const dangerfileLocation = dangerRepresentationforPath(input.path)
 
   const defaultRepoSlug = input.dsl.github.pr.base.repo.full_name
-  const dangerfileContent = await getGitHubFileContentsFromLocation(input.token, dangerfileLocation, defaultRepoSlug)
+  const dangerfileContent = await getGitHubFileContentsFromLocation(token, dangerfileLocation, defaultRepoSlug)
 
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
   const results = await inlineRunner.runDangerfileEnvironment(

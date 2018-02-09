@@ -10,13 +10,12 @@ import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { dsl } from "../danger/danger_run"
 import { InstallationToRun } from "../danger/danger_runner"
 
+// Sidenote: auth token is in  dsl.settings.github
 export interface PerilRunnerObject {
   /** The DSL for JSON, could be a DangerDSLJSON type or the raw webhook */
   dsl: DangerDSLJSONType // | any
   /** The refernce for the initial dangerfile */
   path: DangerfileReferenceString
-  /** github token */
-  token: string
   /** Installation number */
   installation: InstallationToRun
   /** DSL type */
@@ -38,15 +37,24 @@ export const triggerSandboxDangerRun = async (
   type: dsl,
   installation: InstallationToRun,
   path: DangerfileReferenceString,
-  dslJSON: any,
+  dslJSON: DangerDSLJSONType,
   peril: any
 ) => {
   const token = await getTemporaryAccessTokenForInstallation(installation.id)
+
+  dslJSON.settings = {
+    github: {
+      accessToken: token,
+      baseURL: undefined, // used for GH Enterprise, not supported today
+      additionalHeaders: { Accept: "application/vnd.github.machine-man-preview+json" },
+    },
+    cliArgs: {} as any,
+  }
+
   const stdOUT: PerilRunnerObject = {
     installation,
     dsl: dslJSON,
     dslType: type === dsl.pr ? "pr" : "run",
-    token,
     peril,
     path,
   }
@@ -56,6 +64,6 @@ export const triggerSandboxDangerRun = async (
   const callID = JSON.parse(call).CallId
   if (callID) {
     logger.info(`Check logs via:`)
-    logger.info(`> hyper func logs --callid ${callID} ${HYPER_FUNC_NAME}`)
+    logger.info(`> hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
   }
 }
