@@ -1,7 +1,7 @@
 import * as getSTDIN from "get-stdin"
 import nodeCleanup = require("node-cleanup")
-import { run } from "./run"
 import logger from "../logger"
+import { run } from "./run"
 
 try {
   logger.info("Started Runner")
@@ -41,8 +41,6 @@ try {
   }, 5000)
 } catch (error) {
   const err = error as Error
-  // tslint:disable-next-line:no-var-requires
-  const logger = require("../logger").default
   logger.error(`Error ${err.name} in the runner: ${err.message}\n${err.stack}`)
   throw error
 }
