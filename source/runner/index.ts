@@ -48,7 +48,7 @@ try {
       process.exitCode = 1
       process.exit(1)
     }
-  }, 2000)
+  }, 5000)
 } catch (error) {
   const err = error as Error
   // tslint:disable-next-line:no-var-requires
