@@ -61,6 +61,12 @@ export const hyperUpdater = async (req: express.Request, res: express.Response, 
   const notDanger = allImages.filter(i => i.RepoTags.some(t => !t.includes("danger")))
   logger.info(`Removing ${notDanger.length} images`)
   for (const iterator of notDanger) {
-    deleteHyperImage(iterator.Id)
+    try {
+      // This can sometimes fail if a run is happening,
+      // it can get deleted next time
+      deleteHyperImage(iterator.Id)
+    } catch (error) {
+      console.error(error.message)
+    }
   }
 }
