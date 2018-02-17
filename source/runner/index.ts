@@ -1,25 +1,15 @@
 import * as getSTDIN from "get-stdin"
 import nodeCleanup = require("node-cleanup")
+import { run } from "./run"
+import logger from "../logger"
 
 try {
-  // tslint:disable-next-line:no-var-requires
-  const logger = require("../logger").default
   logger.info("Started Runner")
-
-  // We do not trust that the import paths will not provide errors
-  // this is my fault for being too smart, and can slowly get fixed in the
-  // future. Today however, running Peril's runner in the process
-  // with no env vars can be drastically different, and cause unforeseen crashes
-  // which don't show up in hyper.
-  //
-  // So we catch all errors, and thus the upcoming require instead of an import.
 
   // Provide a timeout mechanism for the STDIN from the hyper func host
   let foundDSL = false
   getSTDIN().then(stdin => {
     foundDSL = true
-    // tslint:disable-next-line:no-var-requires
-    const { run } = require("./run")
     run(stdin)
   })
 

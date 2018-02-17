@@ -22,8 +22,6 @@ export const run = async (stdin: string) => {
   if (stdin.trim().length === 0) {
     logger.error("Got no STDIN")
     return
-  } else {
-    logger.info("Got STDIN: " + stdin)
   }
 
   let input: PerilRunnerObject
@@ -98,6 +96,11 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
     dangerfileLocation.dangerfilePath,
     dangerfileContent,
     runtimeEnv
+  )
+  logger.info(
+    `f: ${results.fails.length} w: ${results.warnings.length} m: ${results.messages.length} md: ${
+      results.markdowns.length
+    }`
   )
   await exec.handleResultsPostingToPlatform(results)
   logger.info("Done")
