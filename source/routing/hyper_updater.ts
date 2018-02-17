@@ -66,7 +66,8 @@ export const hyperUpdater = async (req: express.Request, res: express.Response, 
       // it can get deleted next time
       deleteHyperImage(iterator.Id)
     } catch (error) {
-      console.error(error.message)
+      // tslint:disable-next-line:
+      logger.error(error.message)
     }
   }
 }
