@@ -37,7 +37,7 @@
     "semver-sort": "^0.0.4"
   },
   "dependencies": {
-    "@octokit/rest": "^14.0.7",
+    "@octokit/rest": "^15.0.0",
     "@types/agenda": "^1.0.1",
     "@types/body-parser": "^1.16.8",
     "@types/debug": "^0.0.30",
