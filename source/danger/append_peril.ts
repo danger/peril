@@ -8,6 +8,24 @@ import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import { InstallationToRun } from "./danger_runner"
 
 /**
+ * Genereates a GH API for Peril-based work
+ *
+ * @param installationID
+ * @param authToken
+ */
+export const octokitAPIForPeril = async (installationID: number, authToken: string | undefined) => {
+  const token = authToken || (await getTemporaryAccessTokenForInstallation(installationID))
+  const api = new NodeGithub()
+
+  api.authenticate({
+    token,
+    type: "integration",
+  })
+
+  return api
+}
+
+/**
  * Basically adds a re-authenticated GH API client for the Dangerfile
  * can either happen by passing in the installation ID to generate a new token, or
  * by passing in an existing token.
@@ -25,15 +43,7 @@ export async function appendPerilContextToDSL(
   peril: PerilDSL
 ) {
   if (sandbox.danger && sandbox.danger.github) {
-    const token = authToken || (await getTemporaryAccessTokenForInstallation(installationID))
-    const api = new NodeGithub()
-
-    api.authenticate({
-      token,
-      type: "integration",
-    })
-
-    sandbox.danger.github.api = api
+    sandbox.danger.github.api = await octokitAPIForPeril(installationID, authToken)
   }
 
   const anySandbox = sandbox as any

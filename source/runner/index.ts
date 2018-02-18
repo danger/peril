@@ -1,29 +1,13 @@
 import * as getSTDIN from "get-stdin"
-import nodeCleanup = require("node-cleanup")
 import logger from "../logger"
 import { run } from "./run"
 
 try {
-  logger.info("Started Runner")
-
   // Provide a timeout mechanism for the STDIN from the hyper func host
   let foundDSL = false
   getSTDIN().then(stdin => {
     foundDSL = true
     run(stdin)
-  })
-
-  // Wait till the end of the process to print out the results. Will
-  // only post the results when the process has succeeded, leaving the
-  // host process to create a message from the logs.
-  nodeCleanup(exitCode => {
-    logger.info(`Process has finished with ${exitCode}`)
-
-    // TODO: Failure cases?
-    // logger.info("TODO")
-    // runtimeEnv.results
-
-    return undefined
   })
 
   process.on("unhandledRejection", (error: Error) => {

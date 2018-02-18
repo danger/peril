@@ -16,6 +16,10 @@ import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import { PerilRunnerObject } from "./triggerSandboxRun"
 
+import { GitHub } from "danger/distribution/platforms/GitHub"
+import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
+import nodeCleanup = require("node-cleanup")
+
 let runtimeEnv = {} as any
 
 export const run = async (stdin: string) => {
@@ -32,6 +36,7 @@ export const run = async (stdin: string) => {
     return
   }
 
+  logger.info(`Started run for ${input.path}`)
   const installation = input.installation
 
   const dslMode = input.dslType === "pr" ? dsl.pr : dsl.import
@@ -53,10 +58,12 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
   // const exec = await executorForInstallation(platform, inlineRunner)
 
   // Create a DSL that is basically just the webhook
-  // TODO: This probably needs expanding to the util funcs etc
   const token = input.dsl.settings.github.accessToken
   const context = contextForDanger({ github: input.dsl.github } as any)
   const peril = perilObjectForInstallation(installation, process.env, input.peril)
+
+  // Attach Peril + the octokit API to the DSL
+  // TODO: This probably needs expanding to the util funcs etc
   await appendPerilContextToDSL(installation.id, token, context, peril)
 
   const dangerfileLocation = dangerRepresentationforPath(input.path)
@@ -78,7 +85,11 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
 const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerObject) => {
   const token = input.dsl.settings.github.accessToken
 
-  const platform = getPerilPlatformForDSL(dsl.pr, null, input.dsl)
+  const pr = input.dsl.github.pr
+  const perilGHAPI = new GitHubAPI({ repoSlug: pr.head.repo.full_name, pullRequestID: String(pr.number) }, token)
+  const perilGH = new GitHub(perilGHAPI)
+
+  const platform = getPerilPlatformForDSL(dsl.pr, perilGH, input.dsl)
   const exec = await executorForInstallation(platform, inlineRunner)
 
   const runtimeDSL = await jsonToDSL(input.dsl)
@@ -102,6 +113,16 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
       results.markdowns.length
     }`
   )
-  await exec.handleResultsPostingToPlatform(results)
+
+  // Wait till the end of the process to print out the results. Will
+  // only post the results when the process has succeeded, leaving the
+  // host process to create a message from the logs.
+  nodeCleanup(exitCode => {
+    logger.info(`Process finished ${exitCode}, sending results`)
+
+    exec.handleResultsPostingToPlatform(results)
+    return undefined
+  })
+
   logger.info("Done")
 }
