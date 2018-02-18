@@ -17,6 +17,9 @@ jest.mock("../../../github/lib/github_helpers", () => ({
   getGitHubFileContents: mockGHContents,
 }))
 
+// @ts-ignore
+global.regeneratorRuntime = {}
+
 import { readFileSync } from "fs"
 import { resolve } from "path"
 import { dangerRunForRules } from "../../../danger/danger_run"

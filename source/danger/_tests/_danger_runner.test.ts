@@ -26,6 +26,9 @@ const installationSettings = {
   settings: emptySettings,
 }
 
+// @ts-ignore
+global.regeneratorRuntime = {}
+
 describe("evaling", () => {
   it("runs a typescript dangerfile with fixtured data", async () => {
     const platform = fixturedGitHub()
