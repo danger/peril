@@ -17,8 +17,8 @@ import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import { PerilRunnerObject } from "./triggerSandboxRun"
 
 import { GitHub } from "danger/distribution/platforms/GitHub"
-import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import nodeCleanup = require("node-cleanup")
+import { githubAPIForCommentable } from "../github/events/github_runner"
 
 let runtimeEnv = {} as any
 
@@ -86,7 +86,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   const token = input.dsl.settings.github.accessToken
 
   const pr = input.dsl.github.pr
-  const perilGHAPI = new GitHubAPI({ repoSlug: pr.head.repo.full_name, pullRequestID: String(pr.number) }, token)
+  const perilGHAPI = githubAPIForCommentable(token, pr.base.repo.full_name, pr.number)
   const perilGH = new GitHub(perilGHAPI)
 
   const platform = getPerilPlatformForDSL(dsl.pr, perilGH, input.dsl)
