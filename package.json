@@ -18,9 +18,8 @@
     "setup:env": "node out/scripts/setup-env.js",
     "setup:plugins": "node out/scripts/setup-plugins.js",
     "precommit": "lint-staged; yarn build;",
-    "prepush": "yarn danger:prepush",
-    "runner": "node out/runner/index.js",
-    "hyper:staging:recreate": "hyper pull dangersystems/peril"
+    "prepush": "jest",
+    "runner": "node out/runner/index.js"
   },
   "repository": {
     "type": "git",
