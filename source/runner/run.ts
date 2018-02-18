@@ -16,8 +16,8 @@ import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import { PerilRunnerObject } from "./triggerSandboxRun"
 
+import * as exitHook from "async-exit-hook"
 import { GitHub } from "danger/distribution/platforms/GitHub"
-import nodeCleanup = require("node-cleanup")
 import { githubAPIForCommentable } from "../github/events/github_runner"
 
 let runtimeEnv = {} as any
@@ -117,11 +117,9 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   // Wait till the end of the process to print out the results. Will
   // only post the results when the process has succeeded, leaving the
   // host process to create a message from the logs.
-  nodeCleanup(exitCode => {
-    logger.info(`Process finished ${exitCode}, sending results`)
-
-    exec.handleResultsPostingToPlatform(results)
-    return undefined
+  exitHook((callback: () => void) => {
+    logger.info(`Process finished, sending results`)
+    exec.handleResultsPostingToPlatform(results).then(callback)
   })
 
   logger.info("Done")
