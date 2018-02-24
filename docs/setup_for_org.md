@@ -29,7 +29,7 @@ You will need to give it a homepage (anything) and a webhook url. For the webhoo
 
 e.g. `https://peril-artsy.herokuapp.com/webhook`
 
-You should also create a secret, this is just some text that Peril will use to confirm that GitHub is thenentity sending
+You should also create a secret, this is just some text that Peril will use to confirm that GitHub is the entity sending
 you webhooks. It can be any string, so long as it's the same in the heroku setup also.
 
 With respect to **permissions**, my recommendations are:
