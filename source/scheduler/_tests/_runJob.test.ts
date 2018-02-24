@@ -2,7 +2,7 @@ import { dsl } from "../../danger/danger_run"
 import { GitHubInstallation } from "../../db/index"
 import runJob from "../runJob"
 
-jest.mock("../../api/github.ts", () => ({
+jest.mock("../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("token123"),
 }))
 

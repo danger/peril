@@ -10,7 +10,7 @@ const mockGHContents = jest.fn((_, __, path) => {
   return ""
 })
 
-jest.mock("api/github", () => ({
+jest.mock("../../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("token"),
 }))
 jest.mock("../../../github/lib/github_helpers", () => ({

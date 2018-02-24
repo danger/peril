@@ -1,7 +1,7 @@
 import { appendPerilContextToDSL } from "../../danger/append_peril"
 
 const mockToken = "1234535345"
-jest.mock("api/github", () => ({
+jest.mock("../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve(mockToken),
 }))
 

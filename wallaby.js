@@ -2,6 +2,7 @@ module.exports = function(wallaby) {
   return {
     files: [
       "tsconfig.json",
+      "jsconfig.json",
       ".env.sample",
       "source/**/*.ts?(x)",
       "source/**/*.snap",

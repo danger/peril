@@ -20,7 +20,7 @@ const installationSettings = {
   settings: defaultSettings,
 }
 
-jest.mock("api/github", () => ({
+jest.mock("../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("123"),
 }))
 
