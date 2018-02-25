@@ -37,13 +37,6 @@ describe("makes the right calls to GitHub", () => {
     const org = await db.getInstallation(1)
     expect(org).toMatchSnapshot()
   })
-
-  it("gets repo rules correct", async () => {
-    await setup()
-
-    const repo = await db.getRepo(1, "orta/ORStackView")
-    expect(repo).toMatchSnapshot()
-  })
 })
 
 it("Raises with a bad URL", async () => {

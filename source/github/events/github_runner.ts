@@ -12,7 +12,7 @@ import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
 import perilPlatform from "../../danger/peril_platform"
-import { GitHubInstallation } from "../../db"
+import { GitHubInstallation, GithubRepo } from "../../db"
 import db from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 import logger from "../../logger"
@@ -53,13 +53,29 @@ export interface GitHubRunSettings {
   installationSettings: GitHubInstallationSettings
 }
 
+export const getRepoSpecificRules = (installation: GitHubInstallation, repoName: string): GithubRepo | null => {
+  const repos = installation.repos
+  if (!repos[repoName]) {
+    return null
+  }
+
+  const repo: GithubRepo = {
+    fullName: repoName,
+    installationID: installation.id,
+    rules: repos[repoName],
+  }
+
+  return repo
+}
+
 export const setupForRequest = async (req: express.Request, installationSettings: any): Promise<GitHubRunSettings> => {
   const isRepoEvent = !!req.body.repository
   const repoName = isRepoEvent && req.body.repository.full_name
   const installationID = req.body.installation.id as number
+  const installation = await db.getInstallation(installationID)
   const isTriggeredByUser = !!req.body.sender
   const hasRelatedCommentable = getIssueNumber(req.body) !== null
-  const dbRepo = isRepoEvent ? await db.getRepo(installationID, repoName) : null
+  const dbRepo = isRepoEvent ? getRepoSpecificRules(installation!, repoName) : null
   const repoSpecificRules = dbRepo && dbRepo.rules ? dbRepo.rules : {}
 
   return {

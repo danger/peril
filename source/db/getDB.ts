@@ -4,7 +4,7 @@
 
 import logger from "../logger"
 import jsonDB from "./json"
-import postgres from "./postgres"
+import mongo from "./mongo"
 
 import { DatabaseAdaptor } from "./index"
 
@@ -15,8 +15,8 @@ if (DATABASE_JSON_FILE) {
   logger.info(`Using ${DATABASE_JSON_FILE} as a JSON db`)
   exposedDB = jsonDB(DATABASE_JSON_FILE)
 } else if (DATABASE_URL) {
-  logger.info(`Using ${DATABASE_URL} as a postgres db`)
-  exposedDB = postgres
+  logger.info(`Using ${DATABASE_URL} as the mongo db`)
+  exposedDB = mongo
 }
 
 if (exposedDB) {
