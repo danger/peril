@@ -31,22 +31,25 @@ export const startTaskScheduler = async () => {
       return
     }
 
-    const taskString = installation.tasks[data.taskName]
-    if (!taskString) {
+    const taskDangerfiles = installation.tasks[data.taskName]
+    if (!taskDangerfiles) {
       logger.error(`Could not find the task: ${data.taskName} on installation ${data.installationID}`)
       logger.error(`All tasks: ${Object.keys(installation.tasks)}`)
       return
     }
 
-    const results = await runTask(installation, taskString, data.data)
-    // There aren't results when it's process separated
-    if (results) {
-      if (!results.fails.length) {
-        logger.info("Task completed successfully")
-      } else {
-        logger.error("Task failed:")
-        logger.error(results.fails.map(f => f.message).join("\n"))
-        logger.error(results.markdowns.join("\n"))
+    const dangerfiles = Array.isArray(taskDangerfiles) ? taskDangerfiles : [taskDangerfiles]
+    for (const dangerfile of dangerfiles) {
+      const results = await runTask(installation, dangerfile, data.data)
+      // There aren't results when it's process separated
+      if (results) {
+        if (!results.fails.length) {
+          logger.info(`Task ${data.taskName} ${dangerfile} completed successfully`)
+        } else {
+          logger.error(`Task ${data.taskName} ${dangerfile} failed:`)
+          logger.error(results.fails.map(f => f.message).join("\n"))
+          logger.error(results.markdowns.join("\n"))
+        }
       }
     }
     done()

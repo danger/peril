@@ -29,7 +29,8 @@ Let's deep dive into the JSON:
 
 ### `settings`
 
-**@see** - [source/db/GitHubRepoSettings.ts](https://github.com/danger/peril/blob/master/source/db/GitHubRepoSettings.ts)
+**@see** -
+[source/db/GitHubRepoSettings.ts](https://github.com/danger/peril/blob/master/source/db/GitHubRepoSettings.ts)
 
 I'm hesitant to add the specific settings which are supported inside this document, as it'll always end up out of date.
 
@@ -52,13 +53,13 @@ For example, when you set up Peril, you'll have recieved this webhook:
 It has an event of `integration_installation` and an action of `created`. The keys in the rules section allow you to
 write dangerfiles which only run against either a specific action, or against all of them.
 
-You can get information about _any_ webhook [action/names in the GitHub
-docs](https://developer.github.com/v3/activity/events/types/).
+You can get information about _any_ webhook
+[action/names in the GitHub docs](https://developer.github.com/v3/activity/events/types/).
 
-For a Pull Request, there are [a lot of
-actions](https://developer.github.com/v3/activity/events/types/#pullrequestevent): It can be one of `assigned`,
-`unassigned`, `review_requested`, `review_request_removed`, `labeled`, `unlabeled`, `opened`, `edited`, `closed`, or
-`reopened`.
+For a Pull Request, there are
+[a lot of actions](https://developer.github.com/v3/activity/events/types/#pullrequestevent): It can be one of
+`assigned`, `unassigned`, `review_requested`, `review_request_removed`, `labeled`, `unlabeled`, `opened`, `edited`,
+`closed`, or `reopened`.
 
 You can specify a Dangerfile to run either on **all** events by using `"pull_request"` or only a specific action on a
 pull request with `"pull_request.[action]"`.
@@ -112,23 +113,25 @@ Rules are for every repo, `repos` are rules for a single repo.
       "pull_request": "danger/pr.ts"
     },
     "artsy/positron": {
-      "pull_request": "dangerfile.ts"
+      "pull_request": ["dangerfile.ts", "check-for-assignee.ts"]
+      ]
     },
   }
 ```
 
-So, let's say a PR is closed on `artsy/positron`, it would trigger three Dangerfiles to run:
+So, let's say a PR is closed on `artsy/reaction`, it would trigger three Dangerfiles to run:
 
 * `"artsy/artsy-danger@org/all-prs.ts"`
 * `"artsy/artsy-danger@org/closed-prs.ts"`
-* `"danger/pr.ts"` - _this comes from artsy/positron_
+* `"danger/pr.ts"` - _this comes from artsy/reaction_
 
 If a PR were `edited` or `opened`, it would trigger two dangerfiles:
 
 * `"artsy/artsy-danger@org/all-prs.ts"`
-* `"danger/pr.ts"` - _this comes from artsy/positron_
+* `"danger/pr.ts"` - _this comes from artsy/reaction_
 
-I'm not sure the order in which they're ran, so don't rely on that.
+I'm not sure the order in which they're ran, so don't rely on that. You can also use an array to execute a set of
+dangerfiles instead of making a single mega-file.
 
 # Writing a Dangerfile
 
@@ -143,8 +146,8 @@ These are not set in stone. You're welcome to improve them.
 
 There are two types of Dangerfile runs.
 
-* _PR_ runs, which are related to PR events. This is the normal DSL in the [Danger JS
-  Reference](http://danger.systems/js/reference.html)
+* _PR_ runs, which are related to PR events. This is the normal DSL in the
+  [Danger JS Reference](http://danger.systems/js/reference.html)
 * _Event_ runs, which are anything other than PR events. In these cases the `github` instance in the DSL is replaced
   with the JSON that came in from the event.
 
@@ -156,8 +159,8 @@ JavaScript, so you can use any module you want.
 
 Scheduled tasks to run using a cron-like syntax.
 
-This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The
-object is similar to the rules section, in that you define a cron-string with the following format:
+This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The object is similar to the
+rules section, in that you define a cron-string with the following format:
 
 ```
     *    *    *    *    *    *

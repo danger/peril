@@ -13,8 +13,11 @@ const startScheduler = async () => {
   // Loop through the object's properties and set up the scheduler
   for (const cronTask in installation.scheduler) {
     if (installation.scheduler.hasOwnProperty(cronTask)) {
-      const rules = installation.scheduler[cronTask]
-      scheduleJob(cronTask, () => runJob(installation, rules))
+      const dangerfiles = installation.scheduler[cronTask]
+      const rules = Array.isArray(dangerfiles) ? dangerfiles : [dangerfiles]
+      rules.forEach(rule => {
+        scheduleJob(cronTask, () => runJob(installation, rule))
+      })
     }
   }
 }

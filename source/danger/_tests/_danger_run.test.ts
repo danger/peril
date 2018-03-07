@@ -40,6 +40,14 @@ describe("for PRs", () => {
     ])
   })
 
+  it("returns two events when ", () => {
+    const rules = { pull_request: ["dangerfile.js", "anotherdangerfile.ts"] }
+    expect(dangerRunForRules("pull_request", "created", rules).map(r => r.dangerfilePath)).toEqual([
+      "dangerfile.js",
+      "anotherdangerfile.ts",
+    ])
+  })
+
   // Same semantics
   it("returns a PR run when all sub events are globbed in the rules", () => {
     const rules = { "pull_request.*": "dangerfile.js" }
