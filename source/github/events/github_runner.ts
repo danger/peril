@@ -194,7 +194,7 @@ export const runEventRun = async (
     githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
   }
 
-  const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
+  const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, run.branch)
 
   const installationSettings = {
     id: settings.installationID,
