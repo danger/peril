@@ -81,8 +81,9 @@ async function api(token: string | null, path: string, headers: any = {}, body: 
   }
 
   const baseUrl = process.env.DANGER_GITHUB_API_BASE_URL || "https://api.github.com"
+  const includeBody = !(method === "GET" || method === "HEAD")
   return fetch(`${baseUrl}/${path}`, {
-    body,
+    body: includeBody ? body : undefined,
     headers: {
       Accept: "application/vnd.github.machine-man-preview+json",
       "Content-Type": "application/json",
