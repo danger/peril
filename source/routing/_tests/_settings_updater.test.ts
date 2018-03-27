@@ -1,14 +1,16 @@
 import { settingsUpdater } from "../settings_updater"
 
-jest.mock("../../db/getDB", () => ({ default: { setup: jest.fn() } }))
+const mockSetup = jest.fn()
+jest.mock("../../db/getDB", () => ({
+  getDB: () => ({ setup: mockSetup }),
+}))
+
 jest.mock("../../globals", () => ({
   DATABASE_JSON_FILE: "PerilTest/settings@peril.settings.json",
 }))
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
-
-import db from "../../db/getDB"
 
 const requestWithFixturedJSON = (name: string): any => {
   const path = resolve(__dirname, "../../github/events/_tests", "fixtures", `${name}.json`)
@@ -34,7 +36,7 @@ describe("with webhooks from GitHub", () => {
     const req = requestWithFixturedJSON("push")
     settingsUpdater("push", req, {} as any, {})
 
-    expect(db.setup).toBeCalled()
+    expect(mockSetup).toBeCalled()
 
     // Shouldnt
     expect(res.status).not.toBeCalled()

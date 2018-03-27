@@ -13,7 +13,7 @@ import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger
 import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
 import perilPlatform from "../../danger/peril_platform"
 import { GitHubInstallation, GithubRepo } from "../../db"
-import db from "../../db/getDB"
+import { getDB } from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 import logger from "../../logger"
 import { Pull_request } from "../events/types/pull_request_opened.types"
@@ -72,6 +72,7 @@ export const setupForRequest = async (req: express.Request, installationSettings
   const isRepoEvent = !!req.body.repository
   const repoName = isRepoEvent && req.body.repository.full_name
   const installationID = req.body.installation.id as number
+  const db = getDB()
   const installation = await db.getInstallation(installationID)
   const isTriggeredByUser = !!req.body.sender
   const hasRelatedCommentable = getIssueNumber(req.body) !== null
@@ -96,6 +97,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
 
+  const db = getDB()
   const installation = await db.getInstallation(installationID)
   if (!installation) {
     res.status(404).send(`Could not find installation with id: ${installationID}`)
@@ -210,7 +212,7 @@ export const runEventRun = async (
     githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
   }
 
-  const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, null)
+  const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, run.branch)
 
   const installationSettings = {
     id: settings.installationID,

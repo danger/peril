@@ -49,7 +49,15 @@ export const dangerRunForRules = (
   const isDirect = rule[event]
   const globsAll = rule[event + ".*"]
   const eventDotAction = action && rule[event + "." + action]
-  const possibilities = [isDirect, globsAll, eventDotAction].filter(p => p) as string[]
+
+  const alwaysArray = (t: any) => (Array.isArray(t) ? t : [t])
+  const arraydVersions = [isDirect, globsAll, eventDotAction].filter(p => p).map(alwaysArray)
+
+  let possibilities: string[] = []
+  arraydVersions.forEach(arr => {
+    possibilities = possibilities.concat(arr)
+  })
+
   return possibilities.map(path => ({
     action,
     dslType: dslTypeForEvent(event),

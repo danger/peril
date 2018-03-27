@@ -1,14 +1,14 @@
 import { pick } from "lodash"
-import { DATABASE_URL } from "../globals"
+import { MONGODB_URI } from "../globals"
 
 import * as debug from "debug"
 const d = debug("peril:mongo")
 
 import { DatabaseAdaptor, GitHubInstallation } from "./index"
 
-import * as mongoose from "mongoose"
+import { connect, Document, model, Schema } from "mongoose"
 
-export interface MongoGithubInstallationModel extends mongoose.Document {
+export interface MongoGithubInstallationModel extends Document {
   installationID: number
   settings: any
   tasks: any
@@ -26,21 +26,21 @@ export const mongoToGH = (mongo: MongoGithubInstallationModel): GitHubInstallati
   ...(pick(mongo, ["settings", "repos", "tasks", "rules", "scheduler"]) as any),
 })
 
-const Installation = mongoose.model<MongoGithubInstallationModel>(
+const Installation = model<MongoGithubInstallationModel>(
   "GithubInstallation",
-  new mongoose.Schema({
+  new Schema({
     // Need to convert from id to installationID
     installationID: Number,
-    settings: mongoose.Schema.Types.Mixed,
-    tasks: mongoose.Schema.Types.Mixed,
-    repos: mongoose.Schema.Types.Mixed,
-    rules: mongoose.Schema.Types.Mixed,
+    settings: Schema.Types.Mixed,
+    tasks: Schema.Types.Mixed,
+    repos: Schema.Types.Mixed,
+    rules: Schema.Types.Mixed,
   })
 )
 
 const database: DatabaseAdaptor = {
   setup: async () => {
-    await mongoose.connect(DATABASE_URL)
+    await connect(MONGODB_URI)
   },
 
   /** Saves an Integration */

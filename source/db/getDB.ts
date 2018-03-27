@@ -1,26 +1,43 @@
-// TODO: Is this too fancy and needs fixing?
-// e.g. having a get db function
-//
-
 import logger from "../logger"
 import jsonDB from "./json"
 import mongo from "./mongo"
 
-import { DatabaseAdaptor } from "./index"
+import { DATABASE_JSON_FILE, MONGODB_URI } from "../globals"
 
-import { DATABASE_JSON_FILE, DATABASE_URL } from "../globals"
+const isJest = typeof jest !== "undefined"
 
-let exposedDB: DatabaseAdaptor = null as any
-if (DATABASE_JSON_FILE) {
-  logger.info(`Using ${DATABASE_JSON_FILE} as a JSON db`)
-  exposedDB = jsonDB(DATABASE_JSON_FILE)
-} else if (DATABASE_URL) {
-  logger.info(`Using ${DATABASE_URL} as the mongo db`)
-  exposedDB = mongo
+export const getDatabaseForEnv = (env: any) => {
+  if (env.DATABASE_JSON_FILE || isJest) {
+    const json = jsonDB(env.DATABASE_JSON_FILE)
+    json.setup()
+    return json
+  }
+
+  if (env.MONGODB_URI) {
+    if (!isJest) {
+      mongo.setup()
+    }
+    return mongo
+  }
+
+  return null
 }
 
-if (exposedDB) {
-  exposedDB.setup()
-}
+/** Gets the Current DB for this runtime environment */
+export const getDB = () => {
+  if (DATABASE_JSON_FILE || MONGODB_URI) {
+    if (!isJest) {
+      if (DATABASE_JSON_FILE) {
+        logger.info(`Using ${DATABASE_JSON_FILE} as a JSON db`)
+      } else {
+        logger.info(`Using ${MONGODB_URI} as the mongo db`)
+      }
+    }
+  }
 
-export default exposedDB
+  const db = getDatabaseForEnv(process.env)
+  if (!db) {
+    throw new Error("No default DB was set up")
+  }
+  return db
+}

@@ -1,6 +1,9 @@
 const mockGetRepo = jest.fn()
+
 jest.mock("../../../db/getDB", () => ({
-  default: { getRepo: mockGetRepo },
+  getDB: () => ({
+    getInstallation: () => Promise.resolve({ repos: mockGetRepo }),
+  }),
 }))
 
 const mockGHContents = jest.fn((_, __, path) => {
@@ -13,6 +16,7 @@ const mockGHContents = jest.fn((_, __, path) => {
 jest.mock("../../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("token"),
 }))
+
 jest.mock("../../../github/lib/github_helpers", () => ({
   getGitHubFileContents: mockGHContents,
 }))
@@ -29,7 +33,7 @@ const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
 it("runs an Dangerfile for an issue with a local", async () => {
-  mockGetRepo.mockImplementationOnce(() => Promise.resolve({ id: "123", fake: true }))
+  mockGetRepo.mockImplementationOnce(() => ({ id: "123", fake: true }))
 
   const body = fixture("issue_comment_created.json")
   const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
@@ -47,7 +51,7 @@ it("runs an Dangerfile for an issue with a local", async () => {
 })
 
 it("adds github util functions and apis to the DSL for non-PR events", async () => {
-  mockGetRepo.mockImplementationOnce(() => Promise.resolve({ id: "123", fake: true }))
+  mockGetRepo.mockImplementationOnce(() => ({ id: "123", fake: true }))
 
   const body = fixture("issue_comment_created.json")
   const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
@@ -64,7 +68,7 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
 })
 
 it("can handle a db returning nil for the repo with an Dangerfile for an issue with a local", async () => {
-  mockGetRepo.mockImplementationOnce(() => Promise.resolve(null))
+  mockGetRepo.mockImplementationOnce(() => null)
 
   const body = fixture("issue_comment_created.json")
   const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any

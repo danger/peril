@@ -85,7 +85,7 @@ export interface UniqueRepoRuleset {
 }
 
 export interface RunnerRuleset {
-  [name: string]: DangerfileReferenceString
+  [name: string]: DangerfileReferenceString | DangerfileReferenceString[]
 }
 
 export interface GithubRepo {
