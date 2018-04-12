@@ -6,7 +6,8 @@ const d = debug("peril:mongo")
 
 import { DatabaseAdaptor, GitHubInstallation } from "./index"
 
-import { connect, Document, model, Schema } from "mongoose"
+import { Document, model, Schema } from "mongoose"
+import * as mongoose from "mongoose"
 
 export interface MongoGithubInstallationModel extends Document {
   installationID: number
@@ -40,7 +41,8 @@ const Installation = model<MongoGithubInstallationModel>(
 
 const database: DatabaseAdaptor = {
   setup: async () => {
-    await connect(MONGODB_URI)
+    debugger
+    await mongoose.connect(MONGODB_URI)
   },
 
   /** Saves an Integration */

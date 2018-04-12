@@ -103,16 +103,36 @@
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/_tests/.*.test.ts$)",
-    "moduleFileExtensions": ["ts", "tsx", "js"],
-    "roots": ["<rootDir>/source"],
-    "modulePaths": ["<rootDir>/source"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "roots": [
+      "<rootDir>/source"
+    ],
+    "modulePaths": [
+      "<rootDir>/source"
+    ],
     "testEnvironment": "node"
   },
   "lint-staged": {
-    "*.json": ["yarn prettier --write", "git add"],
-    "*.ts": ["tslint --fix", "yarn prettier --write", "git add"],
-    "*test.ts": ["jest -u"],
-    "*.md": ["yarn prettier --write", "git add"]
+    "*.json": [
+      "yarn prettier --write",
+      "git add"
+    ],
+    "*.ts": [
+      "tslint --fix",
+      "yarn prettier --write",
+      "git add"
+    ],
+    "*test.ts": [
+      "jest -u"
+    ],
+    "*.md": [
+      "yarn prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "printWidth": 120,
@@ -126,6 +146,7 @@
     "danger-plugin-spellcheck": "^1.2.2",
     "husky": "^0.14.0",
     "lint-staged": "^7.0.0",
+    "mockingoose": "^2.9.1",
     "prettier": "^1.11.1",
     "tslint-config-prettier": "^1.9.0"
   }
