@@ -85,6 +85,11 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
 const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerObject) => {
   const token = input.dsl.settings.github.accessToken
 
+  if (!input.dsl.github) {
+    logger.info(`Input DSL did not have a github object, ${input}`)
+    return
+  }
+
   const pr = input.dsl.github.pr
   const perilGHAPI = githubAPIForCommentable(token, pr.base.repo.full_name, pr.number)
   const perilGH = new GitHub(perilGHAPI)
@@ -119,7 +124,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   // host process to create a message from the logs.
   exitHook((callback: () => void) => {
     logger.info(`Process finished, sending results`)
-    exec.handleResultsPostingToPlatform(results).then(callback)
+    exec.handleResultsPostingToPlatform(results, runtimeDSL.git).then(callback)
   })
 
   logger.info("Done")

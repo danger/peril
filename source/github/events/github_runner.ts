@@ -12,8 +12,8 @@ import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
 import { executorForInstallation, runDangerForInstallation } from "../../danger/danger_runner"
 import perilPlatform from "../../danger/peril_platform"
-import { GitHubInstallation } from "../../db"
-import db from "../../db/getDB"
+import { GitHubInstallation, GithubRepo } from "../../db"
+import { getDB } from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 import logger from "../../logger"
 import { Pull_request } from "../events/types/pull_request_opened.types"
@@ -53,13 +53,30 @@ export interface GitHubRunSettings {
   installationSettings: GitHubInstallationSettings
 }
 
+export const getRepoSpecificRules = (installation: GitHubInstallation, repoName: string): GithubRepo | null => {
+  const repos = installation.repos
+  if (!repos[repoName]) {
+    return null
+  }
+
+  const repo: GithubRepo = {
+    fullName: repoName,
+    installationID: installation.id,
+    rules: repos[repoName],
+  }
+
+  return repo
+}
+
 export const setupForRequest = async (req: express.Request, installationSettings: any): Promise<GitHubRunSettings> => {
   const isRepoEvent = !!req.body.repository
   const repoName = isRepoEvent && req.body.repository.full_name
   const installationID = req.body.installation.id as number
+  const db = getDB()
+  const installation = await db.getInstallation(installationID)
   const isTriggeredByUser = !!req.body.sender
   const hasRelatedCommentable = getIssueNumber(req.body) !== null
-  const dbRepo = isRepoEvent ? await db.getRepo(installationID, repoName) : null
+  const dbRepo = isRepoEvent ? getRepoSpecificRules(installation!, repoName) : null
   const repoSpecificRules = dbRepo && dbRepo.rules ? dbRepo.rules : {}
 
   return {
@@ -80,6 +97,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   const action = req.body.action as string | null
   const installationID = req.body.installation.id as number
 
+  const db = getDB()
   const installation = await db.getInstallation(installationID)
   if (!installation) {
     res.status(404).send(`Could not find installation with id: ${installationID}`)
@@ -316,7 +334,7 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
     )
 
     if (results && pr.body !== null && pr.body.includes("Peril: Debug")) {
-      results.markdowns.push(reportData("Showing PR details due to including 'Peril: Debug'"))
+      results.markdowns.push({ message: reportData("Showing PR details due to including 'Peril: Debug'") })
     }
     return results ? results : null
   }
@@ -355,7 +373,10 @@ export const commentOnResults = async (
   const gh = new GitHub(githubAPI)
   const platform = perilPlatform(dslType, gh, {})
   const exec = executorForInstallation(platform, vm2)
-  await exec.handleResults(results)
+
+  // TODO: Figure what happens here with `git` as being nully,
+  // for one I think it would mean non-sandbox runs cant use inline?
+  await exec.handleResults(results, {} as any)
 }
 
 // This doesn't feel great, but is OK for now

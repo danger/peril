@@ -1,24 +1,22 @@
-import { Platform } from "danger/distribution/platforms/platform"
-import winston from "../logger"
-
-import { DangerfileReferenceString } from "../db"
-import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
-
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
+import { Platform } from "danger/distribution/platforms/platform"
+import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 import { DangerRunner } from "danger/distribution/runner/runners/runner"
 import vm2 from "danger/distribution/runner/runners/vm2"
 
 import * as path from "path"
-import { dsl } from "./danger_run"
 
-import { contextForDanger } from "danger/distribution/runner/Dangerfile"
+import { DangerfileReferenceString } from "../db"
+import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { HYPER_ACCESS_KEY } from "../globals"
+import winston from "../logger"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
+import { dsl } from "./danger_run"
 import perilPlatform from "./peril_platform"
 
 /** Logs */
@@ -109,16 +107,9 @@ ${contents}
   return {
     fails: [{ message: failure }],
     warnings: [],
-    markdowns: [errorMD],
+    markdowns: [{ message: errorMD }],
     messages: [],
   }
-}
-
-/**
- * Let's Danger handle the results, as well as providing a hook for Peril to do work
- */
-export async function handleDangerResults(results: DangerResults, exec: Executor) {
-  return await exec.handleResults(results)
 }
 
 /**

@@ -1,5 +1,5 @@
 import * as express from "express"
-import db from "../db/getDB"
+import { getDB } from "../db/getDB"
 import { DATABASE_JSON_FILE } from "../globals"
 
 export const settingsUpdater = async (event: string, req: express.Request, _: express.Response, __: any) => {
@@ -14,6 +14,7 @@ export const settingsUpdater = async (event: string, req: express.Request, _: ex
       const modifiedPerilSettings = commits.find(c => c.modified.includes(path))
       if (modifiedPerilSettings) {
         console.log("Updating JSON settings due to merged changes for " + path) // tslint:disable-line
+        const db = getDB()
         db.setup()
       }
     }

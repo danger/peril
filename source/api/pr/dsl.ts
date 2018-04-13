@@ -12,7 +12,7 @@ import { githubAPIForCommentable } from "../../github/events/github_runner"
 import { PERIL_ORG_INSTALLATION_ID } from "../../globals"
 
 const prDSLRunner = async (req: express.Request, res: express.Response, _: express.NextFunction) => {
-  winston.log("router", `Recieved OK`)
+  winston.log("router", `Received OK`)
 
   const query = req.query
   if (!query.owner) {
@@ -48,7 +48,9 @@ const prDSLRunner = async (req: express.Request, res: express.Response, _: expre
   const dangerDSL = await exec.dslForDanger()
 
   // Remove this to reduce data
-  dangerDSL.github.api = {} as any
+  if (dangerDSL.github) {
+    dangerDSL.github.api = {} as any
+  }
 
   // TODO: include Danger version number in JSON
   return res.status(400).jsonp({

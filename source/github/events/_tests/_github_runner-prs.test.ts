@@ -1,5 +1,7 @@
 jest.mock("../../../db/getDB", () => ({
-  default: { getRepo: () => Promise.resolve({ id: "123", fake: true }) },
+  getDB: () => ({
+    getInstallation: () => Promise.resolve({ repos: {} }),
+  }),
 }))
 
 const mockContents = jest.fn(() => Promise.resolve("// empty"))

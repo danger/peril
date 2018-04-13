@@ -2,7 +2,7 @@ import * as JSON5 from "json5"
 import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { PERIL_ORG_INSTALLATION_ID } from "../globals"
 import winston from "../logger"
-import { DangerfileReferenceString, DatabaseAdaptor, GitHubInstallation, GithubRepo } from "./index"
+import { DangerfileReferenceString, DatabaseAdaptor, GitHubInstallation } from "./index"
 
 // Effectively you need to have a JSON file that looks like a GitHubInstallation,
 // but also have a `repos` array of GitHubRepo -so you can do per repo rules in there.
@@ -31,40 +31,14 @@ const error = (message: string) => winston.error(`[json db] - ${message}`)
 let org: GitHubInstallation = null as any
 
 const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
-  /** Deletes an Integration */
-  deleteInstallation: async (_: number) => {
-    info(`Skipping saving github repo with slug.`)
-  },
-
-  /** Deletes a Github repo from the DB */
-  deleteRepo: async (_: number, repoName: string) => {
-    info(`Skipping deleting github repo ${repoName} due to no db`)
-  },
-
   /** Gets an Integration */
   getInstallation: async (_: number): Promise<GitHubInstallation | null> => {
     return org
   },
 
-  /** Gets a Github repo from the DB */
-  getRepo: async (_: number, repoName: string): Promise<GithubRepo | null> => {
-    const repos = org.repos
-    if (!repos[repoName]) {
-      return null
-    }
-
-    const repo: GithubRepo = {
-      fullName: repoName,
-      id: 111, // Should I care?
-      installationID: 1, // Should I care?
-      rules: repos[repoName],
-    }
-    return repo
-  },
-
-  /** Saves a repo */
-  saveGitHubRepo: async (repo: GithubRepo) => {
-    info(`Skipping saving github repo with slug: ${repo.fullName} due to no db`)
+  /** Deletes an Integration */
+  deleteInstallation: async (_: number) => {
+    info(`Skipping saving github repo with slug.`)
   },
 
   /** Saves an Integration */

@@ -1,7 +1,7 @@
 import * as express from "express"
 import winston from "../logger"
 
-import db from "../db/getDB"
+import { getDB } from "../db/getDB"
 import { createInstallation } from "../github/events/create_installation"
 import { githubDangerRunner } from "../github/events/github_runner"
 import { ping } from "../github/events/ping"
@@ -69,6 +69,7 @@ export const githubRouting = (
       // Delete any integrations that have uninstalled Peril :wave:
       if (action === "deleted") {
         info(` - Deleting integration ${installation.id}`)
+        const db = getDB()
         db.deleteInstallation(installation.id)
       }
 

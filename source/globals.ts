@@ -61,9 +61,6 @@ const getInstallationId = (id: string | undefined): number => {
  */
 export const PERIL_ORG_INSTALLATION_ID = getInstallationId(getEnv("PERIL_ORG_INSTALLATION_ID"))
 
-/** Postgres db URL */
-export const DATABASE_URL = getEnv("DATABASE_URL")
-
 /** Should fetch log out to the console? */
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
 
@@ -101,7 +98,7 @@ export const validateENVForPerilServer = () => {
   validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
 
   // Validate the db
-  if (!DATABASE_URL && !DATABASE_JSON_FILE) {
-    throw new Error("Peril cannot work without either a DATABASE_URL or a DATABASE_JSON_FILE")
+  if (!MONGODB_URI && !DATABASE_JSON_FILE) {
+    throw new Error("Peril cannot work without either a MONGODB_URI or a DATABASE_JSON_FILE")
   }
 }

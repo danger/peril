@@ -1,7 +1,7 @@
 import { MONGODB_URI } from "../globals"
 
 import * as Agenda from "agenda"
-import db from "../db/getDB"
+import { getDB } from "../db/getDB"
 import logger from "../logger"
 import { runTask } from "./runTask"
 
@@ -25,6 +25,7 @@ export const startTaskScheduler = async () => {
     const data = job.attrs.data as DangerFileTaskConfig
     logger.info(`Recieved a new task, ${data.taskName}`)
 
+    const db = getDB()
     const installation = await db.getInstallation(data.installationID)
     if (!installation) {
       logger.error(`Could not find installation for task: ${data.taskName}`)

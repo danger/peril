@@ -89,8 +89,6 @@ export interface RunnerRuleset {
 }
 
 export interface GithubRepo {
-  /** UUID */
-  id: number
   /** The installation that this repo is connected to */
   installationID: number
   /** The full name of the slug for this repo, note these could not be unique (GitHub Enterprise?) */
@@ -106,14 +104,7 @@ export interface DatabaseAdaptor {
   /** Gets an integrations settings */
   getInstallation: (installationID: number) => Promise<GitHubInstallation | null>
   /** Saves an Integration */
-  saveInstallation: (installation: GitHubInstallation) => Promise<any>
+  saveInstallation: (installation: GitHubInstallation) => Promise<void>
   /** Deletes the operation */
   deleteInstallation: (installationID: number) => Promise<void>
-
-  /** Gets an optional repo out of the installation settings */
-  getRepo: (installationID: number, repoName: string) => Promise<GithubRepo | null>
-  /** Saves a Repo */
-  saveGitHubRepo: (repo: GithubRepo) => Promise<any>
-  /** Deletes a repo from the  */
-  deleteRepo: (installationID: number, repoName: string) => Promise<null | void>
 }

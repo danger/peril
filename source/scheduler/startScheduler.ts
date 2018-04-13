@@ -1,10 +1,11 @@
 import { scheduleJob } from "node-schedule"
 
-import db from "../db/getDB"
+import { getDB } from "../db/getDB"
 import runJob from "./runJob"
 
 const startScheduler = async () => {
   // TODO: This will only work for JSON-based setups right now
+  const db = getDB()
   const installation = await db.getInstallation(0)
   if (!installation) {
     return

@@ -1,12 +1,12 @@
-import fixturedGitHub from "../../api/_tests/fixtureAPI"
-import { perilObjectForInstallation } from "../../danger/append_peril"
-import { executorForInstallation, runDangerAgainstFileInline } from "../danger_runner"
-
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import vm2 from "danger/distribution/runner/runners/vm2"
 import { readFileSync } from "fs"
 import { resolve } from "path"
+
+import fixturedGitHub from "../../api/_tests/fixtureAPI"
+import { perilObjectForInstallation } from "../../danger/append_peril"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
+import { executorForInstallation, runDangerAgainstFileInline } from "../danger_runner"
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 const peril: PerilDSL = { env: {}, runTask: () => null }
@@ -56,7 +56,7 @@ describe("evaling", () => {
     const contents = readFileSync(path, "utf8")
 
     const results = await runDangerAgainstFileInline(path, contents, installationSettings, executor, peril)
-    expect(results.markdowns).toEqual(["`Object.keys(process.env).length` is 0"])
+    expect(results.markdowns.map(m => m.message)).toEqual(["`Object.keys(process.env).length` is 0"])
   })
 
   // Wallaby can't resolve these
@@ -91,7 +91,7 @@ describe("evaling", () => {
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`, "utf8")
 
     const results = await runDangerAgainstFileInline(localDangerfile, contents, installationSettings, executor, peril)
-    expect(results.markdowns).toEqual([JSON.stringify(peril, null, "  ")])
+    expect(results.markdowns.map(m => m.message)).toEqual([JSON.stringify(peril, null, "  ")])
   })
 
   // I wonder if the babel setup isn't quite right yet for this test

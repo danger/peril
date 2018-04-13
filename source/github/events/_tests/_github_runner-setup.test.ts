@@ -1,5 +1,7 @@
 jest.mock("../../../db/getDB", () => ({
-  default: { getRepo: () => Promise.resolve({ fake: true }) },
+  getDB: () => ({
+    getInstallation: () => Promise.resolve({ repos: {} }),
+  }),
 }))
 
 import { readFileSync } from "fs"
