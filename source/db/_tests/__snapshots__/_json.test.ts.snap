@@ -2,17 +2,6 @@
 
 exports[`Raises with a bad URL 1`] = `[Error: Could not find find a JSON file for Peril settings. It's likely that Peril cannot connect to orta/other@settings.json, check the logs for more info above here. You'll probably need to make changes to your  "DATABASE_JSON_FILE" in your ENV vars.]`;
 
-exports[`makes the right calls to GitHub gets repo rules correct 1`] = `
-Object {
-  "fullName": "orta/ORStackView",
-  "id": 111,
-  "installationID": 1,
-  "rules": Object {
-    "issue.created": "orta/peril@lock_issues.ts",
-  },
-}
-`;
-
 exports[`makes the right calls to GitHub with a legit stubbed JSON file 1`] = `
 Object {
   "id": 23511,

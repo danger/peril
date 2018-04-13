@@ -1,13 +1,11 @@
-import { pick } from "lodash"
-import { MONGODB_URI } from "../globals"
-
 import * as debug from "debug"
-const d = debug("peril:mongo")
+import { pick } from "lodash"
+import { connect, Document, model, Schema } from "mongoose"
 
+import { MONGODB_URI } from "../globals"
 import { DatabaseAdaptor, GitHubInstallation } from "./index"
 
-import { Document, model, Schema } from "mongoose"
-import * as mongoose from "mongoose"
+const d = debug("peril:mongo")
 
 export interface MongoGithubInstallationModel extends Document {
   installationID: number
@@ -16,15 +14,16 @@ export interface MongoGithubInstallationModel extends Document {
   repos: any
   rules: any
 }
+const rootSettings = ["settings", "repos", "tasks", "rules", "scheduler"]
 
 export const ghToMongo = (gh: GitHubInstallation): MongoGithubInstallationModel => ({
   installationID: gh.id,
-  ...(pick(gh, ["settings", "repos", "tasks", "rules", "scheduler"]) as any),
+  ...(pick(gh, rootSettings) as any),
 })
 
 export const mongoToGH = (mongo: MongoGithubInstallationModel): GitHubInstallation => ({
   id: mongo.installationID,
-  ...(pick(mongo, ["settings", "repos", "tasks", "rules", "scheduler"]) as any),
+  ...(pick(mongo, rootSettings) as any),
 })
 
 const Installation = model<MongoGithubInstallationModel>(
@@ -41,8 +40,7 @@ const Installation = model<MongoGithubInstallationModel>(
 
 const database: DatabaseAdaptor = {
   setup: async () => {
-    debugger
-    await mongoose.connect(MONGODB_URI)
+    await connect(MONGODB_URI)
   },
 
   /** Saves an Integration */

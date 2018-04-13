@@ -32,6 +32,7 @@ export const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubE
           utils,
         }
       },
+      supportsInlineComments: () => false,
       getPlatformGitRepresentation: async () => {
         return {} as any
       },

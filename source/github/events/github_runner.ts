@@ -334,7 +334,7 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
     )
 
     if (results && pr.body !== null && pr.body.includes("Peril: Debug")) {
-      results.markdowns.push(reportData("Showing PR details due to including 'Peril: Debug'"))
+      results.markdowns.push({ message: reportData("Showing PR details due to including 'Peril: Debug'") })
     }
     return results ? results : null
   }
@@ -373,7 +373,10 @@ export const commentOnResults = async (
   const gh = new GitHub(githubAPI)
   const platform = perilPlatform(dslType, gh, {})
   const exec = executorForInstallation(platform, vm2)
-  await exec.handleResults(results)
+
+  // TODO: Figure what happens here with `git` as being nully,
+  // for one I think it would mean non-sandbox runs cant use inline?
+  await exec.handleResults(results, {} as any)
 }
 
 // This doesn't feel great, but is OK for now
