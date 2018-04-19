@@ -3,9 +3,8 @@ import * as bodyParser from "body-parser"
 import { Application } from "express"
 
 import { generateAuthToken, redirectForGHOauth } from "./auth/generate"
+import { schema } from "./graphql"
 import prDSLRunner from "./pr/dsl"
-
-const schema = {} as any
 
 // Public API
 const setupPublicAPI = (app: Application) => {

@@ -2,7 +2,15 @@ import { NextFunction, Request, Response } from "express"
 import * as jwt from "jsonwebtoken"
 
 import { isString } from "util"
-import { PERIL_INTEGRATION_ID, PRIVATE_GITHUB_SIGNING_KEY } from "../../globals"
+import {
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+  PERIL_INTEGRATION_ID,
+  PERIL_WEBHOOK_SECRET,
+  PRIVATE_GITHUB_SIGNING_KEY,
+  PUBLIC_API_ROOT_URL,
+} from "../../globals"
+import fetch from "../fetch"
 
 // A JWT is a special type of string
 type JWT = string
@@ -65,12 +73,61 @@ export const getDetailsFromPerilJWT = (token: JWT) =>
     })
   })
 
-export const redirectForGHOauth = (_: Request, __: Response, ___: NextFunction) => {
-  // Do a GH Oauth
-  // Send back to the route for the auth token
+/** { a: 1, b: 2} -> a=1&=2 */
+const encodeToQueryParams = (data: any): string =>
+  Object.keys(data)
+    .map(key => {
+      return [key, data[key]].map(encodeURIComponent).join("=")
+    })
+    .join("&")
+
+/** Handle sending someone off to GitHub for the start of OAuth */
+export const redirectForGHOauth = (_: Request, res: Response, ___: NextFunction) => {
+  // Re-direct for GH web flow
+  // https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/#web-application-flow
+  //
+  const gh = "https://github.com/login/oauth/authorize"
+  const params = {
+    client_id: GITHUB_CLIENT_ID,
+    redirect_uri: PUBLIC_API_ROOT_URL,
+    scope: "read:user",
+    state: PERIL_WEBHOOK_SECRET,
+  }
+
+  res.redirect(`${gh}?${encodeToQueryParams(params)}`)
 }
 
-export const generateAuthToken = (_: Request, __: Response, ___: NextFunction) => {
+export const generateAuthToken = async (req: Request, __: Response, ___: NextFunction) => {
+  // https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/#2-users-are-redirected-back-to-your-site-by-github
+
   // Receive the GH auth token, then generate enough info for a Peril User & JWT
   // Set that to the user's session, and then redirect to the admin page
+  const gh = "https://github.com/login/oauth/access_token"
+  const { code, state } = req.params
+  if (state !== PERIL_WEBHOOK_SECRET) {
+    // NOOP
+    return
+  }
+
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+  }
+  const params = {
+    client_id: GITHUB_CLIENT_ID,
+    client_secret: GITHUB_CLIENT_SECRET,
+    redirect_uri: PUBLIC_API_ROOT_URL,
+    scope: "read:user",
+    state: PERIL_WEBHOOK_SECRET,
+  }
+
+  const tokenResponse = await fetch(`${gh}?${encodeToQueryParams(params)}`, options)
+  const tokenJSON = await tokenResponse.json()
+  const token = tokenJSON.access_token
+  // TODO:
+  //  - Get orgs ( https://developer.github.com/v3/orgs/#list-your-organizations )
+  //  - Get user details ( )
+
+  // We've now logged in the user
 }
