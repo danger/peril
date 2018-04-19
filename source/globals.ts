@@ -29,6 +29,10 @@ function validates(keys: string[]) {
 export const PRIVATE_GITHUB_SIGNING_KEY =
   getEnv("PRIVATE_GITHUB_SIGNING_KEY") && getEnv("PRIVATE_GITHUB_SIGNING_KEY").trim()
 
+/** Used only for verifying JWT keys, so is not useful for non-public */
+export const PUBLIC_GITHUB_SIGNING_KEY =
+  getEnv("PUBLIC_GITHUB_SIGNING_KEY") && getEnv("PUBLIC_GITHUB_SIGNING_KEY").trim()
+
 /**
  * The ID for the GitHub integration
  */
@@ -112,6 +116,12 @@ export const validateENVForPerilServer = () => {
   if (PUBLIC_FACING_API) {
     // Can't run a public API without these settings
     validates(["PUBLIC_WEB_ROOT_URL", "PUBLIC_API_ROOT_URL", "GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET"])
+
+    if (!PUBLIC_GITHUB_SIGNING_KEY) {
+      throw new Error(
+        "You need to set up a public signing key based on GH's private one. `openssl rsa -in mykey.pem -pubout > mykey.pub`"
+      )
+    }
   }
   // Validate the db
   if (!MONGODB_URI && !DATABASE_JSON_FILE) {

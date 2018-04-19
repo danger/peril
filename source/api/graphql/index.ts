@@ -9,7 +9,7 @@ const gql = (strings: any, ...keys: any[]) => {
 
 const typeDefs = gql`
   type Installation {
-
+    id: Int
   }
 
   type User {
@@ -25,7 +25,7 @@ const typeDefs = gql`
 
 const resolvers = {
   User: {
-    installations: () => ({}),
+    installations: () => ({ name: "ok", installations: [] }),
   },
   Query: {
     me: () => ({}),
