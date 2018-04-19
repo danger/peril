@@ -62,7 +62,7 @@ export const dangerRunForRules = (
     action,
     dslType: dslTypeForEvent(event),
     event,
-    ...dangerRepresentationforPath(path),
+    ...dangerRepresentationForPath(path),
     feedback: feedbackTypeForEvent(event),
   }))
 }
@@ -75,7 +75,7 @@ export interface RepresentationForURL {
 }
 
 /** Takes a DangerfileReferenceString and lets you know where to find it globally */
-export const dangerRepresentationforPath = (value: DangerfileReferenceString): RepresentationForURL => {
+export const dangerRepresentationForPath = (value: DangerfileReferenceString): RepresentationForURL => {
   const afterAt = value.includes("@") ? value.split("@")[1] : value
   return {
     branch: value.includes("#") ? value.split("#")[1] : "master",

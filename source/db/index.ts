@@ -17,13 +17,19 @@ export type DangerfileReferenceString = string
  */
 export type PerilEventString = string
 
+// TODO: Convert `id` to not be id somehow?
+
 /** An individual integration of Danger via Peril, this is like the org */
-export interface GitHubInstallation {
+export interface GitHubInstallation extends PerilInstallationSettings {
   /**
    * The ID Integration, this is used when talking to GitHub mainly, but is used
    * as a unique ID in our db
    */
   id: number
+}
+
+/** An individual integration of Danger via Peril, this is like the org */
+export interface PerilInstallationSettings {
   /**
    * In our DB this is represented as a JSON type, so you should anticipate have settings
    * as a nullable type. These are the entire installation settings.
@@ -78,6 +84,15 @@ export interface GitHubInstallation {
    *
    */
   repos: UniqueRepoRuleset
+
+  /**
+   * The path to the settings repo and json file
+   * e.g. danger/peril-settings@settings.json
+   *
+   * Filled in automatically when using JSON db, and
+   * is the initial string when working in the public mode
+   */
+  dangerfilePath: DangerfileReferenceString
 }
 
 export interface UniqueRepoRuleset {
@@ -103,6 +118,8 @@ export interface DatabaseAdaptor {
 
   /** Gets an integrations settings */
   getInstallation: (installationID: number) => Promise<GitHubInstallation | null>
+  /** Updates an integrations settings */
+  updateInstallation: (installationID: number) => Promise<GitHubInstallation | null>
   /** Saves an Integration */
   saveInstallation: (installation: GitHubInstallation) => Promise<void>
   /** Deletes the operation */

@@ -1,4 +1,4 @@
-import { GitHubInstallation } from "../../../db"
+import generateInstallation from "../../../testing/installationFactory"
 import { GitHubRunSettings, runsForEvent } from "../github_runner"
 
 // Default settings
@@ -34,16 +34,13 @@ const getSettings = (overwrites: Partial<GitHubRunSettings>) => ({
 })
 
 it("handles a platform only run", () => {
-  const installation = {
+  const installation = generateInstallation({
     id: 12,
-    repos: {},
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
-    scheduler: {},
     settings: defaultSettings,
-    tasks: {},
-  }
+  })
 
   const settings = getSettings({ repoSpecificRules: {} })
 
@@ -63,16 +60,13 @@ it("handles a platform only run", () => {
 })
 
 it("gets the expected runs for platform + repo rules", () => {
-  const installation: GitHubInstallation = {
+  const installation = generateInstallation({
     id: 12,
-    repos: {},
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
-    scheduler: {},
     settings: defaultSettings,
-    tasks: {},
-  }
+  })
 
   const settings = getSettings({})
 
@@ -102,16 +96,13 @@ it("gets the expected runs for platform + repo rules", () => {
 })
 
 it("gets the expected runs for platform", () => {
-  const installation = {
+  const installation = generateInstallation({
     id: 12,
-    repos: {},
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
-    scheduler: {},
     settings: defaultSettings,
-    tasks: {},
-  }
+  })
 
   const repo = {
     fullName: "danger/peril",

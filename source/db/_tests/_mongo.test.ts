@@ -5,6 +5,7 @@ describe("gh -> mongo", () => {
   it("moves the id to installationID", () => {
     const gh = installationFactory({})
     expect(ghToMongo(gh)).toEqual({
+      dangerfilePath: "",
       installationID: 123,
       repos: {},
       rules: {},
@@ -24,9 +25,18 @@ describe("mongo -> gh", () => {
       repos: {},
       rules: {},
       scheduler: {},
+      dangerfilePath: "path",
     } as any
 
-    expect(mongoToGH(mongo)).toEqual({ id: 1, repos: {}, rules: {}, scheduler: {}, settings: {}, tasks: {} })
+    expect(mongoToGH(mongo)).toEqual({
+      dangerfilePath: "path",
+      id: 1,
+      repos: {},
+      rules: {},
+      scheduler: {},
+      settings: {},
+      tasks: {},
+    })
   })
 })
 

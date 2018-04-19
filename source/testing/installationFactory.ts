@@ -11,6 +11,10 @@ const emptyInstallation: GitHubInstallation = {
     modules: [],
   },
   tasks: {},
+  dangerfilePath: "",
 }
 
-export default (diff: Partial<GitHubInstallation>): GitHubInstallation => Object.assign({}, emptyInstallation, diff)
+const generateInstallation = (diff: Partial<GitHubInstallation>): GitHubInstallation =>
+  Object.assign({}, emptyInstallation, diff)
+
+export default generateInstallation

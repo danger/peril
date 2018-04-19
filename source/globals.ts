@@ -11,7 +11,7 @@ dotenv.config(config)
  * @returns {string}
  */
 function getEnv(configName: string): string {
-  return process.env[configName]
+  return process.env[configName] as string
 }
 
 function validates(keys: string[]) {

@@ -16,7 +16,7 @@ const info = (message: string) => {
 
 const router = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   const event = req.header("X-GitHub-Event")
-  winston.log("router", `Recieved ${event}:`)
+  winston.log("router", `Received ${event}:`)
 
   githubRouting(event, req, res, next)
 }
