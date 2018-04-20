@@ -23,7 +23,7 @@
     "dangerfile_runtime_env",
     "node_modules",
     "out",
-    "dangerfile.js",
+    "dangerfile.lite.ts",
     "wallaby.js",
     "migrations"
   ]
