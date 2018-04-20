@@ -1,4 +1,4 @@
-import * as express from "express"
+import { NextFunction, Request, Response } from "express"
 import winston from "../logger"
 
 import { getDB } from "../db/getDB"
@@ -14,19 +14,14 @@ const info = (message: string) => {
   winston.info(`[router] - ${message}`)
 }
 
-const router = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const router = (req: Request, res: Response, next: NextFunction) => {
   const event = req.header("X-GitHub-Event")
   winston.log("router", `Received ${event}:`)
 
   githubRouting(event, req, res, next)
 }
 
-export const githubRouting = (
-  event: string,
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
+export const githubRouting = (event: string, req: Request, res: Response, next: NextFunction) => {
   const xhubReq = req as any
   if (!xhubReq.isXHub) {
     return res
@@ -56,14 +51,7 @@ export const githubRouting = (
       if (action === "created") {
         info(` - Creating new integration`)
         createInstallation(installation, req, res)
-      }
-
-      // Keep our db up to date as repos are added and removed
-      if (action === "added") {
-        info(` - Updating repos for integration`)
-
-        // request.repositories_added
-        // request.repositories_removed
+        return
       }
 
       // Delete any integrations that have uninstalled Peril :wave:
@@ -71,6 +59,7 @@ export const githubRouting = (
         info(` - Deleting integration ${installation.id}`)
         const db = getDB()
         db.deleteInstallation(installation.id)
+        return
       }
 
       break

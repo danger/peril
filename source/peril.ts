@@ -7,6 +7,7 @@ import {
   HYPER_ACCESS_KEY,
   MONGODB_URI,
   PERIL_WEBHOOK_SECRET,
+  PUBLIC_API_ROOT_URL,
   PUBLIC_FACING_API,
   validateENVForPerilServer,
 } from "./globals"
@@ -54,6 +55,7 @@ const peril = () => {
   // This should go last
   if (PUBLIC_FACING_API) {
     logger.info("This is a public facing Peril instance.")
+    logger.info(`- API Root: ${PUBLIC_API_ROOT_URL}`)
     setupPublicAPI(app)
   }
 

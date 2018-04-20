@@ -2,12 +2,15 @@ import logger from "../logger"
 import jsonDB from "./json"
 import mongo from "./mongo"
 
+import { DatabaseAdaptor } from "."
 import { DATABASE_JSON_FILE, MONGODB_URI } from "../globals"
 
 const isJest = typeof jest !== "undefined"
 
-export const getDatabaseForEnv = (env: any) => {
+const getDatabaseForEnv = (env: any) => {
   if (env.DATABASE_JSON_FILE || isJest) {
+    logger.info(`Using ${DATABASE_JSON_FILE} as a JSON db`)
+
     const json = jsonDB(env.DATABASE_JSON_FILE)
     json.setup()
     return json
@@ -15,6 +18,7 @@ export const getDatabaseForEnv = (env: any) => {
 
   if (env.MONGODB_URI) {
     if (!isJest) {
+      logger.info(`Using ${MONGODB_URI} as the mongo db`)
       mongo.setup()
     }
     return mongo
@@ -23,21 +27,16 @@ export const getDatabaseForEnv = (env: any) => {
   return null
 }
 
+let db: DatabaseAdaptor | null = null
 /** Gets the Current DB for this runtime environment */
 export const getDB = () => {
-  if (DATABASE_JSON_FILE || MONGODB_URI) {
-    if (!isJest) {
-      if (DATABASE_JSON_FILE) {
-        logger.info(`Using ${DATABASE_JSON_FILE} as a JSON db`)
-      } else {
-        logger.info(`Using ${MONGODB_URI} as the mongo db`)
-      }
-    }
+  if (!db) {
+    db = getDatabaseForEnv(process.env)
   }
 
-  const db = getDatabaseForEnv(process.env)
   if (!db) {
     throw new Error("No default DB was set up")
   }
+
   return db
 }

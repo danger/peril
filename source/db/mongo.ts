@@ -35,7 +35,7 @@ const database: DatabaseAdaptor = {
   /** Saves an Integration */
   saveInstallation: async (installation: GitHubInstallation) => {
     d(`Saving installation with id: ${installation.iID}`)
-    const dbInstallation = await Installation.findOne({ installationID: installation.iID })
+    const dbInstallation = await Installation.findOne({ iID: installation.iID })
     if (dbInstallation) {
       await dbInstallation.update(installation)
     } else {
@@ -46,13 +46,13 @@ const database: DatabaseAdaptor = {
 
   /** Gets an Integration */
   getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
-    const dbInstallation = await Installation.findOne({ installationID })
+    const dbInstallation = await Installation.findOne({ iID: installationID })
     return dbInstallation
   },
 
   /** Deletes an Integration */
   updateInstallation: async (installationID: number) => {
-    const dbInstallation = await Installation.findOne({ installationID })
+    const dbInstallation = await Installation.findOne({ iID: installationID })
     if (!dbInstallation) {
       d.log(`Could not get a db reference for installation ${installationID} when updating`)
       return
@@ -78,12 +78,12 @@ const database: DatabaseAdaptor = {
 
     const parsedSettings = JSON5.parse(file) as Partial<GitHubInstallation>
     const installation = partialInstallationToInstallation(parsedSettings, dbInstallation.dangerfilePath)
-    return await Installation.updateOne({ installationID }, installation)
+    return await Installation.updateOne({ iID: installationID }, installation)
   },
 
   /** Deletes an Integration */
   deleteInstallation: async (installationID: number) => {
-    const dbInstallation = await Installation.findOne({ installationID })
+    const dbInstallation = await Installation.findOne({ iID: installationID })
     if (dbInstallation) {
       await dbInstallation.remove()
     }

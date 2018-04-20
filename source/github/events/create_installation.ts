@@ -6,10 +6,14 @@ import { getDB } from "../../db/getDB"
 import generateInstallation from "../../testing/installationFactory"
 
 export async function createInstallation(installationJSON: Installation, _: express.Request, res: express.Response) {
-  // Default to no runnerRules
   const installation = generateInstallation({ iID: installationJSON.id })
-  res.status(200).send("Creating new installation.")
 
   const db = getDB()
-  await db.saveInstallation(installation)
+  const existingInstallation = await db.getInstallation(installation.iID)
+  if (existingInstallation) {
+    res.status(204).send("Did not create new installation, it already existed.")
+  } else {
+    await db.saveInstallation(installation)
+    res.status(200).send("Creating new installation.")
+  }
 }

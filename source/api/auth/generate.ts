@@ -1,17 +1,7 @@
-import { NextFunction, Request, Response } from "express"
 import * as jwt from "jsonwebtoken"
 
 import { isString } from "util"
-import {
-  GITHUB_CLIENT_ID,
-  GITHUB_CLIENT_SECRET,
-  PERIL_WEBHOOK_SECRET,
-  PRIVATE_GITHUB_SIGNING_KEY,
-  PUBLIC_API_ROOT_URL,
-  PUBLIC_GITHUB_SIGNING_KEY,
-} from "../../globals"
-import { GitHubOAuthEnd } from "../api"
-import fetch from "../fetch"
+import { PRIVATE_GITHUB_SIGNING_KEY, PUBLIC_GITHUB_SIGNING_KEY } from "../../globals"
 
 // A JWT is a special type of string
 type JWT = string
@@ -22,7 +12,6 @@ export interface PerilJWT {
   iat: number
   iss: string[]
   data: {
-    gh_orgs: GHOrg[]
     user: PerilOAuthUser
   }
 }
@@ -37,16 +26,15 @@ export interface PerilOAuthUser {
  * a JWT which can be used to make authenticated requests
  * against Peril.
  */
-export const createPerilJWT = (user: PerilOAuthUser, gitHubOrgs: GHOrg[]): JWT => {
+export const createPerilJWT = (user: PerilOAuthUser, installationIDs: number[]): JWT => {
   const now = Math.round(new Date().getTime() / 1000)
   const expires = now + 60
   const keyContent = PRIVATE_GITHUB_SIGNING_KEY
   const payload: PerilJWT = {
     exp: expires,
     iat: now,
-    iss: [user.name, ...gitHubOrgs.map(o => o.login)],
+    iss: installationIDs.map(id => String(id)),
     data: {
-      gh_orgs: gitHubOrgs,
       user,
     },
   }
@@ -74,99 +62,3 @@ export const getDetailsFromPerilJWT = (token: JWT) =>
       }
     })
   })
-
-/** { a: 1, b: 2} -> a=1&=2 */
-const encodeToQueryParams = (data: any): string =>
-  Object.keys(data)
-    .map(key => {
-      return [key, data[key]].map(encodeURIComponent).join("=")
-    })
-    .join("&")
-
-/** Handle sending someone off to GitHub for the start of OAuth */
-export const redirectForGHOauth = (_: Request, res: Response, ___: NextFunction) => {
-  // Re-direct for GH web flow
-  // https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/#web-application-flow
-  //
-  const gh = "https://github.com/login/oauth/authorize"
-  const params = {
-    client_id: GITHUB_CLIENT_ID,
-    // TODO: This URL needs to also contain the value to return to for peril's admin UI also
-    redirect_uri: PUBLIC_API_ROOT_URL + GitHubOAuthEnd,
-    scope: "read:user",
-    state: PERIL_WEBHOOK_SECRET,
-  }
-
-  res.redirect(`${gh}?${encodeToQueryParams(params)}`)
-}
-
-export const generateAuthToken = async (req: Request, res: Response, ___: NextFunction) => {
-  // https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/#2-users-are-redirected-back-to-your-site-by-github
-
-  // Receive the GH auth token, then generate enough info for a Peril User & JWT
-  // Set that to the user's session, and then redirect to the admin page
-  const { code, state } = req.params
-  if (state !== PERIL_WEBHOOK_SECRET) {
-    // NOOP
-    return
-  }
-  const token = await getAccessTokenFromAuthCode(code)
-
-  const orgs = await getUserOrgs(token)
-  const user = await getUserAccount(token)
-
-  const authToken = createPerilJWT({ name: user.name, avatar_url: user.avatar_url }, orgs)
-  res.cookie("jwt", authToken)
-}
-
-const getAccessTokenFromAuthCode = async (code: string) => {
-  const gh = "https://github.com/login/oauth/access_token"
-  const options = {
-    headers: {
-      Accept: "application/json",
-    },
-  }
-  const params = {
-    client_id: GITHUB_CLIENT_ID,
-    client_secret: GITHUB_CLIENT_SECRET,
-    state: PERIL_WEBHOOK_SECRET,
-    code,
-  }
-
-  const tokenResponse = await fetch(`${gh}?${encodeToQueryParams(params)}`, options)
-  const tokenJSON = await tokenResponse.json()
-  return tokenJSON.access_token
-}
-
-const getUserAccount = async (token: string) => miniGHAPI(token, "/user")
-
-interface GHOrg {
-  login: string
-  description: string
-  id: number
-}
-
-const getUserOrgs = async (token: string): Promise<GHOrg[]> => {
-  const orgs = await miniGHAPI("/user/orgs", token)
-  return orgs.map((o: any) => ({
-    login: o.login,
-    description: o.description,
-    id: o.id,
-  }))
-}
-
-const miniGHAPI = async (path: string, token: string) => {
-  const gh = "https://api.github.com/" + path
-
-  const options = {
-    headers: {
-      Accept: "application/json",
-    },
-  }
-  const params = {
-    access_token: token,
-  }
-
-  const userResponse = await fetch(`${gh}?${encodeToQueryParams(params)}`, options)
-  return await userResponse.json()
-}

@@ -4,12 +4,12 @@ import * as cookieParser from "cookie-parser"
 import { Application } from "express"
 
 import { GITHUB_CLIENT_SECRET } from "../globals"
-import { generateAuthToken, redirectForGHOauth } from "./auth/generate"
+import { generateAuthToken, redirectForGHOauth } from "./auth/github"
 import { schema } from "./graphql"
 import prDSLRunner from "./pr/dsl"
 
-export const GitHubOAuthStart = "/api/auth/peril/start"
-export const GitHubOAuthEnd = "/api/auth/peril/github_end"
+export const GitHubOAuthStart = "/api/auth/peril/github/start"
+export const GitHubOAuthEnd = "/api/auth/peril/github/end"
 
 // Public API
 const setupPublicAPI = (app: Application) => {
