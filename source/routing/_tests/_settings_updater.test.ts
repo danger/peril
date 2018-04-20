@@ -1,8 +1,10 @@
 import { settingsUpdater } from "../settings_updater"
 
-const mockSetup = jest.fn()
+const mockGetInstallation = jest.fn()
+const mockUpdateInstallation = jest.fn()
+
 jest.mock("../../db/getDB", () => ({
-  getDB: () => ({ setup: mockSetup }),
+  getDB: () => ({ getInstallation: mockGetInstallation, updateInstallation: mockUpdateInstallation }),
 }))
 
 jest.mock("../../globals", () => ({
@@ -11,6 +13,7 @@ jest.mock("../../globals", () => ({
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
+import generateInstallation from "../../testing/installationFactory"
 
 const requestWithFixturedJSON = (name: string): any => {
   const path = resolve(__dirname, "../../github/events/_tests", "fixtures", `${name}.json`)
@@ -24,6 +27,7 @@ describe("with webhooks from GitHub", () => {
     res = {}
     res.status = jest.fn(() => res)
     res.send = jest.fn()
+    mockUpdateInstallation.mockClear()
   })
 
   it("is not called for ping", () => {
@@ -32,14 +36,60 @@ describe("with webhooks from GitHub", () => {
     expect(res.send).not.toBeCalled()
   })
 
-  it.skip("db setup is called when the right repo + path is changed", () => {
-    const req = requestWithFixturedJSON("push")
-    settingsUpdater("push", req, {} as any, {})
+  describe("on pushes", () => {
+    it("db setup is called when the right repo + path is changed", async () => {
+      const req = requestWithFixturedJSON("push")
+      mockGetInstallation.mockReturnValueOnce(
+        generateInstallation({
+          id: 1234,
+          dangerfilePath: "PerilTest/settings@peril.settings.json",
+        })
+      )
 
-    expect(mockSetup).toBeCalled()
+      await settingsUpdater("push", req, {} as any, {})
 
-    // Shouldnt
-    expect(res.status).not.toBeCalled()
-    expect(res.send).not.toBeCalled()
+      // We get told to update the installation
+      expect(mockUpdateInstallation).toBeCalled()
+
+      // Shouldnt
+      expect(res.status).not.toBeCalled()
+      expect(res.send).not.toBeCalled()
+    })
+  })
+
+  describe("on PRs", () => {
+    it("db setup is called when the right repo", async () => {
+      const req = requestWithFixturedJSON("pull_request_closed")
+      mockGetInstallation.mockReturnValueOnce(
+        generateInstallation({
+          id: 1234,
+          dangerfilePath: "danger/peril@peril.settings.json",
+        })
+      )
+
+      await settingsUpdater("pull_request", req, {} as any, {})
+
+      // We get told to update the installation
+      expect(mockUpdateInstallation).toBeCalled()
+
+      // Shouldnt
+      expect(res.status).not.toBeCalled()
+      expect(res.send).not.toBeCalled()
+    })
+
+    it("db setup is called when the right repo", async () => {
+      const req = requestWithFixturedJSON("pull_request_closed")
+      mockGetInstallation.mockReturnValueOnce(
+        generateInstallation({
+          id: 1234,
+          dangerfilePath: "PerilTest/other_repo@peril.settings.json",
+        })
+      )
+
+      await settingsUpdater("pull_request", req, {} as any, {})
+
+      // We get told to update the installation
+      expect(mockUpdateInstallation).not.toBeCalled()
+    })
   })
 })

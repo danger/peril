@@ -13,7 +13,7 @@ export const settingsUpdater = async (event: string, req: express.Request, _: ex
     const installationID = req.body.installation.id
 
     // Handle checking if a merged PR includes changes to the settings JSON
-    if (event === "pull_request" && req.body.action === "closed") {
+    if (event === "pull_request" && req.body.action === "closed" && req.body.pull_request.merged) {
       const body = req.body as PullRequest
 
       const installation = await db.getInstallation(installationID)
@@ -44,7 +44,7 @@ export const settingsUpdater = async (event: string, req: express.Request, _: ex
 
       const installation = await db.getInstallation(installationID)
       if (!installation) {
-        d.log(`Push: Could not find an installation for ${installationID}`)
+        d(`Push: Could not find an installation for ${installationID}`)
         return
       }
 
