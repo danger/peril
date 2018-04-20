@@ -1,6 +1,6 @@
 import * as debug from "debug"
 import * as JSON5 from "json5"
-import { pick } from "lodash"
+
 import { connect, Document, model, Schema } from "mongoose"
 
 import { dangerRepresentationForPath } from "../danger/danger_run"
@@ -12,29 +12,14 @@ import { partialInstallationToInstallation } from "./json"
 const d = debug("peril:mongo")
 
 /**
- * Basically the same thing as a
+ * Basically the same thing as a PerilInstallationSettings but coming from the database
  */
-export interface MongoGithubInstallationModel extends Document, PerilInstallationSettings {
-  installationID: number
-}
-
-const rootSettings = ["settings", "repos", "tasks", "rules", "scheduler", "dangerfilePath"]
-
-export const ghToMongo = (gh: GitHubInstallation): MongoGithubInstallationModel => ({
-  installationID: gh.id,
-  ...(pick(gh, rootSettings) as any),
-})
-
-export const mongoToGH = (mongo: MongoGithubInstallationModel): GitHubInstallation => ({
-  id: mongo.installationID,
-  ...(pick(mongo, rootSettings) as any),
-})
+export interface MongoGithubInstallationModel extends Document, PerilInstallationSettings {}
 
 const Installation = model<MongoGithubInstallationModel>(
   "GithubInstallation",
   new Schema({
-    // Need to convert from id to installationID
-    installationID: Number,
+    iID: Number,
     settings: Schema.Types.Mixed,
     tasks: Schema.Types.Mixed,
     repos: Schema.Types.Mixed,
@@ -49,12 +34,12 @@ const database: DatabaseAdaptor = {
 
   /** Saves an Integration */
   saveInstallation: async (installation: GitHubInstallation) => {
-    d(`Saving installation with id: ${installation.id}`)
-    const dbInstallation = await Installation.findOne({ installationID: installation.id })
+    d(`Saving installation with id: ${installation.iID}`)
+    const dbInstallation = await Installation.findOne({ installationID: installation.iID })
     if (dbInstallation) {
-      await dbInstallation.update(ghToMongo(installation))
+      await dbInstallation.update(installation)
     } else {
-      const newInstallation = new Installation(ghToMongo(installation))
+      const newInstallation = new Installation(installation)
       await newInstallation.save()
     }
   },
@@ -62,7 +47,7 @@ const database: DatabaseAdaptor = {
   /** Gets an Integration */
   getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
     const dbInstallation = await Installation.findOne({ installationID })
-    return dbInstallation && mongoToGH(dbInstallation)
+    return dbInstallation
   },
 
   /** Deletes an Integration */
@@ -93,8 +78,7 @@ const database: DatabaseAdaptor = {
 
     const parsedSettings = JSON5.parse(file) as Partial<GitHubInstallation>
     const installation = partialInstallationToInstallation(parsedSettings, dbInstallation.dangerfilePath)
-    const mongoRep = ghToMongo(installation)
-    return await Installation.updateOne({ installationID }, mongoRep)
+    return await Installation.updateOne({ installationID }, installation)
   },
 
   /** Deletes an Integration */

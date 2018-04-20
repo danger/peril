@@ -23,7 +23,7 @@ import perilPlatform from "./peril_platform"
 const log = (message: string) => winston.info(`[runner] - ${message}`)
 
 export interface InstallationToRun {
-  id: number
+  iID: number
   settings: GitHubInstallationSettings
 }
 
@@ -74,7 +74,7 @@ export async function runDangerAgainstFileInline(
 
   // This can expand with time
   if (runtimeEnv.sandbox) {
-    await appendPerilContextToDSL(installation.id, undefined, runtimeEnv.sandbox, peril)
+    await appendPerilContextToDSL(installation.iID, undefined, runtimeEnv.sandbox, peril)
   }
 
   let results: DangerResults

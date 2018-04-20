@@ -35,7 +35,7 @@ const getSettings = (overwrites: Partial<GitHubRunSettings>) => ({
 
 it("handles a platform only run", () => {
   const installation = generateInstallation({
-    id: 12,
+    iID: 12,
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
@@ -61,7 +61,7 @@ it("handles a platform only run", () => {
 
 it("gets the expected runs for platform + repo rules", () => {
   const installation = generateInstallation({
-    id: 12,
+    iID: 12,
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },
@@ -97,7 +97,7 @@ it("gets the expected runs for platform + repo rules", () => {
 
 it("gets the expected runs for platform", () => {
   const installation = generateInstallation({
-    id: 12,
+    iID: 12,
     rules: {
       pull_request: "orta/peril-dangerfiles@pr.ts",
     },

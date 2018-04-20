@@ -7,7 +7,7 @@ const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, f
 const body = fixture("pull_request_opened.json")
 
 const mockInstallationSettings = generateInstallation({
-  id: 123,
+  iID: 123,
   settings: {
     env_vars: [],
     ignored_repos: [body.pull_request.head.repo.full_name],

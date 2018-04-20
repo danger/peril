@@ -41,7 +41,7 @@ describe("with webhooks from GitHub", () => {
       const req = requestWithFixturedJSON("push")
       mockGetInstallation.mockReturnValueOnce(
         generateInstallation({
-          id: 1234,
+          iID: 1234,
           dangerfilePath: "PerilTest/settings@peril.settings.json",
         })
       )
@@ -62,7 +62,7 @@ describe("with webhooks from GitHub", () => {
       const req = requestWithFixturedJSON("pull_request_closed")
       mockGetInstallation.mockReturnValueOnce(
         generateInstallation({
-          id: 1234,
+          iID: 1234,
           dangerfilePath: "danger/peril@peril.settings.json",
         })
       )
@@ -81,7 +81,7 @@ describe("with webhooks from GitHub", () => {
       const req = requestWithFixturedJSON("pull_request_closed")
       mockGetInstallation.mockReturnValueOnce(
         generateInstallation({
-          id: 1234,
+          iID: 1234,
           dangerfilePath: "PerilTest/other_repo@peril.settings.json",
         })
       )

@@ -5,7 +5,7 @@ exports[`Raises with a bad URL 1`] = `[Error: Could not find find a JSON file fo
 exports[`makes the right calls to GitHub with a legit stubbed JSON file 1`] = `
 Object {
   "dangerfilePath": "orta/peril@settings.json",
-  "id": 23511,
+  "iID": 23511,
   "repos": Object {
     "orta/ORStackView": Object {
       "issue.created": "orta/peril@lock_issues.ts",

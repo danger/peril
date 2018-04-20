@@ -16,7 +16,7 @@ const defaultSettings = {
 }
 
 const installationSettings = {
-  id: 123,
+  iID: 123,
   settings: defaultSettings,
 }
 

@@ -30,7 +30,7 @@ export const runTask = async (installation: GitHubInstallation, rules: Dangerfil
       data,
     },
   }
-  const token = await getTemporaryAccessTokenForInstallation(installation.id)
+  const token = await getTemporaryAccessTokenForInstallation(installation.iID)
   const dangerfile = await getGitHubFileContents(token, rep.repoSlug!, rep.dangerfilePath, rep.branch)
   return runDangerForInstallation(dangerfile, rep.dangerfilePath, null, dsl.import, installation, dangerDSL)
 }

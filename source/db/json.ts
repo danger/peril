@@ -45,7 +45,7 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
 
   /** Saves an Integration */
   saveInstallation: async (installation: GitHubInstallation) => {
-    info(`Skipping saving installation due to no db: ${installation.id}`)
+    info(`Skipping saving installation due to no db: ${installation.iID}`)
   },
 
   /** Updates the JSON for the db */
@@ -85,7 +85,7 @@ export const partialInstallationToInstallation = (
   partial: Partial<GitHubInstallation>,
   dangerfileRefString: DangerfileReferenceString
 ) => ({
-  id: PERIL_ORG_INSTALLATION_ID,
+  iID: partial.iID || PERIL_ORG_INSTALLATION_ID,
   repos: partial.repos || {},
   rules: partial.rules || {},
   scheduler: partial.scheduler || {},

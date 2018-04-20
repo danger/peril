@@ -64,7 +64,7 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
 
   // Attach Peril + the octokit API to the DSL
   // TODO: This probably needs expanding to the util funcs etc
-  await appendPerilContextToDSL(installation.id, token, context, peril)
+  await appendPerilContextToDSL(installation.iID, token, context, peril)
 
   const dangerfileLocation = dangerRepresentationForPath(input.path)
   if (!dangerfileLocation.repoSlug) {
@@ -100,7 +100,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   const runtimeDSL = await jsonToDSL(input.dsl)
   const context = contextForDanger(runtimeDSL)
   const peril = perilObjectForInstallation(installation, process.env, input.peril)
-  await appendPerilContextToDSL(installation.id, token, context, peril)
+  await appendPerilContextToDSL(installation.iID, token, context, peril)
 
   const dangerfileLocation = dangerRepresentationForPath(input.path)
 

@@ -7,7 +7,7 @@ import generateInstallation from "../../testing/installationFactory"
 
 export async function createInstallation(installationJSON: Installation, _: express.Request, res: express.Response) {
   // Default to no runnerRules
-  const installation = generateInstallation({ id: installationJSON.id })
+  const installation = generateInstallation({ iID: installationJSON.id })
   res.status(200).send("Creating new installation.")
 
   const db = getDB()

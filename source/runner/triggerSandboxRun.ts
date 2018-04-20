@@ -40,7 +40,7 @@ export const triggerSandboxDangerRun = async (
   dslJSON: DangerDSLJSONType,
   peril: any
 ) => {
-  const token = await getTemporaryAccessTokenForInstallation(installation.id)
+  const token = await getTemporaryAccessTokenForInstallation(installation.iID)
 
   dslJSON.settings = {
     github: {
