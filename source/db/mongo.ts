@@ -33,11 +33,11 @@ const database = {
   },
 
   /** Saves an Integration */
-  saveInstallation: async (installation: GitHubInstallation) => {
+  saveInstallation: async (installation: Partial<GitHubInstallation>) => {
     d(`Saving installation with id: ${installation.iID}`)
     const dbInstallation = await Installation.findOne({ iID: installation.iID })
     if (dbInstallation) {
-      await dbInstallation.update(installation)
+      await dbInstallation.update({ iID: installation.iID }, installation)
     } else {
       const newInstallation = new Installation(installation)
       await newInstallation.save()

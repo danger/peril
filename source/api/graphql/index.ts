@@ -19,21 +19,27 @@ const gql = (strings: any, ...keys: any[]) => {
 const typeDefs = gql`
   type Installation {
     # The MongoDB ID
-    id: String
+    id: String!
     # The installation ID, in the real sense
-    iID: Int
+    iID: Int!
+    # The path to the Dangerfile
+    dangerfilePath: String!
   }
 
   type User {
-    name: String
-    avatarURL: String
+    name: String!
+    avatarURL: String!
 
-    installations: [Installation]
+    installations: [Installation]!
   }
 
-  # the schema allows the following query:
+  # Root
   type Query {
     me: User
+  }
+
+  type Mutation {
+    editInstallation(iID: ID!, dangerfilePath: String!): Installation
   }
 `
 
@@ -62,6 +68,23 @@ const resolvers = {
       }
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       return decodedJWT.data.user
+    },
+  },
+
+  Mutation: {
+    editInstallation: async (_: any, params: any, context: GraphQLContext) => {
+      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
+      const installationID = String(params.iID)
+
+      if (!decodedJWT.iss.includes(installationID)) {
+        throw new Error(`You don't have access to this installation`)
+      }
+
+      const db = getDB() as MongoDB
+      const installation = await db.getInstallation(params.iID)
+      const updatedInstallation = { ...installation, ...params }
+      await db.saveInstallation(updatedInstallation)
+      return updatedInstallation
     },
   },
 }
