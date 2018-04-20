@@ -8,7 +8,7 @@ type JWT = string
 
 // The Decoded JWT data
 export interface PerilJWT {
-  exp: number
+  exp?: number
   iat: number
   iss: string[]
   data: {
@@ -28,10 +28,8 @@ export interface PerilOAuthUser {
  */
 export const createPerilJWT = (user: PerilOAuthUser, installationIDs: number[]): JWT => {
   const now = Math.round(new Date().getTime() / 1000)
-  const expires = now + 60
   const keyContent = PRIVATE_GITHUB_SIGNING_KEY
   const payload: PerilJWT = {
-    exp: expires,
     iat: now,
     iss: installationIDs.map(id => String(id)),
     data: {
@@ -39,7 +37,7 @@ export const createPerilJWT = (user: PerilOAuthUser, installationIDs: number[]):
     },
   }
 
-  return jwt.sign(payload, keyContent, { algorithm: "RS256" })
+  return jwt.sign(payload, keyContent, { algorithm: "RS256", expiresIn: "90 days" })
 }
 
 /**
@@ -49,7 +47,6 @@ export const createPerilJWT = (user: PerilOAuthUser, installationIDs: number[]):
 export const getDetailsFromPerilJWT = (token: JWT) =>
   new Promise<PerilJWT>((res, rej) => {
     const options = { algorithms: ["RS256"] }
-
     jwt.verify(token, PUBLIC_GITHUB_SIGNING_KEY, options, (err, decoded) => {
       if (err) {
         rej(err)

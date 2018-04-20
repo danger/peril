@@ -6,7 +6,7 @@ import { connect, Document, model, Schema } from "mongoose"
 import { dangerRepresentationForPath } from "../danger/danger_run"
 import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { MONGODB_URI } from "../globals"
-import { DatabaseAdaptor, GitHubInstallation, PerilInstallationSettings } from "./index"
+import { GitHubInstallation, PerilInstallationSettings } from "./index"
 import { partialInstallationToInstallation } from "./json"
 
 const d = debug("peril:mongo")
@@ -27,7 +27,7 @@ const Installation = model<MongoGithubInstallationModel>(
   })
 )
 
-const database: DatabaseAdaptor = {
+const database = {
   setup: async () => {
     await connect(MONGODB_URI)
   },
@@ -48,6 +48,12 @@ const database: DatabaseAdaptor = {
   getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
     const dbInstallation = await Installation.findOne({ iID: installationID })
     return dbInstallation
+  },
+
+  /** Gets a set of Integrations */
+  getInstallations: async (installationID: number[]): Promise<GitHubInstallation[]> => {
+    const dbInstallations = await Installation.where("iID").in(installationID)
+    return dbInstallations
   },
 
   /** Deletes an Integration */
@@ -90,4 +96,5 @@ const database: DatabaseAdaptor = {
   },
 }
 
+export type MongoDB = typeof database
 export default database

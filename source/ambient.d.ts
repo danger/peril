@@ -4,3 +4,4 @@ declare module "uuid"
 declare module "json2ts"
 
 declare module "async-exit-hook"
+declare module "graphql-resolvers"

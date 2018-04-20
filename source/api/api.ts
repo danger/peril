@@ -1,4 +1,4 @@
-import { graphqlExpress } from "apollo-server-express"
+import { graphiqlExpress, graphqlExpress } from "apollo-server-express"
 import * as bodyParser from "body-parser"
 import * as cookieParser from "cookie-parser"
 import { Application } from "express"
@@ -10,6 +10,10 @@ import prDSLRunner from "./pr/dsl"
 
 export const GitHubOAuthStart = "/api/auth/peril/github/start"
 export const GitHubOAuthEnd = "/api/auth/peril/github/end"
+
+export interface GraphQLContext {
+  jwt: string
+}
 
 // Public API
 const setupPublicAPI = (app: Application) => {
@@ -29,7 +33,18 @@ const setupPublicAPI = (app: Application) => {
   // GQL
   // The main GraphQL route for Peril
   // TODO: Figure out authentication
-  app.use("/api/graphql", bodyParser.json(), graphqlExpress({ schema })) // won't work yet
+  app.use(
+    "/api/graphql",
+    bodyParser.json(),
+    graphqlExpress(req => ({
+      schema,
+      context: {
+        jwt: req && cookieParser.JSONCookies(req.cookies).jwt,
+      },
+    }))
+  )
+
+  app.use("/api/graphiql", graphiqlExpress({ endpointURL: "/api/graphql" }))
 }
 
 export default setupPublicAPI
