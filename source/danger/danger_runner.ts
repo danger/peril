@@ -7,7 +7,6 @@ import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 import { DangerRunner } from "danger/distribution/runner/runners/runner"
 import vm2 from "danger/distribution/runner/runners/vm2"
-
 import * as path from "path"
 
 import { DangerfileReferenceString } from "../db"

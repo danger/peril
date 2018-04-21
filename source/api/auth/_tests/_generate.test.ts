@@ -22,7 +22,7 @@ it("gets data from a JWT it generated", async () => {
   const jwt = createPerilJWT(user, installations)
   // Just a prefix for now
   const data = await getDetailsFromPerilJWT(jwt)
-  expect(data).toEqual({ data: { user: { avatar_url: "123", name: "MurphDog" } }, exp: 61, iat: 1, iss: ["1"] })
+  expect(data).toEqual({ data: { user: { avatar_url: "123", name: "MurphDog" } }, exp: 7776001, iat: 1, iss: ["1"] })
 })
 
 it("raises when then JWT is invalid", async () => {
