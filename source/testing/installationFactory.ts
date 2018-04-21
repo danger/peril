@@ -1,7 +1,7 @@
 import { GitHubInstallation } from "../db/index"
 
 const emptyInstallation: GitHubInstallation = {
-  id: 123,
+  iID: 123,
   repos: {},
   rules: {},
   scheduler: {},
@@ -11,6 +11,10 @@ const emptyInstallation: GitHubInstallation = {
     modules: [],
   },
   tasks: {},
+  dangerfilePath: "",
 }
 
-export default (diff: Partial<GitHubInstallation>): GitHubInstallation => Object.assign({}, emptyInstallation, diff)
+const generateInstallation = (diff: Partial<GitHubInstallation>): GitHubInstallation =>
+  Object.assign({}, emptyInstallation, diff)
+
+export default generateInstallation

@@ -1,7 +1,9 @@
 import * as JSON5 from "json5"
+
 import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { PERIL_ORG_INSTALLATION_ID } from "../globals"
 import winston from "../logger"
+import { getDB } from "./getDB"
 import { DangerfileReferenceString, DatabaseAdaptor, GitHubInstallation } from "./index"
 
 // Effectively you need to have a JSON file that looks like a GitHubInstallation,
@@ -43,7 +45,14 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
 
   /** Saves an Integration */
   saveInstallation: async (installation: GitHubInstallation) => {
-    info(`Skipping saving installation due to no db: ${installation.id}`)
+    info(`Skipping saving installation due to no db: ${installation.iID}`)
+  },
+
+  /** Updates the JSON for the db */
+  updateInstallation: async (_: number) => {
+    const db = await getDB()
+    await db.setup()
+    return org
   },
 
   setup: async () => {
@@ -63,30 +72,37 @@ const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdapto
     } else {
       // Set our write-once org variable that is then re-used for all of the different
       // installation related calls
-
-      org = {
-        id: PERIL_ORG_INSTALLATION_ID,
-        repos: parsedOrg.repos || {},
-        rules: parsedOrg.rules || {},
-        scheduler: parsedOrg.scheduler || {},
-        tasks: parsedOrg.tasks || {},
-        settings: {
-          env_vars: (parsedOrg.settings && parsedOrg.settings.env_vars) || [],
-          ignored_repos: (parsedOrg.settings && parsedOrg.settings.ignored_repos) || [],
-          modules: (parsedOrg.settings && parsedOrg.settings.modules) || [],
-        },
-      }
+      org = partialInstallationToInstallation(parsedOrg, dangerFilePath)
     }
+  },
+})
+
+/**
+ * Go from a potentially semi-filled in Installation, to one
+ * where you can trust that things exist.
+ */
+export const partialInstallationToInstallation = (
+  partial: Partial<GitHubInstallation>,
+  dangerfileRefString: DangerfileReferenceString
+) => ({
+  iID: partial.iID || PERIL_ORG_INSTALLATION_ID,
+  repos: partial.repos || {},
+  rules: partial.rules || {},
+  scheduler: partial.scheduler || {},
+  tasks: partial.tasks || {},
+  dangerfilePath: dangerfileRefString,
+  settings: {
+    env_vars: (partial.settings && partial.settings.env_vars) || [],
+    ignored_repos: (partial.settings && partial.settings.ignored_repos) || [],
+    modules: (partial.settings && partial.settings.modules) || [],
   },
 })
 
 export default jsonDatabase
 
 const throwNoJSONFileFound = (dangerFilePath: DangerfileReferenceString) => {
-  /* tslint:disable: max-line-length */
   const msg = "Could not find find a JSON file for Peril settings."
   const subtitle = `It's likely that Peril cannot connect to ${dangerFilePath}, check the logs for more info above here.`
-  const action = `You'll probably need to make changes to your  "DATABASE_JSON_FILE" in your ENV vars.`
+  const action = `You'll probably need to make changes to the "DATABASE_JSON_FILE" in your ENV vars.`
   throw new Error([msg, subtitle, action].join(" "))
-  /* tslint:enable: max-line-length */
 }

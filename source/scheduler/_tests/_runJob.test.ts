@@ -17,7 +17,7 @@ jest.mock("../../danger/danger_runner", () => ({
 import { runDangerForInstallation } from "../../danger/danger_runner"
 
 const installation: GitHubInstallation = {
-  id: 123,
+  iID: 123,
   repos: {},
   rules: {},
   scheduler: {},
@@ -27,6 +27,7 @@ const installation: GitHubInstallation = {
     modules: [],
   },
   tasks: {},
+  dangerfilePath: "",
 }
 
 const contents = getGitHubFileContents as any

@@ -11,7 +11,7 @@ dotenv.config(config)
  * @returns {string}
  */
 function getEnv(configName: string): string {
-  return process.env[configName]
+  return process.env[configName] as string
 }
 
 function validates(keys: string[]) {
@@ -28,6 +28,10 @@ function validates(keys: string[]) {
  */
 export const PRIVATE_GITHUB_SIGNING_KEY =
   getEnv("PRIVATE_GITHUB_SIGNING_KEY") && getEnv("PRIVATE_GITHUB_SIGNING_KEY").trim()
+
+/** Used only for verifying JWT keys, so is not useful for non-public */
+export const PUBLIC_GITHUB_SIGNING_KEY =
+  getEnv("PUBLIC_GITHUB_SIGNING_KEY") && getEnv("PUBLIC_GITHUB_SIGNING_KEY").trim()
 
 /**
  * The ID for the GitHub integration
@@ -79,6 +83,18 @@ export const PERIL_WEBHOOK_SECRET = getEnv("PERIL_WEBHOOK_SECRET")
 /** Is this a public facing instance of Peril? E.g. is it the definitive server */
 export const PUBLIC_FACING_API = !!getEnv("PUBLIC_FACING_API")
 
+/** The address of the corresponding UI server */
+export const PUBLIC_WEB_ROOT_URL = getEnv("PUBLIC_WEB_ROOT_URL")
+
+/** The address of this API server */
+export const PUBLIC_API_ROOT_URL = getEnv("PUBLIC_API_ROOT_URL")
+
+/** The GitHub OAuth Client ID */
+export const GITHUB_CLIENT_ID = getEnv("GITHUB_CLIENT_ID")
+
+/** The GitHub OAuth Client Secret */
+export const GITHUB_CLIENT_SECRET = getEnv("GITHUB_CLIENT_SECRET")
+
 /** The URL for a Mongo DB instance, currently used for  */
 export const MONGODB_URI = getEnv("MONGODB_URI")
 
@@ -97,6 +113,16 @@ export const validateENVForPerilServer = () => {
   // Can't run without these
   validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
 
+  if (PUBLIC_FACING_API) {
+    // Can't run a public API without these settings
+    validates(["PUBLIC_WEB_ROOT_URL", "PUBLIC_API_ROOT_URL", "GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET"])
+
+    if (!PUBLIC_GITHUB_SIGNING_KEY) {
+      throw new Error(
+        "You need to set up a public signing key based on GH's private one. `openssl rsa -in mykey.pem -pubout > mykey.pub`"
+      )
+    }
+  }
   // Validate the db
   if (!MONGODB_URI && !DATABASE_JSON_FILE) {
     throw new Error("Peril cannot work without either a MONGODB_URI or a DATABASE_JSON_FILE")

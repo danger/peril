@@ -61,7 +61,7 @@ export const getRepoSpecificRules = (installation: GitHubInstallation, repoName:
 
   const repo: GithubRepo = {
     fullName: repoName,
-    installationID: installation.id,
+    installationID: installation.iID,
     rules: repos[repoName],
   }
 
@@ -215,7 +215,7 @@ export const runEventRun = async (
   const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, run.branch)
 
   const installationSettings = {
-    id: settings.installationID,
+    iID: settings.installationID,
     settings: settings.installationSettings,
   }
 
@@ -319,7 +319,7 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
     // Everything is :+1:
 
     const installationSettings = {
-      id: settings.installationID,
+      iID: settings.installationID,
       settings: settings.installationSettings,
     }
 

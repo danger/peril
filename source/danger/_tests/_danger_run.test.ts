@@ -1,4 +1,4 @@
-import { dangerRepresentationforPath, dangerRunForRules, dsl, dslTypeForEvent, feedback } from "../danger_run"
+import { dangerRepresentationForPath, dangerRunForRules, dsl, dslTypeForEvent, feedback } from "../danger_run"
 
 describe("for ping", () => {
   it("returns an action when ping is in the rules", () => {
@@ -100,7 +100,7 @@ describe("for PRs", () => {
 describe("dangerRepresentationforPath", () => {
   it("returns just the path with master and no repo with just a path", () => {
     const path = "dangerfile.ts"
-    expect(dangerRepresentationforPath(path)).toEqual({
+    expect(dangerRepresentationForPath(path)).toEqual({
       branch: "master",
       dangerfilePath: "dangerfile.ts",
       referenceString: "dangerfile.ts",
@@ -110,7 +110,7 @@ describe("dangerRepresentationforPath", () => {
 
   it("returns the path and repo", () => {
     const path = "orta/eigen@dangerfile.ts"
-    expect(dangerRepresentationforPath(path)).toEqual({
+    expect(dangerRepresentationForPath(path)).toEqual({
       branch: "master",
       dangerfilePath: "dangerfile.ts",
       referenceString: "orta/eigen@dangerfile.ts",
@@ -120,7 +120,7 @@ describe("dangerRepresentationforPath", () => {
 
   it("returns just the path when there is no repo reference", () => {
     const path = "orta/eigen@dangerfile.ts#branch"
-    expect(dangerRepresentationforPath(path)).toEqual({
+    expect(dangerRepresentationForPath(path)).toEqual({
       branch: "branch",
       dangerfilePath: "dangerfile.ts",
       referenceString: "orta/eigen@dangerfile.ts#branch",
@@ -130,7 +130,7 @@ describe("dangerRepresentationforPath", () => {
 
   it("handles a branch with no repo ref", () => {
     const path = "dangerfile.ts#branch"
-    expect(dangerRepresentationforPath(path)).toEqual({
+    expect(dangerRepresentationForPath(path)).toEqual({
       branch: "branch",
       dangerfilePath: "dangerfile.ts",
       referenceString: "dangerfile.ts#branch",

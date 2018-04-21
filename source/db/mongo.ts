@@ -1,36 +1,25 @@
 import * as debug from "debug"
-import { pick } from "lodash"
+import * as JSON5 from "json5"
+
 import { connect, Document, model, Schema } from "mongoose"
 
+import { dangerRepresentationForPath } from "../danger/danger_run"
+import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { MONGODB_URI } from "../globals"
-import { DatabaseAdaptor, GitHubInstallation } from "./index"
+import { GitHubInstallation, PerilInstallationSettings } from "./index"
+import { partialInstallationToInstallation } from "./json"
 
 const d = debug("peril:mongo")
 
-export interface MongoGithubInstallationModel extends Document {
-  installationID: number
-  settings: any
-  tasks: any
-  repos: any
-  rules: any
-}
-const rootSettings = ["settings", "repos", "tasks", "rules", "scheduler"]
-
-export const ghToMongo = (gh: GitHubInstallation): MongoGithubInstallationModel => ({
-  installationID: gh.id,
-  ...(pick(gh, rootSettings) as any),
-})
-
-export const mongoToGH = (mongo: MongoGithubInstallationModel): GitHubInstallation => ({
-  id: mongo.installationID,
-  ...(pick(mongo, rootSettings) as any),
-})
+/**
+ * Basically the same thing as a PerilInstallationSettings but coming from the database
+ */
+export interface MongoGithubInstallationModel extends Document, PerilInstallationSettings {}
 
 const Installation = model<MongoGithubInstallationModel>(
   "GithubInstallation",
   new Schema({
-    // Need to convert from id to installationID
-    installationID: Number,
+    iID: Number,
     settings: Schema.Types.Mixed,
     tasks: Schema.Types.Mixed,
     repos: Schema.Types.Mixed,
@@ -38,36 +27,74 @@ const Installation = model<MongoGithubInstallationModel>(
   })
 )
 
-const database: DatabaseAdaptor = {
+const database = {
   setup: async () => {
     await connect(MONGODB_URI)
   },
 
   /** Saves an Integration */
-  saveInstallation: async (installation: GitHubInstallation) => {
-    d(`Saving installation with id: ${installation.id}`)
-    const dbInstallation = await Installation.findOne({ installationID: installation.id })
+  saveInstallation: async (installation: Partial<GitHubInstallation>) => {
+    d(`Saving installation with id: ${installation.iID}`)
+    const dbInstallation = await Installation.findOne({ iID: installation.iID })
     if (dbInstallation) {
-      await dbInstallation.update(ghToMongo(installation))
+      await dbInstallation.update({ iID: installation.iID }, installation)
     } else {
-      const newInstallation = new Installation(ghToMongo(installation))
+      const newInstallation = new Installation(installation)
       await newInstallation.save()
     }
   },
 
   /** Gets an Integration */
   getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
-    const dbInstallation = await Installation.findOne({ installationID })
-    return dbInstallation && mongoToGH(dbInstallation)
+    const dbInstallation = await Installation.findOne({ iID: installationID })
+    return dbInstallation
+  },
+
+  /** Gets a set of Integrations */
+  getInstallations: async (installationID: number[]): Promise<GitHubInstallation[]> => {
+    const dbInstallations = await Installation.where("iID").in(installationID)
+    return dbInstallations
+  },
+
+  /** Deletes an Integration */
+  updateInstallation: async (installationID: number) => {
+    const dbInstallation = await Installation.findOne({ iID: installationID })
+    if (!dbInstallation) {
+      d.log(`Could not get a db reference for installation ${installationID} when updating`)
+      return
+    }
+
+    if (!dbInstallation.dangerfilePath) {
+      d.log(`Could not get installation ${installationID} did not have a dangerfilePath when updating`)
+      return
+    }
+
+    const pathRep = dangerRepresentationForPath(dbInstallation.dangerfilePath)
+
+    if (!pathRep.repoSlug || !pathRep.dangerfilePath) {
+      d.log(`DangerfilePath for ${installationID} did not have a repoSlug/dangerfilePath when updating`)
+      return
+    }
+
+    const file = await getGitHubFileContentsWithoutToken(pathRep.repoSlug, pathRep.dangerfilePath)
+    if (file === "") {
+      d.log(`Settings for ${installationID} at ${dbInstallation.dangerfilePath} were empty`)
+      return
+    }
+
+    const parsedSettings = JSON5.parse(file) as Partial<GitHubInstallation>
+    const installation = partialInstallationToInstallation(parsedSettings, dbInstallation.dangerfilePath)
+    return await Installation.updateOne({ iID: installationID }, installation)
   },
 
   /** Deletes an Integration */
   deleteInstallation: async (installationID: number) => {
-    const dbInstallation = await Installation.findOne({ installationID })
+    const dbInstallation = await Installation.findOne({ iID: installationID })
     if (dbInstallation) {
       await dbInstallation.remove()
     }
   },
 }
 
+export type MongoDB = typeof database
 export default database

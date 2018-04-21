@@ -10,7 +10,7 @@ import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 import inlineRunner from "danger/distribution/runner/runners/inline"
 
 import { appendPerilContextToDSL, perilObjectForInstallation } from "../danger/append_peril"
-import { dangerRepresentationforPath, dsl } from "../danger/danger_run"
+import { dangerRepresentationForPath, dsl } from "../danger/danger_run"
 import { executorForInstallation, InstallationToRun } from "../danger/danger_runner"
 import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
@@ -64,9 +64,9 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
 
   // Attach Peril + the octokit API to the DSL
   // TODO: This probably needs expanding to the util funcs etc
-  await appendPerilContextToDSL(installation.id, token, context, peril)
+  await appendPerilContextToDSL(installation.iID, token, context, peril)
 
-  const dangerfileLocation = dangerRepresentationforPath(input.path)
+  const dangerfileLocation = dangerRepresentationForPath(input.path)
   if (!dangerfileLocation.repoSlug) {
     logger.error(`No repo slug in ${input.path} given for event based run, which is not supported yet`)
     return
@@ -100,9 +100,9 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   const runtimeDSL = await jsonToDSL(input.dsl)
   const context = contextForDanger(runtimeDSL)
   const peril = perilObjectForInstallation(installation, process.env, input.peril)
-  await appendPerilContextToDSL(installation.id, token, context, peril)
+  await appendPerilContextToDSL(installation.iID, token, context, peril)
 
-  const dangerfileLocation = dangerRepresentationforPath(input.path)
+  const dangerfileLocation = dangerRepresentationForPath(input.path)
 
   const defaultRepoSlug = input.dsl.github.pr.base.repo.full_name
   const dangerfileContent = await getGitHubFileContentsFromLocation(token, dangerfileLocation, defaultRepoSlug)

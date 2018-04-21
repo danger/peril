@@ -7,7 +7,6 @@ import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 import { DangerRunner } from "danger/distribution/runner/runners/runner"
 import vm2 from "danger/distribution/runner/runners/vm2"
-
 import * as path from "path"
 
 import { DangerfileReferenceString } from "../db"
@@ -23,7 +22,7 @@ import perilPlatform from "./peril_platform"
 const log = (message: string) => winston.info(`[runner] - ${message}`)
 
 export interface InstallationToRun {
-  id: number
+  iID: number
   settings: GitHubInstallationSettings
 }
 
@@ -74,7 +73,7 @@ export async function runDangerAgainstFileInline(
 
   // This can expand with time
   if (runtimeEnv.sandbox) {
-    await appendPerilContextToDSL(installation.id, undefined, runtimeEnv.sandbox, peril)
+    await appendPerilContextToDSL(installation.iID, undefined, runtimeEnv.sandbox, peril)
   }
 
   let results: DangerResults

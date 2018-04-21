@@ -66,5 +66,5 @@ export const perilObjectForInstallation = (
   env:
     installation.settings.env_vars &&
     Object.assign({}, ...installation.settings.env_vars.map(k => ({ [k]: environment[k] }))),
-  runTask: generateTaskSchedulerForInstallation(installation.id),
+  runTask: generateTaskSchedulerForInstallation(installation.iID),
 })

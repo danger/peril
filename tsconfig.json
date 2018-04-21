@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
+    "target": "es2017",
     "outDir": "out",
-    "lib": ["es2016", "es2016.array.include"],
+    "lib": ["esnext"],
     "sourceMap": true,
     "rootDir": "source",
     "allowJs": true,
@@ -23,7 +23,7 @@
     "dangerfile_runtime_env",
     "node_modules",
     "out",
-    "dangerfile.js",
+    "dangerfile.lite.ts",
     "wallaby.js",
     "migrations"
   ]

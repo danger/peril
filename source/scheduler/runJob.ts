@@ -1,5 +1,5 @@
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
-import { dangerRepresentationforPath, dsl } from "../danger/danger_run"
+import { dangerRepresentationForPath, dsl } from "../danger/danger_run"
 import { runDangerForInstallation } from "../danger/danger_runner"
 import { DangerfileReferenceString, GitHubInstallation } from "../db/index"
 import { getGitHubFileContents } from "../github/lib/github_helpers"
@@ -12,7 +12,7 @@ const error = (message: string) => {
 }
 
 const runJob = async (installation: GitHubInstallation, rules: DangerfileReferenceString) => {
-  const rep = dangerRepresentationforPath(rules)
+  const rep = dangerRepresentationForPath(rules)
   if (rep.repoSlug === undefined) {
     if (DATABASE_JSON_FILE) {
       // If you don't provide a repo slug, assume that the
@@ -24,7 +24,7 @@ const runJob = async (installation: GitHubInstallation, rules: DangerfileReferen
   }
 
   const dangerDSL = {}
-  const token = await getTemporaryAccessTokenForInstallation(installation.id)
+  const token = await getTemporaryAccessTokenForInstallation(installation.iID)
   const dangerfile = await getGitHubFileContents(token, rep.repoSlug!, rep.dangerfilePath, rep.branch)
   return runDangerForInstallation(dangerfile, rep.dangerfilePath, null, dsl.import, installation, dangerDSL)
 }

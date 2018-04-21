@@ -1,22 +1,19 @@
 import { readFileSync } from "fs"
 import { resolve } from "path"
+import generateInstallation from "../../../testing/installationFactory"
 
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 const body = fixture("pull_request_opened.json")
 
-const mockInstallationSettings: GitHubInstallation = {
-  id: 123,
-  repos: {},
-  rules: {},
-  scheduler: {},
+const mockInstallationSettings = generateInstallation({
+  iID: 123,
   settings: {
     env_vars: [],
     ignored_repos: [body.pull_request.head.repo.full_name],
     modules: [],
   },
-  tasks: {},
-}
+})
 
 jest.doMock("../../../db/getDB", () => ({
   getDB: () => ({
@@ -24,7 +21,6 @@ jest.doMock("../../../db/getDB", () => ({
   }),
 }))
 
-import { GitHubInstallation } from "../../../db"
 import { githubDangerRunner } from "../github_runner"
 
 it("Does not run a dangerfile in an ignored repo", async () => {
