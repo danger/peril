@@ -6,3 +6,4 @@ node_modules
 *.dat
 out
 .env
+.next

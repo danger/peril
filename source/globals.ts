@@ -22,17 +22,32 @@ function validates(keys: string[]) {
   })
 }
 
+export let privateKey = getEnv("PRIVATE_GITHUB_SIGNING_KEY") && getEnv("PRIVATE_GITHUB_SIGNING_KEY").trim()
+// Now has issues with putting in complex vars, they want it base64'd
+// so if this var doesn't have the RSA header, then convert it
+if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
+  privateKey = new Buffer(privateKey, "base64").toString()
+  if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
+    throw new Error("Expected PRIVATE_GITHUB_SIGNING_KEY to be a private key after being base64'd, got " + privateKey)
+  }
+}
+
+export let publicKey = getEnv("PUBLIC_GITHUB_SIGNING_KEY") && getEnv("PUBLIC_GITHUB_SIGNING_KEY").trim()
+// This can be null on single-org installations
+if (publicKey && !publicKey.includes("-----BEGIN PUBLIC")) {
+  publicKey = new Buffer(publicKey, "base64").toString()
+  if (!publicKey.includes("-----BEGIN PUBLIC")) {
+    throw new Error("Expected PUBLIC_GITHUB_SIGNING_KEY to be a public key after being base64'd, got " + publicKey)
+  }
+}
+
 /** Private key for the app
  *
  * To set it on heroku: heroku config:add PRIVATE_GITHUB_SIGNING_KEY="$(cat thekey.pem)"
  */
-export const PRIVATE_GITHUB_SIGNING_KEY =
-  getEnv("PRIVATE_GITHUB_SIGNING_KEY") && getEnv("PRIVATE_GITHUB_SIGNING_KEY").trim()
-
+export const PRIVATE_GITHUB_SIGNING_KEY = privateKey
 /** Used only for verifying JWT keys, so is not useful for non-public */
-export const PUBLIC_GITHUB_SIGNING_KEY =
-  getEnv("PUBLIC_GITHUB_SIGNING_KEY") && getEnv("PUBLIC_GITHUB_SIGNING_KEY").trim()
-
+export const PUBLIC_GITHUB_SIGNING_KEY = publicKey
 /**
  * The ID for the GitHub integration
  */

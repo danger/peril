@@ -5,21 +5,25 @@
   "scripts": {
     "start": "node out/index.js",
     "compile": "tsc -watch -p ./",
-    "build": "yarn tsc",
-    "postinstall": "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
-    "test": "jest && yarn lint",
-    "test:watch": "jest --watch",
-    "lint": "tslint source/**/**/**.ts",
+    "build": "tsc",
     "type-check": "tsc --noEmit --pretty",
-    "types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
-    "prettier": "prettier",
-    "prettier-project": "prettier --write 'source/**/*.{ts,tsx,md,json}'",
+    "postinstall": "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
+
+    "test": "jest && tslint source/**/**/**.ts",
+    "generate:types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
+
     "setup": "yarn run setup:plugins && yarn run setup:env",
     "setup:env": "node out/scripts/setup-env.js",
     "setup:plugins": "node out/scripts/setup-plugins.js",
+
+    "runner": "node out/runner/index.js",
+
+    "deploy:staging":
+      "now deploy --local-config now.staging.json --team peril --token $NOW_TOKEN; yarn deploy:staging:alias",
+    "deploy:staging:alias": "now alias --local-config now.staging.json --team peril --token $NOW_TOKEN",
+
     "precommit": "lint-staged; yarn build;",
-    "prepush": "jest; yarn danger local --dangerfile dangerfile.lite.ts",
-    "runner": "node out/runner/index.js"
+    "prepush": "jest; yarn danger local --dangerfile dangerfile.lite.ts"
   },
   "repository": {
     "type": "git",
@@ -106,6 +110,7 @@
     "husky": "^0.14.0",
     "lint-staged": "^7.0.0",
     "mockingoose": "^2.9.1",
+    "now-travis": "^1.2.0",
     "prettier": "^1.12.1",
     "tslint-config-prettier": "^1.10.0"
   },
