@@ -26,7 +26,7 @@ export let privateKey = getEnv("PRIVATE_GITHUB_SIGNING_KEY") && getEnv("PRIVATE_
 // Now has issues with putting in complex vars, they want it base64'd
 // so if this var doesn't have the RSA header, then convert it
 if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
-  privateKey = new Buffer(privateKey, "base64").toString()
+  privateKey = new Buffer(privateKey, "base64").toString("utf8")
   if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
     throw new Error("Expected PRIVATE_GITHUB_SIGNING_KEY to be a private key after being base64'd, got " + privateKey)
   }
@@ -35,7 +35,7 @@ if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
 export let publicKey = getEnv("PUBLIC_GITHUB_SIGNING_KEY") && getEnv("PUBLIC_GITHUB_SIGNING_KEY").trim()
 // This can be null on single-org installations
 if (publicKey && !publicKey.includes("-----BEGIN PUBLIC")) {
-  publicKey = new Buffer(publicKey, "base64").toString()
+  publicKey = new Buffer(publicKey, "base64").toString("utf8")
   if (!publicKey.includes("-----BEGIN PUBLIC")) {
     throw new Error("Expected PUBLIC_GITHUB_SIGNING_KEY to be a public key after being base64'd, got " + publicKey)
   }

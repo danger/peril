@@ -18,10 +18,6 @@
 
     "runner": "node out/runner/index.js",
 
-    "deploy:staging":
-      "now deploy --local-config now.staging.json --team peril --token $NOW_TOKEN; yarn deploy:staging:alias",
-    "deploy:staging:alias": "now alias --local-config now.staging.json --team peril --token $NOW_TOKEN",
-
     "precommit": "lint-staged; yarn build;",
     "prepush": "jest; yarn danger local --dangerfile dangerfile.lite.ts"
   },

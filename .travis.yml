@@ -3,7 +3,7 @@ node_js: 9
 cache: yarn
 
 after_success:
-- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && yarn deploy:staging
+- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && scripts/deploy_staging.sh
 
 env:
   global:
