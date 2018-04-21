@@ -22,32 +22,41 @@ function validates(keys: string[]) {
   })
 }
 
-export let privateKey = getEnv("PRIVATE_GITHUB_SIGNING_KEY") && getEnv("PRIVATE_GITHUB_SIGNING_KEY").trim()
+export let privateKey = getEnv("PRIVATE_GITHUB_SIGNING_KEY")
 // Now has issues with putting in complex vars, they want it base64'd
 // so if this var doesn't have the RSA header, then convert it
 if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
-  privateKey = new Buffer(privateKey, "base64").toString("utf8")
+  privateKey = Buffer.from(privateKey, "base64").toString("utf8")
   if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
+    // tslint:disable-next-line:no-console
+    console.log("Key:" + getEnv("PRIVATE_GITHUB_SIGNING_KEY"))
+    // tslint:disable-next-line:no-console
+    console.log("After:" + privateKey)
     throw new Error("Expected PRIVATE_GITHUB_SIGNING_KEY to be a private key after being base64'd, got " + privateKey)
   }
 }
 
-export let publicKey = getEnv("PUBLIC_GITHUB_SIGNING_KEY") && getEnv("PUBLIC_GITHUB_SIGNING_KEY").trim()
+export let publicKey = getEnv("PUBLIC_GITHUB_SIGNING_KEY")
 // This can be null on single-org installations
 if (publicKey && !publicKey.includes("-----BEGIN PUBLIC")) {
-  publicKey = new Buffer(publicKey, "base64").toString("utf8")
+  publicKey = Buffer.from(publicKey, "base64").toString("utf8")
   if (!publicKey.includes("-----BEGIN PUBLIC")) {
+    // tslint:disable-next-line:no-console
+    console.log("Key:" + getEnv("PUBLIC_GITHUB_SIGNING_KEY"))
+    // tslint:disable-next-line:no-console
+    console.log("After:" + publicKey)
     throw new Error("Expected PUBLIC_GITHUB_SIGNING_KEY to be a public key after being base64'd, got " + publicKey)
   }
 }
 
 /** Private key for the app
  *
- * To set it on heroku: heroku config:add PRIVATE_GITHUB_SIGNING_KEY="$(cat thekey.pem)"
+ * - To set it on heroku: heroku config:add PRIVATE_GITHUB_SIGNING_KEY="$(cat thekey.pem)"
+ * - To set it on now: now secrets -T peril add stag_public_github_signing_key (cat thekey.pem | base64)
  */
-export const PRIVATE_GITHUB_SIGNING_KEY = privateKey
+export const PRIVATE_GITHUB_SIGNING_KEY = privateKey.trim()
 /** Used only for verifying JWT keys, so is not useful for non-public */
-export const PUBLIC_GITHUB_SIGNING_KEY = publicKey
+export const PUBLIC_GITHUB_SIGNING_KEY = publicKey.trim()
 /**
  * The ID for the GitHub integration
  */
