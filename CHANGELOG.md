@@ -1,3 +1,7 @@
+## 2018 - April 21
+
+* Created a real staging environment: https://staging-api.peril.systems/ - orta
+
 ## 2018 - April 20
 
 * Updated node to 9 - orta

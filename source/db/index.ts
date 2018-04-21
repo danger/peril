@@ -92,7 +92,7 @@ export interface PerilInstallationSettings {
    * Filled in automatically when using JSON db, and
    * is the initial string when working in the public mode
    */
-  dangerfilePath: DangerfileReferenceString
+  perilSettingsJSONURL: DangerfileReferenceString
 }
 
 export interface UniqueRepoRuleset {

@@ -27,7 +27,7 @@ const installation: GitHubInstallation = {
     modules: [],
   },
   tasks: {},
-  dangerfilePath: "",
+  perilSettingsJSONURL: "",
 }
 
 const contents = getGitHubFileContents as any

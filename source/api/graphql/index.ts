@@ -23,7 +23,7 @@ const typeDefs = gql`
     # The installation ID, in the real sense
     iID: Int!
     # The path to the Dangerfile
-    dangerfilePath: String!
+    perilSettingsJSONURL: String!
   }
 
   type User {
@@ -39,7 +39,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    editInstallation(iID: ID!, dangerfilePath: String!): Installation
+    editInstallation(iID: ID!, perilSettingsJSONURL: String!): Installation
   }
 `
 
@@ -80,10 +80,12 @@ const resolvers = {
         throw new Error(`You don't have access to this installation`)
       }
 
+      // This is definitely overkil, but sure
       const db = getDB() as MongoDB
       const installation = await db.getInstallation(params.iID)
       const updatedInstallation = { ...installation, ...params }
       await db.saveInstallation(updatedInstallation)
+      await db.updateInstallation(updatedInstallation)
       return updatedInstallation
     },
   },

@@ -90,7 +90,7 @@ export const partialInstallationToInstallation = (
   rules: partial.rules || {},
   scheduler: partial.scheduler || {},
   tasks: partial.tasks || {},
-  dangerfilePath: dangerfileRefString,
+  perilSettingsJSONURL: dangerfileRefString,
   settings: {
     env_vars: (partial.settings && partial.settings.env_vars) || [],
     ignored_repos: (partial.settings && partial.settings.ignored_repos) || [],

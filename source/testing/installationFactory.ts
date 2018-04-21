@@ -11,7 +11,7 @@ const emptyInstallation: GitHubInstallation = {
     modules: [],
   },
   tasks: {},
-  dangerfilePath: "",
+  perilSettingsJSONURL: "",
 }
 
 const generateInstallation = (diff: Partial<GitHubInstallation>): GitHubInstallation =>

@@ -22,7 +22,7 @@ export const settingsUpdater = async (event: string, req: express.Request, _: ex
         return
       }
 
-      const rep = dangerRepresentationForPath(installation.dangerfilePath)
+      const rep = dangerRepresentationForPath(installation.perilSettingsJSONURL)
       if (rep.repoSlug && rep.dangerfilePath) {
         const repo = rep.repoSlug!
 
@@ -48,7 +48,7 @@ export const settingsUpdater = async (event: string, req: express.Request, _: ex
         return
       }
 
-      const rep = dangerRepresentationForPath(installation.dangerfilePath)
+      const rep = dangerRepresentationForPath(installation.perilSettingsJSONURL)
       const ref = body.ref
       const hookRepo = body.repository.full_name
       const repo = rep.repoSlug

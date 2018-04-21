@@ -104,12 +104,18 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
     return
   }
 
+  // If there's not a settings path, then we can't do anything
+  if (installation.perilSettingsJSONURL) {
+    res.status(204).send(`The installation has no settings path`)
+    return
+  }
+
   const settings = await setupForRequest(req, installation.settings)
 
   // Allow edge-case repos to skip Danger rules. E.g. in Artsy, our analytics and marketing repos
   // do not need the same level of thought as an larger engineering project would.
   if (settings.repoName && installation.settings.ignored_repos.includes(settings.repoName)) {
-    res.status(200).send(`Skipping peril run due to repo being in ignored`)
+    res.status(204).send(`Skipping peril run due to repo being in ignored`)
     return
   }
 

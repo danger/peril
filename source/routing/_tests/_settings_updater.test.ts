@@ -42,7 +42,7 @@ describe("with webhooks from GitHub", () => {
       mockGetInstallation.mockReturnValueOnce(
         generateInstallation({
           iID: 1234,
-          dangerfilePath: "PerilTest/settings@peril.settings.json",
+          perilSettingsJSONURL: "PerilTest/settings@peril.settings.json",
         })
       )
 
@@ -63,7 +63,7 @@ describe("with webhooks from GitHub", () => {
       mockGetInstallation.mockReturnValueOnce(
         generateInstallation({
           iID: 1234,
-          dangerfilePath: "danger/peril@peril.settings.json",
+          perilSettingsJSONURL: "danger/peril@peril.settings.json",
         })
       )
 
@@ -82,7 +82,7 @@ describe("with webhooks from GitHub", () => {
       mockGetInstallation.mockReturnValueOnce(
         generateInstallation({
           iID: 1234,
-          dangerfilePath: "PerilTest/other_repo@peril.settings.json",
+          perilSettingsJSONURL: "PerilTest/other_repo@peril.settings.json",
         })
       )
 

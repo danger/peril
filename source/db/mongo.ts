@@ -20,6 +20,7 @@ const Installation = model<MongoGithubInstallationModel>(
   "GithubInstallation",
   new Schema({
     iID: Number,
+    perilSettingsJSONURL: String,
     settings: Schema.Types.Mixed,
     tasks: Schema.Types.Mixed,
     repos: Schema.Types.Mixed,
@@ -64,12 +65,12 @@ const database = {
       return
     }
 
-    if (!dbInstallation.dangerfilePath) {
-      d.log(`Could not get installation ${installationID} did not have a dangerfilePath when updating`)
+    if (!dbInstallation.perilSettingsJSONURL) {
+      d.log(`Could not get installation ${installationID} did not have a perilSettingsJSONURL when updating`)
       return
     }
 
-    const pathRep = dangerRepresentationForPath(dbInstallation.dangerfilePath)
+    const pathRep = dangerRepresentationForPath(dbInstallation.perilSettingsJSONURL)
 
     if (!pathRep.repoSlug || !pathRep.dangerfilePath) {
       d.log(`DangerfilePath for ${installationID} did not have a repoSlug/dangerfilePath when updating`)
@@ -78,12 +79,12 @@ const database = {
 
     const file = await getGitHubFileContentsWithoutToken(pathRep.repoSlug, pathRep.dangerfilePath)
     if (file === "") {
-      d.log(`Settings for ${installationID} at ${dbInstallation.dangerfilePath} were empty`)
+      d.log(`Settings for ${installationID} at ${dbInstallation.perilSettingsJSONURL} were empty`)
       return
     }
 
     const parsedSettings = JSON5.parse(file) as Partial<GitHubInstallation>
-    const installation = partialInstallationToInstallation(parsedSettings, dbInstallation.dangerfilePath)
+    const installation = partialInstallationToInstallation(parsedSettings, dbInstallation.perilSettingsJSONURL)
     return await Installation.updateOne({ iID: installationID }, installation)
   },
 
