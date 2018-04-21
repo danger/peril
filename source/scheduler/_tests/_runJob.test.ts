@@ -1,5 +1,4 @@
 import { dsl } from "../../danger/danger_run"
-import { GitHubInstallation } from "../../db/index"
 import runJob from "../runJob"
 
 jest.mock("../../api/github", () => ({
@@ -15,21 +14,9 @@ jest.mock("../../danger/danger_runner", () => ({
   runDangerForInstallation: jest.fn(),
 }))
 import { runDangerForInstallation } from "../../danger/danger_runner"
+import generateInstallation from "../../testing/installationFactory"
 
-const installation: GitHubInstallation = {
-  iID: 123,
-  repos: {},
-  rules: {},
-  scheduler: {},
-  settings: {
-    env_vars: [],
-    ignored_repos: [],
-    modules: [],
-  },
-  tasks: {},
-  perilSettingsJSONURL: "",
-}
-
+const installation = generateInstallation({ iID: 123 })
 const contents = getGitHubFileContents as any
 
 it("runs a dangerfile", async () => {
@@ -42,7 +29,7 @@ it("runs a dangerfile", async () => {
 
 jest.mock("../../globals", () => ({ DATABASE_JSON_FILE: "private/repo" }))
 
-it("uses the project settings repo when no repo is passsed", async () => {
+it("uses the project settings repo when no repo is passed", async () => {
   contents.mockImplementationOnce(() => Promise.resolve("file"))
 
   await runJob(installation, "weekly.ts")

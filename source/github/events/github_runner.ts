@@ -26,7 +26,7 @@ import { createPRDSL } from "./createPRDSL"
  *  - Validating there is an installation ref in the db
  *  - Generating runs for an installation, could be up to two (org + repo) per integration event
  *  - Going from a run to executing Danger for that run
- *  - Handling the varients in a Danger run
+ *  - Handling the variants in a Danger run
  *
  *    - Event is org based (no repo, DSL is event JSON)
  *    - Event is repo based (has a reference to a repo, but nothing to comment on)

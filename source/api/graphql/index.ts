@@ -39,7 +39,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    editInstallation(iID: ID!, perilSettingsJSONURL: String!): Installation
+    editInstallation(iID: Int!, perilSettingsJSONURL: String!): Installation
   }
 `
 
