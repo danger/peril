@@ -32,5 +32,5 @@ it("Does not run a dangerfile in an ignored repo", async () => {
   await githubDangerRunner("pull_request_opened", request, response, () => "")
 
   expect(response.status).toHaveBeenCalledWith(204)
-  expect(send.send).toHaveBeenCalledWith("Skipping peril run due to repo being in ignored")
+  expect(send.send).toHaveBeenCalledWith({ error: "The installation has no settings path", iID: 4766 })
 })
