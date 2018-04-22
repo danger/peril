@@ -66,11 +66,12 @@ export const githubRouting = (event: string, req: Request, res: Response, next: 
     }
 
     default: {
-      info(`Passing ${event} to GH Dangerfile rule router`)
+      info(`Sending ${event} to GH rule router for ${req.body.installation.id}.`)
 
-      // Look out for changes to the settting JSON file and update the
+      // Look out for changes to the setting JSON file and update the
       // db accordingly
       settingsUpdater(event, req, res, next)
+
       githubDangerRunner(event, req, res, next)
     }
   }

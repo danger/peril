@@ -13,7 +13,7 @@ jest.mock("../../github/events/github_runner", () => ({
 
 import { githubRouting } from "../router"
 
-const validRequest = { isXHub: true, isXHubValid: () => true } as any
+const validRequest = { isXHub: true, isXHubValid: () => true, body: { installation: { id: 123 } } } as any
 const noXhub = { isXHub: false } as any
 const badXHub = { isXHub: true, isXHubValid: () => false } as any
 

@@ -100,13 +100,13 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   const db = getDB()
   const installation = await db.getInstallation(installationID)
   if (!installation) {
-    res.status(404).send(`Could not find installation with id: ${installationID}`)
+    res.status(404).send({ error: `Could not find installation`, iID: installationID })
     return
   }
 
   // If there's not a settings path, then we can't do anything
-  if (installation.perilSettingsJSONURL) {
-    res.status(204).send(`The installation has no settings path`)
+  if (!installation.perilSettingsJSONURL) {
+    res.status(204).send({ error: `The installation has no settings path`, iID: installationID })
     return
   }
 
@@ -114,20 +114,27 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
 
   // Allow edge-case repos to skip Danger rules. E.g. in Artsy, our analytics and marketing repos
   // do not need the same level of thought as an larger engineering project would.
-  if (settings.repoName && installation.settings.ignored_repos.includes(settings.repoName)) {
-    res.status(204).send(`Skipping peril run due to repo being in ignored`)
+  if (
+    settings.repoName &&
+    installation.settings &&
+    installation.settings.ignored_repos &&
+    installation.settings.ignored_repos.includes(settings.repoName)
+  ) {
+    res.status(204).send({ message: `Skipping peril run due to repo being in ignored`, iID: installationID })
     return
   }
-
+  winston.info("Got past")
   // Some events aren't tied to a repo (like creating a user) and so
   // right now I've not thought through what is necessary to run those
   if (!settings.isRepoEvent) {
-    res.status(404).send(`WIP - not built out support for non-repo related events - sorry`)
+    res
+      .status(404)
+      .send({ error: `WIP - not built out support for non-repo related events - sorry`, iID: installationID })
     return
   }
 
   const runs = runsForEvent(event, action, installation, settings)
-  logger.info(`Found ${runs.length} runs for ${action}`)
+  logger.info(`Found ${runs.length} runs for ${action} on ${installationID}`)
   await runEverything(runs, settings, installation, req, res, next)
 }
 
@@ -163,7 +170,6 @@ export const runEverything = async (
     return
   }
 
-  log(`Event Settings: ${JSON.stringify(settings, null, " ")}`)
   const token = await getTemporaryAccessTokenForInstallation(req.body.installation.id)
 
   const allResults = [] as DangerResults[]
@@ -171,7 +177,7 @@ export const runEverything = async (
   const prRuns = runs.filter(r => r.dslType === dsl.pr)
   const eventRuns = runs.filter(r => r.dslType === dsl.import)
 
-  // Loop through all PRs, which are definitely special cases compare to simple events
+  // Loop through all PRs, which are require difference DSL logic compared to simple GH webhook events
   for (const run of prRuns) {
     const results = await runPRRun(run, settings, token, req.body.pull_request || req.body)
     if (results) {
@@ -194,6 +200,7 @@ export const runEverything = async (
     commentOnResults(isPRDSL, finalResults, token, settings)
   }
 
+  // TODO: Get the hyper function metadata into here
   const status = `Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`
   res.status(200).send(JSON.stringify({ status, results: allResults }, null, "  "))
 }
@@ -339,7 +346,7 @@ ${JSON.stringify(stateForErrorHandling, null, "  ")}
       dangerDSL
     )
 
-    if (results && pr.body !== null && pr.body.includes("Peril: Debug")) {
+    if (results && pr.body && pr.body.includes("Peril: Debug")) {
       results.markdowns.push({ message: reportData("Showing PR details due to including 'Peril: Debug'") })
     }
     return results ? results : null
