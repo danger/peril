@@ -51,7 +51,7 @@ describe("routing for GitHub", () => {
 
   it("creates an installation when an integration is created", () => {
     const body = { action: "created" }
-    githubRouting("integration_installation", { ...validRequest, body }, {} as any, {} as any)
+    githubRouting("installation", { ...validRequest, body }, {} as any, {} as any)
     expect(mockCreateInstallation).toBeCalled()
   })
 

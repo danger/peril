@@ -43,20 +43,20 @@ export const githubRouting = (event: string, req: Request, res: Response, next: 
       break
     }
 
-    case "integration_installation": {
+    case "installation": {
       const request = req.body as InstallationCreated
       const action = request.action
       const installation = request.installation
-      // Create a db entry for any new integrations
+      // Create a db entry for any new installation
       if (action === "created") {
-        info(` - Creating new integration`)
+        info(` - Creating new installation`)
         createInstallation(installation, req, res)
         return
       }
 
       // Delete any integrations that have uninstalled Peril :wave:
-      if (action === "deleted") {
-        info(` - Deleting integration ${installation.id}`)
+      else if (action === "deleted") {
+        info(` - Deleting installation ${installation.id}`)
         const db = getDB()
         db.deleteInstallation(installation.id)
         return

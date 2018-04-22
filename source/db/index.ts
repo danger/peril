@@ -17,10 +17,13 @@ export type DangerfileReferenceString = string
  */
 export type PerilEventString = string
 
-// TODO: Convert `id` to not be id somehow?
+// TODO: Figure out how to separate things users put in settings, and stuff we need inside peril
 
 /** An individual integration of Danger via Peril, this is like the org */
-export type GitHubInstallation = PerilInstallationSettings
+export interface GitHubInstallation extends PerilInstallationSettings {
+  /** The associated name of the installation owner */
+  login: string
+}
 
 /** An individual integration of Danger via Peril, this is like the org */
 export interface PerilInstallationSettings {
@@ -121,7 +124,7 @@ export interface DatabaseAdaptor {
   /** Updates an integrations settings */
   updateInstallation: (installationID: number) => Promise<GitHubInstallation | null>
   /** Saves an Integration */
-  saveInstallation: (installation: GitHubInstallation) => Promise<void>
+  saveInstallation: (installation: GitHubInstallation) => Promise<GitHubInstallation>
   /** Deletes the operation */
   deleteInstallation: (installationID: number) => Promise<void>
 }

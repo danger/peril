@@ -24,6 +24,8 @@ const typeDefs = gql`
     iID: Int!
     # The path to the Dangerfile
     perilSettingsJSONURL: String!
+    # The name of a user/org which the installation is attached to
+    login: String!
   }
 
   type User {
@@ -82,10 +84,8 @@ const resolvers = {
 
       // This is definitely overkil, but sure
       const db = getDB() as MongoDB
-      const installation = await db.getInstallation(params.iID)
-      const updatedInstallation = { ...installation, ...params }
-      await db.saveInstallation(updatedInstallation)
-      await db.updateInstallation(updatedInstallation)
+      const updatedInstallation = await db.saveInstallation(params)
+      await db.updateInstallation(updatedInstallation.iID)
       return updatedInstallation
     },
   },

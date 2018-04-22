@@ -3,7 +3,7 @@ import jsonDB from "./json"
 import mongo from "./mongo"
 
 import { DatabaseAdaptor } from "."
-import { DATABASE_JSON_FILE, MONGODB_URI } from "../globals"
+import { DATABASE_JSON_FILE } from "../globals"
 
 const isJest = typeof jest !== "undefined"
 
@@ -18,7 +18,7 @@ const getDatabaseForEnv = (env: any) => {
 
   if (env.MONGODB_URI) {
     if (!isJest) {
-      logger.info(`Using ${MONGODB_URI} as the mongo db`)
+      logger.info(`Using mongo db`)
       mongo.setup()
     }
     return mongo
