@@ -1,6 +1,12 @@
+## 2018 - April 22
+
+* Improvements to the GQL API - orta
+
 ## 2018 - April 21
 
 * Created a real staging environment: https://staging-api.peril.systems/ - orta
+* Peril is much more liberal about updating an installation's DB, PRs or pushes to the settings repo will trigger
+  updates - orta
 
 ## 2018 - April 20
 

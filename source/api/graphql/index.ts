@@ -1,5 +1,6 @@
 import { combineResolvers } from "graphql-resolvers"
 import { makeExecutableSchema } from "graphql-tools"
+import { JSON } from "graphql-tools-types"
 
 import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
@@ -17,6 +18,10 @@ const gql = (strings: any, ...keys: any[]) => {
 }
 
 const typeDefs = gql`
+  # Basically a way to say this is going to be untyped data (it's normally user input)
+  scalar JSON
+
+  # An installation of Peril, ideally not too tightly tied to GH
   type Installation {
     # The MongoDB ID
     id: String!
@@ -26,12 +31,27 @@ const typeDefs = gql`
     perilSettingsJSONURL: String!
     # The name of a user/org which the installation is attached to
     login: String!
+    # A set of per repo rules
+    repos: JSON!
+    # Rules that are for all repos
+    rules: JSON!
+    # Scheduled tasks to run repeatedly
+    scheduler: JSON!
+    # Installation settings, for example ignored repos
+    settings: JSON!
+    # Tasks which you can schedule to run in the future
+    tasks: JSON!
   }
 
+  # Someone logged in to the API, all user data is stored inside the JWT
   type User {
+    # Display name
     name: String!
+    # Use this to show an avatar
     avatarURL: String!
 
+    # The installations that a user can access, TODO
+    # move to be a connection
     installations: [Installation]!
   }
 
@@ -41,6 +61,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    # Building this out incrementally, but basically this provides
+    # the ability to set the URL that Peril should grab data from
     editInstallation(iID: Int!, perilSettingsJSONURL: String!): Installation
   }
 `
@@ -53,6 +75,8 @@ const isAuthenticated = (_: any, __: any, context: GraphQLContext) => {
 }
 
 const resolvers = {
+  JSON: JSON({ name: "Any" }),
+
   User: {
     installations: combineResolvers(isAuthenticated, async (_: any, __: any, context: GraphQLContext) => {
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
