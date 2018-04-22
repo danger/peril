@@ -6,16 +6,7 @@ import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
 import { GraphQLContext } from "../api"
 import { getDetailsFromPerilJWT } from "../auth/generate"
-
-// This is a template string function, which returns the original string
-// It's based on https://github.com/lleaff/tagged-template-noop
-// Which is MIT licensed to lleaff
-//
-
-const gql = (strings: any, ...keys: any[]) => {
-  const lastIndex = strings.length - 1
-  return strings.slice(0, lastIndex).reduce((p: any, s: any, i: number) => p + s + keys[i], "") + strings[lastIndex]
-}
+import { gql } from "./jwt"
 
 const typeDefs = gql`
   # Basically a way to say this is going to be untyped data (it's normally user input)
@@ -67,6 +58,11 @@ const typeDefs = gql`
   }
 `
 
+// A any'd resolver type, with the right context
+type Resolver = (obj: any, params: any, context: GraphQLContext) => Promise<any>
+
+// A combined resolver that checks for auth before running the resolver
+const authD = (resolver: Resolver) => combineResolvers(isAuthenticated, resolver)
 const isAuthenticated = (_: any, __: any, context: GraphQLContext) => {
   if (!context.jwt) {
     return new Error("Not authenticated")
@@ -75,10 +71,11 @@ const isAuthenticated = (_: any, __: any, context: GraphQLContext) => {
 }
 
 const resolvers = {
+  // Let's graphql-tools-types handle the user-data and just puts the whole obj in response
   JSON: JSON({ name: "Any" }),
 
   User: {
-    installations: combineResolvers(isAuthenticated, async (_: any, __: any, context: GraphQLContext) => {
+    installations: authD(async (_: any, __: any, context: GraphQLContext) => {
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       const db = getDB() as MongoDB
       return await db.getInstallations(decodedJWT.iss.map(i => parseInt(i, 10)))
@@ -88,30 +85,29 @@ const resolvers = {
   },
 
   Query: {
-    me: async (_: any, __: any, context: GraphQLContext) => {
-      if (!context.jwt) {
-        return new Error("Not authenticated")
-      }
+    // Extract metadata from the JWT
+    me: authD(async (_: any, __: any, context: GraphQLContext) => {
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       return decodedJWT.data.user
-    },
+    }),
   },
 
   Mutation: {
-    editInstallation: async (_: any, params: any, context: GraphQLContext) => {
+    editInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       const installationID = String(params.iID)
 
+      // Check the installation's ID is included inside the signed JWT, to verify access
       if (!decodedJWT.iss.includes(installationID)) {
         throw new Error(`You don't have access to this installation`)
       }
 
-      // This is definitely overkil, but sure
+      // Save the changes, then trigger an update from the new repo
       const db = getDB() as MongoDB
       const updatedInstallation = await db.saveInstallation(params)
       await db.updateInstallation(updatedInstallation.iID)
       return updatedInstallation
-    },
+    }),
   },
 }
 
