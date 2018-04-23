@@ -57,10 +57,10 @@ if (publicKey && !publicKey.includes("-----BEGIN PUBLIC")) {
 export const PRIVATE_GITHUB_SIGNING_KEY = privateKey.trim()
 /** Used only for verifying JWT keys, so is not useful for non-public */
 export const PUBLIC_GITHUB_SIGNING_KEY = publicKey.trim()
-/**
- * The ID for the GitHub integration
- */
+/** The ID for the GitHub integration */
 export const PERIL_INTEGRATION_ID = getEnv("PERIL_INTEGRATION_ID")
+/** The address for the GitHub App for re-direction */
+export const PUBLIC_GITHUB_APP_URL = getEnv("PUBLIC_GITHUB_APP_URL")
 
 /** The front-end URL route  */
 export const WEB_URL = getEnv("WEB_URL")
@@ -139,7 +139,13 @@ export const validateENVForPerilServer = () => {
 
   if (PUBLIC_FACING_API) {
     // Can't run a public API without these settings
-    validates(["PUBLIC_WEB_ROOT_URL", "PUBLIC_API_ROOT_URL", "GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET"])
+    validates([
+      "PUBLIC_WEB_ROOT_URL",
+      "PUBLIC_API_ROOT_URL",
+      "PUBLIC_GITHUB_APP_URL",
+      "GITHUB_CLIENT_ID",
+      "GITHUB_CLIENT_SECRET",
+    ])
 
     if (!PUBLIC_GITHUB_SIGNING_KEY) {
       throw new Error(

@@ -6,6 +6,7 @@ import { Application } from "express"
 import { GITHUB_CLIENT_SECRET } from "../globals"
 import { generateAuthToken, redirectForGHOauth } from "./auth/github"
 import { schema } from "./graphql"
+import { redirectForGHInstallation } from "./integration/github"
 import prDSLRunner from "./pr/dsl"
 
 export const GitHubOAuthStart = "/api/auth/peril/github/start"
@@ -23,6 +24,10 @@ const setupPublicAPI = (app: Application) => {
 
   // So the JWT can be stored / set
   app.use(cookieParser(GITHUB_CLIENT_SECRET))
+
+  // INTEGRATION
+  // So that someone can install Peril on their org
+  app.get("/api/integrate/github", redirectForGHInstallation)
 
   // AUTH
   // Start generating a Peril JWT for admin
