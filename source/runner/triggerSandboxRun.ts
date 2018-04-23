@@ -60,7 +60,6 @@ export const triggerSandboxDangerRun = async (
   }
 
   logger.info(`Calling hyper function`)
-  logger.info("JSON Sent: ", JSON.stringify(stdOUT, null, "  "))
 
   const call = await callHyperFunction(stdOUT)
   const callID = JSON.parse(call).CallId

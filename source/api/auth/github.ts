@@ -36,7 +36,7 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
 
   const { error, error_description, error_uri } = req.query
   if (error) {
-    res.send(400, { error, error_description, error_uri })
+    res.status(400).send({ error, error_description, error_uri })
     return
   }
 
@@ -44,14 +44,14 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
   // Set that to the user's session, and then redirect to the admin page
   const { code, state } = req.query
   if (state !== PERIL_WEBHOOK_SECRET) {
-    res.send(400, { error: "Bad state", error_description: "The state query param was incorrect" })
+    res.status(400).send({ error: "Bad state", error_description: "The state query param was incorrect" })
     return
   }
 
   const token = await getAccessTokenFromAuthCode(code)
   if (!token) {
     if (error) {
-      res.send(400, { error: "Could not generate an access token from the code given from GitHub" })
+      res.status(400).send({ error: "Could not generate an access token from the code given from GitHub" })
       return
     }
   }
@@ -62,7 +62,7 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
 
   const authToken = createPerilJWT({ name: user.name, avatar_url: user.avatar_url }, installations)
   res.cookie("jwt", authToken)
-  res.send(200, { jwt: authToken })
+  res.status(200).send({ jwt: authToken })
 }
 
 const getAccessTokenFromAuthCode = async (code: string) => {
