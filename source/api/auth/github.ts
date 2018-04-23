@@ -15,15 +15,14 @@ const encodeToQueryParams = (data: any): string =>
     .join("&")
 
 /** Handle sending someone off to GitHub for the start of OAuth */
-export const redirectForGHOauth = (_: Request, res: Response, ___: NextFunction) => {
+export const redirectForGHOauth = (req: Request, res: Response, ___: NextFunction) => {
   // Re-direct for GH web flow
   // https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/#web-application-flow
   //
   const gh = "https://github.com/login/oauth/authorize"
   const params = {
     client_id: GITHUB_CLIENT_ID,
-    // TODO: This URL needs to also contain the value to return to for peril's admin UI also
-    redirect_uri: PUBLIC_API_ROOT_URL + GitHubOAuthEnd,
+    redirect_uri: PUBLIC_API_ROOT_URL + GitHubOAuthEnd + "?redirect=" + req.query.redirect,
     scope: "read:user read:org",
     state: PERIL_WEBHOOK_SECRET,
   }
@@ -34,7 +33,7 @@ export const redirectForGHOauth = (_: Request, res: Response, ___: NextFunction)
 export const generateAuthToken = async (req: Request, res: Response, ___: NextFunction) => {
   // https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/#2-users-are-redirected-back-to-your-site-by-github
 
-  const { error, error_description, error_uri } = req.query
+  const { error, error_description, error_uri, redirect } = req.query
   if (error) {
     res.status(400).send({ error, error_description, error_uri })
     return
@@ -62,7 +61,11 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
 
   const authToken = createPerilJWT({ name: user.name, avatar_url: user.avatar_url }, installations)
   res.cookie("jwt", authToken)
-  res.status(200).send({ jwt: authToken })
+  if (redirect) {
+    res.redirect(redirect)
+  } else {
+    res.status(200).send({ jwt: authToken })
+  }
 }
 
 const getAccessTokenFromAuthCode = async (code: string) => {
