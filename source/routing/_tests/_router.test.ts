@@ -12,21 +12,18 @@ jest.mock("../../github/events/github_runner", () => ({
 }))
 
 import { githubRouting } from "../router"
+import { createMockResponse } from "./create-mock-response"
+
+jest.mock("../../db/getDB")
+import { getDB } from "../../db/getDB"
 
 const validRequest = { isXHub: true, isXHubValid: () => true, body: { installation: { id: 123 } } } as any
 const noXhub = { isXHub: false } as any
 const badXHub = { isXHub: true, isXHubValid: () => false } as any
 
 describe("validating webhooks from GitHub", () => {
-  let res: any
-
-  beforeEach(() => {
-    res = {}
-    res.status = jest.fn(() => res)
-    res.send = jest.fn()
-  })
-
   it("fails when there is is no x-hub", () => {
+    const res = createMockResponse()
     githubRouting("ping", noXhub, res, {} as any)
     expect(res.status).toBeCalledWith(400)
     expect(res.send).toBeCalledWith(
@@ -35,11 +32,14 @@ describe("validating webhooks from GitHub", () => {
   })
 
   it("fails when there is is no x-hub", () => {
+    const res = createMockResponse()
+
     githubRouting("ping", badXHub, res, {} as any)
     expect(res.status).toBeCalledWith(401)
 
-    const message = res.send.mock.calls[0][0]
-    expect(message).toContain("Request did not have a valid x-hub header")
+    expect(res.send).toBeCalledWith(
+      "Request did not have a valid x-hub header. Perhaps PERIL_WEBHOOK_SECRET is not set up right?"
+    )
   })
 })
 
@@ -53,6 +53,13 @@ describe("routing for GitHub", () => {
     const body = { action: "created" }
     githubRouting("installation", { ...validRequest, body }, {} as any, {} as any)
     expect(mockCreateInstallation).toBeCalled()
+  })
+
+  it("deletes an installation when an integration is removed", () => {
+    const body = { action: "deleted", installation: { id: 12345 } }
+    githubRouting("installation", { ...validRequest, body }, {} as any, {} as any)
+
+    expect(getDB().deleteInstallation).toBeCalledWith(12345)
   })
 
   it("calls the GitHub runner for any other event", () => {
