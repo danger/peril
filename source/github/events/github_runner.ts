@@ -260,13 +260,17 @@ export const runPRRun = async (
     return null
   }
 
+  if (!pr.head.repo) {
+    console.error("An event without a head repo was passed to runPRRun") // tslint:disable-line
+    return null
+  }
+
   const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
 
   // In theory only a PR requires a custom branch, so we can check directly for that
   // in the event JSON and if it's not there then use master
   // prioritise the run metadata
 
-  // TODO: this check can crash during a non-repo event
   const dangerfileRepoForPR = pr.head.repo.full_name
   const dangerfileBranchForPR = pr.head.ref
   const neededDangerfileIsLocalRepo = !run.repoSlug
