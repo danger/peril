@@ -6,7 +6,11 @@ import { getDB } from "../../db/getDB"
 import generateInstallation from "../../testing/installationFactory"
 
 export async function createInstallation(installationJSON: Installation, _: express.Request, res: express.Response) {
-  const installation = generateInstallation({ iID: installationJSON.id, login: installationJSON.account.login })
+  const installation = generateInstallation({
+    iID: installationJSON.id,
+    login: installationJSON.account.login,
+    avatarURL: installationJSON.account.avatar_url,
+  })
 
   const db = getDB()
   const existingInstallation = await db.getInstallation(installation.iID)

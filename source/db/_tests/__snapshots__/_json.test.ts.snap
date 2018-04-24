@@ -4,6 +4,7 @@ exports[`Raises with a bad URL 1`] = `[Error: Could not find find a JSON file fo
 
 exports[`makes the right calls to GitHub with a legit stubbed JSON file 1`] = `
 Object {
+  "avatarURL": "",
   "iID": 23511,
   "login": "unknown",
   "perilSettingsJSONURL": "orta/peril@settings.json",

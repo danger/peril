@@ -22,6 +22,10 @@ const schemaSDL = gql`
     id: String!
     # The installation ID, in the real sense
     iID: Int!
+    # The name of the installation owner
+    name: String!
+    # The URL for an image representing the installation owner
+    avatarURL: String!
   }
 
   # An installation of Peril, ideally not too tightly tied to GH
@@ -30,6 +34,10 @@ const schemaSDL = gql`
     id: String!
     # The installation ID, in the real sense
     iID: Int!
+    # The name of the installation owner
+    name: String!
+    # The URL for an image representing the installation owner
+    avatarURL: String!
     # The path to the Dangerfile
     perilSettingsJSONURL: String!
     # The name of a user/org which the installation is attached to

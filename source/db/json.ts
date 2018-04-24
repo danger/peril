@@ -88,6 +88,7 @@ export const partialInstallationToInstallation = (
 ) => ({
   iID: partial.iID || PERIL_ORG_INSTALLATION_ID,
   login: partial.login || "unknown",
+  avatarURL: partial.avatarURL || "", // TODO: Generate a thumbnail
   repos: partial.repos || {},
   rules: partial.rules || {},
   scheduler: partial.scheduler || {},

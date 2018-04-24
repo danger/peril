@@ -23,6 +23,8 @@ export type PerilEventString = string
 export interface GitHubInstallation extends PerilInstallationSettings {
   /** The associated name of the installation owner */
   login: string
+  /** An image url for the installation owner */
+  avatarURL: string
 }
 
 /** An individual integration of Danger via Peril, this is like the org */
