@@ -30,6 +30,14 @@ export const redirectForGHOauth = (req: Request, res: Response, ___: NextFunctio
   res.redirect(address)
 }
 
+export const fakeAuthToken = async (_: Request, res: Response, ___: NextFunction) => {
+  const authToken = createPerilJWT({ name: "Orta", avatar_url: "https://avatars2.githubusercontent.com/u/49038?v=4" }, [
+    123,
+  ])
+  res.cookie("jwt", authToken, { domain: ".localhost" })
+  res.status(200).send({ jwt: authToken })
+}
+
 export const generateAuthToken = async (req: Request, res: Response, ___: NextFunction) => {
   // https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/#2-users-are-redirected-back-to-your-site-by-github
 
