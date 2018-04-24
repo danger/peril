@@ -1,3 +1,4 @@
+import { connectionArgs, connectionDefinitions, connectionFromArray, pageInfoType } from "graphql-relay-tools"
 import { combineResolvers } from "graphql-resolvers"
 import { makeExecutableSchema } from "graphql-tools"
 import { JSON } from "graphql-tools-types"
@@ -8,9 +9,20 @@ import { GraphQLContext } from "../api"
 import { getDetailsFromPerilJWT } from "../auth/generate"
 import { gql } from "./jwt"
 
-const typeDefs = gql`
+const { connectionType: partialConnection } = connectionDefinitions({ name: "PartialInstallation" })
+const { connectionType: installationConnection } = connectionDefinitions({ name: "Installation" })
+
+const schemaSDL = gql`
   # Basically a way to say this is going to be untyped data (it's normally user input)
   scalar JSON
+
+  # An installation of Peril which isn't set up yet
+  type PartialInstallation {
+    # The MongoDB ID
+    id: String!
+    # The installation ID, in the real sense
+    iID: Int!
+  }
 
   # An installation of Peril, ideally not too tightly tied to GH
   type Installation {
@@ -40,10 +52,10 @@ const typeDefs = gql`
     name: String!
     # Use this to show an avatar
     avatarURL: String!
-
-    # The installations that a user can access, TODO
-    # move to be a connection
-    installations: [Installation]!
+    # The installations that a user has access to
+    installations${connectionArgs()}: InstallationConnection
+    # The installations that a user has access to, but hasn't been set up yet
+    installationsToSetUp${connectionArgs()}: PartialInstallationConnection
   }
 
   # Root
@@ -70,15 +82,26 @@ const isAuthenticated = (_: any, __: any, context: GraphQLContext) => {
   return undefined
 }
 
+const getUserInstallations = async (jwt: string) => {
+  const decodedJWT = await getDetailsFromPerilJWT(jwt)
+  const db = getDB() as MongoDB
+  return await db.getInstallations(decodedJWT.iss.map(i => parseInt(i, 10)))
+}
+
 const resolvers = {
   // Let's graphql-tools-types handle the user-data and just puts the whole obj in response
   JSON: JSON({ name: "Any" }),
 
   User: {
-    installations: authD(async (_: any, __: any, context: GraphQLContext) => {
-      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-      const db = getDB() as MongoDB
-      return await db.getInstallations(decodedJWT.iss.map(i => parseInt(i, 10)))
+    // Installations with useful data
+    installations: authD(async (_: any, args: any, context: GraphQLContext) => {
+      const installations = await getUserInstallations(context.jwt)
+      return connectionFromArray(installations.filter(i => i.perilSettingsJSONURL), args)
+    }),
+    // Ready to set up installations with a subset of the data
+    installationsToSetUp: authD(async (_: any, args: any, context: GraphQLContext) => {
+      const installations = await getUserInstallations(context.jwt)
+      return connectionFromArray(installations.filter(i => !i.perilSettingsJSONURL), args)
     }),
     // Rename it from GH's JSON to camelCase
     avatarURL: ({ avatar_url }: { avatar_url: string }) => avatar_url,
@@ -90,6 +113,7 @@ const resolvers = {
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       return decodedJWT.data.user
     }),
+    // node: nodeResolver,
   },
 
   Mutation: {
@@ -112,6 +136,6 @@ const resolvers = {
 }
 
 export const schema = makeExecutableSchema({
-  typeDefs,
+  typeDefs: [schemaSDL, pageInfoType, installationConnection, partialConnection],
   resolvers,
 })

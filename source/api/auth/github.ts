@@ -33,6 +33,7 @@ export const redirectForGHOauth = (req: Request, res: Response, ___: NextFunctio
 export const fakeAuthToken = async (_: Request, res: Response, ___: NextFunction) => {
   const authToken = createPerilJWT({ name: "Orta", avatar_url: "https://avatars2.githubusercontent.com/u/49038?v=4" }, [
     123,
+    321,
   ])
   res.cookie("jwt", authToken, { domain: ".localhost" })
   res.status(200).send({ jwt: authToken })

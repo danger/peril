@@ -77,6 +77,7 @@
     "github-webhook-event-types": "^1.1.0",
     "glob": "^7.1.2",
     "graphql": "^0.13.2",
+    "graphql-relay-tools": "^0.1.1",
     "graphql-resolvers": "^0.2.2",
     "graphql-tools": "^2.24.0",
     "graphql-tools-types": "^1.1.18",
