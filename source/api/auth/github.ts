@@ -30,6 +30,14 @@ export const redirectForGHOauth = (req: Request, res: Response, ___: NextFunctio
   res.redirect(address)
 }
 
+export const fakeAuthToken = async (_: Request, res: Response, ___: NextFunction) => {
+  const authToken = createPerilJWT({ name: "Orta", avatar_url: "https://avatars2.githubusercontent.com/u/49038?v=4" }, [
+    123,
+  ])
+  res.cookie("jwt", authToken, { domain: ".localhost" })
+  res.status(200).send({ jwt: authToken })
+}
+
 export const generateAuthToken = async (req: Request, res: Response, ___: NextFunction) => {
   // https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/#2-users-are-redirected-back-to-your-site-by-github
 
@@ -60,7 +68,10 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
   const user = await getUserAccount(token)
 
   const authToken = createPerilJWT({ name: user.name, avatar_url: user.avatar_url }, installations)
-  res.cookie("jwt", authToken)
+  // TODO: add max age
+  // TODO: This needs to change when we have production vs staging
+  res.cookie("jwt", authToken, { domain: ".peril.systems" })
+
   if (redirect) {
     res.redirect(redirect)
   } else {

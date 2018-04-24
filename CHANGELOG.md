@@ -1,3 +1,11 @@
+## 2018 - April 24
+
+* You can authenticate to Peril using 'Authenticate: Basic xxxyyzzz" with your JWT - orta
+
+## 2018 - April 23
+
+* Peril can redirect you to the GitHub app install page - orta
+
 ## 2018 - April 22
 
 * Improvements to the GQL API - orta

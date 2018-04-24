@@ -4,7 +4,8 @@ import * as cookieParser from "cookie-parser"
 import { Application } from "express"
 
 import { GITHUB_CLIENT_SECRET } from "../globals"
-import { generateAuthToken, redirectForGHOauth } from "./auth/github"
+import { getJWTFromRequest } from "./auth/getJWTFromRequest"
+import { fakeAuthToken, generateAuthToken, redirectForGHOauth } from "./auth/github"
 import { schema } from "./graphql"
 import { redirectForGHInstallation } from "./integration/github"
 import prDSLRunner from "./pr/dsl"
@@ -34,6 +35,8 @@ const setupPublicAPI = (app: Application) => {
   app.get(GitHubOAuthStart, redirectForGHOauth)
   // Actually generate a Peril JWT for admin after GH Oauth
   app.get(GitHubOAuthEnd, generateAuthToken)
+  // A useful for testing locally cookie generator
+  app.get("/api/auth/peril/github/fake", fakeAuthToken)
 
   // GQL
   // The main GraphQL route for Peril
@@ -44,7 +47,7 @@ const setupPublicAPI = (app: Application) => {
     graphqlExpress(req => ({
       schema,
       context: {
-        jwt: req && cookieParser.JSONCookies(req.cookies).jwt,
+        jwt: getJWTFromRequest(req),
       },
     }))
   )
