@@ -23,7 +23,7 @@ const schemaSDL = gql`
     # The installation ID, in the real sense
     iID: Int!
     # The name of the installation owner
-    name: String!
+    login: String!
     # The URL for an image representing the installation owner
     avatarURL: String!
   }
@@ -34,14 +34,12 @@ const schemaSDL = gql`
     id: String!
     # The installation ID, in the real sense
     iID: Int!
-    # The name of the installation owner
-    name: String!
-    # The URL for an image representing the installation owner
-    avatarURL: String!
     # The path to the Dangerfile
     perilSettingsJSONURL: String!
     # The name of a user/org which the installation is attached to
     login: String!
+    # The URL for an image representing the installation owner
+    avatarURL: String!
     # A set of per repo rules
     repos: JSON!
     # Rules that are for all repos
