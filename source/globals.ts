@@ -54,9 +54,9 @@ if (publicKey && !publicKey.includes("-----BEGIN PUBLIC")) {
  * - To set it on heroku: heroku config:add PRIVATE_GITHUB_SIGNING_KEY="$(cat thekey.pem)"
  * - To set it on now: now secrets -T peril add stag_public_github_signing_key (cat thekey.pem | base64)
  */
-export const PRIVATE_GITHUB_SIGNING_KEY = privateKey.trim()
+export const PRIVATE_GITHUB_SIGNING_KEY = privateKey && privateKey.trim()
 /** Used only for verifying JWT keys, so is not useful for non-public */
-export const PUBLIC_GITHUB_SIGNING_KEY = publicKey.trim()
+export const PUBLIC_GITHUB_SIGNING_KEY = publicKey && publicKey.trim()
 /** The ID for the GitHub integration */
 export const PERIL_INTEGRATION_ID = getEnv("PERIL_INTEGRATION_ID")
 /** The address for the GitHub App for re-direction */
