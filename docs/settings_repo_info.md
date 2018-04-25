@@ -59,7 +59,7 @@ You can get information about _any_ webhook
 For a Pull Request, there are
 [a lot of actions](https://developer.github.com/v3/activity/events/types/#pullrequestevent): It can be one of
 `assigned`, `unassigned`, `review_requested`, `review_request_removed`, `labeled`, `unlabeled`, `opened`, `edited`,
-`closed`, or `reopened`.
+`closed`, `reopened` or `synchronize`.
 
 You can specify a Dangerfile to run either on **all** events by using `"pull_request"` or only a specific action on a
 pull request with `"pull_request.[action]"`.
@@ -69,9 +69,10 @@ For example:
 ```
 {
   "rules": {
-    "pull_request": "...", // all
+    "pull_request": "...", // all events
     "pull_request.assigned": "...", // only on when a PR has someone assigned
     "pull_request.closed": "...",// only on when a PR is closed
+    "pull_request.synchronize": "...",// only when the commits for a PR's branch have changed
     ...
   }
 }
