@@ -22,9 +22,24 @@ export const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubE
     }
 
     const nullFunc: any = () => ""
-    const platform: Platform | any = {
+    const platform: Platform = {
+      name: "Peril",
+      getFileContents: github ? github.getFileContents.bind(github) : nullFunc,
+
       createComment: github ? github.createComment.bind(github) : nullFunc,
       deleteMainComment: github ? github.deleteMainComment.bind(github) : nullFunc,
+      updateOrCreateComment: github ? github.updateOrCreateComment.bind(github) : nullFunc,
+
+      createInlineComment: github ? github.createInlineComment.bind(github) : nullFunc,
+      updateInlineComment: github ? github.updateInlineComment.bind(github) : nullFunc,
+      deleteInlineComment: github ? github.deleteInlineComment.bind(github) : nullFunc,
+      getInlineComments: () => (github ? github.getInlineComments.bind(github) : nullFunc),
+
+      supportsCommenting: () => (github ? github.supportsCommenting.bind(github) : nullFunc),
+      supportsInlineComments: () => (github ? github.supportsInlineComments.bind(github) : nullFunc),
+
+      updateStatus: () => (github ? github.supportsInlineComments.bind(github) : nullFunc),
+
       getPlatformDSLRepresentation: async () => {
         return {
           ...githubEvent,
@@ -32,13 +47,9 @@ export const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubE
           utils,
         }
       },
-      supportsInlineComments: () => false,
       getPlatformGitRepresentation: async () => {
         return {} as any
       },
-      name: "Peril",
-      updateOrCreateComment: github ? github.updateOrCreateComment.bind(github) : nullFunc,
-      updateStatus: () => Promise.resolve(true),
     }
     return platform
   }
