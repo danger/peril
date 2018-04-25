@@ -66,7 +66,10 @@ const schemaSDL = gql`
 
   # Root
   type Query {
+    # The logged in user
     me: User
+    # Get information about an installation
+    installation(iID: Int!): Installation
   }
 
   type Mutation {
@@ -119,7 +122,10 @@ const resolvers = {
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       return decodedJWT.data.user
     }),
-    // node: nodeResolver,
+    installation: authD(async (_: any, params: { iID: number }, context: GraphQLContext) => {
+      const installations = await getUserInstallations(context.jwt)
+      return installations.find(i => i.iID === params.iID)
+    }),
   },
 
   Mutation: {
