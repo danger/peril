@@ -3,6 +3,7 @@ import { GitHubInstallation } from "../db/index"
 const emptyInstallation: GitHubInstallation = {
   iID: 123,
   login: "",
+  avatarURL: "",
   repos: {},
   rules: {},
   scheduler: {},

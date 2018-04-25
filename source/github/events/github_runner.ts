@@ -93,8 +93,29 @@ export const setupForRequest = async (req: express.Request, installationSettings
   }
 }
 
+/**
+ * There's value in not running Dangerfiles for every webhook
+ * mainly that it's wasteful, so this gives us
+ */
+export const actionForWebhook = (webhook: any): string | null => {
+  // PR/Issues etc
+  if (webhook.action) {
+    return webhook.action
+  }
+
+  // Are there more worth adding?
+
+  // Fallback for Status
+  // https://developer.github.com/v3/activity/events/types/#statusevent
+  if (webhook.state) {
+    return webhook.state
+  }
+
+  return null
+}
+
 export const githubDangerRunner = async (event: string, req: express.Request, res: express.Response, next: any) => {
-  const action = req.body.action as string | null
+  const action = actionForWebhook(req.body)
   const installationID = req.body.installation.id as number
 
   const db = getDB()
