@@ -7,7 +7,7 @@ jest.mock("danger/distribution/runner/runners/vm2", () => ({
 }))
 
 import { DangerDSLJSONType } from "danger/distribution/dsl/DangerDSL"
-import { dsl } from "../danger_run"
+import { RunType } from "../danger_run"
 import { runDangerForInstallation } from "../danger_runner"
 
 const defaultSettings = {
@@ -29,7 +29,7 @@ jest.mock("../../api/github", () => ({
 
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
-    await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, installationSettings, blankPayload)
+    await runDangerForInstallation(`dangerfile_empty.ts`, "", null, RunType.pr, installationSettings, blankPayload)
 
     const path = mockRunDangerfileEnvironment.mock.calls[0][0]
     expect(path.startsWith("/")).toBeTruthy()

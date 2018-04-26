@@ -11,7 +11,7 @@ import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 import inlineRunner from "danger/distribution/runner/runners/inline"
 
 import { appendPerilContextToDSL, perilObjectForInstallation } from "../danger/append_peril"
-import { dangerRepresentationForPath, dsl } from "../danger/danger_run"
+import { dangerRepresentationForPath, RunType } from "../danger/danger_run"
 import { executorForInstallation, InstallationToRun, ValidatedPayload } from "../danger/danger_runner"
 import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { githubAPIForCommentable } from "../github/events/utils/commenting"
@@ -47,10 +47,10 @@ export const run = async (stdin: string) => {
 
   // Remove the nulls from the payload as by this point it should be set up
   const payload = input.payload as ValidatedPayload
-  const dslMode = input.dslType === "pr" ? dsl.pr : dsl.import
+  const dslMode = input.dslType === "pr" ? RunType.pr : RunType.import
 
   // Run the job
-  if (dslMode === dsl.pr && input.payload.dsl) {
+  if (dslMode === RunType.pr && input.payload.dsl) {
     await runDangerPR(installation, input, payload)
   } else {
     // Pass the webhook right through
@@ -96,7 +96,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   const perilGHAPI = githubAPIForCommentable(token, pr.base.repo.full_name, pr.number)
   const perilGH = new GitHub(perilGHAPI)
 
-  const platform = getPerilPlatformForDSL(dsl.pr, perilGH, payload.dsl)
+  const platform = getPerilPlatformForDSL(RunType.pr, perilGH, payload.dsl)
   const exec = await executorForInstallation(platform, inlineRunner)
 
   const runtimeDSL = await jsonToDSL(payload.dsl)

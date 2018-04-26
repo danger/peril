@@ -1,4 +1,4 @@
-import { dsl } from "../../danger/danger_run"
+import { RunType } from "../../danger/danger_run"
 import runJob from "../runJob"
 
 jest.mock("../../api/github", () => ({
@@ -24,7 +24,14 @@ it("runs a dangerfile", async () => {
 
   await runJob(installation, "danger/danger-repo@hello.ts")
 
-  expect(runDangerForInstallation).toBeCalledWith("file", "hello.ts", null, dsl.import, installation, expect.anything())
+  expect(runDangerForInstallation).toBeCalledWith(
+    "file",
+    "hello.ts",
+    null,
+    RunType.import,
+    installation,
+    expect.anything()
+  )
 })
 
 it("uses the installation settings repo when no repo is passed", async () => {

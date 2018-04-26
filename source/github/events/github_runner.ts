@@ -2,7 +2,7 @@ import * as express from "express"
 
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
-import { DangerRun, dangerRunForRules, dsl, feedback } from "../../danger/danger_run"
+import { DangerRun, dangerRunForRules, feedback, RunType } from "../../danger/danger_run"
 import { GitHubInstallation, GithubRepo } from "../../db"
 import { getDB } from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
@@ -162,8 +162,8 @@ export const runEverything = async (
   const token = await getTemporaryAccessTokenForInstallation(req.body.installation.id)
   const allResults = [] as DangerResults[]
 
-  const prRuns = runs.filter(r => r.dslType === dsl.pr)
-  const eventRuns = runs.filter(r => r.dslType === dsl.import)
+  const prRuns = runs.filter(r => r.dslType === RunType.pr)
+  const eventRuns = runs.filter(r => r.dslType === RunType.import)
 
   // Loop through all PRs, which are require difference DSL logic compared to simple GH webhook events
   for (const run of prRuns) {
@@ -184,7 +184,7 @@ export const runEverything = async (
   if (commentableRun && allResults.length) {
     const finalResults = mergeResults(allResults)
     log(`Commenting, with results: ${mdResults(finalResults)}`)
-    const isPRDSL = runs.find(r => r.dslType === dsl.pr) ? dsl.pr : dsl.import
+    const isPRDSL = runs.find(r => r.dslType === RunType.pr) ? RunType.pr : RunType.import
     commentOnResults(isPRDSL, finalResults, token, settings)
   }
 

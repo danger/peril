@@ -3,7 +3,7 @@ import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import vm2 from "danger/distribution/runner/runners/vm2"
 
-import { dsl } from "../../../danger/danger_run"
+import { RunType } from "../../../danger/danger_run"
 import { executorForInstallation } from "../../../danger/danger_runner"
 import { getPerilPlatformForDSL } from "../../../danger/peril_platform"
 import { PERIL_BOT_USER_ID } from "../../../globals"
@@ -13,7 +13,7 @@ import { GitHubRunSettings } from "../github_runner"
  * Supports commenting via Peril, this is only used on non-sandboxed runs
  */
 export const commentOnResults = async (
-  dslType: dsl,
+  dslType: RunType,
   results: DangerResults,
   token: string,
   settings: GitHubRunSettings

@@ -2,15 +2,15 @@ import { GitHubUtilsDSL } from "danger/distribution/dsl/GitHubDSL"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 
 import { Platform } from "danger/distribution/platforms/platform"
-import { dsl } from "./danger_run"
+import { RunType } from "./danger_run"
 
 /**
  * When Peril is running a dangerfile for a PR we can use the default GitHub from Danger
  * however, an event like an issue comment or a user creation has no way to provide any kind of
  * feedback or DSL. To work around that we use the event provided by GitHub and provide it to Danger.
  */
-export const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubEvent: any): Platform => {
-  if (type === dsl.pr && github) {
+export const getPerilPlatformForDSL = (type: RunType, github: GitHub | null, githubEvent: any): Platform => {
+  if (type === RunType.pr && github) {
     return github
   } else {
     // This bit of faffing ensures that as the gh utils expands we get

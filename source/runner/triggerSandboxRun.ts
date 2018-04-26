@@ -6,7 +6,7 @@ import { callHyperFunction } from "../runner/hyper-api"
 import { DangerfileReferenceString } from "../db/index"
 
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
-import { dsl } from "../danger/danger_run"
+import { RunType } from "../danger/danger_run"
 import { InstallationToRun, Payload } from "../danger/danger_runner"
 
 // Sidenote: auth token is in  dsl.settings.github
@@ -32,7 +32,7 @@ export interface PerilRunnerObject {
 
 /** This function is used inside Peril */
 export const triggerSandboxDangerRun = async (
-  type: dsl,
+  type: RunType,
   installation: InstallationToRun,
   path: DangerfileReferenceString,
   payload: Payload,
@@ -52,12 +52,10 @@ export const triggerSandboxDangerRun = async (
   const stdOUT: PerilRunnerObject = {
     installation,
     payload,
-    dslType: type === dsl.pr ? "pr" : "run",
+    dslType: type === RunType.pr ? "pr" : "run",
     peril,
     path,
   }
-
-  logger.info(`Calling hyper function`)
 
   const call = await callHyperFunction(stdOUT)
   const callID = JSON.parse(call).CallId

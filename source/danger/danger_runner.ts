@@ -15,7 +15,7 @@ import { HYPER_ACCESS_KEY } from "../globals"
 import winston from "../logger"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
-import { dsl } from "./danger_run"
+import { RunType } from "./danger_run"
 import { getPerilPlatformForDSL } from "./peril_platform"
 
 /** Logs */
@@ -49,7 +49,7 @@ export async function runDangerForInstallation(
   contents: string,
   reference: DangerfileReferenceString,
   api: GitHubAPI | null,
-  type: dsl,
+  type: RunType,
   installation: InstallationToRun,
   payload: Payload
 ) {

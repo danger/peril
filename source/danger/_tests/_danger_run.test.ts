@@ -1,4 +1,4 @@
-import { dangerRepresentationForPath, dangerRunForRules, dsl, dslTypeForEvent, feedback } from "../danger_run"
+import { dangerRepresentationForPath, dangerRunForRules, dslTypeForEvent, feedback, RunType } from "../danger_run"
 
 describe("for ping", () => {
   it("returns an action when ping is in the rules", () => {
@@ -8,7 +8,7 @@ describe("for ping", () => {
         action: null,
         branch: "master",
         dangerfilePath: "dangerfile.js",
-        dslType: dsl.import,
+        dslType: RunType.import,
         event: "ping",
         feedback: feedback.silent,
         referenceString: "dangerfile.js",
@@ -31,7 +31,7 @@ describe("for PRs", () => {
         action: "created",
         branch: "master",
         dangerfilePath: "dangerfile.js",
-        dslType: dsl.pr,
+        dslType: RunType.pr,
         event: "pull_request",
         feedback: feedback.commentable,
         referenceString: "dangerfile.js",
@@ -56,7 +56,7 @@ describe("for PRs", () => {
         action: "updated",
         branch: "master",
         dangerfilePath: "dangerfile.js",
-        dslType: dsl.pr,
+        dslType: RunType.pr,
         event: "pull_request",
         feedback: feedback.commentable,
         referenceString: "dangerfile.js",
@@ -77,7 +77,7 @@ describe("for PRs", () => {
         action: "deleted",
         branch: "master",
         dangerfilePath: "dangerfile.js",
-        dslType: dsl.pr,
+        dslType: RunType.pr,
         event: "pull_request",
         feedback: feedback.commentable,
         referenceString: "dangerfile.js",
@@ -141,12 +141,12 @@ describe("dangerRepresentationforPath", () => {
 
 describe("dslTypeForEvent", () => {
   it("recommends importing the integration as the DSL for anything but a PR", () => {
-    expect(dslTypeForEvent("ping")).toEqual(dsl.import)
-    expect(dslTypeForEvent("issue")).toEqual(dsl.import)
-    expect(dslTypeForEvent("user")).toEqual(dsl.import)
+    expect(dslTypeForEvent("ping")).toEqual(RunType.import)
+    expect(dslTypeForEvent("issue")).toEqual(RunType.import)
+    expect(dslTypeForEvent("user")).toEqual(RunType.import)
   })
 
   it("recommends creating the Dangerfile DSL for a pull request", () => {
-    expect(dslTypeForEvent("pull_request")).toEqual(dsl.pr)
+    expect(dslTypeForEvent("pull_request")).toEqual(RunType.pr)
   })
 })

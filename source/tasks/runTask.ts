@@ -1,5 +1,5 @@
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
-import { dangerRepresentationForPath, dsl } from "../danger/danger_run"
+import { dangerRepresentationForPath, RunType } from "../danger/danger_run"
 import { runDangerForInstallation, ValidatedPayload } from "../danger/danger_runner"
 import { DangerfileReferenceString, GitHubInstallation } from "../db/index"
 import { getGitHubFileContents } from "../github/lib/github_helpers"
@@ -32,5 +32,5 @@ export const runTask = async (installation: GitHubInstallation, rules: Dangerfil
   }
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
   const dangerfile = await getGitHubFileContents(token, rep.repoSlug!, rep.dangerfilePath, rep.branch)
-  return runDangerForInstallation(dangerfile, rep.dangerfilePath, null, dsl.import, installation, payload)
+  return runDangerForInstallation(dangerfile, rep.dangerfilePath, null, RunType.import, installation, payload)
 }
