@@ -1,6 +1,6 @@
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import { DangerRun, feedback } from "../../../danger/danger_run"
+import { DangerRun, RunFeedback } from "../../../danger/danger_run"
 import { runDangerForInstallation } from "../../../danger/danger_runner"
 import { getGitHubFileContents } from "../../lib/github_helpers"
 import { GitHubRunSettings } from "../github_runner"
@@ -17,7 +17,7 @@ export const runEventRun = async (
     return null
   }
   // Can we actually provide feedback on this event?
-  const supportsGithubCommentAPIs = run.feedback === feedback.commentable
+  const supportsGithubCommentAPIs = run.feedback === RunFeedback.commentable
 
   // Do we need an authenticated Danger GitHubAPI instance so we
   // can leave feedback on an issue?

@@ -1,4 +1,4 @@
-import { dangerRepresentationForPath, dangerRunForRules, dslTypeForEvent, feedback, RunType } from "../danger_run"
+import { dangerRepresentationForPath, dangerRunForRules, dslTypeForEvent, RunFeedback, RunType } from "../danger_run"
 
 describe("for ping", () => {
   it("returns an action when ping is in the rules", () => {
@@ -10,7 +10,7 @@ describe("for ping", () => {
         dangerfilePath: "dangerfile.js",
         dslType: RunType.import,
         event: "ping",
-        feedback: feedback.silent,
+        feedback: RunFeedback.silent,
         referenceString: "dangerfile.js",
         repoSlug: undefined,
       },
@@ -33,7 +33,7 @@ describe("for PRs", () => {
         dangerfilePath: "dangerfile.js",
         dslType: RunType.pr,
         event: "pull_request",
-        feedback: feedback.commentable,
+        feedback: RunFeedback.commentable,
         referenceString: "dangerfile.js",
         repoSlug: undefined,
       },
@@ -58,7 +58,7 @@ describe("for PRs", () => {
         dangerfilePath: "dangerfile.js",
         dslType: RunType.pr,
         event: "pull_request",
-        feedback: feedback.commentable,
+        feedback: RunFeedback.commentable,
         referenceString: "dangerfile.js",
         repoSlug: undefined,
       },
@@ -79,7 +79,7 @@ describe("for PRs", () => {
         dangerfilePath: "dangerfile.js",
         dslType: RunType.pr,
         event: "pull_request",
-        feedback: feedback.commentable,
+        feedback: RunFeedback.commentable,
         referenceString: "dangerfile.js",
         repoSlug: undefined,
       },

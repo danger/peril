@@ -13,7 +13,7 @@ export enum RunType {
 }
 
 /** Can Danger reply inline? */
-export enum feedback {
+export enum RunFeedback {
   /** Is there a way in which Danger can provide any feedback? */
   commentable,
   /** Can only execute the JS, no feedback into an issue as the event doesn't correlate to one */
@@ -29,7 +29,7 @@ export interface DangerRun extends RepresentationForURL {
   /** What type of DSL should the run use? */
   dslType: RunType
   /** Can Danger provide commentable feedback? */
-  feedback: feedback
+  feedback: RunFeedback
 }
 
 /** Takes an event and action, and defines whether to do a dangerfile run with it. */
@@ -95,9 +95,9 @@ export const dslTypeForEvent = (event: string): RunType => {
 
 /** What events can we provide feedback inline with? */
 // Build system mentions?
-export const feedbackTypeForEvent = (event: string): feedback => {
+export const feedbackTypeForEvent = (event: string): RunFeedback => {
   if (event === "pull_request" || event === "issues" || event === "issue") {
-    return feedback.commentable
+    return RunFeedback.commentable
   }
-  return feedback.silent
+  return RunFeedback.silent
 }

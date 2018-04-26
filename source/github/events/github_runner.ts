@@ -2,7 +2,7 @@ import * as express from "express"
 
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
-import { DangerRun, dangerRunForRules, feedback, RunType } from "../../danger/danger_run"
+import { DangerRun, dangerRunForRules, RunFeedback, RunType } from "../../danger/danger_run"
 import { GitHubInstallation, GithubRepo } from "../../db"
 import { getDB } from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
@@ -180,7 +180,7 @@ export const runEverything = async (
     }
   }
 
-  const commentableRun = runs.find(r => r.feedback === feedback.commentable)
+  const commentableRun = runs.find(r => r.feedback === RunFeedback.commentable)
   if (commentableRun && allResults.length) {
     const finalResults = mergeResults(allResults)
     log(`Commenting, with results: ${mdResults(finalResults)}`)
