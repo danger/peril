@@ -1,11 +1,10 @@
 const mockSchedule = { scheduleJob: jest.fn() }
 jest.mock("node-schedule", () => mockSchedule)
 
-const mockInstallation: jest.Mock<any> = jest.fn()
-jest.mock("../../db/getDB", () => ({
-  getDB: () => ({ getInstallation: mockInstallation }),
-}))
+jest.mock("../../db/getDB")
+import { MockDB } from "../../db/__mocks__/getDB"
 import { getDB } from "../../db/getDB"
+const mockDB = getDB() as MockDB
 
 import installationFactory from "../../testing/installationFactory"
 import startScheduler from "../startScheduler"
@@ -14,8 +13,8 @@ it("runs scheduleJob for your tasks", async () => {
   const scheduler = {
     "1 2 3 4 5": "every_so_often.ts",
   }
-  const installation = installationFactory({ scheduler })
-  mockInstallation.mockImplementationOnce(() => Promise.resolve(installation))
+
+  mockDB.getInstallation.mockResolvedValueOnce(installationFactory({ scheduler }))
 
   await startScheduler()
 
