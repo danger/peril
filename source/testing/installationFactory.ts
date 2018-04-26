@@ -16,6 +16,7 @@ const emptyInstallation: GitHubInstallation = {
   perilSettingsJSONURL: "",
 }
 
+/** Creates an installation from a blank template */
 const generateInstallation = (diff: Partial<GitHubInstallation>): GitHubInstallation =>
   Object.assign({}, emptyInstallation, diff)
 

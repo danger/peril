@@ -7,7 +7,7 @@ import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
 import { GraphQLContext } from "../api"
 import { getDetailsFromPerilJWT } from "../auth/generate"
-import { gql } from "./jwt"
+import { gql } from "./gql"
 
 const { connectionType: partialConnection } = connectionDefinitions({ name: "PartialInstallation" })
 const { connectionType: installationConnection } = connectionDefinitions({ name: "Installation" })
@@ -122,6 +122,7 @@ const resolvers = {
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       return decodedJWT.data.user
     }),
+
     installation: authD(async (_: any, params: { iID: number }, context: GraphQLContext) => {
       const installations = await getUserInstallations(context.jwt)
       return installations.find(i => i.iID === params.iID)
@@ -147,7 +148,7 @@ const resolvers = {
   },
 }
 
-export const schema = makeExecutableSchema({
+export const schema = makeExecutableSchema<GraphQLContext>({
   typeDefs: [schemaSDL, pageInfoType, installationConnection, partialConnection],
   resolvers,
 })
