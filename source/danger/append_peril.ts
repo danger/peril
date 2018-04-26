@@ -1,6 +1,7 @@
 import * as NodeGithub from "@octokit/rest"
 
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
+import GitHubUtils from "danger/distribution/platforms/github/GitHubUtils"
 import { DangerContext } from "danger/distribution/runner/Dangerfile"
 
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
@@ -8,7 +9,7 @@ import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import { InstallationToRun } from "./danger_runner"
 
 /**
- * Genereates a GH API for Peril-based work
+ * Generates a GH API for Peril-based work
  *
  * @param installationID
  * @param authToken
@@ -42,8 +43,10 @@ export async function appendPerilContextToDSL(
   sandbox: DangerContext,
   peril: PerilDSL
 ) {
+  // Update the GitHub related details with the new ocktokit generated per installation
   if (sandbox.danger && sandbox.danger.github) {
     sandbox.danger.github.api = await octokitAPIForPeril(installationID, authToken)
+    sandbox.danger.github.utils = GitHubUtils(sandbox.danger.github.pr, sandbox.danger.github.api)
   }
 
   const anySandbox = sandbox as any

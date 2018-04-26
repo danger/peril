@@ -50,8 +50,8 @@ export const run = async (stdin: string) => {
   return null
 }
 
-// There's a lot of redundnacy between these, but at least they're somewhat separated in their mental
-// model, used to be much harder to keep track of their diffferences
+// There's a lot of redundancy between these, but at least they're somewhat separated in their mental
+// model, used to be much harder to keep track of their differences
 
 const runDangerEvent = async (installation: InstallationToRun, input: PerilRunnerObject) => {
   // const platform = getPerilPlatformForDSL(dsl.import, null, input.dsl)
@@ -113,6 +113,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
     dangerfileContent,
     runtimeEnv
   )
+
   logger.info(
     `f: ${results.fails.length} w: ${results.warnings.length} m: ${results.messages.length} md: ${
       results.markdowns.length

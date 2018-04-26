@@ -209,7 +209,10 @@ import { Issues } from "github-webhook-event-types"
 const gh = (danger.github as any) as Issues
 const issue = gh.issue
 
-const slackify = (text: string) => ({})
+const slackify = (text: string) => ({
+  // generates a API slack compatible object, which is passed into the task
+  // as `peril.data` later on.
+})
 
 if (issue.title.includes("RFC:") || issue.title.includes("[RFC]")) {
   peril.runTask("slack-dev-channel", "in 5 minutes", slackify("🎉: A new RFC has been published."))

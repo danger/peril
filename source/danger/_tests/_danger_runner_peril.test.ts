@@ -21,7 +21,7 @@ it("adds a GH API object to the DSL", async () => {
 
   expect(sandbox.danger.github.api).toBeTruthy()
 
-  // The older API used to allow checjing for the auth methods
-  // as of version 14, you can't ge tto it as it's a plugin
+  // The older API used to allow checking for the auth methods
+  // as of version 14, you can't get to it as it's a plugin
   // expect(sandbox.danger.github.api.auth).toEqual({ token: mockToken, type: "integration" })
 })
