@@ -46,7 +46,7 @@ const peril = () => {
 
   app.post("/webhook", webhook)
 
-  welcomeMessages.push("Starting up Peril")
+  welcomeMessages.push("☢️  Starting up Peril")
   welcomeMessages.push("")
 
   const paperTrail = PAPERTRAIL_URL ? tick : cross

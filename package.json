@@ -15,7 +15,8 @@
     "setup:plugins": "node out/scripts/setup-plugins.js",
     "runner": "node out/runner/index.js",
     "precommit": "lint-staged; yarn build;",
-    "prepush": "jest; yarn danger local --dangerfile dangerfile.lite.ts"
+    "postcommit": "yarn danger local --dangerfile dangerfile.lite.ts",
+    "prepush": "jest"
   },
   "repository": {
     "type": "git",
