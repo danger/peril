@@ -133,6 +133,9 @@ export const HYPER_SECRET_KEY = getEnv("HYPER_SECRET_KEY")
 /** Optional: the function name that represents a danger run */
 export const HYPER_FUNC_NAME = getEnv("HYPER_FUNC_NAME")
 
+/** Optional: Any truthy value here will start up clustering for Peril  */
+export const WEB_CONCURRENCY = getEnv("WEB_CONCURRENCY")
+
 export const validateENVForPerilServer = () => {
   // Can't run without these
   validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
