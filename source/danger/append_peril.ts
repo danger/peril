@@ -44,7 +44,9 @@ export async function appendPerilContextToDSL(
   peril: PerilDSL
 ) {
   // Update the GitHub related details with the new ocktokit generated per installation
-  if (sandbox.danger && sandbox.danger.github) {
+  if (sandbox.danger) {
+    // @ts-ignore - .github is readonly according to the types, but we have to have something here
+    sandbox.danger.github = sandbox.danger.github || ({} as any)
     sandbox.danger.github.api = await octokitAPIForPeril(installationID, authToken)
     sandbox.danger.github.utils = GitHubUtils(sandbox.danger.github.pr, sandbox.danger.github.api)
   }
@@ -63,7 +65,7 @@ export async function appendPerilContextToDSL(
 export const perilObjectForInstallation = (
   installation: InstallationToRun,
   environment: any,
-  peril: any
+  peril: any | undefined
 ): PerilDSL => ({
   ...peril,
   env:

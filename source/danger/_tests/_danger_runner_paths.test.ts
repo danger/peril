@@ -6,6 +6,7 @@ jest.mock("danger/distribution/runner/runners/vm2", () => ({
   },
 }))
 
+import { DangerDSLJSONType } from "danger/distribution/dsl/DangerDSL"
 import { dsl } from "../danger_run"
 import { runDangerForInstallation } from "../danger_runner"
 
@@ -20,13 +21,15 @@ const installationSettings = {
   settings: defaultSettings,
 }
 
+const blankPayload = { dsl: {} as DangerDSLJSONType, webhook: {} }
+
 jest.mock("../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("123"),
 }))
 
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
-    await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, installationSettings)
+    await runDangerForInstallation(`dangerfile_empty.ts`, "", null, dsl.pr, installationSettings, blankPayload)
 
     const path = mockRunDangerfileEnvironment.mock.calls[0][0]
     expect(path.startsWith("/")).toBeTruthy()

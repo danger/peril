@@ -89,7 +89,7 @@ const getInstallationId = (id: string | undefined): number => {
  */
 export const PERIL_ORG_INSTALLATION_ID = getInstallationId(getEnv("PERIL_ORG_INSTALLATION_ID"))
 
-/** Should fetch log out to the console? */
+/** Optional: Logs out fetch requests to the console, work is handled in Danger JS */
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
 
 /** Papertrail url */

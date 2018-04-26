@@ -1,4 +1,4 @@
-import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
+import { DangerDSLJSONType, PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import vm2 from "danger/distribution/runner/runners/vm2"
 import { readFileSync } from "fs"
 import { resolve } from "path"
@@ -10,6 +10,8 @@ import { executorForInstallation, runDangerAgainstFileInline } from "../danger_r
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
 const peril: PerilDSL = { env: {}, runTask: () => null }
+
+const blankPayload = { dsl: {} as DangerDSLJSONType, webhook: {} }
 
 jest.mock("../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("123"),
@@ -39,7 +41,8 @@ describe("evaling", () => {
       contents,
       installationSettings,
       executor,
-      peril
+      peril,
+      blankPayload
     )
     expect(results).toEqual({
       fails: [],
@@ -55,7 +58,14 @@ describe("evaling", () => {
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
     const contents = readFileSync(path, "utf8")
 
-    const results = await runDangerAgainstFileInline(path, contents, installationSettings, executor, peril)
+    const results = await runDangerAgainstFileInline(
+      path,
+      contents,
+      installationSettings,
+      executor,
+      peril,
+      blankPayload
+    )
     expect(results.markdowns.map(m => m.message)).toEqual(["`Object.keys(process.env).length` is 0"])
   })
 
@@ -67,7 +77,14 @@ describe("evaling", () => {
       const path = `${dangerfilesFixtures}/dangerfile_import_module.ts`
 
       const contents = readFileSync(path, "utf8")
-      const results = await runDangerAgainstFileInline(path, contents, installationSettings, executor, peril)
+      const results = await runDangerAgainstFileInline(
+        path,
+        contents,
+        installationSettings,
+        executor,
+        peril,
+        blankPayload
+      )
       expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
     })
 
@@ -78,7 +95,14 @@ describe("evaling", () => {
       const localDangerfile = resolve("./dangerfile_runtime_env", "dangerfile_import_complex_module.ts")
       const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
-      const results = await runDangerAgainstFileInline(localDangerfile, contents, installationSettings, executor, peril)
+      const results = await runDangerAgainstFileInline(
+        localDangerfile,
+        contents,
+        installationSettings,
+        executor,
+        peril,
+        blankPayload
+      )
       expect(results.messages).toEqual([{ message: ":tada: - congrats on your new release" }])
     })
   }
@@ -90,7 +114,14 @@ describe("evaling", () => {
     const localDangerfile = resolve(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`, "utf8")
 
-    const results = await runDangerAgainstFileInline(localDangerfile, contents, installationSettings, executor, peril)
+    const results = await runDangerAgainstFileInline(
+      localDangerfile,
+      contents,
+      installationSettings,
+      executor,
+      peril,
+      blankPayload
+    )
     expect(results.markdowns.map(m => m.message)).toEqual([JSON.stringify(peril, null, "  ")])
   })
 
@@ -102,7 +133,14 @@ describe("evaling", () => {
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
 
     const contents = readFileSync(path, "utf8")
-    const results = await runDangerAgainstFileInline(path, contents, installationSettings, executor, peril)
+    const results = await runDangerAgainstFileInline(
+      path,
+      contents,
+      installationSettings,
+      executor,
+      peril,
+      blankPayload
+    )
     expect(results).toEqual({
       fails: [],
       markdowns: [],
@@ -123,7 +161,7 @@ describe("evaling", () => {
 
 it("exposes specific process env vars via the peril object ", async () => {
   const processInstallationSettings: GitHubInstallationSettings = {
-    env_vars: ["TEST_ENV", "NON_EXISTANT"],
+    env_vars: ["TEST_ENV", "NON_EXISTENT"],
     ignored_repos: [],
     modules: [],
   }
@@ -139,7 +177,7 @@ it("exposes specific process env vars via the peril object ", async () => {
 
 it("allows passing through Peril DSL attributes ", async () => {
   const processInstallationSettings: GitHubInstallationSettings = {
-    env_vars: ["TEST_ENV", "NON_EXISTANT"],
+    env_vars: ["TEST_ENV", "NON_EXISTENT"],
     ignored_repos: [],
     modules: [],
   }

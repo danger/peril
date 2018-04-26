@@ -3,18 +3,17 @@ import logger from "../logger"
 import { HYPER_FUNC_NAME } from "../globals"
 import { callHyperFunction } from "../runner/hyper-api"
 
-import { DangerDSLJSONType } from "danger/distribution/dsl/DangerDSL"
 import { DangerfileReferenceString } from "../db/index"
 
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { dsl } from "../danger/danger_run"
-import { InstallationToRun } from "../danger/danger_runner"
+import { InstallationToRun, Payload } from "../danger/danger_runner"
 
 // Sidenote: auth token is in  dsl.settings.github
 export interface PerilRunnerObject {
   /** The DSL for JSON, could be a DangerDSLJSON type or the raw webhook */
-  dsl: DangerDSLJSONType // | any
-  /** The refernce for the initial dangerfile */
+  payload: Payload
+  /** The reference for the initial dangerfile */
   path: DangerfileReferenceString
   /** Installation number */
   installation: InstallationToRun
@@ -23,8 +22,7 @@ export interface PerilRunnerObject {
   /** Optional Peril settings? (think like task) */
   // TODO: Make a PerilJSONDSL
   peril: any
-
-  // TODO: Validate the source came from Peril - public key based on the GH private one?
+  // TODO: Generate a UUID and then sign with JWT for security?
 }
 
 // You can fake this by doing something like:
@@ -37,12 +35,12 @@ export const triggerSandboxDangerRun = async (
   type: dsl,
   installation: InstallationToRun,
   path: DangerfileReferenceString,
-  dslJSON: DangerDSLJSONType,
+  payload: Payload,
   peril: any
 ) => {
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
-
-  dslJSON.settings = {
+  const DSL: any = payload.dsl || {}
+  DSL.settings = {
     github: {
       accessToken: token,
       baseURL: undefined, // used for GH Enterprise, not supported today
@@ -53,7 +51,7 @@ export const triggerSandboxDangerRun = async (
 
   const stdOUT: PerilRunnerObject = {
     installation,
-    dsl: dslJSON,
+    payload,
     dslType: type === dsl.pr ? "pr" : "run",
     peril,
     path,

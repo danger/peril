@@ -1,7 +1,7 @@
 import { dsl } from "../danger_run"
 
 import { GitHub } from "danger/distribution/platforms/GitHub"
-import getPerilPlatformForDSL from "../peril_platform"
+import { getPerilPlatformForDSL } from "../peril_platform"
 
 it("Provides the Danger GitHub DSL for a PR", () => {
   const myAPI = {} as any

@@ -54,5 +54,3 @@ export const getPerilPlatformForDSL = (type: dsl, github: GitHub | null, githubE
     return platform
   }
 }
-
-export default getPerilPlatformForDSL
