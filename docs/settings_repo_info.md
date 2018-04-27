@@ -10,7 +10,7 @@
 
 Let's deep dive into the JSON:
 
-```
+```json5
 {
   "settings": {
     [your settings]
@@ -26,6 +26,8 @@ Let's deep dive into the JSON:
   }
 }
 ```
+
+It's is parsed via JSON5, so you can add comments.
 
 ### `settings`
 
@@ -46,7 +48,7 @@ These are globally applied rules, e.g. to every repo. It's a set of `event names
 
 These are the names of a webhook from GitHub. A webhook event always has a name, but it may also have an action.
 
-For example, when you set up Peril, you'll have recieved this webhook:
+For example, when you set up Peril, you'll have received this webhook:
 
 ![](images/events-ex.png)
 
@@ -59,24 +61,38 @@ You can get information about _any_ webhook
 For a Pull Request, there are
 [a lot of actions](https://developer.github.com/v3/activity/events/types/#pullrequestevent): It can be one of
 `assigned`, `unassigned`, `review_requested`, `review_request_removed`, `labeled`, `unlabeled`, `opened`, `edited`,
-`closed`, `reopened` or `synchronized`.
+`closed`, `reopened` or `synchronize`.
 
 You can specify a Dangerfile to run either on **all** events by using `"pull_request"` or only a specific action on a
 pull request with `"pull_request.[action]"`.
 
 For example:
 
-```
+```json5
 {
   "rules": {
     "pull_request": "...", // all events
     "pull_request.assigned": "...", // only on when a PR has someone assigned
-    "pull_request.closed": "...",// only on when a PR is closed
-    "pull_request.synchronized": "...",// only when the commits for a PR's branch have changed
-    ...
+    "pull_request.closed": "...", // only on when a PR is closed
+    "pull_request.synchronize": "..." // only when the commits for a PR's branch have changed
+    // ...
   }
 }
 ```
+
+You can have a combination of rules run which the same Dangerfile in order to get the behavior you want, for example to
+replicate the exact process of running Danger on CI, you could use:
+
+```json5
+{
+  "rules": {
+    "pull_request.opened": "artsy/artsy-danger@org/all-prs.ts",
+    "pull_request.synchronize": "artsy/artsy-danger@org/all-prs.ts"
+  }
+}
+```
+
+Which would run `"org/pr.ts"` when a PR is created, and then updated.
 
 ### `dangerfiles`
 
