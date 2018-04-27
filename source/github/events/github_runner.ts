@@ -123,7 +123,14 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   }
 
   const runs = runsForEvent(event, action, installation, settings)
-  logger.info(`Found ${runs.length} runs for ${action} on ${installationID}`)
+  const name = action ? `${event}.${action}` : event
+  if (runs.length) {
+    logger.info(`## ${name} on ${installationID}`)
+    logger.info(`   Found ${runs.length} runs for ${action} on ${installation.login}`)
+  } else {
+    logger.info(`${name} on ${installation.login} skipped`)
+  }
+
   await runEverything(runs, settings, installation, req, res, next)
 }
 
@@ -148,7 +155,7 @@ export const runEverything = async (
 ) => {
   // We got no runs ( so there were no rules that correspond to the event)
   if (runs.length === 0) {
-    res.status(204).send(`No work to do.`)
+    res.status(204).send(`No work to do {.`)
     next()
     return
   }

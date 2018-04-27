@@ -8,11 +8,7 @@ import { ping } from "../github/events/ping"
 import { settingsUpdater } from "./settings_updater"
 
 import { RootObject as InstallationCreated } from "../github/events/types/integration_installation_created.types"
-
-/** Logs */
-const info = (message: string) => {
-  winston.info(`[router] - ${message}`)
-}
+import logger from "../logger"
 
 const router = (req: Request, res: Response, next: NextFunction) => {
   const event = req.header("X-GitHub-Event")
@@ -47,16 +43,17 @@ export const githubRouting = (event: string, req: Request, res: Response, next: 
       const request = req.body as InstallationCreated
       const action = request.action
       const installation = request.installation
+
       // Create a db entry for any new installation
       if (action === "created") {
-        info(` - Creating new installation`)
+        logger.info(`## Creating new installation for ${request.installation.account.login}`)
         createInstallation(installation, req, res)
         return
       }
 
       // Delete any integrations that have uninstalled Peril :wave:
       else if (action === "deleted") {
-        info(` - Deleting installation ${installation.id}`)
+        logger.info(`## Deleting installation ${installation.id}`)
         const db = getDB()
         db.deleteInstallation(installation.id)
         return
@@ -66,12 +63,9 @@ export const githubRouting = (event: string, req: Request, res: Response, next: 
     }
 
     default: {
-      info(`Sending ${event} to GH rule router for ${req.body.installation.id}.`)
-
       // Look out for changes to the setting JSON file and update the
       // db accordingly
       settingsUpdater(event, req, res, next)
-
       githubDangerRunner(event, req, res, next)
     }
   }

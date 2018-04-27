@@ -49,17 +49,18 @@ interface HyperImage {
 export const hyperUpdater = async (req: express.Request, res: express.Response, __: any) => {
   const webhook = req.body as DockerHubWebhook
   const image = `${webhook.repository.repo_name}:${webhook.push_data.tag}`
-  logger.info(`Updating hyper image for ${image}`)
   res.status(200).json({ ok: true })
+  logger.info("\n## Hyper Docker Image Updater Triggered")
 
   // Pulls down the new version from dockerhub
   await updateHyperFuncImageUpdate(image)
+  logger.info(`   Name: ${image}`)
 
   // Deletes anything that's not the right tag
   const allImages: HyperImage[] = await getAllHyperImages()
-  logger.info(`Found ${allImages.length} images`)
+  logger.info(`   ${allImages.length} images updated`)
   const notDanger = allImages.filter(i => i.RepoTags.some(t => !t.includes("danger")))
-  logger.info(`Removing ${notDanger.length} images`)
+  logger.info(`   ${notDanger.length} images removed`)
   for (const iterator of notDanger) {
     try {
       // This can sometimes fail if a run is happening,
@@ -70,4 +71,5 @@ export const hyperUpdater = async (req: express.Request, res: express.Response, 
       logger.error(error.message)
     }
   }
+  logger.info("")
 }
