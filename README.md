@@ -4,7 +4,7 @@
 
 [per·il](https://en.oxforddictionaries.com/definition/peril) **ˈperəl** _noun_
 
-1.  serious and immediate danger. _"their family was in peril"_
+1.  serious and immediate danger. _"their family was in peril"_.
 
 ---
 
