@@ -13,6 +13,8 @@
     "setup": "yarn run setup:plugins && yarn run setup:env",
     "setup:env": "node out/scripts/setup-env.js",
     "setup:plugins": "node out/scripts/setup-plugins.js",
+    "docker:build:site": "docker build .",
+    "docker:build:runner": "docker build -f Dockerfile.runner  -t runner .",
     "runner": "node out/runner/index.js",
     "precommit": "lint-staged; yarn build;",
     "postcommit": "yarn danger local --dangerfile dangerfile.lite.ts",

@@ -14,3 +14,6 @@ if (!readFileSync("Dockerfile", "utf8").includes("node:" + nodeVersion)) {
 if (!readFileSync("Dockerfile.runner", "utf8").includes("node:" + nodeVersion)) {
   warn("The `Dockerfile.runner` does not have the same version of node in it")
 }
+if (!readFileSync(".travis.yml", "utf8").includes("node_js: " + nodeVersion)) {
+  warn("The `.travis.yml` does not have the same version of node in it")
+}
