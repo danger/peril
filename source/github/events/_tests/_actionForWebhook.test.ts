@@ -1,4 +1,4 @@
-import { actionForWebhook } from "../github_runner"
+import { actionForWebhook } from "../utils/actions"
 
 it("gets the action from a JSON payload", () => {
   expect(actionForWebhook({ action: "runs" })).toBe("runs")

@@ -19,14 +19,13 @@ jest.mock("../../../danger/danger_runner", () => ({
 import { readFileSync } from "fs"
 import { resolve } from "path"
 import { dangerRunForRules } from "../../../danger/danger_run"
-import { runPRRun, setupForRequest } from "../github_runner"
+import { setupForRequest } from "../github_runner"
+import { runPRRun } from "../handlers/pr"
 
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
-jest.mock("../createPRDSL", () => ({
-  createPRDSL: () => Promise.resolve({}),
-}))
+jest.mock("../createPRDSL", () => ({ createPRJSONDSL: () => Promise.resolve({}) }))
 
 it("runs an Dangerfile for a PR with a local", async () => {
   mockContents.mockImplementationOnce(() => Promise.resolve("fail('dangerfile')"))

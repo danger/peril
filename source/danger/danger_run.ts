@@ -5,7 +5,7 @@ import { DangerfileReferenceString, RunnerRuleset } from "../db"
  * to a PR as we send to an Issue, or to User creation, the lack of
  * reference to a PR means that we can't do work like finding diffs.
  */
-export enum dsl {
+export enum RunType {
   /** What, for years, has been the "Danger DSL" */
   pr,
   /** Take whatever JSON triggered this run and use that as the `github.` DSL */
@@ -13,7 +13,7 @@ export enum dsl {
 }
 
 /** Can Danger reply inline? */
-export enum feedback {
+export enum RunFeedback {
   /** Is there a way in which Danger can provide any feedback? */
   commentable,
   /** Can only execute the JS, no feedback into an issue as the event doesn't correlate to one */
@@ -27,9 +27,9 @@ export interface DangerRun extends RepresentationForURL {
   /** What action inside that event trigger this run */
   action: string | null
   /** What type of DSL should the run use? */
-  dslType: dsl
+  dslType: RunType
   /** Can Danger provide commentable feedback? */
-  feedback: feedback
+  feedback: RunFeedback
 }
 
 /** Takes an event and action, and defines whether to do a dangerfile run with it. */
@@ -86,18 +86,18 @@ export const dangerRepresentationForPath = (value: DangerfileReferenceString): R
 }
 
 /** What type of DSL should get used for the Dangerfile eval? */
-export const dslTypeForEvent = (event: string): dsl => {
+export const dslTypeForEvent = (event: string): RunType => {
   if (event === "pull_request") {
-    return dsl.pr
+    return RunType.pr
   }
-  return dsl.import
+  return RunType.import
 }
 
 /** What events can we provide feedback inline with? */
 // Build system mentions?
-export const feedbackTypeForEvent = (event: string): feedback => {
+export const feedbackTypeForEvent = (event: string): RunFeedback => {
   if (event === "pull_request" || event === "issues" || event === "issue") {
-    return feedback.commentable
+    return RunFeedback.commentable
   }
-  return feedback.silent
+  return RunFeedback.silent
 }

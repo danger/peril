@@ -1,23 +1,33 @@
 import "babel-polyfill"
 import * as bodyParser from "body-parser"
+import chalk from "chalk"
 import * as express from "express"
 import * as xhub from "express-x-hub"
 
 import {
+  DATABASE_JSON_FILE,
   HYPER_ACCESS_KEY,
   MONGODB_URI,
+  PAPERTRAIL_URL,
   PERIL_WEBHOOK_SECRET,
   PUBLIC_API_ROOT_URL,
   PUBLIC_FACING_API,
+  PUBLIC_WEB_ROOT_URL,
   validateENVForPerilServer,
+  WEB_CONCURRENCY,
 } from "./globals"
 
+import { URL } from "url"
 import setupPublicAPI from "./api/api"
 import logger from "./logger"
 import { hyperUpdater } from "./routing/hyper_updater"
 import webhook from "./routing/router"
 import startScheduler from "./scheduler/startScheduler"
 import { startTaskScheduler } from "./tasks/startTaskScheduler"
+
+const welcomeMessages = [] as string[]
+const tick = chalk.bold.greenBright("✓")
+const cross = chalk.bold.redBright("ⅹ")
 
 const peril = () => {
   validateENVForPerilServer()
@@ -36,8 +46,24 @@ const peril = () => {
 
   app.post("/webhook", webhook)
 
+  welcomeMessages.push("☢️  Starting up Peril")
+  welcomeMessages.push("")
+
+  const paperTrail = PAPERTRAIL_URL ? tick : cross
+  welcomeMessages.push(paperTrail + " Papertrail")
+
+  const clustering = WEB_CONCURRENCY ? tick : cross
+  welcomeMessages.push(clustering + " Clustering")
+
   if (MONGODB_URI) {
-    logger.info("Starting up the task scheduler.")
+    const uri = new URL(MONGODB_URI)
+    welcomeMessages.push(tick + ` Mongo at ${uri.host}`)
+  } else {
+    welcomeMessages.push(tick + ` JSON Db at ${DATABASE_JSON_FILE}`)
+  }
+
+  if (MONGODB_URI) {
+    welcomeMessages.push(tick + " Task Scheduler")
     startTaskScheduler()
   }
 
@@ -48,20 +74,26 @@ const peril = () => {
     // This is mainly so you don't need to remember to do a `hyper pull` after
     // an update to Peril.
     const url = `/api/v1/webook/dockerhub/${HYPER_ACCESS_KEY}`
-    logger.info(`Started up the dockerhub webhook on ${url}`)
+    welcomeMessages.push(tick + " Hyper Sandbox")
+    welcomeMessages.push(tick + " Docker Webhook")
     app.post(url, hyperUpdater)
   }
 
   // This should go last
   if (PUBLIC_FACING_API) {
-    logger.info("This is a public facing Peril instance.")
-    logger.info(`- API Root: ${PUBLIC_API_ROOT_URL}`)
+    welcomeMessages.push(tick + " Public API:")
+    welcomeMessages.push(`  - Web Root: ${PUBLIC_WEB_ROOT_URL}`)
+    welcomeMessages.push(`  - API Root: ${PUBLIC_API_ROOT_URL}`)
     setupPublicAPI(app)
   }
 
   // Start server
   app.listen(app.get("port"), () => {
-    logger.info(`Started server at http://localhost:${process.env.PORT || 5000}`)
+    if (!process.env.HEROKU || !process.env.NOW) {
+      welcomeMessages.push(tick + " Server:")
+      welcomeMessages.push(`  - Local: http://localhost:${process.env.PORT || 5000}`)
+    }
+    welcomeMessages.forEach(l => logger.info(l))
     startScheduler()
   })
 }

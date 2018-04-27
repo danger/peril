@@ -5,10 +5,10 @@ import { GitHub } from "danger/distribution/platforms/GitHub"
 import inline from "danger/distribution/runner/runners/inline"
 
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
-import { dsl } from "../../danger/danger_run"
+import { RunType } from "../../danger/danger_run"
 import { executorForInstallation } from "../../danger/danger_runner"
-import perilPlatform from "../../danger/peril_platform"
-import { githubAPIForCommentable } from "../../github/events/github_runner"
+import { getPerilPlatformForDSL } from "../../danger/peril_platform"
+import { githubAPIForCommentable } from "../../github/events/utils/commenting"
 import { PERIL_ORG_INSTALLATION_ID } from "../../globals"
 
 const prDSLRunner = async (req: express.Request, res: express.Response, _: express.NextFunction) => {
@@ -42,7 +42,7 @@ const prDSLRunner = async (req: express.Request, res: express.Response, _: expre
   const githubAPI = githubAPIForCommentable(token, ghDetails.fullName, ghDetails.prID)
 
   const gh = new GitHub(githubAPI)
-  const platform = perilPlatform(dsl.pr, gh, {})
+  const platform = getPerilPlatformForDSL(RunType.pr, gh, {})
 
   const exec = await executorForInstallation(platform, inline)
   const dangerDSL = await exec.dslForDanger()

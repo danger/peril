@@ -15,7 +15,8 @@
     "setup:plugins": "node out/scripts/setup-plugins.js",
     "runner": "node out/runner/index.js",
     "precommit": "lint-staged; yarn build;",
-    "prepush": "jest; yarn danger local --dangerfile dangerfile.lite.ts"
+    "postcommit": "yarn danger local --dangerfile dangerfile.lite.ts",
+    "prepush": "jest"
   },
   "repository": {
     "type": "git",
@@ -66,6 +67,7 @@
     "babel-preset-es2015": "7.0.0-alpha.19",
     "babel-preset-stage-3": "7.0.0-alpha.19",
     "body-parser": "^1.18.2",
+    "chalk": "^2.4.1",
     "cookie-parser": "^1.4.3",
     "danger": "^3.6.0",
     "danger-plugin-yarn": "^1.3.0",

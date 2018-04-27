@@ -1,4 +1,4 @@
-import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
+import { DangerDSLJSONType, PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
@@ -15,8 +15,8 @@ import { HYPER_ACCESS_KEY } from "../globals"
 import winston from "../logger"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
-import { dsl } from "./danger_run"
-import perilPlatform from "./peril_platform"
+import { RunType } from "./danger_run"
+import { getPerilPlatformForDSL } from "./peril_platform"
 
 /** Logs */
 const log = (message: string) => winston.info(`[runner] - ${message}`)
@@ -26,6 +26,22 @@ export interface InstallationToRun {
   settings: GitHubInstallationSettings
 }
 
+/** The DSL / injected obj for the Danger run, before it's set up */
+export interface Payload {
+  // The Danger DSL when the event is a PR
+  dsl: DangerDSLJSONType | {}
+  // The webhook for anything else
+  webhook: any
+}
+
+/** Once we're more certain of the payload */
+export interface ValidatedPayload {
+  // The Danger DSL when the event is a PR
+  dsl: DangerDSLJSONType
+  // The webhook for anything else
+  webhook: any
+}
+
 /**
  * The single function to run danger against an installation
  */
@@ -33,27 +49,30 @@ export async function runDangerForInstallation(
   contents: string,
   reference: DangerfileReferenceString,
   api: GitHubAPI | null,
-  type: dsl,
+  type: RunType,
   installation: InstallationToRun,
-  dangerDSL?: any
+  payload: Payload
 ) {
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
   log(`Running Danger`)
+  const DSL = payload.dsl
   const gh = api ? new GitHub(api) : null
-  const platform = perilPlatform(type, gh, dangerDSL)
+  const platform = getPerilPlatformForDSL(type, gh, payload.dsl)
 
   const exec = await executorForInstallation(platform, vm2)
 
   const randomName = Math.random().toString(36)
   const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(reference))
-  const peril = perilObjectForInstallation(installation, process.env, dangerDSL && dangerDSL.peril)
+  // Allow
+  const perilFromRunOrTask = DSL && (DSL as any).peril
+  const peril = perilObjectForInstallation(installation, process.env, perilFromRunOrTask)
 
   if (HYPER_ACCESS_KEY) {
-    return await triggerSandboxDangerRun(type, installation, reference, dangerDSL, peril)
+    return await triggerSandboxDangerRun(type, installation, reference, payload, peril)
   } else {
-    return await runDangerAgainstFileInline(localDangerfilePath, contents, installation, exec, peril, dangerDSL)
+    return await runDangerAgainstFileInline(localDangerfilePath, contents, installation, exec, peril, payload)
   }
 }
 
@@ -66,20 +85,21 @@ export async function runDangerAgainstFileInline(
   installation: InstallationToRun,
   exec: Executor,
   peril: PerilDSL,
-  dangerDSL?: any
+  payload: Payload
 ) {
+  const dangerDSL = payload.dsl as any | undefined
   const context = contextForDanger(dangerDSL)
   const runtimeEnv = await exec.runner.createDangerfileRuntimeEnvironment(context)
 
-  // This can expand with time
   if (runtimeEnv.sandbox) {
+    // Mutates runtimeEnv.sandbox
     await appendPerilContextToDSL(installation.iID, undefined, runtimeEnv.sandbox, peril)
   }
 
   let results: DangerResults
 
   try {
-    results = await exec.runner.runDangerfileEnvironment(filepath, contents, runtimeEnv)
+    results = await exec.runner.runDangerfileEnvironment(filepath, contents, runtimeEnv, payload.webhook)
   } catch (error) {
     results = resultsForCaughtError(filepath, contents, error)
   }

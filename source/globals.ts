@@ -89,7 +89,7 @@ const getInstallationId = (id: string | undefined): number => {
  */
 export const PERIL_ORG_INSTALLATION_ID = getInstallationId(getEnv("PERIL_ORG_INSTALLATION_ID"))
 
-/** Should fetch log out to the console? */
+/** Optional: Logs out fetch requests to the console, work is handled in Danger JS */
 export const LOG_FETCH_REQUESTS = getEnv("LOG_FETCH_REQUESTS")
 
 /** Papertrail url */
@@ -132,6 +132,9 @@ export const HYPER_SECRET_KEY = getEnv("HYPER_SECRET_KEY")
 
 /** Optional: the function name that represents a danger run */
 export const HYPER_FUNC_NAME = getEnv("HYPER_FUNC_NAME")
+
+/** Optional: Any truthy value here will start up clustering for Peril  */
+export const WEB_CONCURRENCY = getEnv("WEB_CONCURRENCY")
 
 export const validateENVForPerilServer = () => {
   // Can't run without these

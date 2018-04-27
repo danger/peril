@@ -27,7 +27,8 @@ global.regeneratorRuntime = {}
 import { readFileSync } from "fs"
 import { resolve } from "path"
 import { dangerRunForRules } from "../../../danger/danger_run"
-import { runEventRun, setupForRequest } from "../github_runner"
+import { setupForRequest } from "../github_runner"
+import { runEventRun } from "../handlers/event"
 
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
@@ -67,6 +68,24 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
   expect(result!.warnings[0].message).not.toEqual("null")
 })
 
+it("adds github util functions and apis to the DSL for non-PR events", async () => {
+  mockGetRepo.mockImplementationOnce(() => ({ id: "123", fake: true }))
+
+  const body = fixture("issue_comment_created.json")
+  const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
+  const settings = await setupForRequest(req, {})
+
+  // Pass in the installation ID to warn
+  const dangerfileForRun = "module.exports.default = (deets) => { warn(deets.installation.id) }"
+  mockGHContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
+  const run = dangerRunForRules("issue_comment", "created", {
+    issue_comment: "warn_with_api",
+  })[0]
+
+  const result = await runEventRun(run, settings, "token", body)
+  expect(result!.warnings[0].message).toEqual(23511)
+})
+
 it("can handle a db returning nil for the repo with an Dangerfile for an issue with a local", async () => {
   mockGetRepo.mockImplementationOnce(() => null)
 
@@ -80,6 +99,6 @@ it("can handle a db returning nil for the repo with an Dangerfile for an issue w
   })[0]
 
   const result = await runEventRun(run, settings, "token", body)
-  // See above i nthe mock for the link
+  // See above in the mock for the link
   expect(result!.warnings[0].message).toEqual("issue worked")
 })
