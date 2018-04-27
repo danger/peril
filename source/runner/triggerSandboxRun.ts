@@ -39,6 +39,8 @@ export const triggerSandboxDangerRun = async (
   peril: any
 ) => {
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
+
+  // Ensure that the settings are passed through correctly
   const DSL: any = payload.dsl || {}
   DSL.settings = {
     github: {
@@ -48,6 +50,8 @@ export const triggerSandboxDangerRun = async (
     },
     cliArgs: {} as any,
   }
+
+  payload.dsl = DSL
 
   const stdOUT: PerilRunnerObject = {
     installation,
