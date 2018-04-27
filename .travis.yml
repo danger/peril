@@ -2,7 +2,8 @@ language: node_js
 node_js: 9
 cache: yarn
 
-after_script:
+script:
+  - yarn test
   - yarn docker:build:site
   - yarn docker:build:runner
 

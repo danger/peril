@@ -25,7 +25,7 @@ function validates(keys: string[]) {
 export let privateKey = getEnv("PRIVATE_GITHUB_SIGNING_KEY")
 // Now has issues with putting in complex vars, they want it base64'd
 // so if this var doesn't have the RSA header, then convert it
-if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
+if (privateKey && !privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
   privateKey = Buffer.from(privateKey, "base64").toString("utf8")
   if (!privateKey.includes("-----BEGIN RSA PRIVATE KEY")) {
     // tslint:disable-next-line:no-console
