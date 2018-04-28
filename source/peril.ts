@@ -21,7 +21,7 @@ import { URL } from "url"
 import setupPublicAPI from "./api/api"
 import logger from "./logger"
 import { hyperUpdater } from "./routing/hyper_updater"
-import webhook from "./routing/router"
+import { githubRouter } from "./routing/router"
 import startScheduler from "./scheduler/startScheduler"
 import { startTaskScheduler } from "./tasks/startTaskScheduler"
 
@@ -44,7 +44,7 @@ const peril = () => {
   app.use(bodyParser.json())
   app.use(express.static("public"))
 
-  app.post("/webhook", webhook)
+  app.post("/webhook", githubRouter)
 
   welcomeMessages.push("☢️  Starting up Peril")
 
