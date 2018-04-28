@@ -47,7 +47,6 @@ const peril = () => {
   app.post("/webhook", webhook)
 
   welcomeMessages.push("☢️  Starting up Peril")
-  welcomeMessages.push("")
 
   const paperTrail = PAPERTRAIL_URL ? tick : cross
   welcomeMessages.push(paperTrail + " Papertrail")
@@ -94,6 +93,7 @@ const peril = () => {
       welcomeMessages.push(`  - Local: http://localhost:${process.env.PORT || 5000}`)
     }
     welcomeMessages.forEach(l => logger.info(l))
+    logger.info("")
     startScheduler()
   })
 }

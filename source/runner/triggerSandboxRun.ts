@@ -64,9 +64,7 @@ export const triggerSandboxDangerRun = async (
   const call = await callHyperFunction(stdOUT)
   const callID = JSON.parse(call).CallId
   if (callID) {
-    logger.info(`Check runtime for ${path} with:`)
-    logger.info(`> hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
-    logger.info(`Full logs at:`)
-    logger.info(`> hyper func get ${callID}`)
+    logger.info(`   Logs: hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
+    logger.info(`         hyper func get ${callID}`)
   }
 }

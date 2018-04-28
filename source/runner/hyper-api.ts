@@ -66,9 +66,7 @@ export const deleteHyperImage = (name: string) => hyper(`/images/${name}`, "DELE
 export const callHyperFunction = async (body: any) => {
   // Use the API to grab the UUID needed for the hyper call
   if (!funcUUID) {
-    logger.info("Getting uuid for hyper func")
     const funcInfo = await getHyperFuncInfo()
-    logger.info("Got: " + funcInfo.UUID)
     funcUUID = funcInfo.UUID
   }
 

@@ -1,3 +1,7 @@
+## 2018 - April 27
+
+* The logs have been artistically hand crafted to feel good - orta
+
 ## 2018 - April 26
 
 [BREAKING CHANGES]

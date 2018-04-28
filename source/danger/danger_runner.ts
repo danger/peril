@@ -12,14 +12,10 @@ import * as path from "path"
 import { DangerfileReferenceString } from "../db"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { HYPER_ACCESS_KEY } from "../globals"
-import winston from "../logger"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import { RunType } from "./danger_run"
 import { getPerilPlatformForDSL } from "./peril_platform"
-
-/** Logs */
-const log = (message: string) => winston.info(`[runner] - ${message}`)
 
 export interface InstallationToRun {
   iID: number
@@ -56,7 +52,6 @@ export async function runDangerForInstallation(
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
-  log(`Running Danger`)
   const DSL = payload.dsl
   const gh = api ? new GitHub(api) : null
   const platform = getPerilPlatformForDSL(type, gh, payload.dsl)
