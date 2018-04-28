@@ -1,5 +1,3 @@
-import { settingsUpdater } from "../settings_updater"
-
 const mockGetInstallation = jest.fn()
 const mockUpdateInstallation = jest.fn()
 
@@ -14,6 +12,7 @@ jest.mock("../../globals", () => ({
 import { readFileSync } from "fs"
 import { resolve } from "path"
 import generateInstallation from "../../testing/installationFactory"
+import { installationSettingsUpdater } from "../installationSettingsUpdater"
 
 const requestWithFixturedJSON = (name: string): any => {
   const path = resolve(__dirname, "../../github/events/_tests", "fixtures", `${name}.json`)
@@ -31,7 +30,7 @@ describe("with webhooks from GitHub", () => {
   })
 
   it("is not called for ping", () => {
-    settingsUpdater("ping", {} as any, res, {})
+    installationSettingsUpdater("ping", {} as any, res, {})
     expect(res.status).not.toBeCalled()
     expect(res.send).not.toBeCalled()
   })
@@ -46,7 +45,7 @@ describe("with webhooks from GitHub", () => {
         })
       )
 
-      await settingsUpdater("push", req, {} as any, {})
+      await installationSettingsUpdater("push", req, {} as any, {})
 
       // We get told to update the installation
       expect(mockUpdateInstallation).toBeCalled()
@@ -67,7 +66,7 @@ describe("with webhooks from GitHub", () => {
         })
       )
 
-      await settingsUpdater("pull_request", req, {} as any, {})
+      await installationSettingsUpdater("pull_request", req, {} as any, {})
 
       // We get told to update the installation
       expect(mockUpdateInstallation).toBeCalled()
@@ -86,7 +85,7 @@ describe("with webhooks from GitHub", () => {
         })
       )
 
-      await settingsUpdater("pull_request", req, {} as any, {})
+      await installationSettingsUpdater("pull_request", req, {} as any, {})
 
       // We get told to update the installation
       expect(mockUpdateInstallation).not.toBeCalled()

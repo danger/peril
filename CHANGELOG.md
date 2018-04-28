@@ -1,3 +1,8 @@
+## 2018 - April 28
+
+* Refactored a bunch of disparate event based routing into "plugins" still some better abstractions to go there but this
+  is a good start - orta/pedrovereza
+
 ## 2018 - April 27
 
 * The logs have been artistically hand crafted to feel good - orta

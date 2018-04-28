@@ -7,7 +7,12 @@ import winston from "../logger"
 
 const d = debug("Peril Settings Updater")
 
-export const settingsUpdater = async (event: string, req: express.Request, _: express.Response, __: any) => {
+export const installationSettingsUpdater = async (
+  event: string,
+  req: express.Request,
+  _: express.Response,
+  __: any
+) => {
   if (event === "pull_request" || event === "push") {
     const db = getDB()
     const installationID = req.body.installation.id
