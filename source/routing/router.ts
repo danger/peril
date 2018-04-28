@@ -46,14 +46,14 @@ export const githubRouting = (event: string, req: Request, res: Response, next: 
 
       // Create a db entry for any new installation
       if (action === "created") {
-        logger.info(`## Creating new installation for ${request.installation.account.login}`)
+        logger.info(`\n## Creating new installation for ${request.installation.account.login}`)
         createInstallation(installation, req, res)
         return
       }
 
       // Delete any integrations that have uninstalled Peril :wave:
       else if (action === "deleted") {
-        logger.info(`## Deleting installation ${installation.id}`)
+        logger.info(`\n## Deleting installation ${installation.id}`)
         const db = getDB()
         db.deleteInstallation(installation.id)
         return
