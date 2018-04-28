@@ -50,7 +50,8 @@ export const hyperUpdater = async (req: express.Request, res: express.Response, 
   const webhook = req.body as DockerHubWebhook
   const image = `${webhook.repository.repo_name}:${webhook.push_data.tag}`
   res.status(200).json({ ok: true })
-  logger.info("\n## Hyper Docker Image Updater Triggered")
+  logger.info("")
+  logger.info("## Hyper Docker Image Updater Triggered")
 
   // Pulls down the new version from dockerhub
   await updateHyperFuncImageUpdate(image)

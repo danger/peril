@@ -32,7 +32,8 @@ export const settingsUpdater = async (event: string, req: express.Request, _: ex
 
         const hookRepo = body.repository.full_name
         if (repo === hookRepo) {
-          winston.info("\n## Installation settings on " + installation.login)
+          winston.info("")
+          winston.info("## Installation settings on " + installation.login)
           winston.info("   Updated due to merged PR")
           await db.updateInstallation(installationID)
         }
