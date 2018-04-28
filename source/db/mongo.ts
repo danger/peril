@@ -12,9 +12,14 @@ const d = debug("peril:mongo")
 
 /**
  * Basically the same thing as a PerilInstallationSettings but coming from the database
+ * which might mean that we add extra db-specific metadata
  */
-export interface MongoGithubInstallationModel extends Document, GitHubInstallation {}
+export interface MongoGithubInstallationModel extends Document, GitHubInstallation {
+  /** If this is set to be in the future, any webhook for this installation will get saved in the db */
+  recordWebhooksUntilTime: Date
+}
 
+/** The model for an installation in the DB */
 const Installation = model<MongoGithubInstallationModel>(
   "GithubInstallation",
   new Schema({
@@ -25,9 +30,15 @@ const Installation = model<MongoGithubInstallationModel>(
     rules: Schema.Types.Mixed,
     settings: Schema.Types.Mixed,
     tasks: Schema.Types.Mixed,
+    recordWebhooksUntilTime: Date,
   })
 )
 
+/* 
+ * Basically, Mongo does not allow you to have a key with a '.' in it. This
+ * isn't great for us, because 'x.y' is real common, so, we amend the keys in
+ * the JSON on load/save to ensure it can be saved.
+ */
 const userInput = ["repo", "rules", "settings", "tasks"]
 
 const prepareToSave = (installation: Partial<GitHubInstallation>) => {
@@ -65,13 +76,13 @@ const transformKeys = (obj: any, before: string, after: string) =>
     {} as any
   )
 
-const database = {
+export const mongoDatabase = {
   setup: async () => {
     await connect(MONGODB_URI)
   },
 
   /** Saves an Integration */
-  saveInstallation: async (installation: Partial<GitHubInstallation>) => {
+  saveInstallation: async (installation: Partial<MongoGithubInstallationModel>) => {
     d(`Saving installation with id: ${installation.iID}`)
 
     const sanitizedInstallation = prepareToSave(installation)
@@ -137,5 +148,4 @@ const database = {
   },
 }
 
-export type MongoDB = typeof database
-export default database
+export type MongoDB = typeof mongoDatabase

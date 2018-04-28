@@ -11,7 +11,7 @@ import { getPerilPlatformForDSL } from "../../danger/peril_platform"
 import { githubAPIForCommentable } from "../../github/events/utils/commenting"
 import { PERIL_ORG_INSTALLATION_ID } from "../../globals"
 
-const prDSLRunner = async (req: express.Request, res: express.Response, _: express.NextFunction) => {
+export const prDSLRunner = async (req: express.Request, res: express.Response, _: express.NextFunction) => {
   winston.log("router", `Received OK`)
 
   const query = req.query
@@ -58,5 +58,3 @@ const prDSLRunner = async (req: express.Request, res: express.Response, _: expre
     status: "OK",
   })
 }
-
-export default prDSLRunner

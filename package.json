@@ -9,6 +9,7 @@
     "type-check": "tsc --noEmit --pretty",
     "postinstall": "yarn build; if [ $DATABASE_JSON_FILE ]; then yarn run setup; fi",
     "test": "jest && tslint source/**/**/**.ts",
+    "lint": " tslint source/**/**/**.ts",
     "generate:types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
     "setup": "yarn run setup:plugins && yarn run setup:env",
     "setup:env": "node out/scripts/setup-env.js",

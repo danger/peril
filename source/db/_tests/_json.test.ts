@@ -19,7 +19,7 @@ jest.mock("../../github/lib/github_helpers", () => ({
 }))
 
 import { DatabaseAdaptor } from "../index"
-import jsonDB from "../json"
+import { jsonDatabase } from "../json"
 
 describe("makes the right calls to GitHub", () => {
   let db: DatabaseAdaptor = null as any
@@ -27,7 +27,7 @@ describe("makes the right calls to GitHub", () => {
   const setup = async () => {
     mockGHContents.mockImplementationOnce(() => Promise.resolve(legitSettings))
 
-    db = jsonDB("orta/peril@settings.json")
+    db = jsonDatabase("orta/peril@settings.json")
     return db.setup()
   }
 
@@ -44,7 +44,7 @@ it("Raises with a bad URL", async () => {
   expect.assertions(1)
 
   try {
-    const db = jsonDB("orta/other@settings.json")
+    const db = jsonDatabase("orta/other@settings.json")
     await db.setup()
   } catch (error) {
     expect(error).toMatchSnapshot()

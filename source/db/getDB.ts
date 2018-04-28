@@ -1,22 +1,22 @@
-import jsonDB from "./json"
-import mongo from "./mongo"
+import { jsonDatabase } from "./json"
+import { mongoDatabase } from "./mongo"
 
 import { DatabaseAdaptor } from "."
 
 const isJest = typeof jest !== "undefined"
 
-const getDatabaseForEnv = (env: any) => {
+const getDatabaseForEnv = (env: any): DatabaseAdaptor | null => {
   if (env.DATABASE_JSON_FILE || isJest) {
-    const json = jsonDB(env.DATABASE_JSON_FILE)
+    const json = jsonDatabase(env.DATABASE_JSON_FILE)
     json.setup()
     return json
   }
 
   if (env.MONGODB_URI) {
     if (!isJest) {
-      mongo.setup()
+      mongoDatabase.setup()
     }
-    return mongo
+    return mongoDatabase
   }
 
   return null

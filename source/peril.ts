@@ -18,7 +18,7 @@ import {
 } from "./globals"
 
 import { URL } from "url"
-import setupPublicAPI from "./api/api"
+import { setupPublicAPI } from "./api/api"
 import logger from "./logger"
 import { hyperUpdater } from "./routing/hyper_updater"
 import { githubRouter } from "./routing/router"
@@ -29,7 +29,7 @@ const welcomeMessages = [] as string[]
 const tick = chalk.bold.greenBright("✓")
 const cross = chalk.bold.redBright("ⅹ")
 
-const peril = () => {
+export const peril = () => {
   validateENVForPerilServer()
 
   // Error logging
@@ -97,5 +97,3 @@ const peril = () => {
     startScheduler()
   })
 }
-
-export default peril

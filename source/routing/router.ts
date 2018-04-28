@@ -17,6 +17,11 @@ export const githubRouter = (req: Request, res: Response, next: NextFunction) =>
   githubDangerRunner(event, req, res, next)
 }
 
+// TODO:
+//   Type the plugins
+//   Make a context obj with installation and others
+//   Remove the next fn
+
 export const githubEventPluginHandler = (event: string, req: Request, res: Response, next: NextFunction) => {
   // Use XHub to verify the request was sent from GH
   if (!validatesGithubWebhook(event, req, res, next)) {
