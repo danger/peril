@@ -21,6 +21,8 @@ const RecordedWebhook = model<RecordedWebhookModel>(
     iID: Number,
     event: String,
     json: Schema.Types.Mixed,
+    eventID: String,
+    createdAt: Date,
   })
 )
 
