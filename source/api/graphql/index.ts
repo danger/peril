@@ -1,4 +1,15 @@
-import { connectionArgs, connectionDefinitions, connectionFromArray, pageInfoType } from "graphql-relay-tools"
+import {
+  connectionArgs,
+  connectionDefinitions,
+  connectionFromArray,
+  fromGlobalId,
+  globalIdResolver,
+  nodeDefinitions,
+  nodeField,
+  nodeInterface,
+  pageInfoType,
+} from "graphql-relay-tools"
+
 import { combineResolvers } from "graphql-resolvers"
 import { makeExecutableSchema } from "graphql-tools"
 import { Date, JSON } from "graphql-tools-types"
@@ -19,15 +30,26 @@ const { connectionType: partialConnection } = connectionDefinitions({ name: "Par
 const { connectionType: installationConnection } = connectionDefinitions({ name: "Installation" })
 const { connectionType: recordedWebhookConnection } = connectionDefinitions({ name: "RecordedWebhook" })
 
+const { nodeResolver } = nodeDefinitions(async globalId => {
+  const { type, id } = fromGlobalId(globalId)
+  const db = getDB() as MongoDB
+
+  if (type === "Installation") {
+    return await db.getInstallationByDBID(id)
+  }
+
+  throw new Error("Unknown type passed to nodeID")
+})
+
 const schemaSDL = gql`
   # Basically a way to say this is going to be untyped data (it's normally user input)
   scalar JSON
   scalar Date
 
   # An installation of Peril which isn't set up yet
-  type PartialInstallation {
+  type PartialInstallation implements Node {
     # The MongoDB ID
-    id: String!
+    id: ID!
     # The installation ID, in the real sense
     iID: Int!
     # The name of the installation owner
@@ -37,9 +59,9 @@ const schemaSDL = gql`
   }
 
   # An installation of Peril, ideally not too tightly tied to GH
-  type Installation {
+  type Installation implements Node {
     # The MongoDB ID
-    id: String!
+    id: ID!
     # The installation ID, in the real sense
     iID: Int!
     # The path to the Dangerfile
@@ -94,6 +116,7 @@ const schemaSDL = gql`
     me: User
     # Get information about an installation
     installation(iID: Int!): Installation
+    ${nodeField}
   }
 
   type Mutation {
@@ -149,6 +172,10 @@ const resolvers = {
       const webhooks = await getRecordedWebhooksForInstallation(installationID)
       return connectionFromArray(webhooks, args)
     }),
+    id: globalIdResolver(),
+  },
+  PartialInstallation: {
+    id: globalIdResolver(),
   },
 
   Query: {
@@ -162,6 +189,8 @@ const resolvers = {
       const installations = await getUserInstallations(context.jwt)
       return installations.find(i => i.iID === params.iID)
     }),
+
+    node: nodeResolver,
   },
 
   Mutation: {
@@ -198,9 +227,16 @@ const resolvers = {
       return installations.find(i => i.iID === params.iID)
     }),
   },
+  Node: {
+    __resolveType: (obj: any) => {
+      return obj.perilSettingsJSONURL ? "Installation" : "PartialInstallation"
+    },
+  },
 }
 
+const connections = [installationConnection, partialConnection, recordedWebhookConnection]
+
 export const schema = makeExecutableSchema<GraphQLContext>({
-  typeDefs: [schemaSDL, pageInfoType, installationConnection, partialConnection, recordedWebhookConnection],
+  typeDefs: [schemaSDL, pageInfoType, ...connections, nodeInterface],
   resolvers,
 })
