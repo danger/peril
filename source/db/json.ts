@@ -32,7 +32,7 @@ const error = (message: string) => winston.error(`[json db] - ${message}`)
 
 let org: GitHubInstallation = null as any
 
-const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
+export const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
   /** Gets an Integration */
   getInstallation: async (_: number): Promise<GitHubInstallation | null> => {
     return org
@@ -100,8 +100,6 @@ export const partialInstallationToInstallation = (
     modules: (partial.settings && partial.settings.modules) || [],
   },
 })
-
-export default jsonDatabase
 
 const throwNoJSONFileFound = (dangerFilePath: DangerfileReferenceString) => {
   const msg = "Could not find find a JSON file for Peril settings."

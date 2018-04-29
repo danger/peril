@@ -2,7 +2,7 @@ import * as cluster from "cluster"
 import * as os from "os"
 
 import logger from "./logger"
-import peril from "./peril"
+import { peril } from "./peril"
 
 const WORKERS = process.env.NODE_ENV === "production" ? process.env.WEB_CONCURRENCY || os.cpus().length : 1
 const log = (message: string) => {

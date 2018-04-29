@@ -5,6 +5,7 @@ import { githubDangerRunner } from "../github/events/github_runner"
 
 import { installationLifeCycle } from "../plugins/installationLifeCycle"
 import { installationSettingsUpdater } from "../plugins/installationSettingsUpdater"
+import { recordWebhook } from "../plugins/recordWebhooks"
 import { validatesGithubWebhook } from "../plugins/validatesGithubWebhook"
 
 export const githubRouter = (req: Request, res: Response, next: NextFunction) => {
@@ -17,6 +18,11 @@ export const githubRouter = (req: Request, res: Response, next: NextFunction) =>
   githubDangerRunner(event, req, res, next)
 }
 
+// TODO:
+//   Type the plugins
+//   Make a context obj with installation and others
+//   Remove the next fn
+
 export const githubEventPluginHandler = (event: string, req: Request, res: Response, next: NextFunction) => {
   // Use XHub to verify the request was sent from GH
   if (!validatesGithubWebhook(event, req, res, next)) {
@@ -24,6 +30,9 @@ export const githubEventPluginHandler = (event: string, req: Request, res: Respo
   }
   // Creating / Removing installations from the DB
   installationLifeCycle(event, req, res, next)
+
+  // Allow a dev mode
+  recordWebhook(event, req, res, next)
 
   // Updating an install when the JSON changes
   installationSettingsUpdater(event, req, res, next)

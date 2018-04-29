@@ -223,5 +223,3 @@ export const mergeResults = (results: DangerResults[]): DangerResults => {
     { fails: [], markdowns: [], warnings: [], messages: [] }
   )
 }
-
-export default githubDangerRunner

@@ -1,6 +1,6 @@
 import * as child_process from "child_process"
 
-import jsonDatabase from "../db/json"
+import { jsonDatabase } from "../db/json"
 import { DATABASE_JSON_FILE } from "../globals"
 
 const log = console.log

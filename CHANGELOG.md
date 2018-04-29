@@ -1,5 +1,6 @@
 ## 2018 - April 28
 
+* Adds initial support for recording all Webhooks going to an installation for 5 minutes - orta (idea from ashfurrow)
 * Refactored a bunch of disparate event based routing into "plugins" still some better abstractions to go there but this
   is a good start - orta/pedrovereza
 

@@ -15,9 +15,9 @@ const requestWithFixturedJSON = (path: string): (() => Promise<any>) => () =>
 const requestWithFixturedContent = (path: string): (() => Promise<string>) => () =>
   Promise.resolve(readFileSync(`${githubFixtures}/${path}`, {}).toString())
 
-/** Returns a fxitured GitHub instance */
+/** Returns a fixtured GitHub instance */
 
-export default (repoSlug?: string, pullRequestID?: string): GitHub => {
+export const fixturedAPI = (repoSlug?: string, pullRequestID?: string): GitHub => {
   repoSlug = repoSlug || "artsy/emission"
   pullRequestID = pullRequestID || "1"
   const api = new GitHubAPI({ repoSlug, pullRequestID }, "ABCDE")

@@ -3,6 +3,7 @@
   "rules": {
     // "no-default-export": true,
     "object-literal-sort-keys": false,
-    "interface-name": [true, "never-prefix"]
+    "interface-name": [true, "never-prefix"],
+    "no-default-export": true
   }
 }

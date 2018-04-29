@@ -3,7 +3,7 @@ import vm2 from "danger/distribution/runner/runners/vm2"
 import { readFileSync } from "fs"
 import { resolve } from "path"
 
-import fixturedGitHub from "../../api/_tests/fixtureAPI"
+import { fixturedAPI } from "../../api/_tests/fixtureAPI"
 import { perilObjectForInstallation } from "../../danger/append_peril"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 import { executorForInstallation, runDangerAgainstFileInline } from "../danger_runner"
@@ -33,7 +33,7 @@ global.regeneratorRuntime = {}
 
 describe("evaling", () => {
   it("runs a typescript dangerfile with fixtured data", async () => {
-    const platform = fixturedGitHub()
+    const platform = fixturedAPI()
     const executor = executorForInstallation(platform, vm2)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_empty.ts`, "utf8")
     const results = await runDangerAgainstFileInline(
@@ -53,7 +53,7 @@ describe("evaling", () => {
   })
 
   it("highlights some of the security measures", async () => {
-    const platform = fixturedGitHub()
+    const platform = fixturedAPI()
     const executor = executorForInstallation(platform, vm2)
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
     const contents = readFileSync(path, "utf8")
@@ -72,7 +72,7 @@ describe("evaling", () => {
   // Wallaby can't resolve these
   if (!process.env.WALLABY_PRODUCTION) {
     it("allows external modules", async () => {
-      const platform = fixturedGitHub()
+      const platform = fixturedAPI()
       const executor = executorForInstallation(platform, vm2)
       const path = `${dangerfilesFixtures}/dangerfile_import_module.ts`
 
@@ -89,7 +89,7 @@ describe("evaling", () => {
     })
 
     it("allows external modules with internal resolving ", async () => {
-      const platform = fixturedGitHub()
+      const platform = fixturedAPI()
       const executor = executorForInstallation(platform, vm2)
 
       const localDangerfile = resolve("./dangerfile_runtime_env", "dangerfile_import_complex_module.ts")
@@ -108,7 +108,7 @@ describe("evaling", () => {
   }
 
   it("has a peril object defined in global scope", async () => {
-    const platform = fixturedGitHub()
+    const platform = fixturedAPI()
     const executor = executorForInstallation(platform, vm2)
 
     const localDangerfile = resolve(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`)
@@ -127,7 +127,7 @@ describe("evaling", () => {
 
   // I wonder if the babel setup isn't quite right yet for this test
   it.skip("runs a JS dangerfile with fixtured data", async () => {
-    const platform = fixturedGitHub()
+    const platform = fixturedAPI()
     const executor = executorForInstallation(platform, vm2)
     // The executor will return results etc in the next release
     const path = `${dangerfilesFixtures}/dangerfile_insecure.ts`
@@ -150,7 +150,7 @@ describe("evaling", () => {
   })
 
   it("generates the correct modified/deleted/created paths", async () => {
-    const platform = fixturedGitHub()
+    const platform = fixturedAPI()
     const executor = executorForInstallation(platform, vm2)
     const dsl = await executor.dslForDanger()
     expect(dsl.git.created_files.length).toBeGreaterThan(0)

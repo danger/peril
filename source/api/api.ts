@@ -8,7 +8,7 @@ import { getJWTFromRequest } from "./auth/getJWTFromRequest"
 import { fakeAuthToken, generateAuthToken, redirectForGHOauth } from "./auth/github"
 import { schema } from "./graphql"
 import { redirectForGHInstallation } from "./integration/github"
-import prDSLRunner from "./pr/dsl"
+import { prDSLRunner } from "./pr/dsl"
 
 export const GitHubOAuthStart = "/api/auth/peril/github/start"
 export const GitHubOAuthEnd = "/api/auth/peril/github/end"
@@ -18,7 +18,7 @@ export interface GraphQLContext {
 }
 
 // Public API
-const setupPublicAPI = (app: Application) => {
+export const setupPublicAPI = (app: Application) => {
   // MISC
   // Generate a JSON DSL for any random PR
   app.get("/api/v1/pr/dsl", prDSLRunner)
@@ -54,5 +54,3 @@ const setupPublicAPI = (app: Application) => {
 
   app.use("/api/graphiql", graphiqlExpress({ endpointURL: "/api/graphql" }))
 }
-
-export default setupPublicAPI
