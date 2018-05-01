@@ -18,6 +18,7 @@ import { GitHubInstallation } from "../../db"
 import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
 import {
+  getRecordedWebhook,
   getRecordedWebhooksForInstallation,
   setInstallationToRecord,
   wipeAllRecordedWebhooks,
@@ -125,6 +126,8 @@ const schemaSDL = gql`
     editInstallation(iID: Int!, perilSettingsJSONURL: String!): Installation
     # Sets the installation to record webhooks for the next 5m
     makeInstallationRecord(iID: Int!): Installation
+    # Send webhook
+    sendWebhookForInstallation(iID: Int!. eventID: String!): RecordedWebhook
   }
 `
 
@@ -225,6 +228,20 @@ const resolvers = {
       // Return the modified installation
       const installations = await getUserInstallations(context.jwt)
       return installations.find(i => i.iID === params.iID)
+    }),
+
+    sendWebhookForInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
+      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
+      const installationID = String(params.iID)
+
+      // Check the installation's ID is included inside the signed JWT, to verify access
+      if (!decodedJWT.iss.includes(installationID)) {
+        throw new Error(`You don't have access to this installation`)
+      }
+
+      const webhook = await getRecordedWebhook(params.iID, params.eventID)
+
+      return webhook
     }),
   },
   Node: {
