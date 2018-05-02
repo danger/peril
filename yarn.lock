@@ -2349,9 +2349,9 @@ danger-plugin-yarn@^1.3.0:
   optionalDependencies:
     esdoc "^0.5.2"
 
-danger@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-3.6.2.tgz#454b25208233f10a863d2beee67133344acbdf1a"
+danger@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-3.6.3.tgz#007e04c151681ec951061322e73decaddb0fe6bf"
   dependencies:
     "@octokit/rest" "^15.2.6"
     babel-polyfill "^6.23.0"
