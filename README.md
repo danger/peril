@@ -8,9 +8,24 @@
 
 ---
 
-Peril is the API, and code runner behind a centralized Danger server, freeing Danger from running on CI. 👍
+Peril is the API, and code runner behind a centralized [Danger](https://github.com/danger/danger-js) server, freeing Danger from running on CI. 👍
 
 Want to understand what the plan is? Consult the [VISION.md](/VISION.md)
+
+---
+
+### What is Danger?
+
+[Danger JS](https://github.com/danger/danger-js) is a service that runs after your CI, automating things like:
+
+* Enforce CHANGELOGs
+* Enforce links to Trello/JIRA in PR/MR bodies
+* Enforce using descriptive labels
+* Look out for common anti-patterns
+* Highlight interesting build artifacts
+* Give warnings when specific files change
+
+... and any other rules specific to your team's culture and needs.
 
 ---
 
