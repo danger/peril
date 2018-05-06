@@ -40,7 +40,7 @@ describe("for PRs", () => {
     ])
   })
 
-  it("returns two events when ", () => {
+  it("returns two events when rule contains two files", () => {
     const rules = { pull_request: ["dangerfile.js", "anotherdangerfile.ts"] }
     expect(dangerRunForRules("pull_request", "created", rules).map(r => r.dangerfilePath)).toEqual([
       "dangerfile.js",
@@ -70,7 +70,7 @@ describe("for PRs", () => {
     expect(dangerRunForRules("pull_request", "updated", rules)).toEqual([])
   })
 
-  it("returns a PR run when all sub events are globbed in the rules", () => {
+  it("returns a PR run when event contains action suffix", () => {
     const rules = { "pull_request.deleted": "dangerfile.js" }
     expect(dangerRunForRules("pull_request", "deleted", rules)).toEqual([
       {
@@ -94,6 +94,58 @@ describe("for PRs", () => {
       "pull_request.updated": "dangerfile.js",
     }
     expect(dangerRunForRules("pull_request", "updated", rules).length).toEqual(3)
+  })
+
+  it("returns a PR when multiple rules are declared inline", () => {
+    const rules = {
+      "issue, pull_request": "dangerfile.js",
+    }
+    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+      {
+        action: "created",
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: RunType.pr,
+        event: "pull_request",
+        feedback: RunFeedback.commentable,
+        referenceString: "dangerfile.js",
+        repoSlug: undefined,
+      },
+    ])
+  })
+
+  it("returns null when no multi inline rules match", () => {
+    const rules = {
+      "issue.created, pull_request.closed": "dangerfile.js",
+    }
+    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([])
+  })
+
+  it("returns a PR when PR is in the rules and there are multi inline rules", () => {
+    const rules = {
+      "issue.created, issue.closed": "dangerfile.js",
+      pull_request: "dangerfile.js",
+    }
+    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+      {
+        action: "created",
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: RunType.pr,
+        event: "pull_request",
+        feedback: RunFeedback.commentable,
+        referenceString: "dangerfile.js",
+        repoSlug: undefined,
+      },
+    ])
+  })
+
+  it("returns one run when there are many potential matches with inline rules", () => {
+    const rules = {
+      issue: "dangerfile.js",
+      "pull_request, pull_request.*, pull_request.updated": "dangerfile.js",
+    }
+    expect(dangerRunForRules("pull_request", "updated", rules).length).toEqual(1)
   })
 })
 
