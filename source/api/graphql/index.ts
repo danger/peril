@@ -1,4 +1,15 @@
-import { connectionArgs, connectionDefinitions, connectionFromArray, pageInfoType } from "graphql-relay-tools"
+import {
+  connectionArgs,
+  connectionDefinitions,
+  connectionFromArray,
+  fromGlobalId,
+  globalIdResolver,
+  nodeDefinitions,
+  nodeField,
+  nodeInterface,
+  pageInfoType,
+} from "graphql-relay-tools"
+
 import { combineResolvers } from "graphql-resolvers"
 import { makeExecutableSchema } from "graphql-tools"
 import { Date, JSON } from "graphql-tools-types"
@@ -7,10 +18,12 @@ import { GitHubInstallation } from "../../db"
 import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
 import {
+  getRecordedWebhook,
   getRecordedWebhooksForInstallation,
   setInstallationToRecord,
   wipeAllRecordedWebhooks,
 } from "../../plugins/utils/recordWebhookWithRequest"
+import { sendWebhookThroughGitHubRunner } from "../../plugins/utils/sendWebhookThroughGitHubRunner"
 import { GraphQLContext } from "../api"
 import { getDetailsFromPerilJWT } from "../auth/generate"
 import { gql } from "./gql"
@@ -19,15 +32,26 @@ const { connectionType: partialConnection } = connectionDefinitions({ name: "Par
 const { connectionType: installationConnection } = connectionDefinitions({ name: "Installation" })
 const { connectionType: recordedWebhookConnection } = connectionDefinitions({ name: "RecordedWebhook" })
 
+const { nodeResolver } = nodeDefinitions(async globalId => {
+  const { type, id } = fromGlobalId(globalId)
+  const db = getDB() as MongoDB
+
+  if (type === "Installation") {
+    return await db.getInstallationByDBID(id)
+  }
+
+  throw new Error("Unknown type passed to nodeID")
+})
+
 const schemaSDL = gql`
   # Basically a way to say this is going to be untyped data (it's normally user input)
   scalar JSON
   scalar Date
 
   # An installation of Peril which isn't set up yet
-  type PartialInstallation {
+  type PartialInstallation implements Node {
     # The MongoDB ID
-    id: String!
+    id: ID!
     # The installation ID, in the real sense
     iID: Int!
     # The name of the installation owner
@@ -37,9 +61,9 @@ const schemaSDL = gql`
   }
 
   # An installation of Peril, ideally not too tightly tied to GH
-  type Installation {
+  type Installation implements Node {
     # The MongoDB ID
-    id: String!
+    id: ID!
     # The installation ID, in the real sense
     iID: Int!
     # The path to the Dangerfile
@@ -94,6 +118,7 @@ const schemaSDL = gql`
     me: User
     # Get information about an installation
     installation(iID: Int!): Installation
+    ${nodeField}
   }
 
   type Mutation {
@@ -102,6 +127,8 @@ const schemaSDL = gql`
     editInstallation(iID: Int!, perilSettingsJSONURL: String!): Installation
     # Sets the installation to record webhooks for the next 5m
     makeInstallationRecord(iID: Int!): Installation
+    # Send webhook
+    sendWebhookForInstallation(iID: Int!, eventID: String!): RecordedWebhook
   }
 `
 
@@ -149,6 +176,10 @@ const resolvers = {
       const webhooks = await getRecordedWebhooksForInstallation(installationID)
       return connectionFromArray(webhooks, args)
     }),
+    id: globalIdResolver(),
+  },
+  PartialInstallation: {
+    id: globalIdResolver(),
   },
 
   Query: {
@@ -162,6 +193,8 @@ const resolvers = {
       const installations = await getUserInstallations(context.jwt)
       return installations.find(i => i.iID === params.iID)
     }),
+
+    node: nodeResolver,
   },
 
   Mutation: {
@@ -197,10 +230,35 @@ const resolvers = {
       const installations = await getUserInstallations(context.jwt)
       return installations.find(i => i.iID === params.iID)
     }),
+
+    sendWebhookForInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
+      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
+      const installationID = String(params.iID)
+
+      // Check the installation's ID is included inside the signed JWT, to verify access
+      if (!decodedJWT.iss.includes(installationID)) {
+        throw new Error(`You don't have access to this installation`)
+      }
+
+      const webhook = await getRecordedWebhook(params.iID, params.eventID)
+      if (!webhook) {
+        return null
+      }
+
+      await sendWebhookThroughGitHubRunner(webhook)
+      return webhook
+    }),
+  },
+  Node: {
+    __resolveType: (obj: any) => {
+      return obj.perilSettingsJSONURL ? "Installation" : "PartialInstallation"
+    },
   },
 }
 
+const connections = [installationConnection, partialConnection, recordedWebhookConnection]
+
 export const schema = makeExecutableSchema<GraphQLContext>({
-  typeDefs: [schemaSDL, pageInfoType, installationConnection, partialConnection, recordedWebhookConnection],
+  typeDefs: [schemaSDL, pageInfoType, ...connections, nodeInterface],
   resolvers,
 })

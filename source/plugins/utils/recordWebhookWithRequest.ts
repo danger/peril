@@ -4,7 +4,7 @@ import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
 import { actionForWebhook } from "../../github/events/utils/actions"
 
-interface RecordedWebhook {
+export interface RecordedWebhook {
   iID: number
   event: string
   eventID: string
@@ -42,7 +42,7 @@ export const recordWebhookWithRequest = async (req: express.Request) => {
     json: req.body,
   }
 
-  RecordedWebhook.create(record)
+  await RecordedWebhook.create(record)
 }
 
 /** Triggers the recording time for a specific installation to be for the next 5m */
@@ -63,4 +63,5 @@ export const getRecordedWebhooksForInstallation = async (installationID: number)
   RecordedWebhook.find({ iID: installationID }, "iID event eventID createdAt")
 
 /** Gets an webhook */
-export const getRecordedWebhook = async (eventID: string) => RecordedWebhook.find({ eventID })
+export const getRecordedWebhook = async (installationID: string, eventID: string) =>
+  RecordedWebhook.findOne({ iID: installationID, eventID })

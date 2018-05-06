@@ -96,9 +96,15 @@ export const mongoDatabase = {
     return newInstallation
   },
 
-  /** Gets an Integration */
+  /** Gets an installation */
   getInstallation: async (installationID: number): Promise<GitHubInstallation | null> => {
     const dbInstallation = await Installation.findOne({ iID: installationID })
+    return (dbInstallation && convertDBRepresentationToModel(dbInstallation)) || null
+  },
+
+  /** Gets an installation via it's ID in the db, used in Relay */
+  getInstallationByDBID: async (id: string): Promise<GitHubInstallation | null> => {
+    const dbInstallation = await Installation.findById(id)
     return (dbInstallation && convertDBRepresentationToModel(dbInstallation)) || null
   },
 
