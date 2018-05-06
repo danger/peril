@@ -1,6 +1,6 @@
 const mockGetRepo = jest.fn()
 
-jest.mock("../../../db/getDB", () => ({
+jest.mock("../../../../db/getDB", () => ({
   getDB: () => ({
     getInstallation: () => Promise.resolve({ repos: mockGetRepo }),
   }),
@@ -8,16 +8,16 @@ jest.mock("../../../db/getDB", () => ({
 
 const mockGHContents = jest.fn((_, __, path) => {
   if (path === "dangerfile.issue") {
-    return Promise.resolve("warn('issue worked')")
+    return Promise.resolve("warn('issue worked: ' + danger.github.issue.number)")
   }
   return ""
 })
 
-jest.mock("../../../api/github", () => ({
+jest.mock("../../../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("token"),
 }))
 
-jest.mock("../../../github/lib/github_helpers", () => ({
+jest.mock("../../../../github/lib/github_helpers", () => ({
   getGitHubFileContents: mockGHContents,
 }))
 
@@ -26,11 +26,11 @@ global.regeneratorRuntime = {}
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
-import { dangerRunForRules } from "../../../danger/danger_run"
-import { setupForRequest } from "../github_runner"
-import { runEventRun } from "../handlers/event"
+import { dangerRunForRules } from "../../../../danger/danger_run"
+import { setupForRequest } from "../../github_runner"
+import { runEventRun } from "../event"
 
-const apiFixtures = resolve(__dirname, "fixtures")
+const apiFixtures = resolve(__dirname, "../../_tests/fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
 it("runs an Dangerfile for an issue with a local", async () => {
@@ -48,7 +48,7 @@ it("runs an Dangerfile for an issue with a local", async () => {
 
   const result = await runEventRun(run, settings, "token", body)
   // See above in the mock for the link
-  expect(result!.warnings[0].message).toEqual("issue worked")
+  expect(result!.warnings[0].message).toEqual("issue worked: 631")
 })
 
 it("adds github util functions and apis to the DSL for non-PR events", async () => {
@@ -100,5 +100,5 @@ it("can handle a db returning nil for the repo with an Dangerfile for an issue w
 
   const result = await runEventRun(run, settings, "token", body)
   // See above in the mock for the link
-  expect(result!.warnings[0].message).toEqual("issue worked")
+  expect(result!.warnings[0].message).toEqual("issue worked: 631")
 })
