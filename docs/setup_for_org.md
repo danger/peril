@@ -154,6 +154,10 @@ import { warn, danger } from "danger"
 * <https://github.com/CocoaPods/peril-settings>
 * <https://github.com/Moya/moya-peril>
 * <https://github.com/RxSwiftCommunity/peril>
+* <https://github.com/ashfurrow/peril-settings> (personal repo)
+* <https://github.com/orta/peril-settings> (personal repo)
+
+(Note: Peril can technically be installed on personal accounts, too, because an account is just a specific type of org from the GitHub API's perspective.)
 
 # Troubleshooting
 
