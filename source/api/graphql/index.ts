@@ -166,8 +166,6 @@ const resolvers = {
       const installations = await getUserInstallations(context.jwt)
       return connectionFromArray(installations.filter(i => !i.perilSettingsJSONURL), args)
     }),
-    // Rename it from GH's JSON to camelCase
-    avatarURL: ({ avatar_url }: { avatar_url: string }) => avatar_url,
   },
 
   Installation: {
