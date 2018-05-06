@@ -39,7 +39,7 @@ export const runEventRun = async (
     githubAPI,
     run.dslType,
     installationSettings,
-    { dsl: {}, webhook: dangerDSL }
+    { dsl: { github: dangerDSL }, webhook: dangerDSL }
   )
 
   return results || null
