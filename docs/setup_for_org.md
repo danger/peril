@@ -152,6 +152,8 @@ import { warn, danger } from "danger"
 * <https://github.com/danger/peril-settings>
 * <https://github.com/artsy/artsy-danger>
 * <https://github.com/CocoaPods/peril-settings>
+* <https://github.com/Moya/moya-peril>
+* <https://github.com/RxSwiftCommunity/peril>
 
 # Troubleshooting
 
