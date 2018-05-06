@@ -1,7 +1,8 @@
-import { graphiqlExpress, graphqlExpress } from "apollo-server-express"
+import { graphqlExpress } from "apollo-server-express"
 import * as bodyParser from "body-parser"
 import * as cookieParser from "cookie-parser"
 import { Application } from "express"
+import expressPlayground from "graphql-playground-middleware-express"
 
 import { GITHUB_CLIENT_SECRET } from "../globals"
 import { getJWTFromRequest } from "./auth/getJWTFromRequest"
@@ -52,5 +53,14 @@ export const setupPublicAPI = (app: Application) => {
     }))
   )
 
-  app.use("/api/graphiql", graphiqlExpress({ endpointURL: "/api/graphql" }))
+  app.get(
+    "/api/graphiql",
+    expressPlayground({
+      endpoint: "/api/graphql",
+      workspaceName: "Peril",
+      settings: {
+        "request.credentials": "include", // https://github.com/graphcool/graphql-playground/pull/661
+      } as any,
+    })
+  )
 }

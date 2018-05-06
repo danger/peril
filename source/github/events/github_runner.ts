@@ -105,7 +105,6 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   }
 
   const settings = await setupForRequest(req, installation.settings)
-
   // Allow edge-case repos to skip Danger rules. E.g. in Artsy, our analytics and marketing repos
   // do not need the same level of thought as an larger engineering project would.
   if (repoIsIgnored(settings.repoName, installation)) {

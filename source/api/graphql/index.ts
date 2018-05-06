@@ -23,6 +23,7 @@ import {
   setInstallationToRecord,
   wipeAllRecordedWebhooks,
 } from "../../plugins/utils/recordWebhookWithRequest"
+import { sendWebhookThroughGitHubRunner } from "../../plugins/utils/sendWebhookThroughGitHubRunner"
 import { GraphQLContext } from "../api"
 import { getDetailsFromPerilJWT } from "../auth/generate"
 import { gql } from "./gql"
@@ -127,7 +128,7 @@ const schemaSDL = gql`
     # Sets the installation to record webhooks for the next 5m
     makeInstallationRecord(iID: Int!): Installation
     # Send webhook
-    sendWebhookForInstallation(iID: Int!. eventID: String!): RecordedWebhook
+    sendWebhookForInstallation(iID: Int!, eventID: String!): RecordedWebhook
   }
 `
 
@@ -240,7 +241,11 @@ const resolvers = {
       }
 
       const webhook = await getRecordedWebhook(params.iID, params.eventID)
+      if (!webhook) {
+        return null
+      }
 
+      await sendWebhookThroughGitHubRunner(webhook)
       return webhook
     }),
   },

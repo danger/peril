@@ -77,12 +77,15 @@ export const peril = () => {
     welcomeMessages.push(tick + " Docker Webhook")
     app.post(url, hyperUpdater)
   }
+  const port = process.env.PORT || 5000
 
   // This should go last
   if (PUBLIC_FACING_API) {
     welcomeMessages.push(tick + " Public API:")
     welcomeMessages.push(`  - Web Root: ${PUBLIC_WEB_ROOT_URL}`)
     welcomeMessages.push(`  - API Root: ${PUBLIC_API_ROOT_URL}`)
+    welcomeMessages.push(`  - GraphQL : http://localhost:${port}/api/graphql`)
+    welcomeMessages.push(`  - GraphiQL: http://localhost:${port}/api/graphiql`)
     setupPublicAPI(app)
   }
 
@@ -90,7 +93,7 @@ export const peril = () => {
   app.listen(app.get("port"), () => {
     if (!process.env.HEROKU || !process.env.NOW) {
       welcomeMessages.push(tick + " Server:")
-      welcomeMessages.push(`  - Local: http://localhost:${process.env.PORT || 5000}`)
+      welcomeMessages.push(`  - Local: http://localhost:${port}`)
     }
     welcomeMessages.forEach(l => logger.info(l))
     logger.info("")
