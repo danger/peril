@@ -24,9 +24,9 @@ ENV vars too.
 So, you got the server up and running, now you need to install your GitHub integration in your org. 
 If you've already done this, you can go into your integration admin panel and re-send the event, or re-install.
 
-You should get a reply back from peril [saying](source/github/events/create_installation.ts#L8) `"Creating new installation"`.
+You should get a reply back from peril [saying](../source/github/events/create_installation.ts#L8) `"Creating new installation"`.
 
-Now, any other GitHub event goes to peril and is handled by the [GitHub runner](source/github/events/github_runner.ts). This is powered by JSON and a set of rules called [DangerRunRules](master/source/danger/danger_run.ts) - these bind GitHub event names + actions to actions in danger. E.g.
+Now, any other GitHub event goes to peril and is handled by the [GitHub runner](../source/github/events/github_runner.ts). This is powered by JSON and a set of rules called [DangerRunRules](../source/danger/danger_run.ts) - these bind GitHub event names + actions to actions in danger. E.g.
 
 ```json
 "rules": {

@@ -72,7 +72,7 @@
     "body-parser": "^1.18.2",
     "chalk": "^2.4.1",
     "cookie-parser": "^1.4.3",
-    "danger": "^3.6.0",
+    "danger": "^3.6.4",
     "danger-plugin-yarn": "^1.3.0",
     "dotenv": "^5.0.1",
     "ejs": "^2.5.9",
