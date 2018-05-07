@@ -49,7 +49,7 @@ export const dangerRunForRules = (
   const globsKey = event + ".*"
   const dotActionKey = event + "." + action
 
-  let allKeys = [directKey, globsKey, dotActionKey]
+  const allKeys = [directKey, globsKey, dotActionKey]
 
   if (action === "labeled" || action === "unlabeled") {
     const labelName: string = requestBody.label.name

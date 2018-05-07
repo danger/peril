@@ -33,6 +33,8 @@ const getSettings = (overwrites: Partial<GitHubRunSettings>) => ({
   ...overwrites,
 })
 
+const body = {}
+
 it("handles a platform only run", () => {
   const installation = generateInstallation({
     iID: 12,
@@ -44,7 +46,7 @@ it("handles a platform only run", () => {
 
   const settings = getSettings({ repoSpecificRules: {} })
 
-  const runs = runsForEvent("pull_request", "created", installation, settings)
+  const runs = runsForEvent("pull_request", "created", body, installation, settings)
   expect(runs).toEqual([
     {
       action: "created",
@@ -70,7 +72,7 @@ it("gets the expected runs for platform + repo rules", () => {
 
   const settings = getSettings({})
 
-  const runs = runsForEvent("pull_request", "created", installation, settings)
+  const runs = runsForEvent("pull_request", "created", body, installation, settings)
   expect(runs).toEqual([
     {
       action: "created",
@@ -118,7 +120,7 @@ it("gets the expected runs for platform", () => {
     repoName: repo.fullName,
   })
 
-  const runs = runsForEvent("issues", "created", installation, settings)
+  const runs = runsForEvent("issues", "created", body, installation, settings)
   expect(runs).toEqual([
     {
       action: "created",

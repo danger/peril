@@ -1,9 +1,11 @@
 import { dangerRepresentationForPath, dangerRunForRules, dslTypeForEvent, RunFeedback, RunType } from "../danger_run"
 
 describe("for ping", () => {
+  const body = {}
+
   it("returns an action when ping is in the rules", () => {
     const rules = { ping: "dangerfile.js" }
-    expect(dangerRunForRules("ping", null, rules)).toEqual([
+    expect(dangerRunForRules("ping", null, body, rules)).toEqual([
       {
         action: null,
         branch: "master",
@@ -19,14 +21,16 @@ describe("for ping", () => {
 
   it("returns nothing when ping is not in the rules", () => {
     const rules = {}
-    expect(dangerRunForRules("ping", null, rules)).toEqual([])
+    expect(dangerRunForRules("ping", null, body, rules)).toEqual([])
   })
 })
 
 describe("for PRs", () => {
+  const body = {}
+
   it("returns a PR when PR is in the rules", () => {
     const rules = { pull_request: "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "created", body, rules)).toEqual([
       {
         action: "created",
         branch: "master",
@@ -42,7 +46,7 @@ describe("for PRs", () => {
 
   it("returns two events when rule contains two files", () => {
     const rules = { pull_request: ["dangerfile.js", "anotherdangerfile.ts"] }
-    expect(dangerRunForRules("pull_request", "created", rules).map(r => r.dangerfilePath)).toEqual([
+    expect(dangerRunForRules("pull_request", "created", body, rules).map(r => r.dangerfilePath)).toEqual([
       "dangerfile.js",
       "anotherdangerfile.ts",
     ])
@@ -51,7 +55,7 @@ describe("for PRs", () => {
   // Same semantics
   it("returns a PR run when all sub events are globbed in the rules", () => {
     const rules = { "pull_request.*": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "updated", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "updated", body, rules)).toEqual([
       {
         action: "updated",
         branch: "master",
@@ -67,12 +71,12 @@ describe("for PRs", () => {
 
   it("returns null when you only ask for a specific action", () => {
     const rules = { "pull_request.created": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "updated", rules)).toEqual([])
+    expect(dangerRunForRules("pull_request", "updated", body, rules)).toEqual([])
   })
 
   it("returns a PR run when event contains action suffix", () => {
     const rules = { "pull_request.deleted": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "deleted", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "deleted", body, rules)).toEqual([
       {
         action: "deleted",
         branch: "master",
@@ -93,14 +97,14 @@ describe("for PRs", () => {
       "pull_request.*": "dangerfile.js",
       "pull_request.updated": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "updated", rules).length).toEqual(3)
+    expect(dangerRunForRules("pull_request", "updated", body, rules).length).toEqual(3)
   })
 
   it("returns a PR when multiple rules are declared inline", () => {
     const rules = {
       "issue, pull_request": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "created", body, rules)).toEqual([
       {
         action: "created",
         branch: "master",
@@ -118,7 +122,7 @@ describe("for PRs", () => {
     const rules = {
       "issue.created, pull_request.closed": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([])
+    expect(dangerRunForRules("pull_request", "created", body, rules)).toEqual([])
   })
 
   it("returns a PR when PR is in the rules and there are multi inline rules", () => {
@@ -126,7 +130,7 @@ describe("for PRs", () => {
       "issue.created, issue.closed": "dangerfile.js",
       pull_request: "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "created", body, rules)).toEqual([
       {
         action: "created",
         branch: "master",
@@ -145,7 +149,7 @@ describe("for PRs", () => {
       issue: "dangerfile.js",
       "pull_request, pull_request.*, pull_request.updated": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "updated", rules).length).toEqual(1)
+    expect(dangerRunForRules("pull_request", "updated", body, rules).length).toEqual(1)
   })
 })
 
