@@ -156,7 +156,7 @@ describe("for PRs", () => {
 describe("for label events", () => {
   it("returns a run for a labeled event with a matching label name", () => {
     const rules = {
-      "pull_request.labeled.question": "dangerfile.js",
+      "pull_request.labeled(question)": "dangerfile.js",
     }
     const body = {
       action: "labeled",
@@ -182,7 +182,7 @@ describe("for label events", () => {
 
   it("returns null when no label names match", () => {
     const rules = {
-      "pull_request.labeled.enhancement": "dangerfile.js",
+      "pull_request.labeled(enhancement)": "dangerfile.js",
     }
     const body = {
       action: "labeled",
@@ -193,6 +193,58 @@ describe("for label events", () => {
     }
 
     expect(dangerRunForRules("pull_request", "labeled", body, rules)).toEqual([])
+  })
+
+  it("returns a run for a labeled event with commas in the label name", () => {
+    const rules = {
+      "pull_request.labeled(this,works)": "dangerfile.js",
+    }
+    const body = {
+      action: "labeled",
+      event: "pull_request",
+      label: {
+        name: "this,works",
+      },
+    }
+
+    expect(dangerRunForRules("pull_request", "labeled", body, rules)).toEqual([
+      {
+        action: "labeled",
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: RunType.pr,
+        event: "pull_request",
+        feedback: RunFeedback.commentable,
+        referenceString: "dangerfile.js",
+        repoSlug: undefined,
+      },
+    ])
+  })
+
+  it("supports multiple trigger events with label names", () => {
+    const rules = {
+      "pull_request, pull_request.labeled(this,works), pull_request.unlabeled(question)": "dangerfile.js",
+    }
+    const body = {
+      action: "labeled",
+      event: "pull_request",
+      label: {
+        name: "this,works",
+      },
+    }
+
+    expect(dangerRunForRules("pull_request", "labeled", body, rules)).toEqual([
+      {
+        action: "labeled",
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: RunType.pr,
+        event: "pull_request",
+        feedback: RunFeedback.commentable,
+        referenceString: "dangerfile.js",
+        repoSlug: undefined,
+      },
+    ])
   })
 })
 

@@ -52,14 +52,23 @@ export const dangerRunForRules = (
   const allKeys = [directKey, globsKey, dotActionKey]
 
   if (action === "labeled" || action === "unlabeled") {
-    const labelName: string = requestBody.label.name
-    allKeys.push(event + "." + action + "." + labelName)
+    let labelName: string = requestBody.label.name
+    allKeys.push(event + "." + action + "(" + labelName + ")")
   }
 
   const arraydVersions = Object.keys(rule)
     .filter(key => {
+      // We have to preprocess labeled events with names because if they
+      // contain a comma then multi trigger rules won't split correctly.
+      const labelNamePattern = /(issue|pull_request).(labeled|unlabeled)\(.+\)/
+      const labelNameRules: string[] = key.match(labelNamePattern) || []
+      if (labelNameRules.length > 0) {
+        key.replace(labelNameRules[0], "")
+      }
+      // Now process all remaining rules
       const indvRules = key.split(",").map(i => i.trim())
-      return allKeys.some(key => indvRules.includes(key))
+      const allRules = indvRules.concat(labelNameRules[0])
+      return allKeys.some(key => allRules.includes(key))
     })
     .map(key => {
       const alwaysArray = (t: any) => (Array.isArray(t) ? t : [t])
