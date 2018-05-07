@@ -1,3 +1,7 @@
+## 2018 - May 6
+
+* Allows multiple inline events to trigger rules - SD10
+
 ## 2018 - April 28
 
 * Adds initial support for recording all Webhooks going to an installation for 5 minutes - orta (idea from ashfurrow)
