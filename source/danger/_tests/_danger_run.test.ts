@@ -153,6 +153,49 @@ describe("for PRs", () => {
   })
 })
 
+describe("for label events", () => {
+  it("returns a run for a labeled event with a matching label name", () => {
+    const rules = {
+      "pull_request.labeled.question": "dangerfile.js",
+    }
+    const body = {
+      action: "labeled",
+      event: "pull_request",
+      label: {
+        name: "question",
+      },
+    }
+
+    expect(dangerRunForRules("pull_request", "labeled", body, rules)).toEqual([
+      {
+        action: "labeled",
+        branch: "master",
+        dangerfilePath: "dangerfile.js",
+        dslType: RunType.pr,
+        event: "pull_request",
+        feedback: RunFeedback.commentable,
+        referenceString: "dangerfile.js",
+        repoSlug: undefined,
+      },
+    ])
+  })
+
+  it("returns null when no label names match", () => {
+    const rules = {
+      "pull_request.labeled.enhancement": "dangerfile.js",
+    }
+    const body = {
+      action: "labeled",
+      event: "pull_request",
+      label: {
+        name: "question",
+      },
+    }
+
+    expect(dangerRunForRules("pull_request", "labeled", body, rules)).toEqual([])
+  })
+})
+
 describe("dangerRepresentationforPath", () => {
   it("returns just the path with master and no repo with just a path", () => {
     const path = "dangerfile.ts"
