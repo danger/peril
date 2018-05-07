@@ -1,6 +1,7 @@
 import { graphqlExpress } from "apollo-server-express"
 import * as bodyParser from "body-parser"
 import * as cookieParser from "cookie-parser"
+import * as cors from "cors"
 import { Application } from "express"
 import expressPlayground from "graphql-playground-middleware-express"
 
@@ -44,6 +45,7 @@ export const setupPublicAPI = (app: Application) => {
   // TODO: Figure out authentication
   app.use(
     "/api/graphql",
+    cors(),
     bodyParser.json(),
     graphqlExpress(req => ({
       schema,

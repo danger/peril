@@ -1,3 +1,8 @@
+## 2018 - May 6
+
+* Added mutations for re-sending a webhook through Peril - orta
+* Fixed CORs support - orta
+
 ## 2018 - April 28
 
 * Adds initial support for recording all Webhooks going to an installation for 5 minutes - orta (idea from ashfurrow)
