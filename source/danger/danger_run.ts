@@ -36,6 +36,7 @@ export interface DangerRun extends RepresentationForURL {
 export const dangerRunForRules = (
   event: string,
   action: string | null,
+  requestBody: any,
   rule: RunnerRuleset | undefined | null
 ): DangerRun[] => {
   // tslint:disable-line
@@ -48,10 +49,16 @@ export const dangerRunForRules = (
   const globsKey = event + ".*"
   const dotActionKey = event + "." + action
 
+  let allKeys = [directKey, globsKey, dotActionKey]
+
+  if (action === "labeled" || action === "unlabeled") {
+    const labelName: string = requestBody.label.name
+    allKeys.push(event + "." + action + "." + labelName)
+  }
+
   const arraydVersions = Object.keys(rule)
     .filter(key => {
       const indvRules = key.split(",").map(i => i.trim())
-      const allKeys = [directKey, globsKey, dotActionKey]
       return allKeys.some(key => indvRules.includes(key))
     })
     .map(key => {
