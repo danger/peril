@@ -46,6 +46,7 @@ const prepareToSave = (installation: Partial<GitHubInstallation>) => {
   userInput.forEach(i => {
     if (amendedInstallation[i]) {
       amendedInstallation[i] = removeDots(amendedInstallation[i])
+      amendedInstallation[i] = removeDollars(amendedInstallation[i])
     }
   })
   return installation
@@ -56,6 +57,7 @@ const convertDBRepresentationToModel = (installation: GitHubInstallation) => {
   userInput.forEach(i => {
     if (amendedInstallation[i]) {
       amendedInstallation[i] = bringBackDots(amendedInstallation[i])
+      amendedInstallation[i] = bringBackDollars(amendedInstallation[i])
     }
   })
   return installation
@@ -64,6 +66,10 @@ const convertDBRepresentationToModel = (installation: GitHubInstallation) => {
 // We can't store keys which have a dot in them, and basically all settings JSON has this.
 const removeDots = (obj: object) => transformKeys(obj, ".", "___")
 const bringBackDots = (obj: object) => transformKeys(obj, "___", ".")
+
+// We cant store keys with a dollar sign and they may be present in label names.
+const removeDollars = (obj: object) => transformKeys(obj, "$", "____")
+const bringBackDollars = (obj: object) => transformKeys(obj, "____", "$")
 
 const transformKeys = (obj: any, before: string, after: string) =>
   Object.keys(obj).reduce(

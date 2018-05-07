@@ -42,7 +42,7 @@ it("runs an Dangerfile for an issue with a local", async () => {
   const settings = await setupForRequest(req, {})
   expect(settings.commentableID).toBeTruthy()
 
-  const run = dangerRunForRules("issue_comment", "created", {
+  const run = dangerRunForRules("issue_comment", "created", body, {
     issue_comment: "dangerfile.issue",
   })[0]
 
@@ -60,7 +60,7 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
 
   const dangerfileForRun = "warn(danger.github.api)"
   mockGHContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
-  const run = dangerRunForRules("issue_comment", "created", {
+  const run = dangerRunForRules("issue_comment", "created", body, {
     issue_comment: "warn_with_api",
   })[0]
 
@@ -78,7 +78,7 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
   // Pass in the installation ID to warn
   const dangerfileForRun = "module.exports.default = (deets) => { warn(deets.installation.id) }"
   mockGHContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
-  const run = dangerRunForRules("issue_comment", "created", {
+  const run = dangerRunForRules("issue_comment", "created", body, {
     issue_comment: "warn_with_api",
   })[0]
 
@@ -94,7 +94,7 @@ it("can handle a db returning nil for the repo with an Dangerfile for an issue w
   const settings = await setupForRequest(req, {})
   expect(settings.commentableID).toBeTruthy()
 
-  const run = dangerRunForRules("issue_comment", "created", {
+  const run = dangerRunForRules("issue_comment", "created", body, {
     issue_comment: "dangerfile.issue",
   })[0]
 

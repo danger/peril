@@ -34,7 +34,7 @@ it("runs an Dangerfile for a PR with a local", async () => {
   const body = fixture("pull_request_opened.json")
   const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any, {})
 
-  const run = dangerRunForRules("pull_request", "opened", {
+  const run = dangerRunForRules("pull_request", "opened", body, {
     pull_request: "dangerfile.pr",
   })[0]
 
@@ -58,7 +58,7 @@ describe("when someone edits the dangerfile", () => {
     const body = fixture("pull_request_opened.json")
     const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any, {})
 
-    const run = dangerRunForRules("pull_request", "opened", {
+    const run = dangerRunForRules("pull_request", "opened", body, {
       pull_request: "dangerfile.no.access.pr",
     })[0]
 
@@ -75,7 +75,7 @@ describe("when someone edits the dangerfile", () => {
     const body = fixture("pull_request_opened.json")
     const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any, {})
 
-    const run = dangerRunForRules("pull_request", "opened", {
+    const run = dangerRunForRules("pull_request", "opened", body, {
       pull_request: "dangerfile.no.access.pr",
     })[0]
 
