@@ -128,8 +128,8 @@ This setup will:
   the same repo: `orta/ORStackView`. So it would ignore issue updates or deletes.
 
 You can actually use `orta/example-peril` BTW, I have some dummy Dangerfiles on that repo exactly for this purpose. Save
-the above JSON as `peril-settings.json`. Add that to a repo, push it to master on your GitHub remote. Here's one [I did
-earlier](https://github.com/artsy/artsy-danger/commit/03a1745b1f9f83fc2367ed6cdc72dee3f466b75f).
+the above JSON as `peril-settings.json`. Add that to a repo, push it to master on your GitHub remote. Here's one
+[I did earlier](https://github.com/artsy/artsy-danger/commit/03a1745b1f9f83fc2367ed6cdc72dee3f466b75f).
 
 Note: when you make updates to this file, you need to restart your Peril server, until
 [#88](https://github.com/danger/peril/issues/88) is resolved.
@@ -152,6 +152,13 @@ import { warn, danger } from "danger"
 * <https://github.com/danger/peril-settings>
 * <https://github.com/artsy/artsy-danger>
 * <https://github.com/CocoaPods/peril-settings>
+* <https://github.com/Moya/moya-peril>
+* <https://github.com/RxSwiftCommunity/peril>
+* <https://github.com/ashfurrow/peril-settings> (personal repo)
+* <https://github.com/orta/peril-settings> (personal repo)
+
+(Note: Peril can technically be installed on personal accounts, too, because an account is just a specific type of org
+from the GitHub API's perspective.)
 
 # Troubleshooting
 
@@ -161,10 +168,10 @@ Run `heroku logs --app [my_heroku_peril_app]`.
 
 ### "You need an installation ID for your integration: `PERIL_ORG_INSTALLATION_ID`
 
-Go back to your integration settings, you _probably_ have two events so far. The 2nd one, which has a `X-GitHub-Event:
-integration_installation` will provide you with the env var for `PERIL_ORG_INSTALLATION_ID`. You can find the
-installation id inside "installation.id" in the JSON. To set the heroku env var, run `heroku config:add
-PERIL_ORG_INSTALLATION_ID="[my-id]" --app [my_heroku_peril_app]`
+Go back to your integration settings, you _probably_ have two events so far. The 2nd one, which has a
+`X-GitHub-Event: integration_installation` will provide you with the env var for `PERIL_ORG_INSTALLATION_ID`. You can
+find the installation id inside "installation.id" in the JSON. To set the heroku env var, run
+`heroku config:add PERIL_ORG_INSTALLATION_ID="[my-id]" --app [my_heroku_peril_app]`
 
 Setting it will restart the server.
 

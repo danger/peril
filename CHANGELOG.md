@@ -3,10 +3,14 @@
 * Added mutations for adding/editing/deleting env vars for hosted Peril - orta
 * Hosted Peril can now have env vars in the DSL - orta
 
-## 2018 - May 6
+## 2018 - May 7
 
 * Added mutations for re-sending a webhook through Peril - orta
 * Fixed CORs support - orta
+
+## 2018 - May 6
+
+* Allows multiple inline events to trigger rules - SD10
 
 ## 2018 - April 28
 
