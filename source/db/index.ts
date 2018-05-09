@@ -25,6 +25,8 @@ export interface GitHubInstallation extends PerilInstallationSettings {
   login: string
   /** An image url for the installation owner */
   avatarURL: string
+  /** An image url for the installation owner */
+  envVars?: any
 }
 
 /** An individual integration of Danger via Peril, this is like the org */

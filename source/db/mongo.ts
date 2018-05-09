@@ -3,6 +3,7 @@ import * as JSON5 from "json5"
 
 import { connect, Document, model, Schema } from "mongoose"
 
+import _ = require("lodash")
 import { dangerRepresentationForPath } from "../danger/danger_run"
 import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { MONGODB_URI } from "../globals"
@@ -23,14 +24,18 @@ export interface MongoGithubInstallationModel extends Document, GitHubInstallati
 const Installation = model<MongoGithubInstallationModel>(
   "GithubInstallation",
   new Schema({
-    iID: Number,
-    login: String,
-    perilSettingsJSONURL: String,
+    // Comes from the JSON config
     repos: Schema.Types.Mixed,
     rules: Schema.Types.Mixed,
     settings: Schema.Types.Mixed,
     tasks: Schema.Types.Mixed,
+
+    // Needed by Peril
+    iID: Number,
+    login: String,
+    perilSettingsJSONURL: String,
     recordWebhooksUntilTime: Date,
+    envVars: Schema.Types.Mixed,
   })
 )
 
@@ -140,7 +145,10 @@ export const mongoDatabase = {
       return
     }
 
-    const parsedSettings = JSON5.parse(file) as Partial<GitHubInstallation>
+    // Only allow the JSON to overwrite user editable settings in mongo
+    const json = JSON5.parse(file)
+    const parsedSettings: Partial<GitHubInstallation> = _.pick(json, userInput)
+
     const sanitizedSettings = prepareToSave(parsedSettings)
     return await Installation.updateOne({ iID: installationID }, sanitizedSettings)
   },
