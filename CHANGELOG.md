@@ -2,6 +2,7 @@
 
 * Added mutations for re-sending a webhook through Peril - orta
 * Fixed CORs support - orta
+* Allows multiple inline events to trigger rules - SD10
 
 ## 2018 - April 28
 

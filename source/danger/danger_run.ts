@@ -44,14 +44,20 @@ export const dangerRunForRules = (
     return []
   }
 
-  // We can just see if anything exists at the right places,
-  // and return the first right object
-  const isDirect = rule[event]
-  const globsAll = rule[event + ".*"]
-  const eventDotAction = action && rule[event + "." + action]
+  const directKey = event
+  const globsKey = event + ".*"
+  const dotActionKey = event + "." + action
 
-  const alwaysArray = (t: any) => (Array.isArray(t) ? t : [t])
-  const arraydVersions = [isDirect, globsAll, eventDotAction].filter(p => p).map(alwaysArray)
+  const arraydVersions = Object.keys(rule)
+    .filter(key => {
+      const indvRules = key.split(",").map(i => i.trim())
+      const allKeys = [directKey, globsKey, dotActionKey]
+      return allKeys.some(key => indvRules.includes(key))
+    })
+    .map(key => {
+      const alwaysArray = (t: any) => (Array.isArray(t) ? t : [t])
+      return alwaysArray(rule[key])
+    })
 
   let possibilities: string[] = []
   arraydVersions.forEach(arr => {
