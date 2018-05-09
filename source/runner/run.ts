@@ -67,7 +67,7 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
   // Pull out the metadata from the JSON to load up the danger process
   const token = payload.dsl.settings.github.accessToken
   const context = contextForDanger({ github: payload.dsl.github } as any)
-  const peril = perilObjectForInstallation(installation, process.env, input.peril)
+  const peril = await perilObjectForInstallation(installation, process.env, input.peril)
 
   // Attach Peril + the octokit API to the DSL
   await appendPerilContextToDSL(installation.iID, token, context, peril)
@@ -101,7 +101,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
 
   const runtimeDSL = await jsonToDSL(payload.dsl)
   const context = contextForDanger(runtimeDSL)
-  const peril = perilObjectForInstallation(installation, process.env, input.peril)
+  const peril = await perilObjectForInstallation(installation, process.env, input.peril)
   await appendPerilContextToDSL(installation.iID, token, context, peril)
 
   const rep = dangerRepresentationForPath(input.path)

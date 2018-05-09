@@ -5,6 +5,8 @@ import { DatabaseAdaptor } from "."
 
 const isJest = typeof jest !== "undefined"
 
+export const isSelfHosted = process.env.DATABASE_JSON_FILE !== null
+
 const getDatabaseForEnv = (env: any): DatabaseAdaptor | null => {
   if (env.DATABASE_JSON_FILE || isJest) {
     const json = jsonDatabase(env.DATABASE_JSON_FILE)
