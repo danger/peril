@@ -5,6 +5,8 @@ import GitHubUtils from "danger/distribution/platforms/github/GitHubUtils"
 import { DangerContext } from "danger/distribution/runner/Dangerfile"
 
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
+import { getDB, isSelfHosted } from "../db/getDB"
+import { MongoDB } from "../db/mongo"
 import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import { InstallationToRun } from "./danger_runner"
 
@@ -62,14 +64,25 @@ export async function appendPerilContextToDSL(
  * @param environment nearly always process.env in prod
  * @param peril an existing peril object, which will be splatted in
  */
-export const perilObjectForInstallation = (
+export const perilObjectForInstallation = async (
   installation: InstallationToRun,
   environment: any,
   peril: any | undefined
-): PerilDSL => ({
-  ...peril,
-  env:
+): Promise<PerilDSL> => {
+  const envVarsForSelfHosted = () =>
     installation.settings.env_vars &&
-    Object.assign({}, ...installation.settings.env_vars.map(k => ({ [k]: environment[k] }))),
-  runTask: generateTaskSchedulerForInstallation(installation.iID),
-})
+    Object.assign({}, ...installation.settings.env_vars.map(k => ({ [k]: environment[k] })))
+
+  const getEnvVars = async () => {
+    const db = getDB() as MongoDB
+    const dbInstallation = await db.getInstallation(installation.iID)
+    return dbInstallation ? dbInstallation.envVars || {} : {}
+  }
+
+  return {
+    ...peril,
+    env: isSelfHosted ? envVarsForSelfHosted() : await getEnvVars(),
+
+    runTask: generateTaskSchedulerForInstallation(installation.iID),
+  }
+}

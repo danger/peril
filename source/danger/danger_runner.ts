@@ -60,9 +60,10 @@ export async function runDangerForInstallation(
 
   const randomName = Math.random().toString(36)
   const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(reference))
-  // Allow
+
+  // Allow custom peril funcs to come from the task/scheduler DSL
   const perilFromRunOrTask = DSL && (DSL as any).peril
-  const peril = perilObjectForInstallation(installation, process.env, perilFromRunOrTask)
+  const peril = await perilObjectForInstallation(installation, process.env, perilFromRunOrTask)
 
   if (HYPER_ACCESS_KEY) {
     return await triggerSandboxDangerRun(type, installation, reference, payload, peril)

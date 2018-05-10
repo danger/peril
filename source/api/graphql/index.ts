@@ -10,23 +10,20 @@ import {
   pageInfoType,
 } from "graphql-relay-tools"
 
-import { combineResolvers } from "graphql-resolvers"
 import { makeExecutableSchema } from "graphql-tools"
 import { Date, JSON } from "graphql-tools-types"
 
 import { GitHubInstallation } from "../../db"
 import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
-import {
-  getRecordedWebhook,
-  getRecordedWebhooksForInstallation,
-  setInstallationToRecord,
-  wipeAllRecordedWebhooks,
-} from "../../plugins/utils/recordWebhookWithRequest"
-import { sendWebhookThroughGitHubRunner } from "../../plugins/utils/sendWebhookThroughGitHubRunner"
+import { getRecordedWebhooksForInstallation } from "../../plugins/utils/recordWebhookWithRequest"
+
 import { GraphQLContext } from "../api"
 import { getDetailsFromPerilJWT } from "../auth/generate"
 import { gql } from "./gql"
+import { mutations } from "./mutations"
+import { authD } from "./utils/auth"
+import { getUserInstallations } from "./utils/installations"
 
 const { connectionType: partialConnection } = connectionDefinitions({ name: "PartialInstallation" })
 const { connectionType: installationConnection } = connectionDefinitions({ name: "Installation" })
@@ -82,8 +79,10 @@ const schemaSDL = gql`
     settings: JSON!
     # Tasks which you can schedule to run in the future
     tasks: JSON!
-    # Tasks which you can schedule to run in the future
+    # Saved webhooks which can be re-sent
     webhooks${connectionArgs()}: RecordedWebhookConnection
+    # User-environment variables
+    envVars: JSON
   }
 
   # Someone logged in to the API, all user data is stored inside the JWT
@@ -129,26 +128,10 @@ const schemaSDL = gql`
     makeInstallationRecord(iID: Int!): Installation
     # Send webhook
     sendWebhookForInstallation(iID: Int!, eventID: String!): RecordedWebhook
+    # Adds/edits/removes a new ENV var to an installation
+    changeEnvVarForInstallation(iID: Int!, key: String!, value: String): JSON
   }
 `
-
-// A any'd resolver type, with the right context
-type Resolver = (obj: any, params: any, context: GraphQLContext) => Promise<any>
-
-// A combined resolver that checks for auth before running the resolver
-const authD = (resolver: Resolver) => combineResolvers(isAuthenticated, resolver)
-const isAuthenticated = (_: any, __: any, context: GraphQLContext) => {
-  if (!context.jwt) {
-    return new Error("Not authenticated")
-  }
-  return undefined
-}
-
-const getUserInstallations = async (jwt: string) => {
-  const decodedJWT = await getDetailsFromPerilJWT(jwt)
-  const db = getDB() as MongoDB
-  return await db.getInstallations(decodedJWT.iss.map(i => parseInt(i, 10)))
-}
 
 const resolvers = {
   // Let's graphql-tools-types handle the user-data and just puts the whole obj in response
@@ -166,8 +149,6 @@ const resolvers = {
       const installations = await getUserInstallations(context.jwt)
       return connectionFromArray(installations.filter(i => !i.perilSettingsJSONURL), args)
     }),
-    // Rename it from GH's JSON to camelCase
-    avatarURL: ({ avatar_url }: { avatar_url: string }) => avatar_url,
   },
 
   Installation: {
@@ -198,56 +179,7 @@ const resolvers = {
   },
 
   Mutation: {
-    editInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
-      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-      const installationID = String(params.iID)
-
-      // Check the installation's ID is included inside the signed JWT, to verify access
-      if (!decodedJWT.iss.includes(installationID)) {
-        throw new Error(`You don't have access to this installation`)
-      }
-
-      // Save the changes, then trigger an update from the new repo
-      const db = getDB() as MongoDB
-      const updatedInstallation = await db.saveInstallation(params)
-      await db.updateInstallation(updatedInstallation.iID)
-      return updatedInstallation
-    }),
-
-    makeInstallationRecord: authD(async (_: any, params: any, context: GraphQLContext) => {
-      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-      const installationID = String(params.iID)
-
-      // Check the installation's ID is included inside the signed JWT, to verify access
-      if (!decodedJWT.iss.includes(installationID)) {
-        throw new Error(`You don't have access to this installation`)
-      }
-
-      await wipeAllRecordedWebhooks(params.iID)
-      await setInstallationToRecord(params.iID)
-
-      // Return the modified installation
-      const installations = await getUserInstallations(context.jwt)
-      return installations.find(i => i.iID === params.iID)
-    }),
-
-    sendWebhookForInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
-      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-      const installationID = String(params.iID)
-
-      // Check the installation's ID is included inside the signed JWT, to verify access
-      if (!decodedJWT.iss.includes(installationID)) {
-        throw new Error(`You don't have access to this installation`)
-      }
-
-      const webhook = await getRecordedWebhook(params.iID, params.eventID)
-      if (!webhook) {
-        return null
-      }
-
-      await sendWebhookThroughGitHubRunner(webhook)
-      return webhook
-    }),
+    ...mutations,
   },
   Node: {
     __resolveType: (obj: any) => {
