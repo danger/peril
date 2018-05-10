@@ -53,7 +53,7 @@
     "@types/lodash": "^4.14.108",
     "@types/mongodb": "^3.0.15",
     "@types/mongoose": "^5.0.10",
-    "@types/node": "^9.6.6",
+    "@types/node": "^10.0.7",
     "@types/node-cleanup": "^2.1.0",
     "@types/node-fetch": "^1.6.9",
     "@types/node-schedule": "^1.2.2",
