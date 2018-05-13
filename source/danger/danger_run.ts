@@ -1,3 +1,4 @@
+import _ = require("lodash")
 import { DangerfileReferenceString, RunnerRuleset } from "../db"
 
 /**
@@ -36,7 +37,8 @@ export interface DangerRun extends RepresentationForURL {
 export const dangerRunForRules = (
   event: string,
   action: string | null,
-  rule: RunnerRuleset | undefined | null
+  rule: RunnerRuleset | undefined | null,
+  webhook: any
 ): DangerRun[] => {
   // tslint:disable-line
   // Can't do anything with nothing
@@ -44,15 +46,52 @@ export const dangerRunForRules = (
     return []
   }
 
+  // These are the potential keys that could trigger a run
   const directKey = event
   const globsKey = event + ".*"
   const dotActionKey = event + "." + action
 
-  const arraydVersions = Object.keys(rule)
+  const arrayVersions = Object.keys(rule)
+    // Look through all existing rules to see if we can
+    // find a key that matches the incoming rule
     .filter(key => {
-      const indvRules = key.split(",").map(i => i.trim())
+      // Take into account comma split strings:
+      //   "pull_request.opened, pull_request.closed"
+      //
+      // also take into account webhook checking:
+      //   "pull_request (pull_request.id == 12)"
+      //
+      const eachRule = key.split(",").map(i => i.split("(")[0].trim())
       const allKeys = [directKey, globsKey, dotActionKey]
-      return allKeys.some(key => indvRules.includes(key))
+      return allKeys.some(potentialKey => eachRule.includes(potentialKey))
+    })
+    .filter(key => {
+      // Do the webhook data check, return early if there's no () or ==
+      if (!key.includes("(") || !key.includes("==")) {
+        return true
+      }
+      try {
+        // get inside the ( )
+        const inner = key.split("(")[1].split(")")[0]
+        // allow (x == 1) and (x==1)
+        const keypath = inner.split(" ")[0].split("=")[0]
+        const value = _.get(webhook, keypath)
+        let expected: any = inner.split("==")[1].trim()
+
+        // handle boolean values
+        if (expected === "true") {
+          expected = true
+        }
+        if (expected === "false") {
+          expected = false
+        }
+        // We want to allow things like 1 to equal "1"
+        // tslint:disable-next-line:triple-equals
+        return value == expected
+      } catch (error) {
+        // Bail, so just always fail to indicate that it didn't run
+        return false
+      }
     })
     .map(key => {
       const alwaysArray = (t: any) => (Array.isArray(t) ? t : [t])
@@ -60,7 +99,7 @@ export const dangerRunForRules = (
     })
 
   let possibilities: string[] = []
-  arraydVersions.forEach(arr => {
+  arrayVersions.forEach(arr => {
     possibilities = possibilities.concat(arr)
   })
 

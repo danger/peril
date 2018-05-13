@@ -1,33 +1,29 @@
 {
-    "javascript.validate.enable": false,
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/.DS_Store": true,
-        "out/": true
-    },
-    "search.exclude": {
-        "**/node_modules": true,
-        "out/": true
-    },
-    "eslint.enable": false,
-    "editor.rulers": [
-        120
-    ],
-    "tslint.autoFixOnSave": true,
-    "tslint.run": "onType",
-    "tslint.exclude": "node_modules/**/*",
-    "flow.enabled": false,
-    "editor.formatOnSave": true,
-    "prettier.singleQuote": false,
-    "prettier.trailingComma": "es5",
-    "prettier.typescriptEnable": [
-        "typescript",
-        "typescriptreact"
-    ],
-    "prettier.jsonEnable": [],
-    "prettier.semi": false,
-    "prettier.printWidth": 120,
-    "editor.renderWhitespace": "boundary"
+  "javascript.validate.enable": false,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "out/": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "out/": true
+  },
+  "eslint.enable": false,
+  "editor.rulers": [120],
+  "tslint.autoFixOnSave": true,
+  "tslint.run": "onType",
+  "tslint.exclude": "node_modules/**/*",
+  "flow.enabled": false,
+  "editor.formatOnSave": true,
+  "prettier.singleQuote": false,
+  "prettier.trailingComma": "es5",
+  "prettier.typescriptEnable": ["typescript", "typescriptreact"],
+  "prettier.jsonEnable": [],
+  "prettier.semi": false,
+  "prettier.printWidth": 120,
+  "editor.renderWhitespace": "boundary",
+  "cSpell.words": ["doggos"]
 }

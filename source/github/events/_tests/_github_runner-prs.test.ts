@@ -34,9 +34,14 @@ it("runs an Dangerfile for a PR with a local", async () => {
   const body = fixture("pull_request_opened.json")
   const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any, {})
 
-  const run = dangerRunForRules("pull_request", "opened", {
-    pull_request: "dangerfile.pr",
-  })[0]
+  const run = dangerRunForRules(
+    "pull_request",
+    "opened",
+    {
+      pull_request: "dangerfile.pr",
+    },
+    body
+  )[0]
 
   await runPRRun(run, settings, "token", body.pull_request)
   const call = mockRunner.mock.calls[0]
@@ -58,9 +63,14 @@ describe("when someone edits the dangerfile", () => {
     const body = fixture("pull_request_opened.json")
     const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any, {})
 
-    const run = dangerRunForRules("pull_request", "opened", {
-      pull_request: "dangerfile.no.access.pr",
-    })[0]
+    const run = dangerRunForRules(
+      "pull_request",
+      "opened",
+      {
+        pull_request: "dangerfile.no.access.pr",
+      },
+      body
+    )[0]
 
     const results = await runPRRun(run, settings, "token", body.pull_request)
     expect(mockRunner).not.toBeCalled()
@@ -75,9 +85,14 @@ describe("when someone edits the dangerfile", () => {
     const body = fixture("pull_request_opened.json")
     const settings = await setupForRequest({ body, headers: { "X-GitHub-Delivery": "12345" } } as any, {})
 
-    const run = dangerRunForRules("pull_request", "opened", {
-      pull_request: "dangerfile.no.access.pr",
-    })[0]
+    const run = dangerRunForRules(
+      "pull_request",
+      "opened",
+      {
+        pull_request: "dangerfile.no.access.pr",
+      },
+      body
+    )[0]
 
     await runPRRun(run, settings, "token", body.pull_request)
     expect(mockRunner).toBeCalled()

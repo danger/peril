@@ -121,7 +121,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
     return
   }
 
-  const runs = runsForEvent(event, action, installation, settings)
+  const runs = runsForEvent(event, action, installation, req.body, settings)
   const name = action ? `${event}.${action}` : event
   if (runs.length) {
     logger.info("")
@@ -138,10 +138,11 @@ export function runsForEvent(
   event: string,
   action: string | null,
   installation: GitHubInstallation,
+  webhook: any,
   settings: GitHubRunSettings
 ) {
-  const installationRun = dangerRunForRules(event, action, installation.rules)
-  const repoRun = dangerRunForRules(event, action, settings.repoSpecificRules)
+  const installationRun = dangerRunForRules(event, action, installation.rules, webhook)
+  const repoRun = dangerRunForRules(event, action, settings.repoSpecificRules, webhook)
   return [...installationRun, ...repoRun].filter(r => !!r) as DangerRun[]
 }
 

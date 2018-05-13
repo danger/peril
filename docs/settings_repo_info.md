@@ -94,6 +94,74 @@ replicate the exact process of running Danger on CI, you could use:
 
 Which would run `"org/pr.ts"` when a PR is created, and then updated.
 
+#### Extra features
+
+You can use commas to have a single run be triggered by many events and actions. So the above could be this instead:
+
+```json5
+{
+  "rules": {
+    "pull_request.opened, pull_request.synchronize": "artsy/artsy-danger@org/all-prs.ts"
+  }
+}
+```
+
+**Advanced:** You can use parens to dive into the webhook's json to only run in very specific edge cases. So, for
+example if we have this webhook JSON:
+
+```json
+{
+  "action": "opened",
+  "issue": {
+    "id": 226685977,
+    "number": 2,
+    "title": "Update the README to explain why there is TypeScript et al",
+    "user": {
+      "login": "orta",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "assignee": {
+      "login": "orta",
+      "id": 49038
+    },
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2017-05-05T20:40:02Z",
+    "updated_at": "2017-05-05T20:40:02Z",
+    "closed_at": null,
+    "body": ""
+  },
+  "organization": {
+    "login": "artsy",
+    "id": 546231
+  },
+  "sender": {
+    "login": "orta",
+    "id": 49038,
+    "type": "User",
+    "site_admin": false
+  },
+  "installation": {
+    "id": 23511
+  }
+}
+```
+
+You have _all sorts_ of potential bits of data to work with:
+
+```json5
+{
+  "rules": {
+    "issue (sender.site_admin == true)": "org/welcome-admins.ts",
+    "issue.closed (sender.type == Bot)": "org/post-peril-auto-close.ts",
+    "issue.opened (issue.number == 1000)": "org/congrats-issue-one-thousand.ts"
+  }
+}
+```
+
 ### `dangerfiles`
 
 The value in these keys is a reference to a Dangerfile. There are two ways of specifying a Dangerfile, remote or local.
