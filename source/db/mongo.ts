@@ -46,7 +46,7 @@ const Installation = model<MongoGithubInstallationModel>(
  */
 const userInput = ["repo", "rules", "settings", "tasks"]
 
-const prepareToSave = (installation: Partial<GitHubInstallation>) => {
+export const prepareToSave = (installation: Partial<GitHubInstallation>) => {
   const amendedInstallation: any = installation
   userInput.forEach(i => {
     if (amendedInstallation[i]) {
@@ -56,7 +56,7 @@ const prepareToSave = (installation: Partial<GitHubInstallation>) => {
   return installation
 }
 
-const convertDBRepresentationToModel = (installation: GitHubInstallation) => {
+export const convertDBRepresentationToModel = (installation: GitHubInstallation) => {
   const amendedInstallation: any = installation
   userInput.forEach(i => {
     if (amendedInstallation[i]) {
@@ -66,15 +66,16 @@ const convertDBRepresentationToModel = (installation: GitHubInstallation) => {
   return installation
 }
 
-// We can't store keys which have a dot in them, and basically all settings JSON has this.
-const removeDots = (obj: object) => transformKeys(obj, ".", "___")
-const bringBackDots = (obj: object) => transformKeys(obj, "___", ".")
+// We can't store keys which have a dot/dollar in them, and basically all settings JSON has dots.
+// See https://docs.mongodb.com/manual/reference/limits/#Restrictions-on-Field-Names
+const removeDots = (obj: object) => transformKeys(obj, ".", "___", "$", "^^^")
+const bringBackDots = (obj: object) => transformKeys(obj, "___", ".", "^^^", "$")
 
-const transformKeys = (obj: any, before: string, after: string) =>
+const transformKeys = (obj: any, before1: string, after1: string, before2: string, after2: string) =>
   Object.keys(obj).reduce(
     (o, prop) => {
       const value = obj[prop]
-      const newProp = prop.replace(before, after)
+      const newProp = prop.replace(before1, after1).replace(before2, after2)
       o[newProp] = value
       return o
     },
