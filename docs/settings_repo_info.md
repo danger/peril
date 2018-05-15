@@ -162,6 +162,9 @@ You have _all sorts_ of potential bits of data to work with:
 }
 ```
 
+Bug: as this is all pretty much all hacky string manipulation, it doesn't really mix well with commas in the strings.
+Happy to take PRs improving this if you want it :+1:.
+
 ### `dangerfiles`
 
 The value in these keys is a reference to a Dangerfile. There are two ways of specifying a Dangerfile, remote or local.
