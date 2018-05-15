@@ -3,7 +3,7 @@ import { dangerRepresentationForPath, dangerRunForRules, dslTypeForEvent, RunFee
 describe("for ping", () => {
   it("returns an action when ping is in the rules", () => {
     const rules = { ping: "dangerfile.js" }
-    expect(dangerRunForRules("ping", null, rules)).toEqual([
+    expect(dangerRunForRules("ping", null, rules, {})).toEqual([
       {
         action: null,
         branch: "master",
@@ -19,14 +19,14 @@ describe("for ping", () => {
 
   it("returns nothing when ping is not in the rules", () => {
     const rules = {}
-    expect(dangerRunForRules("ping", null, rules)).toEqual([])
+    expect(dangerRunForRules("ping", null, rules, {})).toEqual([])
   })
 })
 
 describe("for PRs", () => {
   it("returns a PR when PR is in the rules", () => {
     const rules = { pull_request: "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "created", rules, {})).toEqual([
       {
         action: "created",
         branch: "master",
@@ -42,7 +42,7 @@ describe("for PRs", () => {
 
   it("returns two events when rule contains two files", () => {
     const rules = { pull_request: ["dangerfile.js", "anotherdangerfile.ts"] }
-    expect(dangerRunForRules("pull_request", "created", rules).map(r => r.dangerfilePath)).toEqual([
+    expect(dangerRunForRules("pull_request", "created", rules, {}).map(r => r.dangerfilePath)).toEqual([
       "dangerfile.js",
       "anotherdangerfile.ts",
     ])
@@ -51,7 +51,7 @@ describe("for PRs", () => {
   // Same semantics
   it("returns a PR run when all sub events are globbed in the rules", () => {
     const rules = { "pull_request.*": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "updated", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "updated", rules, {})).toEqual([
       {
         action: "updated",
         branch: "master",
@@ -67,12 +67,12 @@ describe("for PRs", () => {
 
   it("returns null when you only ask for a specific action", () => {
     const rules = { "pull_request.created": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "updated", rules)).toEqual([])
+    expect(dangerRunForRules("pull_request", "updated", rules, {})).toEqual([])
   })
 
   it("returns a PR run when event contains action suffix", () => {
     const rules = { "pull_request.deleted": "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "deleted", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "deleted", rules, {})).toEqual([
       {
         action: "deleted",
         branch: "master",
@@ -93,14 +93,14 @@ describe("for PRs", () => {
       "pull_request.*": "dangerfile.js",
       "pull_request.updated": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "updated", rules).length).toEqual(3)
+    expect(dangerRunForRules("pull_request", "updated", rules, {}).length).toEqual(3)
   })
 
   it("returns a PR when multiple rules are declared inline", () => {
     const rules = {
       "issue, pull_request": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "created", rules, {})).toEqual([
       {
         action: "created",
         branch: "master",
@@ -118,7 +118,7 @@ describe("for PRs", () => {
     const rules = {
       "issue.created, pull_request.closed": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([])
+    expect(dangerRunForRules("pull_request", "created", rules, {})).toEqual([])
   })
 
   it("returns a PR when PR is in the rules and there are multi inline rules", () => {
@@ -126,7 +126,7 @@ describe("for PRs", () => {
       "issue.created, issue.closed": "dangerfile.js",
       pull_request: "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "created", rules)).toEqual([
+    expect(dangerRunForRules("pull_request", "created", rules, {})).toEqual([
       {
         action: "created",
         branch: "master",
@@ -145,7 +145,37 @@ describe("for PRs", () => {
       issue: "dangerfile.js",
       "pull_request, pull_request.*, pull_request.updated": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "updated", rules).length).toEqual(1)
+    expect(dangerRunForRules("pull_request", "updated", rules, {}).length).toEqual(1)
+  })
+
+  describe("webhook checking", () => {
+    it("handles inline rules", () => {
+      const rules = {
+        "pull_request (hello == true)": "dangerfile.js",
+      }
+      expect(dangerRunForRules("pull_request", "updated", rules, { hello: true }).length).toEqual(1)
+    })
+
+    it("handles inline number rules", () => {
+      const rules = {
+        "pull_request (doggos.count == 3)": "dangerfile.js",
+      }
+      expect(dangerRunForRules("pull_request", "updated", rules, { doggos: { count: 3 } }).length).toEqual(1)
+    })
+
+    it("handles inline string rules", () => {
+      const rules = {
+        "pull_request (doggos.name == murphy)": "dangerfile.js",
+      }
+      expect(dangerRunForRules("pull_request", "updated", rules, { doggos: { name: "murphy" } }).length).toEqual(1)
+    })
+
+    it("skips when there's no inline match", () => {
+      const rules = {
+        "pull_request (doggos.name == little man)": "dangerfile.js",
+      }
+      expect(dangerRunForRules("pull_request", "updated", rules, { doggos: { name: "murphy" } }).length).toEqual(0)
+    })
   })
 })
 

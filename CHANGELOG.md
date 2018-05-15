@@ -1,3 +1,7 @@
+## 2018 - May 13
+
+* Danger rules ket can use keypaths to determine if they should run - orta
+
 ## 2018 - May 9
 
 * Added mutations for adding/editing/deleting env vars for hosted Peril - orta
