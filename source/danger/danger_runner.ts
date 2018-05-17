@@ -53,7 +53,7 @@ export async function runDangerForInstallation(
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
   const DSL = payload.dsl
-  const gh = api ? new GitHub(api) : null
+  const gh = api ? GitHub(api) : null
   const platform = getPerilPlatformForDSL(type, gh, payload.dsl)
 
   const exec = await executorForInstallation(platform, vm2)
@@ -95,7 +95,7 @@ export async function runDangerAgainstFileInline(
   let results: DangerResults
 
   try {
-    results = await exec.runner.runDangerfileEnvironment(filepath, contents, runtimeEnv, payload.webhook)
+    results = await exec.runner.runDangerfileEnvironment([filepath], [contents], runtimeEnv, payload.webhook)
   } catch (error) {
     results = resultsForCaughtError(filepath, contents, error)
   }

@@ -12,7 +12,7 @@ it("Provides the Danger GitHub DSL for a PR", () => {
 })
 
 it("Uses the event json when it's a non-PR event", async () => {
-  const gh = new GitHub({
+  const gh = GitHub({
     getExternalAPI: () => ({ api: true }),
     fileContents: () => "",
   } as any)

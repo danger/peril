@@ -41,7 +41,7 @@ export const prDSLRunner = async (req: express.Request, res: express.Response, _
 
   const githubAPI = githubAPIForCommentable(token, ghDetails.fullName, ghDetails.prID)
 
-  const gh = new GitHub(githubAPI)
+  const gh = GitHub(githubAPI)
   const platform = getPerilPlatformForDSL(RunType.pr, gh, {})
 
   const exec = await executorForInstallation(platform, inline)

@@ -22,7 +22,7 @@ export const createPRDSL = async (githubAPI: GitHubAPI) => {
  * @param githubAPI the Danger GithubAPI instance
  */
 export const createPRJSONDSL = async (githubAPI: GitHubAPI) => {
-  const gh = new GitHub(githubAPI)
+  const gh = GitHub(githubAPI)
   const platform = getPerilPlatformForDSL(RunType.pr, gh, {})
   return await jsonDSLGenerator(platform)
 }

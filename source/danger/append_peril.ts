@@ -22,7 +22,7 @@ export const octokitAPIForPeril = async (installationID: number, authToken: stri
 
   api.authenticate({
     token,
-    type: "integration",
+    type: "app",
   })
 
   return api

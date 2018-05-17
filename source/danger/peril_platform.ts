@@ -1,6 +1,6 @@
 import { GitHubUtilsDSL } from "danger/distribution/dsl/GitHubDSL"
-import { GitHub } from "danger/distribution/platforms/GitHub"
 
+import { GitHubType } from "danger/distribution/platforms/GitHub"
 import { Platform } from "danger/distribution/platforms/platform"
 import { RunType } from "./danger_run"
 
@@ -9,7 +9,7 @@ import { RunType } from "./danger_run"
  * however, an event like an issue comment or a user creation has no way to provide any kind of
  * feedback or DSL. To work around that we use the event provided by GitHub and provide it to Danger.
  */
-export const getPerilPlatformForDSL = (type: RunType, github: GitHub | null, githubEvent: any): Platform => {
+export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null, githubEvent: any): Platform => {
   if (type === RunType.pr && github) {
     return github
   } else {
@@ -39,7 +39,8 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHub | null, git
       supportsInlineComments: () => (github ? github.supportsInlineComments.bind(github) : nullFunc),
 
       updateStatus: () => (github ? github.supportsInlineComments.bind(github) : nullFunc),
-
+      // TODO: Make this true?
+      supportsHandlingResultsManually: () => (github ? github.supportsHandlingResultsManually.bind(github) : nullFunc),
       getPlatformDSLRepresentation: async () => {
         return {
           ...githubEvent,
@@ -47,6 +48,7 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHub | null, git
           utils,
         }
       },
+      getReviewInfo: () => (github ? github.getReviewInfo.bind(github) : nullFunc),
       getPlatformGitRepresentation: async () => {
         return {} as any
       },

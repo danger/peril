@@ -19,7 +19,7 @@ export const commentOnResults = async (
   settings: GitHubRunSettings
 ) => {
   const githubAPI = githubAPIForCommentable(token, settings.repoName!, settings.commentableID)
-  const gh = new GitHub(githubAPI)
+  const gh = GitHub(githubAPI)
   const platform = getPerilPlatformForDSL(dslType, gh, {})
   const exec = executorForInstallation(platform, vm2)
 
