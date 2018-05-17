@@ -26,6 +26,11 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
       name: "Peril",
       getFileContents: github ? github.getFileContents.bind(github) : nullFunc,
 
+      // Checks Support
+      handlePostingResults: () =>
+        github ? github.handlePostingResults && github.handlePostingResults.bind(github) : nullFunc,
+      supportsHandlingResultsManually: () => true,
+
       createComment: github ? github.createComment.bind(github) : nullFunc,
       deleteMainComment: github ? github.deleteMainComment.bind(github) : nullFunc,
       updateOrCreateComment: github ? github.updateOrCreateComment.bind(github) : nullFunc,
@@ -39,8 +44,6 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
       supportsInlineComments: () => (github ? github.supportsInlineComments.bind(github) : nullFunc),
 
       updateStatus: () => (github ? github.supportsInlineComments.bind(github) : nullFunc),
-      // TODO: Make this true?
-      supportsHandlingResultsManually: () => (github ? github.supportsHandlingResultsManually.bind(github) : nullFunc),
       getPlatformDSLRepresentation: async () => {
         return {
           ...githubEvent,
