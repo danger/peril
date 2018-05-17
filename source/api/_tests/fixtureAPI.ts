@@ -1,4 +1,4 @@
-import { GitHub } from "danger/distribution/platforms/GitHub"
+import { GitHub, GitHubType } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 
 import { readFileSync } from "fs"
@@ -17,11 +17,11 @@ const requestWithFixturedContent = (path: string): (() => Promise<string>) => ()
 
 /** Returns a fixtured GitHub instance */
 
-export const fixturedAPI = (repoSlug?: string, pullRequestID?: string): GitHub => {
+export const fixturedAPI = (repoSlug?: string, pullRequestID?: string): GitHubType => {
   repoSlug = repoSlug || "artsy/emission"
   pullRequestID = pullRequestID || "1"
   const api = new GitHubAPI({ repoSlug, pullRequestID }, "ABCDE")
-  const platform = new GitHub(api)
+  const platform = GitHub(api)
 
   api.getPullRequestInfo = requestWithFixturedJSON("github_pr.json")
   api.getPullRequestDiff = requestWithFixturedContent("github_diff.diff")

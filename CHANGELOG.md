@@ -1,6 +1,10 @@
+## 2018 - May 17
+
+* Merged in Danger JS changes for multiple execution runs, and checks instead of comments - orta
+
 ## 2018 - May 13
 
-* Danger rules ket can use keypaths to determine if they should run - orta
+* Danger rules can use keypaths to determine if they should run - orta
 
 ## 2018 - May 9
 

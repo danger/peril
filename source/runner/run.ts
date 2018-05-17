@@ -81,7 +81,7 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
   const dangerfileContent = await getGitHubFileContentsFromLocation(token, rep, rep.repoSlug!)
 
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
-  await inlineRunner.runDangerfileEnvironment(rep.dangerfilePath, dangerfileContent, runtimeEnv, payload.webhook)
+  await inlineRunner.runDangerfileEnvironment([rep.dangerfilePath], [dangerfileContent], runtimeEnv, payload.webhook)
 }
 
 const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerObject, payload: ValidatedPayload) => {
@@ -94,7 +94,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   const pr = payload.dsl.github.pr
 
   const perilGHAPI = githubAPIForCommentable(token, pr.base.repo.full_name, pr.number)
-  const perilGH = new GitHub(perilGHAPI)
+  const perilGH = GitHub(perilGHAPI)
 
   const platform = getPerilPlatformForDSL(RunType.pr, perilGH, payload.dsl)
   const exec = await executorForInstallation(platform, inlineRunner)
@@ -110,7 +110,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   const dangerfileContent = await getGitHubFileContentsFromLocation(token, rep, defaultRepoSlug)
 
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
-  const results = await inlineRunner.runDangerfileEnvironment(rep.dangerfilePath, dangerfileContent, runtimeEnv)
+  const results = await inlineRunner.runDangerfileEnvironment([rep.dangerfilePath], [dangerfileContent], runtimeEnv)
 
   logger.info(
     `f: ${results.fails.length} w: ${results.warnings.length} m: ${results.messages.length} md: ${
