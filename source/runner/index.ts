@@ -2,6 +2,8 @@ import * as getSTDIN from "get-stdin"
 import logger from "../logger"
 import { run } from "./run"
 
+logger.info("☢️")
+
 try {
   // Provide a timeout mechanism for the STDIN from the hyper func host
   let foundDSL = false
@@ -18,7 +20,7 @@ try {
   // Add a timeout so that CI doesn't run forever if something has broken.
   setTimeout(() => {
     if (!foundDSL) {
-      logger.error("Timeout: Failed to get the Peril DSL after 2 seconds")
+      logger.error("Timeout: Failed to get the Peril DSL after 5 seconds")
       process.exitCode = 1
       process.exit(1)
     }

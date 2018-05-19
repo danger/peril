@@ -72,7 +72,7 @@ export const peril = () => {
     //
     // This is mainly so you don't need to remember to do a `hyper pull` after
     // an update to Peril.
-    const url = `/api/v1/webook/dockerhub/${HYPER_ACCESS_KEY}`
+    const url = `/api/v1/webhook/dockerhub/${HYPER_ACCESS_KEY}`
     welcomeMessages.push(tick + " Hyper Sandbox")
     welcomeMessages.push(tick + " Docker Webhook")
     app.post(url, hyperUpdater)

@@ -2,7 +2,14 @@
 //
 // ❯ yarn build; cat source/runner/fixtures/branch-push.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | env DEBUG="*" node out/runner/index.js
 // ❯
-//
+
+// If you want to be testing this via hyper
+//  yarn build; cat source/runner/fixtures/hello-world.json  | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | hyper func call danger-peril-staging-debug
+
+// Alternatively, to switch staging's runner to be a debug runner:
+// ❯ hyper func update --env "DEBUG='*'" peril-staging
+// and back with
+// ❯ hyper func update --env "DEBUG=''" peril-staging
 
 import * as exitHook from "async-exit-hook"
 import { GitHub } from "danger/distribution/platforms/GitHub"

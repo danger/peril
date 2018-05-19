@@ -7,16 +7,18 @@
       "modules": ["danger-plugin-spellcheck", "danger-plugin-yarn", "@slack/client", "semver-sort"]
     }
   },
-  "dsl": {
-    "github": {
-      "hello": "Hi there, from the DSL"
-    },
-    "settings": {
+  "payload": {
+    "dsl": {
       "github": {
-        "accessToken": "12345",
-        "baseURL": null,
-        "additionalHeaders": {
-          "Accept": "application/vnd.github.machine-man-preview+json"
+        "hello": "Hi there, from the DSL"
+      },
+      "settings": {
+        "github": {
+          "accessToken": "12345",
+          "baseURL": null,
+          "additionalHeaders": {
+            "Accept": "application/vnd.github.machine-man-preview+json"
+          }
         }
       }
     }

@@ -25,5 +25,5 @@
   "prettier.semi": false,
   "prettier.printWidth": 120,
   "editor.renderWhitespace": "boundary",
-  "cSpell.words": ["doggos"]
+  "cSpell.words": ["GHAPI", "Graphi", "HEROKU", "PAPERTRAIL", "PRDSL", "dockerhub", "doggos", "prioritise"]
 }
