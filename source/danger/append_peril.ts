@@ -75,9 +75,11 @@ export const perilObjectForInstallation = async (
 
   const getEnvVars = async () => {
     const db = getDB() as MongoDB
+    console.log("OK")
     const dbInstallation = await db.getInstallation(installation.iID)
     return dbInstallation ? dbInstallation.envVars || {} : {}
   }
+  console.log("self: ", isSelfHosted)
 
   return {
     ...peril,

@@ -95,7 +95,7 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
 
   const perilGHAPI = githubAPIForCommentable(token, pr.base.repo.full_name, pr.number)
   const perilGH = GitHub(perilGHAPI)
-
+ 
   const platform = getPerilPlatformForDSL(RunType.pr, perilGH, payload.dsl)
   const exec = await executorForInstallation(platform, inlineRunner)
 

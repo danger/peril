@@ -20,9 +20,7 @@ export interface PerilRunnerObject {
   /** DSL type */
   dslType: "pr" | "run"
   /** Optional Peril settings? (think like task) */
-  // TODO: Make a PerilJSONDSL
   peril: any
-  // TODO: Generate a UUID and then sign with JWT for security?
 }
 
 // You can fake this by doing something like:

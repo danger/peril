@@ -53,3 +53,5 @@ export const getDB = (): MockDB => {
 
   return perTestFileMock
 }
+
+export const isSelfHosted = true
