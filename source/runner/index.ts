@@ -3,6 +3,7 @@ import logger from "../logger"
 import { run } from "./run"
 
 logger.info("☢️")
+logger.info(JSON.stringify(process.env))
 
 try {
   // Provide a timeout mechanism for the STDIN from the hyper func host
