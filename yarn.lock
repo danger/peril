@@ -17,9 +17,22 @@
     core-js "^2.5.3"
     regenerator-runtime "^0.11.1"
 
-"@octokit/rest@^15.5.0", "@octokit/rest@^15.6.0":
+"@octokit/rest@^15.5.0":
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-15.6.0.tgz#2d4a9f9efd38513b606f3192d91bac216c1c6d94"
+  dependencies:
+    before-after-hook "^1.1.0"
+    btoa-lite "^1.0.0"
+    debug "^3.1.0"
+    http-proxy-agent "^2.1.0"
+    https-proxy-agent "^2.2.0"
+    lodash "^4.17.4"
+    node-fetch "^2.1.1"
+    url-template "^2.0.8"
+
+"@octokit/rest@^15.6.1":
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-15.6.1.tgz#e19e745a8df4f30baba3d7659fb350d97991528b"
   dependencies:
     before-after-hook "^1.1.0"
     btoa-lite "^1.0.0"
