@@ -43,11 +43,11 @@ it("runs an Dangerfile for a PR with a local", async () => {
     body
   )[0]
 
-  await runPRRun(run, settings, "token", body.pull_request)
+  await runPRRun([run], settings, "token", body.pull_request)
   const call = mockRunner.mock.calls[0]
-
-  expect(call[0]).toEqual("fail('dangerfile')")
-  expect(call[1]).toEqual("dangerfile.pr")
+  expect(mockRunner).toBeCalled()
+  expect(call[0]).toEqual(["fail('dangerfile')"])
+  expect(call[1]).toEqual(["dangerfile.pr"])
 })
 
 describe("when someone edits the dangerfile", () => {
@@ -55,7 +55,7 @@ describe("when someone edits the dangerfile", () => {
     mockRunner.mockReset()
   })
 
-  it("fails a run when a Dangerfile is edited by somone without access", async () => {
+  it("fails a run when a Dangerfile is edited by someone without access", async () => {
     mockContents.mockImplementationOnce(() => Promise.resolve("// safe"))
     mockContents.mockImplementationOnce(() => Promise.resolve("// unsafe"))
     mockUserRepoAccess.mockImplementationOnce(() => Promise.resolve(false))
@@ -72,12 +72,12 @@ describe("when someone edits the dangerfile", () => {
       body
     )[0]
 
-    const results = await runPRRun(run, settings, "token", body.pull_request)
+    const results = await runPRRun([run], settings, "token", body.pull_request)
     expect(mockRunner).not.toBeCalled()
     expect(results!.messages[0].message).toContain("Not running Danger rules")
   })
 
-  it("runs a Dangerfile when edited by somone with access", async () => {
+  it("runs a Dangerfile when edited by someone with access", async () => {
     mockContents.mockImplementationOnce(() => Promise.resolve("// safe"))
     mockContents.mockImplementationOnce(() => Promise.resolve("// unsafe"))
     mockUserRepoAccess.mockImplementationOnce(() => Promise.resolve(true))
@@ -94,7 +94,7 @@ describe("when someone edits the dangerfile", () => {
       body
     )[0]
 
-    await runPRRun(run, settings, "token", body.pull_request)
+    await runPRRun([run], settings, "token", body.pull_request)
     expect(mockRunner).toBeCalled()
   })
 })

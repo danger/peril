@@ -37,8 +37,8 @@ describe("evaling", () => {
     const executor = executorForInstallation(platform, vm2)
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_empty.ts`, "utf8")
     const results = await runDangerAgainstFileInline(
-      `${dangerfilesFixtures}/dangerfile_empty.ts`,
-      contents,
+      [`${dangerfilesFixtures}/dangerfile_empty.ts`],
+      [contents],
       installationSettings,
       executor,
       peril,
@@ -59,8 +59,8 @@ describe("evaling", () => {
     const contents = readFileSync(path, "utf8")
 
     const results = await runDangerAgainstFileInline(
-      path,
-      contents,
+      [path],
+      [contents],
       installationSettings,
       executor,
       peril,
@@ -78,8 +78,8 @@ describe("evaling", () => {
 
       const contents = readFileSync(path, "utf8")
       const results = await runDangerAgainstFileInline(
-        path,
-        contents,
+        [path],
+        [contents],
         installationSettings,
         executor,
         peril,
@@ -96,8 +96,8 @@ describe("evaling", () => {
       const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_import_module.ts`, "utf8")
 
       const results = await runDangerAgainstFileInline(
-        localDangerfile,
-        contents,
+        [localDangerfile],
+        [contents],
         installationSettings,
         executor,
         peril,
@@ -115,8 +115,8 @@ describe("evaling", () => {
     const contents = readFileSync(`${dangerfilesFixtures}/dangerfile_peril_obj.ts`, "utf8")
 
     const results = await runDangerAgainstFileInline(
-      localDangerfile,
-      contents,
+      [localDangerfile],
+      [contents],
       installationSettings,
       executor,
       peril,
@@ -134,8 +134,8 @@ describe("evaling", () => {
 
     const contents = readFileSync(path, "utf8")
     const results = await runDangerAgainstFileInline(
-      path,
-      contents,
+      [path],
+      [contents],
       installationSettings,
       executor,
       peril,

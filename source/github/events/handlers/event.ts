@@ -7,17 +7,21 @@ import { GitHubRunSettings } from "../github_runner"
 import { githubAPIForCommentable } from "../utils/commenting"
 
 export const runEventRun = async (
-  run: DangerRun,
+  runs: DangerRun[],
   settings: GitHubRunSettings,
   token: string,
   dangerDSL: any
 ): Promise<DangerResults | null> => {
-  const repoForDangerfile = run.repoSlug || (dangerDSL.repository && dangerDSL.repository.full_name)
+  if (!runs.length) {
+    return null
+  }
+
+  const repoForDangerfile = runs[0].repoSlug || (dangerDSL.repository && dangerDSL.repository.full_name)
   if (!repoForDangerfile) {
     return null
   }
   // Can we actually provide feedback on this event?
-  const supportsGithubCommentAPIs = run.feedback === RunFeedback.commentable
+  const supportsGithubCommentAPIs = runs[0].feedback === RunFeedback.commentable
 
   // Do we need an authenticated Danger GitHubAPI instance so we
   // can leave feedback on an issue?
@@ -26,7 +30,11 @@ export const runEventRun = async (
     githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
   }
 
-  const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, run.branch)
+  const contents: string[] = []
+  for (const run of runs) {
+    const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, run.branch)
+    contents.push(headDangerfile)
+  }
 
   const installationSettings = {
     iID: settings.installationID,
@@ -34,10 +42,10 @@ export const runEventRun = async (
   }
 
   const results = await runDangerForInstallation(
-    headDangerfile,
-    run.referenceString,
+    contents,
+    runs.map(r => r.referenceString),
     githubAPI,
-    run.dslType,
+    runs[0].dslType,
     installationSettings,
     { dsl: { github: dangerDSL }, webhook: dangerDSL }
   )

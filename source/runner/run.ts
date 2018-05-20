@@ -43,7 +43,7 @@ export const run = async (stdin: string) => {
     return
   }
 
-  logger.info(`Started run for ${input.path}`)
+  logger.info(`Started run for ${input.paths.join(", ")}`)
   const installation = input.installation
 
   // Validate the JSON
@@ -79,16 +79,26 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
   // Attach Peril + the octokit API to the DSL
   await appendPerilContextToDSL(installation.iID, token, context, peril)
 
-  const rep = dangerRepresentationForPath(input.path)
-  if (!rep.repoSlug) {
-    logger.error(`No repo slug in ${input.path} given for event based run, which is not supported yet`)
-    return
+  for (const path of input.paths) {
+    const rep = dangerRepresentationForPath(path)
+    if (!rep.repoSlug) {
+      logger.error(`No repo slug in ${path} given for event based run, which is not supported yet`)
+      return
+    }
   }
 
-  const dangerfileContent = await getGitHubFileContentsFromLocation(token, rep, rep.repoSlug!)
+  // Start getting the details for what code to eval.
+  const paths = input.paths.map(p => dangerRepresentationForPath(p).dangerfilePath)
+  // Grab all the contents before to pass into the runner
+  const contents: string[] = []
+  for (const path of input.paths) {
+    const rep = dangerRepresentationForPath(path)
+    const dangerfileContent = await getGitHubFileContentsFromLocation(token, rep, rep.repoSlug!)
+    contents.push(dangerfileContent)
+  }
 
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
-  await inlineRunner.runDangerfileEnvironment([rep.dangerfilePath], [dangerfileContent], runtimeEnv, payload.webhook)
+  await inlineRunner.runDangerfileEnvironment(paths, contents, runtimeEnv, payload.webhook)
 }
 
 const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerObject, payload: ValidatedPayload) => {
@@ -106,19 +116,29 @@ const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerOb
   const platform = getPerilPlatformForDSL(RunType.pr, perilGH, payload.dsl)
   const exec = await executorForInstallation(platform, inlineRunner)
 
+  // Set up the Danger runtime env
   const runtimeDSL = await jsonToDSL(payload.dsl)
   const context = contextForDanger(runtimeDSL)
   const peril = await perilObjectForInstallation(installation, process.env, input.peril)
   await appendPerilContextToDSL(installation.iID, token, context, peril)
 
-  const rep = dangerRepresentationForPath(input.path)
+  // Start getting the details for what code to eval.
+  const paths = input.paths.map(p => dangerRepresentationForPath(p).dangerfilePath)
+  // Grab all the contents before to pass into the runner
+  const contents: string[] = []
+  for (const path of input.paths) {
+    const rep = dangerRepresentationForPath(path)
 
-  const defaultRepoSlug = payload.dsl.github.pr.base.repo.full_name
-  const dangerfileContent = await getGitHubFileContentsFromLocation(token, rep, defaultRepoSlug)
+    const defaultRepoSlug = payload.dsl.github.pr.base.repo.full_name
+    const dangerfileContent = await getGitHubFileContentsFromLocation(token, rep, defaultRepoSlug)
+    contents.push(dangerfileContent)
+  }
 
+  // Run it
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
-  const results = await inlineRunner.runDangerfileEnvironment([rep.dangerfilePath], [dangerfileContent], runtimeEnv)
+  const results = await inlineRunner.runDangerfileEnvironment(paths, contents, runtimeEnv)
 
+  // Give a small summary
   logger.info(
     `f: ${results.fails.length} w: ${results.warnings.length} m: ${results.messages.length} md: ${
       results.markdowns.length

@@ -25,8 +25,8 @@ it("runs a dangerfile", async () => {
   await runJob(installation, "danger/danger-repo@hello.ts")
 
   expect(runDangerForInstallation).toBeCalledWith(
-    "file",
-    "hello.ts",
+    ["file"],
+    ["hello.ts"],
     null,
     RunType.import,
     installation,
