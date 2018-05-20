@@ -3,7 +3,9 @@ FROM node:9.11-slim
 ADD . /app
 WORKDIR /app
 
-ENV COMMIT ${SOURCE_COMMIT}
+ARG SOURCE_COMMIT
+ENV SOURCE_COMMIT $SOURCE_COMMIT
+
 
 # This will also trigger the build process
 RUN yarn install

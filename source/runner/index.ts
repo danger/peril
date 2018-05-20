@@ -26,12 +26,10 @@ import { run } from "./run"
 // }
 
 // Log that the process has started, and on what commit
-logger.info(`☢️ ${process.env.COMMIT}`)
+logger.info(`☢️ ${process.env.SOURCE_COMMIT}`)
 
 // Empty the auth ENV VAR before running code
 process.env.authorization = ""
-
-logger.info(JSON.stringify(process.env))
 
 try {
   // Provide a timeout mechanism for the STDIN from the hyper func host
