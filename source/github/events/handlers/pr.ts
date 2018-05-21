@@ -13,6 +13,10 @@ export const runPRRun = async (
   token: string,
   pr: Pull_request
 ): Promise<DangerResults | null> => {
+  if (!runs.length) {
+    return null
+  }
+
   if (!settings.repoName) {
     console.error("An event without a repo name was passed to runRPRun") // tslint:disable-line
     return null
@@ -30,7 +34,7 @@ export const runPRRun = async (
 
   const githubAPI = githubAPIForCommentable(token, settings.repoName, settings.commentableID)
 
-  const errorResults = validateRuns(runs, settings, token, pr)
+  const errorResults = await validateRuns(runs, settings, token, pr)
   if (errorResults) {
     return errorResults
   }

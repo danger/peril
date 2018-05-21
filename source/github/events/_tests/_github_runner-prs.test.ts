@@ -27,7 +27,9 @@ const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, f
 
 jest.mock("../createPRDSL", () => ({ createPRJSONDSL: () => Promise.resolve({}) }))
 
-it("runs an Dangerfile for a PR with a local", async () => {
+it("runs a Dangerfile for a PR with a local", async () => {
+  mockContents.mockImplementationOnce(() => Promise.resolve("fail('dangerfile')"))
+  mockContents.mockImplementationOnce(() => Promise.resolve("fail('dangerfile')"))
   mockContents.mockImplementationOnce(() => Promise.resolve("fail('dangerfile')"))
   mockContents.mockImplementationOnce(() => Promise.resolve("fail('dangerfile')"))
 
