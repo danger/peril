@@ -1,3 +1,7 @@
+## 2018 - May 20
+
+* Uses checks now - orta
+
 ## 2018 - May 17
 
 * Merged in Danger JS changes for multiple execution runs, and checks instead of comments - orta

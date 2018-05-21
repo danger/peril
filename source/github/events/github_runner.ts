@@ -174,18 +174,14 @@ export const runEverything = async (
   const eventRuns = runs.filter(r => r.dslType === RunType.import)
 
   // Loop through all PRs, which are require difference DSL logic compared to simple GH webhook events
-  for (const run of prRuns) {
-    const results = await runPRRun(run, settings, token, req.body.pull_request || req.body)
-    if (results) {
-      allResults.push(results)
-    }
+  const prResults = await runPRRun(prRuns, settings, token, req.body.pull_request || req.body)
+  if (prResults) {
+    allResults.push(prResults)
   }
 
-  for (const run of eventRuns) {
-    const results = await runEventRun(run, settings, token, req.body)
-    if (results) {
-      allResults.push(results)
-    }
+  const eventResults = await runEventRun(eventRuns, settings, token, req.body)
+  if (eventResults) {
+    allResults.push(eventResults)
   }
 
   const commentableRun = runs.find(r => r.feedback === RunFeedback.commentable)

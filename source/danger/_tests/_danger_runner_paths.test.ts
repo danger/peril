@@ -29,7 +29,7 @@ jest.mock("../../api/github", () => ({
 
 describe("paths", () => {
   it("passes an absolute string to runDangerfileEnvironment", async () => {
-    await runDangerForInstallation(`dangerfile_empty.ts`, "", null, RunType.pr, installationSettings, blankPayload)
+    await runDangerForInstallation([`dangerfile_empty.ts`], [""], null, RunType.pr, installationSettings, blankPayload)
 
     const paths = mockRunDangerfileEnvironment.mock.calls[0][0]
     expect(paths[0].startsWith("/")).toBeTruthy()

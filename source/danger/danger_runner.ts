@@ -42,8 +42,8 @@ export interface ValidatedPayload {
  * The single function to run danger against an installation
  */
 export async function runDangerForInstallation(
-  contents: string,
-  reference: DangerfileReferenceString,
+  contents: string[],
+  references: DangerfileReferenceString[],
   api: GitHubAPI | null,
   type: RunType,
   installation: InstallationToRun,
@@ -59,16 +59,16 @@ export async function runDangerForInstallation(
   const exec = await executorForInstallation(platform, vm2)
 
   const randomName = Math.random().toString(36)
-  const localDangerfilePath = path.resolve("./" + "danger-" + randomName + path.extname(reference))
+  const localDangerfilePaths = references.map(ref => path.resolve("./" + "danger-" + randomName + path.extname(ref)))
 
   // Allow custom peril funcs to come from the task/scheduler DSL
   const perilFromRunOrTask = DSL && (DSL as any).peril
   const peril = await perilObjectForInstallation(installation, process.env, perilFromRunOrTask)
 
   if (HYPER_ACCESS_KEY) {
-    return await triggerSandboxDangerRun(type, installation, reference, payload, peril)
+    return await triggerSandboxDangerRun(type, installation, references, payload, peril)
   } else {
-    return await runDangerAgainstFileInline(localDangerfilePath, contents, installation, exec, peril, payload)
+    return await runDangerAgainstFileInline(localDangerfilePaths, contents, installation, exec, peril, payload)
   }
 }
 
@@ -76,8 +76,8 @@ export async function runDangerForInstallation(
  * Sets up the custom peril environment and runs danger against a local file
  */
 export async function runDangerAgainstFileInline(
-  filepath: string,
-  contents: string,
+  filepath: string[],
+  contents: string[],
   installation: InstallationToRun,
   exec: Executor,
   peril: PerilDSL,
@@ -95,9 +95,9 @@ export async function runDangerAgainstFileInline(
   let results: DangerResults
 
   try {
-    results = await exec.runner.runDangerfileEnvironment([filepath], [contents], runtimeEnv, payload.webhook)
+    results = await exec.runner.runDangerfileEnvironment(filepath, contents, runtimeEnv, payload.webhook)
   } catch (error) {
-    results = resultsForCaughtError(filepath, contents, error)
+    results = resultsForCaughtError(filepath.join(","), contents.join("\n---\n"), error)
   }
   return results
 }

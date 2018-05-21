@@ -45,8 +45,8 @@ describe("evaling an issue", () => {
     warn("Issue number: " + danger.github.issue.id)
     `
     const results = await runDangerAgainstFileInline(
-      `${dangerfilesFixtures}/dangerfile_issue.ts`,
-      dangerfile,
+      [`${dangerfilesFixtures}/dangerfile_issue.ts`],
+      [dangerfile],
       installationSettings,
       executor,
       peril,

@@ -14,7 +14,7 @@ export interface PerilRunnerObject {
   /** The DSL for JSON, could be a DangerDSLJSON type or the raw webhook */
   payload: Payload
   /** The reference for the initial dangerfile */
-  path: DangerfileReferenceString
+  paths: DangerfileReferenceString[]
   /** Installation number */
   installation: InstallationToRun
   /** DSL type */
@@ -34,7 +34,7 @@ export interface PerilRunnerObject {
 export const triggerSandboxDangerRun = async (
   type: RunType,
   installation: InstallationToRun,
-  path: DangerfileReferenceString,
+  paths: DangerfileReferenceString[],
   payload: Payload,
   peril: any
 ) => {
@@ -58,7 +58,7 @@ export const triggerSandboxDangerRun = async (
     payload,
     dslType: type === RunType.pr ? "pr" : "run",
     peril,
-    path,
+    paths,
   }
 
   const call = await callHyperFunction(stdOUT)
