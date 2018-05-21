@@ -17,3 +17,10 @@ if (!readFileSync("Dockerfile.runner", "utf8").includes("node:" + nodeVersion)) 
 if (!readFileSync(".travis.yml", "utf8").includes("node_js: " + nodeVersion)) {
   warn("The `.travis.yml` does not have the same version of node in it")
 }
+
+if (
+  danger.git.modified_files.includes("source/db/GitHubRepoSettings.ts") &&
+  danger.git.modified_files.includes("source/db/index.ts")
+) {
+  warn("You may need to run `yarn generate:types:schema`.")
+}

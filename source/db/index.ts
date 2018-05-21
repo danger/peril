@@ -29,14 +29,7 @@ export interface GitHubInstallation extends PerilInstallationSettings {
   envVars?: any
 }
 
-/** An individual integration of Danger via Peril, this is like the org */
-export interface PerilInstallationSettings {
-  /**
-   * The ID Integration, this is used when talking to GitHub mainly, but is used
-   * as a unique ID in our db
-   */
-  iID: number
-
+export interface PerilSettingsRepoJSON {
   /**
    * In our DB this is represented as a JSON type, so you should anticipate have settings
    * as a nullable type. These are the entire installation settings.
@@ -91,6 +84,15 @@ export interface PerilInstallationSettings {
    *
    */
   repos: UniqueRepoRuleset
+}
+
+/** An individual integration of Danger via Peril, this is like the org */
+export interface PerilInstallationSettings extends PerilSettingsRepoJSON {
+  /**
+   * The ID Integration, this is used when talking to GitHub mainly, but is used
+   * as a unique ID in our db
+   */
+  iID: number
 
   /**
    * The path to the settings repo and json file
