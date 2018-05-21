@@ -4,11 +4,10 @@ cache: yarn
 
 script:
   - yarn test
-  - yarn docker:build:site
   - yarn docker:build:runner
 
 after_success:
-- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && scripts/deploy_staging.sh
+  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && scripts/deploy_staging.sh
 
 env:
   global:

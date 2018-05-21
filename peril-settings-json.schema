@@ -1,0 +1,77 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "GitHubInstallationSettings": {
+            "properties": {
+                "env_vars": {
+                    "description": "An array of allowed ENV vars which are passed into Dangerfiles.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "ignored_repos": {
+                    "description": "An array of repos that should not run any Peril dangerfiles. This is so that you can\nturn on Peril for an entire org, and just make the occasional edge case.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "modules": {
+                    "description": "An array of modules for Peril to install, requires a re-deploy of the server to update.\nThey will be `yarn install`'d on the deploy, and available for Dangerfiles.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "RunnerRuleset": {
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": "object"
+        },
+        "UniqueRepoRuleset": {
+            "additionalProperties": {
+                "$ref": "#/definitions/RunnerRuleset"
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "repos": {
+            "$ref": "#/definitions/UniqueRepoRuleset",
+            "description": "A set of repos and their additional event hooks, these are\nin addition to the ones provided by `\"rules\"` which are applied\nto every repo.\n\n     \"repos\" : {\n       \"orta/ORStackView\": {\n          \"issue.created\": \"orta/peril@lock_issues.ts\"\n       }\n     }"
+        },
+        "rules": {
+            "$ref": "#/definitions/RunnerRuleset",
+            "description": "Having rules in here would mean that it would happen on _any_ event, another JSON type in the DB"
+        },
+        "scheduler": {
+            "$ref": "#/definitions/RunnerRuleset",
+            "description": "Scheduled tasks to run using a cron-like syntax.\n\nThis uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The\nobject is similar to the rules section, in that you define a cron-string with the following format:\n\n    *    *    *    *    *    *\n    ┬    ┬    ┬    ┬    ┬    ┬\n    │    │    │    │    │    |\n    │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)\n    │    │    │    │    └───── month (1 - 12)\n    │    │    │    └────────── day of month (1 - 31)\n    │    │    └─────────────── hour (0 - 23)\n    │    └──────────────────── minute (0 - 59)\n    └───────────────────────── second (0 - 59, OPTIONAL)\n\nWhich would look something like:\n\n    \"scheduler\": {\n      \"0 0 12 * * ?\": \"schedule/daily_at_twelve.ts\",\n      \"0 9 * * 1-5\": \"schedule/weekday_wakeup_email.ts\"\n    }\n\nin practice. There's a lot of great resources on the net showing the general syntax."
+        },
+        "settings": {
+            "$ref": "#/definitions/GitHubInstallationSettings",
+            "description": "In our DB this is represented as a JSON type, so you should anticipate have settings\nas a nullable type. These are the entire installation settings."
+        },
+        "tasks": {
+            "$ref": "#/definitions/RunnerRuleset",
+            "description": "Individual tasks which a Dangerfile can schedule against"
+        }
+    },
+    "type": "object"
+}
+
