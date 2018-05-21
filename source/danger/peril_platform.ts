@@ -1,6 +1,10 @@
 import { GitHubUtilsDSL } from "danger/distribution/dsl/GitHubDSL"
 
 import { GitHubType } from "danger/distribution/platforms/GitHub"
+import {
+  createUpdatedIssueWithIDGenerator,
+  fileContentsGenerator,
+} from "danger/distribution/platforms/github/GitHubUtils"
 import { Platform } from "danger/distribution/platforms/platform"
 import { RunType } from "./danger_run"
 
@@ -13,10 +17,14 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
   if (type === RunType.pr && github) {
     return github
   } else {
+    const repoSlug = reposlugFromEvent(githubEvent) || "danger/peril"
+    const ref = refFromEvent(githubEvent)
+
     // This bit of faffing ensures that as the gh utils expands we get
     // compiler errors in peril
     const utils: GitHubUtilsDSL | null = github && {
-      fileContents: github && github.api.fileContents,
+      fileContents: fileContentsGenerator(github.api.getExternalAPI(), repoSlug, ref),
+      createUpdatedIssueWithID: createUpdatedIssueWithIDGenerator(github.api.getExternalAPI()),
       // Not sure what this looks like for non-PR events
       fileLinks: (paths, _, __, ___) => paths.join(", "),
     }
@@ -58,4 +66,25 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
     }
     return platform
   }
+}
+
+// Try figure the repo by guessing from the json
+const reposlugFromEvent = (event: any): string | null => {
+  if (event.repository && event.repository.full_name) {
+    return event.repository.full_name
+  }
+  return null
+}
+
+// Try and figure out a sha by pulling out some json
+const refFromEvent = (event: any): string => {
+  // https://developer.github.com/v3/activity/events/types/#pushevent
+  if (event.ref) {
+    return event.ref
+  }
+  // https://developer.github.com/v3/activity/events/types/#statusevent
+  if (event.sha) {
+    return event.sha
+  }
+  return "master"
 }

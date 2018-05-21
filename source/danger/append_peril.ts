@@ -50,7 +50,9 @@ export async function appendPerilContextToDSL(
     // @ts-ignore - .github is readonly according to the types, but we have to have something here
     sandbox.danger.github = sandbox.danger.github || ({} as any)
     sandbox.danger.github.api = await octokitAPIForPeril(installationID, authToken)
-    sandbox.danger.github.utils = GitHubUtils(sandbox.danger.github.pr, sandbox.danger.github.api)
+    if (sandbox.danger.github.pr && sandbox.danger.github.api) {
+      sandbox.danger.github.utils = GitHubUtils(sandbox.danger.github.pr, sandbox.danger.github.api)
+    }
   }
 
   const anySandbox = sandbox as any
@@ -82,7 +84,6 @@ export const perilObjectForInstallation = async (
   return {
     ...peril,
     env: isSelfHosted ? envVarsForSelfHosted() : await getEnvVars(),
-
     runTask: generateTaskSchedulerForInstallation(installation.iID),
   }
 }
