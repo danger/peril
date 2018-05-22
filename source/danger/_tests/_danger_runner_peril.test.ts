@@ -1,4 +1,5 @@
 import { appendPerilContextToDSL } from "../../danger/append_peril"
+import { stubSandbox } from "./sandbox_stub"
 
 const mockToken = "1234535345"
 jest.mock("../../api/github", () => ({
@@ -6,7 +7,7 @@ jest.mock("../../api/github", () => ({
 }))
 
 it("adds peril to the DSL", async () => {
-  const sandbox = { danger: { github: {} } } as any
+  const sandbox = stubSandbox()
   const perilDSL = { perilDSL: true } as any
 
   await appendPerilContextToDSL(123, undefined, sandbox, perilDSL)
@@ -14,7 +15,7 @@ it("adds peril to the DSL", async () => {
 })
 
 it("adds a GH API object to the DSL", async () => {
-  const sandbox = { danger: { github: {} } } as any
+  const sandbox = stubSandbox()
   const perilDSL = { perilDSL: true } as any
 
   await appendPerilContextToDSL(123, undefined, sandbox, perilDSL)
