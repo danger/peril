@@ -6,6 +6,7 @@ import {
   wipeAllRecordedWebhooks,
 } from "../../../plugins/utils/recordWebhookWithRequest"
 import { sendWebhookThroughGitHubRunner } from "../../../plugins/utils/sendWebhookThroughGitHubRunner"
+import { runTaskForInstallation } from "../../../tasks/startTaskScheduler"
 import { GraphQLContext } from "../../api"
 import { getDetailsFromPerilJWT } from "../../auth/generate"
 import { authD } from "../utils/auth"
@@ -93,5 +94,30 @@ export const mutations = {
     // Just update the env vars
     await db.saveInstallation({ iID: opts.iID, envVars })
     return envVars
+  }),
+
+  runTask: authD(async (_: any, params: any, context: GraphQLContext) => {
+    const opts = params as { iID: number; task: string; data: any }
+    const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
+    const installationID = String(params.iID)
+
+    // Check the installation's ID is included inside the signed JWT, to verify access
+    if (!decodedJWT.iss.includes(installationID)) {
+      throw new Error(`You don't have access to this installation`)
+    }
+
+    const db = getDB() as MongoDB
+    const installation = await db.getInstallation(opts.iID)
+    if (!installation) {
+      throw new Error(`Installation not found`)
+    }
+
+    if (!installation.tasks[opts.task]) {
+      throw new Error(`Task not found on installation`)
+    }
+
+    await runTaskForInstallation(installation, opts.task, opts.data || {})
+
+    return { success: true }
   }),
 }

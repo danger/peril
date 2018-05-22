@@ -58,16 +58,18 @@ export interface PerilSettingsRepoJSON {
    * Which would look something like:
    *
    *    "scheduler": {
-   *      "0 0 12 * * ?": "schedule/daily_at_twelve.ts",
-   *      "0 9 * * 1-5": "schedule/weekday_wakeup_email.ts"
+   *      "0 0 12 * * ?": "daily_at_twelve",
+   *      "0 9 * * 1-5": "weekday_wakeup_email"
    *    }
    *
-   * in practice. There's a lot of great resources on the net showing the general syntax.
+   * in practice. There's a lot of great resources on the net showing the general syntax. The values
+   * are tasks which are defined in the tasks object.
    */
-  scheduler: RunnerRuleset
+  scheduler: TaskObject
 
   /**
-   * Individual tasks which a Dangerfile can schedule against
+   * Individual tasks which a Peril can schedule, either via the Dangerfile API or via the
+   * scheduler object below.
    */
   tasks: RunnerRuleset
 
@@ -106,6 +108,10 @@ export interface PerilInstallationSettings extends PerilSettingsRepoJSON {
 
 export interface UniqueRepoRuleset {
   [name: string]: RunnerRuleset
+}
+
+export interface TaskObject {
+  [name: string]: string
 }
 
 export interface RunnerRuleset {
