@@ -243,36 +243,6 @@ Not all events have something they can comment on, only `pull_request` and `issu
 `message` won't work. In practice we've used a slack webhook to pass information back to our dev channel. It's just
 JavaScript, so you can use any module you want.
 
-### Scheduler
-
-Scheduled tasks to run using a cron-like syntax.
-
-This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The object is similar to the
-rules section, in that you define a cron-string with the following format:
-
-```
-    *    *    *    *    *    *
-    ┬    ┬    ┬    ┬    ┬    ┬
-    │    │    │    │    │    |
-    │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
-    │    │    │    │    └───── month (1 - 12)
-    │    │    │    └────────── day of month (1 - 31)
-    │    │    └─────────────── hour (0 - 23)
-    │    └──────────────────── minute (0 - 59)
-    └───────────────────────── second (0 - 59, OPTIONAL)
-```
-
-Which, inside the Peril settings, would look something like:
-
-```json
-    "scheduler": {
-      "0 0 12 * * ?": "schedule/daily_at_twelve.ts",
-      "0 9 * * 1-5": "schedule/weekday_wakeup_email.ts"
-    }
-```
-
-There's a lot of great resources on the net showing the general syntax for the cron format.
-
 ### Tasks
 
 If you have Peril hooked up to a Mongo DB instance (via the ENV var `MONGODB_URI` (there's a free heroku add-on which
@@ -287,7 +257,7 @@ This works by defining tasks in your `peril.settings.json`:
   },
 ```
 
-Which maps a task name to a file in a repo. You schedule tasks using the Peril object inside a Dangerfile:
+Which maps a task name to a file in a repo. You schedule tasks either by using the Peril object inside a Dangerfile:
 
 ```ts
 import { danger, peril } from "danger"
@@ -312,7 +282,9 @@ This schedules three jobs using [agenda](https://github.com/agenda/agenda) under
 strings based on [human-interval](https://github.com/agenda/human-interval), then data which will be passed through to
 your job later.
 
-When your task starts running, you can access that data via `peril.data`:
+Or you can schedule tasks via the peril settings scheduler below.
+
+When your task starts running, you can access data provided via the dangerfile API via `peril.data`:
 
 ```ts
 import { peril } from "danger"
@@ -322,6 +294,37 @@ const url = peril.env.SLACK_RFC_WEBHOOK_URL || ""
 const webhook = new IncomingWebhook(url)
 webhook.send(peril.data)
 ```
+
+### Scheduler
+
+Scheduled tasks to run using a cron-like syntax.
+
+This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The object is similar to the
+rules section, in that you define a cron-string with the following format:
+
+```
+    *    *    *    *    *    *
+    ┬    ┬    ┬    ┬    ┬    ┬
+    │    │    │    │    │    |
+    │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+    │    │    │    │    └───── month (1 - 12)
+    │    │    │    └────────── day of month (1 - 31)
+    │    │    └─────────────── hour (0 - 23)
+    │    └──────────────────── minute (0 - 59)
+    └───────────────────────── second (0 - 59, OPTIONAL)
+```
+
+Which, inside the Peril settings, would look something like:
+
+```json
+    "scheduler": {
+      "0 0 12 * * ?": "daily_at_twelve",
+      "0 9 * * 1-5": "weekday_wakeup_email"
+    }
+```
+
+There's a lot of great resources on the net showing the general syntax for the cron format. The right hand value should
+be the name of a task.
 
 ### Types
 

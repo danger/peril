@@ -130,6 +130,8 @@ const schemaSDL = gql`
     sendWebhookForInstallation(iID: Int!, eventID: String!): RecordedWebhook
     # Adds/edits/removes a new ENV var to an installation
     changeEnvVarForInstallation(iID: Int!, key: String!, value: String): JSON
+    # Trigger a named task from the installation's settings 
+    runTask(iID: Int!, task: String!, data: JSON): JSON
   }
 `
 
