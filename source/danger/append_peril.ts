@@ -7,6 +7,7 @@ import { DangerContext } from "danger/distribution/runner/Dangerfile"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { getDB, isSelfHosted } from "../db/getDB"
 import { MongoDB } from "../db/mongo"
+import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRun"
 import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import { InstallationToRun } from "./danger_runner"
 
@@ -69,7 +70,8 @@ export async function appendPerilContextToDSL(
 export const perilObjectForInstallation = async (
   installation: InstallationToRun,
   environment: any,
-  peril: any | undefined
+  peril: any | undefined,
+  sandboxSettings?: PerilRunnerBootstrapJSON
 ): Promise<PerilDSL> => {
   const envVarsForSelfHosted = () =>
     installation.settings.env_vars &&
@@ -84,6 +86,6 @@ export const perilObjectForInstallation = async (
   return {
     ...peril,
     env: isSelfHosted ? envVarsForSelfHosted() : await getEnvVars(),
-    runTask: generateTaskSchedulerForInstallation(installation.iID),
+    runTask: generateTaskSchedulerForInstallation(installation.iID, sandboxSettings),
   }
 }

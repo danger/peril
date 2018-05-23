@@ -24,7 +24,7 @@ import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { githubAPIForCommentable } from "../github/events/utils/commenting"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import logger from "../logger"
-import { PerilRunnerObject } from "./triggerSandboxRun"
+import { PerilRunnerBootstrapJSON } from "./triggerSandboxRun"
 
 let runtimeEnv = {} as any
 
@@ -35,9 +35,9 @@ export const run = async (stdin: string) => {
   }
 
   // Get STDIN and convert it into a Peril obj
-  let input: PerilRunnerObject
+  let input: PerilRunnerBootstrapJSON
   try {
-    input = JSON.parse(stdin) as PerilRunnerObject
+    input = JSON.parse(stdin) as PerilRunnerBootstrapJSON
   } catch (error) {
     logger.error("STDIN was not JSON: ", stdin)
     return
@@ -70,7 +70,11 @@ export const run = async (stdin: string) => {
 // There's a lot of redundancy between these, but at least they're somewhat separated in their mental
 // model, used to be much harder to keep track of their differences
 
-const runDangerEvent = async (installation: InstallationToRun, input: PerilRunnerObject, payload: ValidatedPayload) => {
+const runDangerEvent = async (
+  installation: InstallationToRun,
+  input: PerilRunnerBootstrapJSON,
+  payload: ValidatedPayload
+) => {
   // Pull out the metadata from the JSON to load up the danger process
   const token = payload.dsl.settings.github.accessToken
   const context = contextForDanger({ github: payload.dsl.github } as any)
@@ -101,7 +105,11 @@ const runDangerEvent = async (installation: InstallationToRun, input: PerilRunne
   await inlineRunner.runDangerfileEnvironment(paths, contents, runtimeEnv, payload.webhook)
 }
 
-const runDangerPR = async (installation: InstallationToRun, input: PerilRunnerObject, payload: ValidatedPayload) => {
+const runDangerPR = async (
+  installation: InstallationToRun,
+  input: PerilRunnerBootstrapJSON,
+  payload: ValidatedPayload
+) => {
   if (!payload.dsl.github) {
     logger.error("PR payload did not have a github")
     return

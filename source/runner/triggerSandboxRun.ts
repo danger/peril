@@ -1,6 +1,6 @@
 import logger from "../logger"
 
-import { HYPER_FUNC_NAME } from "../globals"
+import { HYPER_FUNC_NAME, PUBLIC_API_ROOT_URL } from "../globals"
 import { callHyperFunction } from "../runner/hyper-api"
 
 import { DangerfileReferenceString } from "../db/index"
@@ -8,9 +8,10 @@ import { DangerfileReferenceString } from "../db/index"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { RunType } from "../danger/danger_run"
 import { InstallationToRun, Payload } from "../danger/danger_runner"
+import { createPerilSandboxAPIJWT } from "./sandbox/jwt"
 
 // Sidenote: auth token is in  dsl.settings.github
-export interface PerilRunnerObject {
+export interface PerilRunnerBootstrapJSON {
   /** The DSL for JSON, could be a DangerDSLJSON type or the raw webhook */
   payload: Payload
   /** The reference for the initial dangerfile */
@@ -19,6 +20,10 @@ export interface PerilRunnerObject {
   installation: InstallationToRun
   /** DSL type */
   dslType: "pr" | "run"
+  /** A short-lived JWT that can be used to make API requests back to Peril */
+  perilJWT: string
+  /** The root address of the Peril server */
+  perilAPIRoot: string
   /** Optional Peril settings? (think like task) */
   // TODO: Make a PerilJSONDSL
   peril: any
@@ -53,11 +58,13 @@ export const triggerSandboxDangerRun = async (
 
   payload.dsl = DSL
 
-  const stdOUT: PerilRunnerObject = {
+  const stdOUT: PerilRunnerBootstrapJSON = {
     installation,
     payload,
     dslType: type === RunType.pr ? "pr" : "run",
     peril,
+    perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTasks"]),
+    perilAPIRoot: PUBLIC_API_ROOT_URL,
     paths,
   }
 
