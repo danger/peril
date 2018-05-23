@@ -6,7 +6,7 @@ import { fixturedAPI } from "../../api/_tests/fixtureAPI"
 import { executorForInstallation, runDangerAgainstFileInline } from "../danger_runner"
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
-const peril: PerilDSL = { env: {}, runTask: () => null }
+const peril: PerilDSL = { env: {}, runTask: async () => undefined }
 
 const blankPayload = {
   dsl: {

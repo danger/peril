@@ -1,5 +1,5 @@
 import { graphql } from "graphql"
-import { createPerilJWT } from "../../auth/generate"
+import { createPerilUserJWT } from "../../auth/generate"
 import { gql } from "../gql"
 import { schema } from "../index"
 
@@ -21,7 +21,7 @@ describe("simple queries", () => {
   `
 
   it("pulls user details out of the JWT", async () => {
-    const jwt = createPerilJWT({ name: "Orta", avatar_url: "hi" }, [123])
+    const jwt = createPerilUserJWT({ name: "Orta", avatar_url: "hi" }, [123])
     const result = await graphql(schema, queryMe, null, { jwt })
 
     expect(result).toEqual({ data: { me: { name: "Orta" } } })
@@ -68,7 +68,7 @@ describe("my installation queries", () => {
       generateInstallation({ iID: 123, login: "Test", perilSettingsJSONURL: "a/b@c.ts" }),
     ])
 
-    const jwt = createPerilJWT({ name: "Orta", avatar_url: "hi" }, [123])
+    const jwt = createPerilUserJWT({ name: "Orta", avatar_url: "hi" }, [123])
     const result = await graphql(schema, queryMyInstallations, null, { jwt })
 
     const response = { data: { me: { installations: { edges: [{ node: { login: "Test" } }] } } } }
@@ -80,7 +80,7 @@ describe("my installation queries", () => {
   it("doesn't include installations without perilSettingsJSON", async () => {
     mockDB.getInstallations.mockReturnValueOnce([generateInstallation({ iID: 1231, login: "Test" })])
 
-    const jwt = createPerilJWT({ name: "Orta", avatar_url: "hi" }, [123])
+    const jwt = createPerilUserJWT({ name: "Orta", avatar_url: "hi" }, [123])
     const result = await graphql(schema, queryMyInstallations, null, { jwt })
 
     const response = { data: { me: { installations: { edges: [] } } } }
@@ -92,7 +92,7 @@ describe("my installation queries", () => {
   it("doesn't include installations without perilSettingsJSON", async () => {
     mockDB.getInstallations.mockReturnValueOnce([generateInstallation({ iID: 1231, login: "Test" })])
 
-    const jwt = createPerilJWT({ name: "Orta", avatar_url: "hi" }, [123])
+    const jwt = createPerilUserJWT({ name: "Orta", avatar_url: "hi" }, [123])
     const result = await graphql(schema, queryMyUnfinishedInstallations, null, { jwt })
 
     const response = { data: { me: { installationsToSetUp: { edges: [{ node: { login: "Test" } }] } } } }
@@ -117,7 +117,7 @@ describe("an installation queries", () => {
       generateInstallation({ iID: 123, login: "Test", perilSettingsJSONURL: "a/b@c.ts" }),
     ])
 
-    const jwt = createPerilJWT({ name: "Orta", avatar_url: "hi" }, [123])
+    const jwt = createPerilUserJWT({ name: "Orta", avatar_url: "hi" }, [123])
     const result = await graphql(schema, queryInstallation(123), null, { jwt })
 
     const response = { data: { installation: { login: "Test" } } }
@@ -132,7 +132,7 @@ describe("an installation queries", () => {
       generateInstallation({ iID: 123, login: "Test", perilSettingsJSONURL: "a/b@c.ts" }),
     ])
 
-    const jwt = createPerilJWT({ name: "Orta", avatar_url: "hi" }, [123])
+    const jwt = createPerilUserJWT({ name: "Orta", avatar_url: "hi" }, [123])
     const result = await graphql(schema, queryInstallation(312), null, { jwt })
 
     const response = { data: { installation: null } }

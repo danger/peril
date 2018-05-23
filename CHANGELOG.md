@@ -1,3 +1,12 @@
+## 2018 - May 21
+
+* Adds a new mutation for scheduling a task from a sandboxed run, where it doesn't have access to the agenda runtime -
+  orta
+
+## 2018 - May 21
+
+* Adds a JSON schema for the settings json - orta
+
 ## 2018 - May 20
 
 * Uses checks now - orta

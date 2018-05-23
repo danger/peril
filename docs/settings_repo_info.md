@@ -1,7 +1,7 @@
 ## References
 
 * <https://github.com/danger/peril-settings>
-* <https://github.com/artsy/artsy-danger>
+* <https://github.com/artsy/peril-settings>
 * <https://github.com/CocoaPods/peril-settings>
 
 # Config JSON
@@ -263,18 +263,18 @@ Which maps a task name to a file in a repo. You schedule tasks either by using t
 import { danger, peril } from "danger"
 import { Issues } from "github-webhook-event-types"
 
-const gh = (danger.github as any) as Issues
-const issue = gh.issue
-
 const slackify = (text: string) => ({
   // generates a API slack compatible object, which is passed into the task
   // as `peril.data` later on.
 })
 
-if (issue.title.includes("RFC:") || issue.title.includes("[RFC]")) {
-  peril.runTask("slack-dev-channel", "in 5 minutes", slackify("🎉: A new RFC has been published."))
-  peril.runTask("slack-dev-channel", "in 3 days", slackify("🕰: A new RFC was published 3 days ago."))
-  peril.runTask("slack-dev-channel", "in 7 days", slackify("🕰: A new RFC is ready to be resolved."))
+export default async (webhook: Issues) => {
+  const issue = webhook.issue
+  if (issue.title.includes("RFC:") || issue.title.includes("[RFC]")) {
+    await peril.runTask("slack-dev-channel", "in 5 minutes", slackify("🎉: A new RFC has been published."))
+    await peril.runTask("slack-dev-channel", "in 3 days", slackify("🕰: A new RFC was published 3 days ago."))
+    await peril.runTask("slack-dev-channel", "in 7 days", slackify("🕰: A new RFC is ready to be resolved."))
+  }
 }
 ```
 
@@ -338,30 +338,32 @@ import { schedule, danger } from "danger"
 import { IncomingWebhook } from "@slack/client"
 import { Issues } from "github-webhook-event-types"
 
-declare const peril: any // danger/danger#351
-const gh = (danger.github as any) as Issues
-const issue = gh.issue
+export default async (webhook: Issues) => {
+  const issue = webhook.issue
 
-if (issue.title.includes("RFC:")) {
-  var url = peril.env.SLACK_RFC_WEBHOOK_URL || ""
-  var webhook = new IncomingWebhook(url)
-  schedule(async () => {
-    await webhook.send({
-      unfurl_links: false,
-      attachments: [
-        {
-          pretext: "🎉 A new Peril RFC has been published.",
-          color: "good",
-          title: issue.title,
-          title_link: issue.html_url,
-          author_name: issue.user.login,
-          author_icon: issue.user.avatar_url,
-        },
-      ],
+  if (issue.title.includes("RFC:")) {
+    var url = peril.env.SLACK_RFC_WEBHOOK_URL || ""
+    var webhook = new IncomingWebhook(url)
+    schedule(async () => {
+      await webhook.send({
+        unfurl_links: false,
+        attachments: [
+          {
+            pretext: "🎉 A new Peril RFC has been published.",
+            color: "good",
+            title: issue.title,
+            title_link: issue.html_url,
+            author_name: issue.user.login,
+            author_icon: issue.user.avatar_url,
+          },
+        ],
+      })
     })
-  })
+  }
 }
 ```
+
+The default export
 
 ### Known limitations
 
@@ -370,39 +372,10 @@ if (issue.title.includes("RFC:")) {
 
 # Writing Tests for your Dangerfile
 
-In the Artsy Peril config repo, we runs tests for each new rules in isolation. This is done with a small amount of
-trickery. By adding this to the top of your Dangerfile, then making each rule live inside an async `rfc` function.
+Because the default function will be evaluated, you can set up individual rules as named exports, then have the default
+export run them all. This makes testing a Dangerfile no different than testing any other JavaScript file.
 
-```ts
-const isJest = typeof jest !== "undefined"
-
-// Stores the parameter in a closure that can be invoked in tests.
-const storeRFC = (reason: string, closure: () => void | Promise<any>) =>
-  // We return a closure here so that the (promise is resolved|closure is invoked)
-  // during test time and not when we call rfc().
-  () => (closure instanceof Promise ? closure : Promise.resolve(closure()))
-
-// Either schedules the promise for execution via Danger, or invokes closure.
-const runRFC = (reason: string, closure: () => void | Promise<any>) =>
-  closure instanceof Promise ? schedule(closure) : closure()
-
-const rfc: any = isJest ? storeRFC : runRFC
-```
-
-So, a rule to check for a assignee would be something that Jest (which doesn't have the issue around local
-import/exports) could import the function.
-
-```js
-// https://github.com/artsy/artsy-danger/issues/5
-export const rfc5 = rfc("No PR is too small to warrant a paragraph or two of summary", () => {
-  const pr = danger.github.pr
-  if (pr.body === null || pr.body.length === 0) {
-    fail("Please add a description to your PR.")
-  }
-})
-```
-
-Then you can mock `danger` as an import and use any sort of mocked data you want.
+You can mock `danger` as an import and use any sort of mocked data you want.
 
 ```js
 jest.mock("danger", () => jest.fn())
@@ -415,17 +388,17 @@ beforeEach(() => {
   dm.fail = jest.fn()
 })
 
-it("fails when there's no PR body", () => {
+it("fails when there's no PR body", async () => {
   dm.danger = { github: { pr: { body: "" } } }
-  return rfc5().then(() => {
-    expect(dm.fail).toHaveBeenCalledWith("Please add a description to your PR.")
-  })
+  await rfc5()
+  expect(dm.fail).toHaveBeenCalledWith("Please add a description to your PR.")
 })
 
-it("does nothing when there's a PR body", () => {
+it("does nothing when there's a PR body", async () => {
   dm.danger = { github: { pr: { body: "Hello world" } } }
-  return rfc5().then(() => {
-    expect(dm.fail).not.toHaveBeenCalled()
-  })
+  return rfc5()
+  expect(dm.fail).not.toHaveBeenCalled()
 })
 ```
+
+There are extensive tests on the [Artsy Peril Settings repo](https://github.com/artsy/peril-settings/tree/master/tests)

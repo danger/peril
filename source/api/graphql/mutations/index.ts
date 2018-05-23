@@ -6,7 +6,8 @@ import {
   wipeAllRecordedWebhooks,
 } from "../../../plugins/utils/recordWebhookWithRequest"
 import { sendWebhookThroughGitHubRunner } from "../../../plugins/utils/sendWebhookThroughGitHubRunner"
-import { runTaskForInstallation } from "../../../tasks/startTaskScheduler"
+import { getDetailsFromPerilSandboxAPIJWT } from "../../../runner/sandbox/jwt"
+import { agenda, runTaskForInstallation } from "../../../tasks/startTaskScheduler"
 import { GraphQLContext } from "../../api"
 import { getDetailsFromPerilJWT } from "../../auth/generate"
 import { authD } from "../utils/auth"
@@ -120,4 +121,27 @@ export const mutations = {
 
     return { success: true }
   }),
+
+  scheduleTask: async (_: any, params: any, __: GraphQLContext) => {
+    const opts = params as { task: string; time: string; data: any; jwt: string }
+    const decodedJWT = await getDetailsFromPerilSandboxAPIJWT(opts.jwt)
+
+    const db = getDB() as MongoDB
+    const installation = await db.getInstallation(parseInt(decodedJWT.iss[0]!, 10))
+    if (!installation) {
+      throw new Error(`Installation not found from JWT`)
+    }
+
+    if (!installation.tasks[opts.task]) {
+      throw new Error(`Task not found on installation`)
+    }
+
+    // see createPerilSandboxAPIJWT
+    if (!opts.data.actions || opts.data.actions.includes("scheduleTasks")) {
+      throw new Error(`This JWT does not have the credentials to schedule a task`)
+    }
+
+    agenda.schedule(opts.time, opts.task, opts.data)
+    return { success: true }
+  },
 }

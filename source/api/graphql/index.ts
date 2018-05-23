@@ -132,6 +132,8 @@ const schemaSDL = gql`
     changeEnvVarForInstallation(iID: Int!, key: String!, value: String): JSON
     # Trigger a named task from the installation's settings 
     runTask(iID: Int!, task: String!, data: JSON): JSON
+    # Schedule a named task, with a JWT passed by Peril to a unique sandbox run
+    scheduleTask(jwt: String!, task: String!, time: String!, data: JSON): JSON
   }
 `
 

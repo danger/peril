@@ -9,7 +9,7 @@ import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 import { executorForInstallation, runDangerAgainstFileInline } from "../danger_runner"
 
 const dangerfilesFixtures = resolve(__dirname, "fixtures")
-const peril: PerilDSL = { env: {}, runTask: () => null }
+const peril: PerilDSL = { env: {}, runTask: async () => undefined }
 
 const blankPayload = { dsl: {} as DangerDSLJSONType, webhook: {} }
 

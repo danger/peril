@@ -4,7 +4,7 @@ import { RequestInit } from "node-fetch"
 import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, PERIL_WEBHOOK_SECRET, PUBLIC_API_ROOT_URL } from "../../globals"
 import { GitHubOAuthEnd } from "../api"
 import fetch from "../fetch"
-import { createPerilJWT } from "./generate"
+import { createPerilUserJWT } from "./generate"
 
 /** { a: 1, b: 2} -> a=1&=2 */
 const encodeToQueryParams = (data: any): string =>
@@ -31,10 +31,10 @@ export const redirectForGHOauth = (req: Request, res: Response, ___: NextFunctio
 }
 
 export const fakeAuthToken = async (_: Request, res: Response, ___: NextFunction) => {
-  const authToken = createPerilJWT({ name: "Orta", avatar_url: "https://avatars2.githubusercontent.com/u/49038?v=4" }, [
-    123,
-    321,
-  ])
+  const authToken = createPerilUserJWT(
+    { name: "Orta", avatar_url: "https://avatars2.githubusercontent.com/u/49038?v=4" },
+    [123, 321]
+  )
   res.cookie("jwt", authToken, { domain: ".localhost" })
   res.status(200).send({ jwt: authToken })
 }
@@ -68,7 +68,7 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
 
   const user = await getUserAccount(token)
 
-  const authToken = createPerilJWT({ name: user.name, avatar_url: user.avatar_url }, installations)
+  const authToken = createPerilUserJWT({ name: user.name, avatar_url: user.avatar_url }, installations)
   // TODO: add max age
   // TODO: This needs to change when we have production vs staging
   res.cookie("jwt", authToken, { domain: ".peril.systems" })

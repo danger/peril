@@ -126,7 +126,9 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
   if (runs.length) {
     logger.info("")
     logger.info(`## ${name} on ${installation.login}`)
-    logger.info(`   ${runs.length} runs needed: ${runs.map(r => r.dangerfilePath).join(", ")}`)
+    logger.info(
+      `   ${runs.length} run${runs.length > 0 ? "s" : ""} needed: ${runs.map(r => r.dangerfilePath).join(", ")}`
+    )
   } else {
     logger.info(`${name} on ${installation.login} skipped`)
   }
