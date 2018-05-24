@@ -6,7 +6,7 @@ import logger from "../logger"
 
 export const installationLifeCycle = async (event: string, req: express.Request, res: express.Response, ___: any) => {
   if (event !== "installation") {
-    return
+    return false
   }
 
   const request = req.body as InstallationCreated
@@ -18,6 +18,7 @@ export const installationLifeCycle = async (event: string, req: express.Request,
     logger.info("")
     logger.info(`## Creating new installation for ${request.installation.account.login}`)
     await createInstallation(installation, req, res)
+    return true
   }
 
   // Delete any integrations that have uninstalled Peril :wave:
@@ -26,5 +27,8 @@ export const installationLifeCycle = async (event: string, req: express.Request,
     logger.info(`## Deleting installation ${installation.id}`)
     const db = getDB()
     db.deleteInstallation(installation.id)
+    return true
   }
+
+  return false
 }

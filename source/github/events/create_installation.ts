@@ -15,9 +15,9 @@ export async function createInstallation(installationJSON: Installation, _: expr
   const db = getDB()
   const existingInstallation = await db.getInstallation(installation.iID)
   if (existingInstallation) {
-    res.status(204).send("Did not create new installation, it already existed.")
+    res.send(204, "Did not create new installation, it already existed.")
   } else {
     await db.saveInstallation(installation)
-    res.status(200).send("Creating new installation.")
+    res.send(200, "Creating new installation.")
   }
 }
