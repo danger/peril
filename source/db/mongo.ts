@@ -44,7 +44,7 @@ const Installation = model<MongoGithubInstallationModel>(
  * isn't great for us, because 'x.y' is real common, so, we amend the keys in
  * the JSON on load/save to ensure it can be saved.
  */
-const userInput = ["repo", "rules", "settings", "tasks"]
+const userInput = ["repos", "rules", "settings", "tasks"]
 
 export const prepareToSave = (installation: Partial<GitHubInstallation>) => {
   const amendedInstallation: any = installation
