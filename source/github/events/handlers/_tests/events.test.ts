@@ -4,6 +4,8 @@ jest.mock("../../../../db/getDB", () => ({
   getDB: () => ({
     getInstallation: () => Promise.resolve({ repos: mockGetRepo }),
   }),
+  // Make sure it uses the inline Danger runner
+  isSelfHosted: true,
 }))
 
 const mockGHContents = jest.fn((_, __, path) => {

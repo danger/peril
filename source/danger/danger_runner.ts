@@ -10,8 +10,9 @@ import vm2 from "danger/distribution/runner/runners/vm2"
 import * as path from "path"
 
 import { DangerfileReferenceString } from "../db"
+import { getDB, isSelfHosted } from "../db/getDB"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
-import { HYPER_ACCESS_KEY } from "../globals"
+import { MongoDB } from "../db/mongo"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import { RunType } from "./danger_run"
@@ -39,14 +40,14 @@ export interface ValidatedPayload {
 }
 
 /**
- * The single function to run danger against an installation
+ * The single function to run danger against an installationRun
  */
 export async function runDangerForInstallation(
   contents: string[],
   references: DangerfileReferenceString[],
   api: GitHubAPI | null,
   type: RunType,
-  installation: InstallationToRun,
+  installationRun: InstallationToRun,
   payload: Payload
 ) {
   // We need this for things like repo slugs, PR IDs etc
@@ -63,13 +64,22 @@ export async function runDangerForInstallation(
 
   // Allow custom peril funcs to come from the task/scheduler DSL
   const perilFromRunOrTask = DSL && (DSL as any).peril
-  const peril = await perilObjectForInstallation(installation, process.env, perilFromRunOrTask)
 
-  if (HYPER_ACCESS_KEY) {
-    return await triggerSandboxDangerRun(type, installation, references, payload, peril)
+  const env = isSelfHosted ? process.env : await getEnvVars(installationRun.iID)
+  const peril = await perilObjectForInstallation(installationRun, env, perilFromRunOrTask)
+
+  if (isSelfHosted) {
+    return await runDangerAgainstFileInline(localDangerfilePaths, contents, installationRun, exec, peril, payload)
   } else {
-    return await runDangerAgainstFileInline(localDangerfilePaths, contents, installation, exec, peril, payload)
+    return await triggerSandboxDangerRun(type, installationRun, references, payload, peril)
   }
+}
+
+/** Sandbox runs need their envVars to be sent from Peril to the sandbox */
+const getEnvVars = async (iID: number) => {
+  const db = getDB() as MongoDB
+  const dbInstallation = await db.getInstallation(iID)
+  return dbInstallation ? dbInstallation.envVars || {} : {}
 }
 
 /**
@@ -78,7 +88,7 @@ export async function runDangerForInstallation(
 export async function runDangerAgainstFileInline(
   filepath: string[],
   contents: string[],
-  installation: InstallationToRun,
+  installationRun: InstallationToRun,
   exec: Executor,
   peril: PerilDSL,
   payload: Payload
@@ -89,7 +99,7 @@ export async function runDangerAgainstFileInline(
 
   if (runtimeEnv.sandbox) {
     // Mutates runtimeEnv.sandbox
-    await appendPerilContextToDSL(installation.iID, undefined, runtimeEnv.sandbox, peril)
+    await appendPerilContextToDSL(installationRun.iID, undefined, runtimeEnv.sandbox, peril)
   }
 
   let results: DangerResults
@@ -128,7 +138,7 @@ ${contents}
 }
 
 /**
- * Generates a Danger Executor based on the installation's context
+ * Generates a Danger Executor based on the installationRun's context
  */
 export function executorForInstallation(platform: Platform, runner: DangerRunner) {
   // We need this for things like repo slugs, PR IDs etc
