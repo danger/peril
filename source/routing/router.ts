@@ -28,8 +28,11 @@ export const githubEventPluginHandler = (event: string, req: Request, res: Respo
   if (!validatesGithubWebhook(event, req, res, next)) {
     return
   }
+
   // Creating / Removing installations from the DB
-  installationLifeCycle(event, req, res, next)
+  if (installationLifeCycle(event, req, res, next)) {
+    return
+  }
 
   // Allow a dev mode
   recordWebhook(event, req, res, next)
