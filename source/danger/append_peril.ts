@@ -85,8 +85,8 @@ export const perilObjectForInstallation = (
   }
 
   return {
-    ...peril,
     env,
+    ...peril,
     runTask: generateTaskSchedulerForInstallation(installation.iID, sandboxSettings),
   }
 }
