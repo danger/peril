@@ -265,7 +265,7 @@ import { Issues } from "github-webhook-event-types"
 
 const slackify = (text: string) => ({
   // generates a API slack compatible object, which is passed into the task
-  // as `peril.data` later on.
+  // as the first arg of a default param later on.
 })
 
 export default async (webhook: Issues) => {
@@ -290,9 +290,11 @@ When your task starts running, you can access data provided via the dangerfile A
 import { peril } from "danger"
 import { IncomingWebhook } from "@slack/client"
 
-const url = peril.env.SLACK_RFC_WEBHOOK_URL || ""
-const webhook = new IncomingWebhook(url)
-webhook.send(peril.data)
+export default (data: any) => {
+  const url = peril.env.SLACK_RFC_WEBHOOK_URL || ""
+  const webhook = new IncomingWebhook(url)
+  webhook.send(data)
+}
 ```
 
 ### Scheduler

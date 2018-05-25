@@ -20,14 +20,8 @@ export const runTask = async (installation: GitHubInstallation, rules: Dangerfil
     error(`Error: could not determine a repo for ${rules} - skipping the task run`)
   }
 
-  // Expand the Peril DSL which is created later with data from the task
-  const dangerDSL = {
-    peril: {
-      data,
-    },
-  }
   const payload: ValidatedPayload = {
-    dsl: dangerDSL as any, // This can't have a git,
+    dsl: {} as any, // This can't have a git,
     webhook: data,
   }
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
