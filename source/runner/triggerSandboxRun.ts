@@ -65,7 +65,6 @@ export const triggerSandboxDangerRun = async (
 
   // Grab the installation env vars
   const envVars = await getEnvVars(installation.iID)
-  console.log("OK", envVars)
   const stdOUT: PerilRunnerBootstrapJSON = {
     installation,
     payload,
