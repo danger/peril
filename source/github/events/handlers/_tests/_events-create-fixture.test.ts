@@ -28,7 +28,7 @@ jest.mock("../../../../runner/hyper-api", () => ({
 const apiFixtures = resolve(__dirname, "../../_tests/fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
-it.only("passes the right args to the hyper functions", async () => {
+it("passes the right args to the hyper functions", async () => {
   mockDB.getInstallation.mockReturnValue({ iID: "123", repos: {}, envVars: { hello: "world" } })
 
   const body = fixture("issue_comment_created.json")

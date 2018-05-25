@@ -10,8 +10,9 @@ import vm2 from "danger/distribution/runner/runners/vm2"
 import * as path from "path"
 
 import { DangerfileReferenceString } from "../db"
-import { isSelfHosted } from "../db/getDB"
+import { runtimeEnvironment } from "../db/getDB"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
+import { RuntimeEnvironment } from "../db/runtimeEnv"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import { RunType } from "./danger_run"
@@ -62,7 +63,7 @@ export async function runDangerForInstallation(
   const localDangerfilePaths = references.map(ref => path.resolve("./" + "danger-" + randomName + path.extname(ref)))
 
   // Allow custom peril funcs to come from the task/scheduler DSL
-  if (isSelfHosted) {
+  if (runtimeEnvironment === RuntimeEnvironment.Standalone) {
     const perilFromRunOrTask = DSL && (DSL as any).peril
     const peril = await perilObjectForInstallation(installationRun, process.env, perilFromRunOrTask)
     return await runDangerAgainstFileInline(localDangerfilePaths, contents, installationRun, exec, peril, payload)
@@ -84,17 +85,17 @@ export async function runDangerAgainstFileInline(
 ) {
   const dangerDSL = payload.dsl as any | undefined
   const context = contextForDanger(dangerDSL)
-  const runtimeEnv = await exec.runner.createDangerfileRuntimeEnvironment(context)
+  const dangerRuntimeEnv = await exec.runner.createDangerfileRuntimeEnvironment(context)
 
-  if (runtimeEnv.sandbox) {
+  if (dangerRuntimeEnv.sandbox) {
     // Mutates runtimeEnv.sandbox
-    await appendPerilContextToDSL(installationRun.iID, undefined, runtimeEnv.sandbox, peril)
+    await appendPerilContextToDSL(installationRun.iID, undefined, dangerRuntimeEnv.sandbox, peril)
   }
 
   let results: DangerResults
 
   try {
-    results = await exec.runner.runDangerfileEnvironment(filepath, contents, runtimeEnv, payload.webhook)
+    results = await exec.runner.runDangerfileEnvironment(filepath, contents, dangerRuntimeEnv, payload.webhook)
   } catch (error) {
     results = resultsForCaughtError(filepath.join(","), contents.join("\n---\n"), error)
   }

@@ -1,4 +1,5 @@
 import { DatabaseAdaptor, GitHubInstallation } from ".."
+import { RuntimeEnvironment } from "../runtimeEnv"
 
 // Caches per test file, so you can import it and check from the import
 // If this is an issue, don't use this mock :D
@@ -54,4 +55,4 @@ export const getDB = (): MockDB => {
   return perTestFileMock
 }
 
-export const isSelfHosted = false
+export const runtimeEnv = RuntimeEnvironment.Standalone
