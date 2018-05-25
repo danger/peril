@@ -2,10 +2,21 @@ import { jsonDatabase } from "./json"
 import { mongoDatabase } from "./mongo"
 
 import { DatabaseAdaptor } from "."
+import { RuntimeEnvironment } from "./runtimeEnv"
 
 const isJest = typeof jest !== "undefined"
 
-export const isSelfHosted = process.env.DATABASE_JSON_FILE !== null
+const hasJSONDef = !!process.env.DATABASE_JSON_FILE
+const hasPerilAPIURL = !!process.env.PUBLIC_API_ROOT_URL
+const hasHyperEnv = !!process.env.x_hyper_content_sha256
+
+export const runtimeEnvironment = hasJSONDef
+  ? RuntimeEnvironment.Standalone
+  : hasPerilAPIURL
+    ? RuntimeEnvironment.Peril
+    : hasHyperEnv
+      ? RuntimeEnvironment.Runner
+      : RuntimeEnvironment.Unknown
 
 const getDatabaseForEnv = (env: any): DatabaseAdaptor | null => {
   if (env.DATABASE_JSON_FILE || isJest) {

@@ -5,7 +5,8 @@ import GitHubUtils from "danger/distribution/platforms/github/GitHubUtils"
 import { DangerContext } from "danger/distribution/runner/Dangerfile"
 
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
-import { isSelfHosted } from "../db/getDB"
+import { runtimeEnvironment } from "../db/getDB"
+import { RuntimeEnvironment } from "../db/runtimeEnv"
 import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRun"
 import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import { InstallationToRun } from "./danger_runner"
@@ -76,12 +77,7 @@ export const perilObjectForInstallation = (
     installation.settings.env_vars &&
     Object.assign({}, ...installation.settings.env_vars.map(k => ({ [k]: environment[k] })))
 
-  let env = {}
-  if (isSelfHosted) {
-    env = envVarsForSelfHosted()
-  } else {
-    env = environment
-  }
+  const env = runtimeEnvironment === RuntimeEnvironment.Standalone ? envVarsForSelfHosted() : environment
 
   return {
     env,
