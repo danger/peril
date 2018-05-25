@@ -10,6 +10,7 @@ const hasJSONDef = !!process.env.DATABASE_JSON_FILE
 const hasPerilAPIURL = !!process.env.PUBLIC_API_ROOT_URL
 const hasHyperEnv = !!process.env.x_hyper_content_sha256
 
+/** There are three runtime environments for Peril, this says which one it is */
 export const runtimeEnvironment = hasJSONDef
   ? RuntimeEnvironment.Standalone
   : hasPerilAPIURL
