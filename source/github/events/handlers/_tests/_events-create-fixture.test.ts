@@ -13,22 +13,23 @@ jest.mock("../../../../github/lib/github_helpers", () => ({
 import { getGitHubFileContents } from "../../../lib/github_helpers"
 const mockGetGitHubFileContents: any = getGitHubFileContents
 
-import { readFileSync } from "fs"
+import { readFileSync, writeFileSync } from "fs"
 import { resolve } from "path"
 import { dangerRunForRules } from "../../../../danger/danger_run"
-import { triggerSandboxDangerRun } from "../../../../runner/triggerSandboxRun"
+import { callHyperFunction } from "../../../../runner/hyper-api"
+import { PerilRunnerBootstrapJSON } from "../../../../runner/triggerSandboxRun"
 import { setupForRequest } from "../../github_runner"
 import { runEventRun } from "../event"
 
-jest.mock("../../../../runner/triggerSandboxRun", () => ({
-  triggerSandboxDangerRun: jest.fn(),
+jest.mock("../../../../runner/hyper-api", () => ({
+  callHyperFunction: jest.fn(() => Promise.resolve('{ "CallId": 123 }')),
 }))
 
 const apiFixtures = resolve(__dirname, "../../_tests/fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
-it("sets up the right call to trigger sandbox run", async () => {
-  mockDB.getInstallation.mockReturnValueOnce({ iID: "123", repos: {} })
+it.only("passes the right args to the hyper functions", async () => {
+  mockDB.getInstallation.mockReturnValue({ iID: "123", repos: {}, envVars: { hello: "world" } })
 
   const body = fixture("issue_comment_created.json")
   const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
@@ -37,13 +38,14 @@ it("sets up the right call to trigger sandbox run", async () => {
   const dangerfileForRun = "warn(danger.github.api)"
   mockGetGitHubFileContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
 
-  const run = dangerRunForRules("issue_comment", "created", { issue_comment: "warn_with_api" }, body)[0]
+  const run = dangerRunForRules("issue_comment", "created", { issue_comment: "warn_with_api.ts" }, body)[0]
 
   await runEventRun([run], settings, "token", body)
-  const mock = (triggerSandboxDangerRun as any).mock.calls[0]
 
-  expect(mock[0]).toMatchSnapshot("type")
-  expect(mock[1]).toMatchSnapshot("installation")
-  expect(mock[2]).toMatchSnapshot("paths")
-  expect(mock[3]).toMatchSnapshot("payload")
+  // Take the payload, remove the JWT and save a copy of the JSON into a fixture dir, then snapshot it
+  const payload = (callHyperFunction as any).mock.calls[0][0] as PerilRunnerBootstrapJSON
+  payload.perilSettings.perilJWT = "[skipped]"
+  writeFileSync(__dirname + "/fixtures/PerilRunnerBootStrapExample.json", JSON.stringify(payload, null, "  "), "utf8")
+
+  expect(payload).toMatchSnapshot()
 })

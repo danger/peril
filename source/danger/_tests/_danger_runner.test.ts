@@ -159,7 +159,7 @@ describe("evaling", () => {
   })
 })
 
-it("exposes specific process env vars via the peril object ", async () => {
+it("exposes specific process env vars via the peril object when self-hosted", async () => {
   const processInstallationSettings: GitHubInstallationSettings = {
     env_vars: ["TEST_ENV", "NON_EXISTENT"],
     ignored_repos: [],
@@ -174,31 +174,7 @@ it("exposes specific process env vars via the peril object ", async () => {
   const perilObj = await perilObjectForInstallation(
     { iID: 1, settings: processInstallationSettings },
     fakeProcess,
-    false
+    undefined
   )
   expect(perilObj.env).toEqual({ TEST_ENV: "123" })
-})
-
-it("allows passing through Peril DSL attributes ", async () => {
-  const processInstallationSettings: GitHubInstallationSettings = {
-    env_vars: ["TEST_ENV", "NON_EXISTENT"],
-    ignored_repos: [],
-    modules: [],
-  }
-
-  const fakeProcess = {
-    SECRET_ENV: "432",
-    TEST_ENV: "123",
-  }
-
-  const perilDSL = {
-    a: "b",
-  }
-
-  const perilObj = (await perilObjectForInstallation(
-    { iID: 1, settings: processInstallationSettings },
-    fakeProcess,
-    perilDSL
-  )) as any
-  expect(perilObj.a).toEqual("b")
 })

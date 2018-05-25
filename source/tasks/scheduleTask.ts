@@ -32,7 +32,7 @@ export const generateTaskSchedulerForInstallation = (
       const settings = sandboxSettings!
 
       const input = {
-        jwt: settings.perilJWT,
+        jwt: settings.perilSettings.perilJWT,
         task: runDangerfileTaskName,
         time: sanitizedTime,
         data,
@@ -46,7 +46,10 @@ export const generateTaskSchedulerForInstallation = (
       }`
       // Make the API call
 
-      await fetch(`${settings.perilAPIRoot}/api/graphql`, { method: "POST", body: JSON.stringify({ query }) })
+      await fetch(`${settings.perilSettings.perilAPIRoot}/api/graphql`, {
+        method: "POST",
+        body: JSON.stringify({ query }),
+      })
     }
   }
 

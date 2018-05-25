@@ -10,9 +10,8 @@ import vm2 from "danger/distribution/runner/runners/vm2"
 import * as path from "path"
 
 import { DangerfileReferenceString } from "../db"
-import { getDB, isSelfHosted } from "../db/getDB"
+import { isSelfHosted } from "../db/getDB"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
-import { MongoDB } from "../db/mongo"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import { RunType } from "./danger_run"
@@ -63,23 +62,13 @@ export async function runDangerForInstallation(
   const localDangerfilePaths = references.map(ref => path.resolve("./" + "danger-" + randomName + path.extname(ref)))
 
   // Allow custom peril funcs to come from the task/scheduler DSL
-  const perilFromRunOrTask = DSL && (DSL as any).peril
-
-  const env = isSelfHosted ? process.env : await getEnvVars(installationRun.iID)
-  const peril = await perilObjectForInstallation(installationRun, env, perilFromRunOrTask)
-
   if (isSelfHosted) {
+    const perilFromRunOrTask = DSL && (DSL as any).peril
+    const peril = await perilObjectForInstallation(installationRun, process.env, perilFromRunOrTask)
     return await runDangerAgainstFileInline(localDangerfilePaths, contents, installationRun, exec, peril, payload)
   } else {
-    return await triggerSandboxDangerRun(type, installationRun, references, payload, peril)
+    return await triggerSandboxDangerRun(type, installationRun, references, payload)
   }
-}
-
-/** Sandbox runs need their envVars to be sent from Peril to the sandbox */
-const getEnvVars = async (iID: number) => {
-  const db = getDB() as MongoDB
-  const dbInstallation = await db.getInstallation(iID)
-  return dbInstallation ? dbInstallation.envVars || {} : {}
 }
 
 /**

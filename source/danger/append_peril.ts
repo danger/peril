@@ -69,9 +69,8 @@ export async function appendPerilContextToDSL(
 export const perilObjectForInstallation = (
   installation: InstallationToRun,
   environment: any,
-  peril: any | undefined,
   sandboxSettings?: PerilRunnerBootstrapJSON
-): Promise<PerilDSL> => {
+): PerilDSL => {
   // get them by pulling out white-listed env vars
   const envVarsForSelfHosted = () =>
     installation.settings.env_vars &&
@@ -86,7 +85,6 @@ export const perilObjectForInstallation = (
 
   return {
     env,
-    ...peril,
     runTask: generateTaskSchedulerForInstallation(installation.iID, sandboxSettings),
   }
 }

@@ -8,7 +8,19 @@ import { DangerfileReferenceString } from "../db/index"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { RunType } from "../danger/danger_run"
 import { InstallationToRun, Payload } from "../danger/danger_runner"
+import { getDB } from "../db/getDB"
+import { MongoDB } from "../db/mongo"
 import { createPerilSandboxAPIJWT } from "./sandbox/jwt"
+
+/** Peril specific settings */
+export interface PerilSettings {
+  /** A short-lived JWT that can be used to make API requests back to Peril */
+  perilJWT: string
+  /** The root address of the Peril server */
+  perilAPIRoot: string
+  /** The environment variables sent over from Peril */
+  envVars: any
+}
 
 // Sidenote: auth token is in  dsl.settings.github
 export interface PerilRunnerBootstrapJSON {
@@ -20,14 +32,8 @@ export interface PerilRunnerBootstrapJSON {
   installation: InstallationToRun
   /** DSL type */
   dslType: "pr" | "run"
-  /** A short-lived JWT that can be used to make API requests back to Peril */
-  perilJWT: string
-  /** The root address of the Peril server */
-  perilAPIRoot: string
-  /** Optional Peril settings? (think like task) */
-  // TODO: Make a PerilJSONDSL
-  peril: any
-  // TODO: Generate a UUID and then sign with JWT for security?
+  /** The DI'd settings on a per-peril run */
+  perilSettings: PerilSettings
 }
 
 // You can fake this by doing something like:
@@ -40,8 +46,7 @@ export const triggerSandboxDangerRun = async (
   type: RunType,
   installation: InstallationToRun,
   paths: DangerfileReferenceString[],
-  payload: Payload,
-  peril: any
+  payload: Payload
 ) => {
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
 
@@ -58,13 +63,18 @@ export const triggerSandboxDangerRun = async (
 
   payload.dsl = DSL
 
+  // Grab the installation env vars
+  const envVars = await getEnvVars(installation.iID)
+  console.log("OK", envVars)
   const stdOUT: PerilRunnerBootstrapJSON = {
     installation,
     payload,
     dslType: type === RunType.pr ? "pr" : "run",
-    peril,
-    perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTasks"]),
-    perilAPIRoot: PUBLIC_API_ROOT_URL,
+    perilSettings: {
+      perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTasks"]),
+      perilAPIRoot: PUBLIC_API_ROOT_URL,
+      envVars,
+    },
     paths,
   }
 
@@ -74,4 +84,11 @@ export const triggerSandboxDangerRun = async (
     logger.info(`   Logs: hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
     logger.info(`         hyper func get ${callID}`)
   }
+}
+
+/** Sandbox runs need their envVars to be sent from Peril to the sandbox */
+const getEnvVars = async (iID: number) => {
+  const db = getDB() as MongoDB
+  const dbInstallation = await db.getInstallation(iID)
+  return dbInstallation ? dbInstallation.envVars || {} : {}
 }
