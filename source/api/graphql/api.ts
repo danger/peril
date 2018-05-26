@@ -6,7 +6,11 @@ export const graphqlAPI = (url: string, query: string) =>
     body: JSON.stringify({ query }),
   })
     .then(res => {
-      return res.json()
+      if (!res.ok) {
+        return res.json()
+      } else {
+        throw new Error("HTTP error\n" + JSON.stringify(res, null, "  "))
+      }
     })
     .then(body => {
       if (body.errors) {
