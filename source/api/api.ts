@@ -52,6 +52,8 @@ export const setupPublicAPI = (app: Application) => {
       context: {
         jwt: getJWTFromRequest(req),
       },
+      tracing: true,
+      cacheControl: true,
     }))
   )
 

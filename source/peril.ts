@@ -4,6 +4,8 @@ import chalk from "chalk"
 import * as express from "express"
 import * as xhub from "express-x-hub"
 
+import { startApp } from "./listen"
+
 import {
   DATABASE_JSON_FILE,
   HYPER_ACCESS_KEY,
@@ -90,7 +92,7 @@ export const peril = () => {
   }
 
   // Start server
-  app.listen(app.get("port"), () => {
+  startApp(app, () => {
     if (!process.env.HEROKU || !process.env.NOW) {
       welcomeMessages.push(tick + " Server:")
       welcomeMessages.push(`  - Local: http://localhost:${port}`)

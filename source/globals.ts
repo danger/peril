@@ -136,6 +136,9 @@ export const HYPER_FUNC_NAME = getEnv("HYPER_FUNC_NAME")
 /** Optional: Any truthy value here will start up clustering for Peril  */
 export const WEB_CONCURRENCY = getEnv("WEB_CONCURRENCY")
 
+/** Optional: the key for running apollo engine */
+export const APOLLO_ENGINE_KEY = getEnv("APOLLO_ENGINE_KEY")
+
 export const validateENVForPerilServer = () => {
   // Can't run without these
   validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])
