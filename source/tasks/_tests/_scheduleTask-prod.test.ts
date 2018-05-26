@@ -10,6 +10,7 @@ jest.mock("../../api/fetch", () => ({
 }))
 
 import { fetch } from "../../api/fetch"
+import { gql } from "../../api/graphql/gql"
 import { PerilRunnerBootstrapJSON } from "../../runner/triggerSandboxRun"
 
 it("handles making a working graphql mutation", () => {
@@ -24,8 +25,19 @@ it("handles making a working graphql mutation", () => {
   scheduleFunc("My Task", "1 month", { hello: "world" })
 
   expect(fetch).toBeCalledWith("https://murphdog.com/api/graphql", {
-    body:
-      '{"query":"mutation {\\n        scheduleTask(\\n          { jwt: \\"123.asd.zxc\\", task: \\"mockTask\\", time: \\"1 month\\", data: { hello: \\"world\\" } }\\n        ) {\\n          success\\n        }\\n      }"}',
+    body: expect.anything(),
     method: "POST",
   })
+
+  // Verify the query feels right
+  const mockFetch = fetch as any
+  const body = mockFetch.mock.calls[0][1].body
+  const response = JSON.parse(body)
+  expect(response.query.replace(/\s/g, "")).toEqual(
+    gql`
+      mutation {
+        scheduleTask(jwt: "123.asd.zxc", task: "mockTask", time: "1 month", data: { hello: "world" })
+      }
+    `.replace(/\s/g, "")
+  )
 })

@@ -1,5 +1,6 @@
 import { includes, isBoolean, isNumber, isString } from "lodash"
 import { fetch } from "../api/fetch"
+import { gql } from "../api/graphql/gql"
 import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRun"
 import { agenda, DangerFileTaskConfig, runDangerfileTaskName } from "./startTaskScheduler"
 
@@ -31,18 +32,14 @@ export const generateTaskSchedulerForInstallation = (
     } else {
       const settings = sandboxSettings!
 
-      const input = {
-        jwt: settings.perilSettings.perilJWT,
-        task: runDangerfileTaskName,
-        time: sanitizedTime,
-        data,
-      }
-      const query = `mutation {
+      const query = gql`
+      mutation {
         scheduleTask(
-          ${objectToGraphQLInput(input)}
-        ) {
-          success
-        }
+          jwt: "${settings.perilSettings.perilJWT}",
+          task: "${runDangerfileTaskName}",
+          time: "${sanitizedTime}",
+          data: ${objectToGraphQLInput(data)}
+        )
       }`
       // Make the API call
 
