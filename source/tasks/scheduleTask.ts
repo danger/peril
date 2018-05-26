@@ -1,5 +1,5 @@
 import { includes, isBoolean, isNumber, isString } from "lodash"
-import fetch from "../api/fetch"
+import { fetch } from "../api/fetch"
 import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRun"
 import { agenda, DangerFileTaskConfig, runDangerfileTaskName } from "./startTaskScheduler"
 
@@ -76,5 +76,5 @@ export const objectToGraphQLInput = (obj: any, enums?: string[]) => {
       }
     }
   }
-  return input.substring(0, input.length - 2)
+  return "{ " + input.substring(0, input.length - 2) + " }"
 }
