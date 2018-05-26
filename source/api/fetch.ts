@@ -22,9 +22,10 @@ export function fetch(url: string | node_fetch.Request, init?: node_fetch.Reques
       }
     }
 
-    if (init.method === "POST") {
-      // const body:string = init.body
-      // output.concat([init.body])
+    if (init.method === "POST" && init.body) {
+      const body = init.body.toString()
+      output.concat(["-H", "Content-Type: application/json"])
+      output.concat(["--data-binary", body])
     }
 
     if (typeof url === "string") {

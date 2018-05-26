@@ -1,5 +1,5 @@
 import { includes, isBoolean, isNumber, isString } from "lodash"
-import { fetch } from "../api/fetch"
+import { graphqlAPI } from "../api/graphql/api"
 import { gql } from "../api/graphql/gql"
 import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRun"
 import { agenda, DangerFileTaskConfig, runDangerfileTaskName } from "./startTaskScheduler"
@@ -41,12 +41,9 @@ export const generateTaskSchedulerForInstallation = (
           data: ${objectToGraphQLInput(data)}
         )
       }`
-      // Make the API call
 
-      await fetch(`${settings.perilSettings.perilAPIRoot}/api/graphql`, {
-        method: "POST",
-        body: JSON.stringify({ query }),
-      })
+      // Make the API call
+      await graphqlAPI(settings.perilSettings.perilAPIRoot, query)
     }
   }
 

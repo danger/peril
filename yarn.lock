@@ -43,6 +43,12 @@
     node-fetch "^2.1.1"
     url-template "^2.0.8"
 
+"@types/accepts@*":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@types/accepts/-/accepts-1.3.5.tgz#c34bec115cfc746e04fe5a059df4ce7e7b391575"
+  dependencies:
+    "@types/node" "*"
+
 "@types/agenda@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@types/agenda/-/agenda-1.0.3.tgz#27e9fbca2d197746d5c52bebcde3fd5d27d0505c"
@@ -71,7 +77,14 @@
   dependencies:
     "@types/node" "*"
 
-"@types/connect@*":
+"@types/bunyan@*":
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/@types/bunyan/-/bunyan-1.8.4.tgz#69c11adc7b50538d45fb68d9ae39d062b9432f38"
+  dependencies:
+    "@types/events" "*"
+    "@types/node" "*"
+
+"@types/connect@*", "@types/connect@^3.4.31":
   version "3.4.32"
   resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.32.tgz#aa0e9616b9435ccad02bc52b5b454ffc2c70ba28"
   dependencies:
@@ -82,6 +95,15 @@
   resolved "https://registry.yarnpkg.com/@types/cookie-parser/-/cookie-parser-1.4.1.tgz#e88a39c41960f31549b4c52dd8620aa4a2feb4bb"
   dependencies:
     "@types/express" "*"
+
+"@types/cookies@*":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@types/cookies/-/cookies-0.7.1.tgz#f9f204bd6767d389eea3b87609e30c090c77a540"
+  dependencies:
+    "@types/connect" "*"
+    "@types/express" "*"
+    "@types/keygrip" "*"
+    "@types/node" "*"
 
 "@types/cors@^2.8.3":
   version "2.8.3"
@@ -120,7 +142,7 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
-"@types/express@^4.11.1":
+"@types/express@^4.0.36", "@types/express@^4.11.1":
   version "4.11.1"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.11.1.tgz#f99663b3ab32d04cb11db612ef5dd7933f75465b"
   dependencies:
@@ -150,6 +172,10 @@
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.0.tgz#78a33a7f429a06a64714817d9130d578e0f35ecb"
 
+"@types/http-assert@*":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.3.0.tgz#5e932606153da28e1d04f9043f4912cf61fd55dd"
+
 "@types/jest@^22.2.3":
   version "22.2.3"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.2.3.tgz#0157c0316dc3722c43a7b71de3fdf3acbccef10d"
@@ -162,6 +188,38 @@
   version "7.2.6"
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-7.2.6.tgz#8d018c21ca5910b5eb3ebcb385656606a215032f"
   dependencies:
+    "@types/node" "*"
+
+"@types/keygrip@*":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/keygrip/-/keygrip-1.0.1.tgz#ff540462d2fb4d0a88441ceaf27d287b01c3d878"
+
+"@types/koa-bodyparser@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@types/koa-bodyparser/-/koa-bodyparser-4.2.0.tgz#04febc567f3d3dd40e3d1a0e095cdf7b07c4d7ce"
+  dependencies:
+    "@types/koa" "*"
+
+"@types/koa-compose@*":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@types/koa-compose/-/koa-compose-3.2.2.tgz#dc106e000bbf92a3ac900f756df47344887ee847"
+
+"@types/koa-router@^7.0.27":
+  version "7.0.28"
+  resolved "https://registry.yarnpkg.com/@types/koa-router/-/koa-router-7.0.28.tgz#67487c862a831099aed8864a8996bfa7e989edc0"
+  dependencies:
+    "@types/koa" "*"
+
+"@types/koa@*", "@types/koa@^2.0.39":
+  version "2.0.45"
+  resolved "https://registry.yarnpkg.com/@types/koa/-/koa-2.0.45.tgz#133cbda6cc8d12b73434b5d9663898c833f80aa2"
+  dependencies:
+    "@types/accepts" "*"
+    "@types/cookies" "*"
+    "@types/events" "*"
+    "@types/http-assert" "*"
+    "@types/keygrip" "*"
+    "@types/koa-compose" "*"
     "@types/node" "*"
 
 "@types/lodash@^4.14.108":
@@ -229,12 +287,26 @@
   version "9.6.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.6.tgz#439b91f9caf3983cad2eef1e11f6bedcbf9431d2"
 
+"@types/restify@^5.0.7":
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/@types/restify/-/restify-5.0.8.tgz#6cfe3a6e4ad1a3b8fcd152cd5b2b7b6ee2282cb6"
+  dependencies:
+    "@types/bunyan" "*"
+    "@types/node" "*"
+    "@types/spdy" "*"
+
 "@types/serve-static@*":
   version "1.7.31"
   resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.7.31.tgz#15456de8d98d6b4cff31be6c6af7492ae63f521a"
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
+
+"@types/spdy@*":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@types/spdy/-/spdy-3.4.4.tgz#3282fd4ad8c4603aa49f7017dd520a08a345b2bc"
+  dependencies:
+    "@types/node" "*"
 
 "@types/winston@^2.3.9":
   version "2.3.9"
@@ -407,6 +479,33 @@ apollo-cache-control@^0.1.0:
   resolved "https://registry.yarnpkg.com/apollo-cache-control/-/apollo-cache-control-0.1.1.tgz#173d14ceb3eb9e7cb53de7eb8b61bee6159d4171"
   dependencies:
     graphql-extensions "^0.0.x"
+
+apollo-engine-binary-darwin@0.2018.4-86-gf35bdc892:
+  version "0.2018.4-86-gf35bdc892"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.4-86-gf35bdc892.tgz#f1e4ae4b72afdb298039d0230e38dab8774c8890"
+
+apollo-engine-binary-linux@0.2018.4-86-gf35bdc892:
+  version "0.2018.4-86-gf35bdc892"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.4-86-gf35bdc892.tgz#bc63eee10cb5191d7eb5e61f01d50e28983c89d7"
+
+apollo-engine-binary-windows@0.2018.4-86-gf35bdc892:
+  version "0.2018.4-86-gf35bdc892"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.4-86-gf35bdc892.tgz#1e02f8ceb9f75ab72551f584a4730260907ef199"
+
+apollo-engine@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-1.1.1.tgz#5e0ea8f1d6d23b5b931cee5404c472893045b201"
+  dependencies:
+    "@types/connect" "^3.4.31"
+    "@types/express" "^4.0.36"
+    "@types/koa" "^2.0.39"
+    "@types/koa-bodyparser" "^4.2.0"
+    "@types/koa-router" "^7.0.27"
+    "@types/restify" "^5.0.7"
+  optionalDependencies:
+    apollo-engine-binary-darwin "0.2018.4-86-gf35bdc892"
+    apollo-engine-binary-linux "0.2018.4-86-gf35bdc892"
+    apollo-engine-binary-windows "0.2018.4-86-gf35bdc892"
 
 apollo-link@1.2.1:
   version "1.2.1"

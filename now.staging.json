@@ -23,6 +23,8 @@
     "PUBLIC_GITHUB_APP_URL": "https://github.com/apps/peril-staging",
 
     "GITHUB_CLIENT_ID": "@stag_github_client_id",
-    "GITHUB_CLIENT_SECRET": "@stag_github_client_secret"
+    "GITHUB_CLIENT_SECRET": "@stag_github_client_secret",
+
+    "APOLLO_ENGINE_KEY": "@stag_apollo_engine_key"
   }
 }
