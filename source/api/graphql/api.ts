@@ -4,6 +4,7 @@ export const graphqlAPI = (url: string, query: string) =>
   fetch(`${url}/api/graphql`, {
     method: "POST",
     body: JSON.stringify({ query }),
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
   })
     .then(res => {
       if (res.ok) {
