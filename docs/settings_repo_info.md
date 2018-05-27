@@ -284,7 +284,8 @@ your job later.
 
 Or you can schedule tasks via the peril settings scheduler below.
 
-When your task starts running, you can access data provided via the dangerfile API via `peril.data`:
+When your task starts running, you can access data provided via the dangerfile API via the first param in the default
+export:
 
 ```ts
 import { peril } from "danger"

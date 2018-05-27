@@ -26,6 +26,7 @@ it("handles making a working graphql mutation", () => {
 
   expect(fetch).toBeCalledWith("https://murphdog.com/api/graphql", {
     body: expect.anything(),
+    headers: expect.anything(),
     method: "POST",
   })
 

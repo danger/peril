@@ -58,3 +58,6 @@ declare module "graphql-relay-tools" {
   /** Creates the resolver for an id field on a node. */
   function globalIdResolver(): any
 }
+
+// shame, https://github.com/primus/primus/pull/623
+declare module "primus"
