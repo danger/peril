@@ -143,8 +143,7 @@ const runDangerPR = async (
   }
 
   // Because it's not feasible to get stderr from hyper
-  console.warn = console.log
-  console.error = console.log
+  process.stderr = process.stdout
 
   // Run it
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
