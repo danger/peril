@@ -2,10 +2,13 @@ import { graphqlExpress } from "apollo-server-express"
 import * as bodyParser from "body-parser"
 import * as cookieParser from "cookie-parser"
 import * as cors from "cors"
+import { Request, Response } from "express"
 import { Application } from "express"
 import expressPlayground from "graphql-playground-middleware-express"
 
 import { GITHUB_CLIENT_SECRET } from "../globals"
+import { primus } from "../listen"
+import { getDetailsFromPerilJWT } from "./auth/generate"
 import { getJWTFromRequest } from "./auth/getJWTFromRequest"
 import { fakeAuthToken, generateAuthToken, redirectForGHOauth } from "./auth/github"
 import { schema } from "./graphql"
@@ -40,6 +43,12 @@ export const setupPublicAPI = (app: Application) => {
   // A useful for testing locally cookie generator
   app.get("/api/auth/peril/github/fake", fakeAuthToken)
 
+  // SCRIPT
+  // Sets up the primus library client side
+  app.get("/scripts/primus.js", (_, res: Response) => {
+    res.send(primus.library())
+  })
+
   // GQL
   // The main GraphQL route for Peril
   // TODO: Figure out authentication
@@ -67,4 +76,53 @@ export const setupPublicAPI = (app: Application) => {
       } as any,
     })
   )
+}
+
+export const setupPublicWebsocket = () => {
+  // Handle verifying things which we connect
+  primus.authorize(async (req: Request, done: any) => {
+    const jwt = getJWTFromRequest(req)
+    if (!jwt) {
+      return done(new Error("No auth"))
+    }
+
+    const details = await getDetailsFromPerilJWT(jwt)
+
+    if (!req.query) {
+      return done(new Error("No query included"))
+    }
+
+    if (!req.query.iID) {
+      return done(new Error("No query iID included"))
+    }
+
+    if (!details.iss.includes(req.query.iID.toString())) {
+      return done(new Error("The query iID is not in the JWT"))
+    }
+
+    done()
+  })
+
+  primus.on("connection", (spark: any) => {
+    spark.write({ hello: "world" })
+
+    sendMessageToConnectionsWithAccessToInstallation(123, { vfd: "asdasda" })
+  })
+
+  primus.on("disconnection", (spark: any) => {
+    // the spark that disconnected
+    spark.write({ bye: "world" })
+  })
+}
+
+export const sendMessageToConnectionsWithAccessToInstallation = (iID: number, message: any) => {
+  if (!primus) {
+    return
+  }
+
+  primus.forEach((spark: any) => {
+    if (spark.query.iID === iID) {
+      spark.write(message)
+    }
+  })
 }

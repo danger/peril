@@ -5,6 +5,7 @@ import { callHyperFunction } from "../runner/hyper-api"
 
 import { DangerfileReferenceString } from "../db/index"
 
+import { sendMessageToConnectionsWithAccessToInstallation } from "../api/api"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { RunType } from "../danger/danger_run"
 import { InstallationToRun, Payload } from "../danger/danger_runner"
@@ -48,6 +49,8 @@ export const triggerSandboxDangerRun = async (
   paths: DangerfileReferenceString[],
   payload: Payload
 ) => {
+  sendMessageToConnectionsWithAccessToInstallation(installation.iID, { message: "Running a Dangerfile" })
+
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
 
   // Ensure that the settings are passed through correctly

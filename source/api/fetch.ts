@@ -33,6 +33,8 @@ export function fetch(url: string | node_fetch.Request, init?: node_fetch.Reques
     }
 
     console.log(output.join(" ")) // tslint:disable-line
+
+    console.log(init) // tslint:disable-line
   }
 
   const originalFetch: any = node_fetch

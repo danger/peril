@@ -98,7 +98,6 @@ export const peril = () => {
       welcomeMessages.push(`  - Local: http://localhost:${port}`)
     }
     welcomeMessages.forEach(l => logger.info(l))
-    logger.info("")
     startScheduler()
   })
 }
