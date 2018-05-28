@@ -1,4 +1,5 @@
 import { DatabaseAdaptor, GitHubInstallation } from ".."
+import { RunIDToCallID } from "../mongo/runToCallID"
 import { RuntimeEnvironment } from "../runtimeEnv"
 
 // Caches per test file, so you can import it and check from the import
@@ -12,6 +13,8 @@ type InstallationIDToInstallation = (installationID: number) => Promise<GitHubIn
 type InstallationIDsToInstallations = (installationID: number[]) => Promise<GitHubInstallation[]>
 type InstallationToVoid = (installationID: number) => Promise<void>
 
+type InstallationIDRunToRun = (installationID: number, runID: string) => Promise<RunIDToCallID>
+type InstallationIDRunCallIDToRun = (installationID: number, runID: string, callID: string) => Promise<RunIDToCallID>
 // Take the DB and rewrite all of its functions to be both the original version and potentially the
 // jest mocked version of it.
 export interface MockDB extends DatabaseAdaptor {
@@ -21,6 +24,10 @@ export interface MockDB extends DatabaseAdaptor {
   updateInstallation: InstallationIDToNullInstallation & jest.Mock<InstallationIDToNullInstallation>
   saveInstallation: InstallationIDToInstallation & jest.Mock<InstallationIDToNullInstallation>
   deleteInstallation: InstallationToVoid & jest.Mock<InstallationToVoid>
+
+  storeCallIDForRun: InstallationIDRunCallIDToRun & jest.Mock<InstallationIDRunCallIDToRun>
+  getCallIDForRun: InstallationIDRunToRun & jest.Mock<InstallationIDRunToRun>
+
   clear: () => void
 }
 
@@ -39,6 +46,8 @@ export const getDB = (): MockDB => {
     deleteInstallation: jest.fn(),
     saveInstallation: jest.fn(),
     updateInstallation: jest.fn(),
+    getCallIDForRun: jest.fn(),
+    storeCallIDForRun: jest.fn(),
     setup: jest.fn(),
     clear: () => "void",
   }
@@ -49,6 +58,8 @@ export const getDB = (): MockDB => {
     perTestFileMock.deleteInstallation.mockClear()
     perTestFileMock.saveInstallation.mockClear()
     perTestFileMock.updateInstallation.mockClear()
+    perTestFileMock.getCallIDForRun.mockClear()
+    perTestFileMock.storeCallIDForRun.mockClear()
     perTestFileMock.setup.mockClear()
   }
 

@@ -144,7 +144,7 @@ export const mutations = {
     }
 
     // see createPerilSandboxAPIJWT
-    if (!decodedJWT.data.actions || decodedJWT.data.actions.includes("scheduleTasks")) {
+    if (!decodedJWT.data.actions || decodedJWT.data.actions.includes("scheduleTask")) {
       throw new Error(`This JWT does not have the credentials to schedule a task`)
     }
 

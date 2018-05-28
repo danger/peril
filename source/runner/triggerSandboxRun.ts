@@ -1,4 +1,4 @@
-import uuid from "uuid/v1"
+import * as uuid from "uuid/v1"
 import logger from "../logger"
 
 import { HYPER_FUNC_NAME, PUBLIC_API_ROOT_URL } from "../globals"
@@ -85,7 +85,7 @@ export const triggerSandboxDangerRun = async (
     payload,
     dslType: type === RunType.pr ? "pr" : "run",
     perilSettings: {
-      perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTasks", "taskFinished"]),
+      perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTask", "dangerfileFinished"]),
       perilAPIRoot: PUBLIC_API_ROOT_URL,
       envVars,
       perilRunID,

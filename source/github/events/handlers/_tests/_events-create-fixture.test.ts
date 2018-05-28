@@ -45,6 +45,7 @@ it("passes the right args to the hyper functions", async () => {
   // Take the payload, remove the JWT and save a copy of the JSON into a fixture dir, then snapshot it
   const payload = (callHyperFunction as any).mock.calls[0][0] as PerilRunnerBootstrapJSON
   payload.perilSettings.perilJWT = "[skipped]"
+  payload.perilSettings.perilRunID = "[run-id]"
   writeFileSync(__dirname + "/fixtures/PerilRunnerBootStrapExample.json", JSON.stringify(payload, null, "  "), "utf8")
 
   expect(payload).toMatchSnapshot()

@@ -9,6 +9,7 @@ import { createPerilSandboxAPIJWT } from "../../../../runner/sandbox/jwt"
 
 jest.mock("../../../api", () => ({
   sendMessageToConnectionsWithAccessToInstallation: jest.fn(),
+  sendAsyncMessageToConnectionsWithAccessToInstallation: jest.fn(),
 }))
 import { sendMessageToConnectionsWithAccessToInstallation } from "../../../api"
 
@@ -41,7 +42,6 @@ describe("handle mutations", () => {
     expect(sendMessageToConnectionsWithAccessToInstallation).toBeCalledWith(1, {
       action: "finished",
       filenames: ["app.ts"],
-      dangerRunID: "123-654",
       time: 123,
     })
   })
