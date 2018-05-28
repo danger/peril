@@ -8,6 +8,7 @@ import { dangerRepresentationForPath } from "../danger/danger_run"
 import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { MONGODB_URI } from "../globals"
 import { GitHubInstallation } from "./index"
+import { runToCallIDFunctions } from "./mongo/runToCallID"
 
 const d = debug("peril:mongo")
 
@@ -161,6 +162,8 @@ export const mongoDatabase = {
       await dbInstallation.remove()
     }
   },
+
+  ...runToCallIDFunctions(),
 }
 
 export type MongoDB = typeof mongoDatabase

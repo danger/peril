@@ -105,8 +105,6 @@ export const setupPublicWebsocket = () => {
 
   primus.on("connection", (spark: any) => {
     spark.write({ hello: "world" })
-
-    sendMessageToConnectionsWithAccessToInstallation(123, { vfd: "asdasda" })
   })
 
   primus.on("disconnection", (spark: any) => {
@@ -115,7 +113,28 @@ export const setupPublicWebsocket = () => {
   })
 }
 
-export const sendMessageToConnectionsWithAccessToInstallation = (iID: number, message: any) => {
+export interface MSGDangerfileStarted {
+  event: string
+  action: "started"
+  filenames: string[]
+}
+
+export interface MSGDangerfileFinished {
+  action: "finished"
+  filenames: string[]
+
+  time: number
+}
+
+export interface MSGDangerfileLog {
+  action: "log"
+  filenames: string[]
+  log: string
+}
+
+type MSGMessages = MSGDangerfileStarted | MSGDangerfileFinished | MSGDangerfileLog
+
+export const sendMessageToConnectionsWithAccessToInstallation = (iID: number, message: MSGMessages) => {
   if (!primus) {
     return
   }
@@ -123,6 +142,23 @@ export const sendMessageToConnectionsWithAccessToInstallation = (iID: number, me
   primus.forEach((spark: any) => {
     if (spark.query.iID === iID) {
       spark.write(message)
+    }
+  })
+}
+
+export const sendAsyncMessageToConnectionsWithAccessToInstallation = (
+  iID: number,
+  callback: (spark: any) => Promise<any>
+) => {
+  if (!primus) {
+    return
+  }
+
+  primus.forEach((spark: any, finalCallback: any) => {
+    if (spark.query.iID === iID) {
+      callback(spark).then(finalCallback)
+    } else {
+      finalCallback()
     }
   })
 }

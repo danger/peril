@@ -1,3 +1,4 @@
+import uuid from "uuid/v1"
 import logger from "../logger"
 
 import { HYPER_FUNC_NAME, PUBLIC_API_ROOT_URL } from "../globals"
@@ -5,7 +6,7 @@ import { callHyperFunction } from "../runner/hyper-api"
 
 import { DangerfileReferenceString } from "../db/index"
 
-import { sendMessageToConnectionsWithAccessToInstallation } from "../api/api"
+import { MSGDangerfileStarted, sendMessageToConnectionsWithAccessToInstallation } from "../api/api"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { RunType } from "../danger/danger_run"
 import { InstallationToRun, Payload } from "../danger/danger_runner"
@@ -19,6 +20,8 @@ export interface PerilSettings {
   perilJWT: string
   /** The root address of the Peril server */
   perilAPIRoot: string
+  /** The run ID for this current run, used in passing the results back */
+  perilRunID: string
   /** The environment variables sent over from Peril */
   envVars: any
 }
@@ -49,7 +52,14 @@ export const triggerSandboxDangerRun = async (
   paths: DangerfileReferenceString[],
   payload: Payload
 ) => {
-  sendMessageToConnectionsWithAccessToInstallation(installation.iID, { message: "Running a Dangerfile" })
+  const start: MSGDangerfileStarted = {
+    event: "TODO",
+    action: "started",
+    filenames: paths,
+  }
+  sendMessageToConnectionsWithAccessToInstallation(installation.iID, start)
+
+  const db = getDB() as MongoDB
 
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
 
@@ -68,14 +78,17 @@ export const triggerSandboxDangerRun = async (
 
   // Grab the installation env vars
   const envVars = await getEnvVars(installation.iID)
+  const perilRunID = uuid()
+
   const stdOUT: PerilRunnerBootstrapJSON = {
     installation,
     payload,
     dslType: type === RunType.pr ? "pr" : "run",
     perilSettings: {
-      perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTasks"]),
+      perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTasks", "taskFinished"]),
       perilAPIRoot: PUBLIC_API_ROOT_URL,
       envVars,
+      perilRunID,
     },
     paths,
   }
@@ -83,8 +96,11 @@ export const triggerSandboxDangerRun = async (
   const call = await callHyperFunction(stdOUT)
   const callID = JSON.parse(call).CallId
   if (callID) {
+    // So we can do lookups later
+    await db.storeCallIDForRun(installation.iID, perilRunID, callID)
+    // MAke it easy to grab logs from
     logger.info(`   Logs: hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
-    logger.info(`         hyper func get ${callID}`)
+    logger.info(` stdout: hyper func get ${callID}`)
   }
 }
 

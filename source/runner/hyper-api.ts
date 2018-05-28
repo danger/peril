@@ -62,6 +62,9 @@ export const getAllHyperImages = () => hyper("/images/json?all=0", "GET")
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Image/remove.html
 export const deleteHyperImage = (name: string) => hyper(`/images/${name}`, "DELETE")
 
+// https://docs.hyper.sh/hyper/Reference/API/2016-04-04%20[Ver.%201.23]/Func/logs.html
+export const getHyperLogs = (callID: string) => hyper(`/logs/${HYPER_FUNC_NAME}/${funcUUID}?callid${callID}`, "GET")
+
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/call.html
 export const callHyperFunction = async (body: any) => {
   // Use the API to grab the UUID needed for the hyper call
