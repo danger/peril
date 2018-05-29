@@ -29,7 +29,7 @@ describe("handle mutations", () => {
           jwt: "${sandboxJWT}",
           dangerfiles: ["app.ts"],
           time: 123,
-          dangerRunID: "123-654"
+          hyperCallID: "123-654"
         ) {
           success
         }

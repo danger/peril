@@ -140,7 +140,7 @@ const schemaSDL = gql`
     # Schedule a named task, with a JWT passed by Peril to a unique sandbox run
     scheduleTask(jwt: String!, task: String!, time: String!, data: JSON): MutationWithSuccess
     # Triggers a message to admins in the dashboard, and prepares to grab the logs
-    dangerfileFinished(jwt: String!, dangerfiles: [String!]!, time: Int!, dangerRunID: String!): MutationWithSuccess
+    dangerfileFinished(jwt: String!, dangerfiles: [String!]!, time: Int!, hyperCallID: String!): MutationWithSuccess
   }
 `
 

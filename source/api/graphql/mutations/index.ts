@@ -153,7 +153,7 @@ export const mutations = {
   },
 
   dangerfileFinished: async (_: any, params: any, __: GraphQLContext) => {
-    const opts = params as { dangerfiles: string[]; time: number; jwt: string; dangerRunID: string }
+    const opts = params as { dangerfiles: string[]; time: number; jwt: string; hyperCallID: string }
     const decodedJWT = await getDetailsFromPerilSandboxAPIJWT(opts.jwt)
 
     const db = getDB() as MongoDB
@@ -183,17 +183,14 @@ export const mutations = {
       sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
         // TODO: Cache the hyper call, because the logs will disappear after the first
         // connected client gets access to them.
-        const hyperCall = await db.getCallIDForRun(installation.iID, opts.dangerRunID)
-        if (hyperCall) {
-          const logs = await getHyperLogs(hyperCall.callID)
-          // I'm pretty sure this is just text
-          const logMessage: MSGDangerfileLog = {
-            action: "log",
-            filenames: opts.dangerfiles,
-            log: logs,
-          }
-          spark.write(logMessage)
+        const logs = await getHyperLogs(opts.hyperCallID)
+        // I'm pretty sure this is just text
+        const logMessage: MSGDangerfileLog = {
+          action: "log",
+          filenames: opts.dangerfiles,
+          log: logs,
         }
+        spark.write(logMessage)
       })
     }, 2000)
 

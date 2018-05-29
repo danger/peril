@@ -169,7 +169,7 @@ const runDangerPR = async (
         input.perilSettings.perilJWT,
         input.paths,
         1234,
-        input.perilSettings.perilRunID
+        process.env.HYPER_CALL_ID || ""
       ),
       exec.handleResultsPostingToPlatform(results, runtimeDSL.git),
     ]).then(callback)
@@ -187,7 +187,7 @@ const postResultsCall = (url: string, jwt: string, dangerfiles: string[], time: 
       jwt: "${jwt}",
       dangerfiles: [${dangerfiles.map(d => `"${d}"`).join(", ")}],
       time: ${time},
-      dangerRunID: "${hyperID}"
+      hyperCallID: "${hyperID}"
     ) {
       success
     }

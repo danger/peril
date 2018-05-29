@@ -59,8 +59,6 @@ export const triggerSandboxDangerRun = async (
   }
   sendMessageToConnectionsWithAccessToInstallation(installation.iID, start)
 
-  const db = getDB() as MongoDB
-
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
 
   // Ensure that the settings are passed through correctly
@@ -96,11 +94,10 @@ export const triggerSandboxDangerRun = async (
   const call = await callHyperFunction(stdOUT)
   const callID = JSON.parse(call).CallId
   if (callID) {
-    // So we can do lookups later
-    await db.storeCallIDForRun(installation.iID, perilRunID, callID)
-    // MAke it easy to grab logs from
-    logger.info(`   Logs: hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
-    logger.info(` stdout: hyper func get ${callID}`)
+    // Make it easy to grab logs from
+    logger.info(` Logs`)
+    logger.info(` summary: hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
+    logger.info(`  stdout: hyper func get ${callID}`)
   }
 }
 
