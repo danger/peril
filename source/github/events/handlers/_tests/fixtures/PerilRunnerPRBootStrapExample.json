@@ -1,0 +1,58 @@
+{
+  "installation": {
+    "iID": 4766,
+    "settings": {}
+  },
+  "payload": {
+    "dsl": {
+      "git": {
+        "modified_files": [],
+        "created_files": [],
+        "deleted_files": [],
+        "commits": [
+          {
+            "sha": "123",
+            "author": {
+              "name": "1",
+              "email": "1",
+              "date": "1"
+            },
+            "committer": {
+              "name": "1",
+              "email": "1",
+              "date": "1"
+            },
+            "message": "456",
+            "tree": {
+              "sha": "123",
+              "url": "123"
+            },
+            "url": "123"
+          }
+        ]
+      },
+      "github": {},
+      "settings": {
+        "github": {
+          "accessToken": "token",
+          "additionalHeaders": {
+            "Accept": "application/vnd.github.machine-man-preview+json"
+          }
+        },
+        "cliArgs": {}
+      }
+    },
+    "webhook": null
+  },
+  "dslType": "pr",
+  "perilSettings": {
+    "perilJWT": "[skipped]",
+    "envVars": {
+      "hello": "world"
+    },
+    "perilRunID": "[run-id]"
+  },
+  "paths": [
+    "org/repo@warn_with_api.ts#branch"
+  ]
+}

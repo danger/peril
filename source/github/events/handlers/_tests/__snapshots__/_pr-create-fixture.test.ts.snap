@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`passes the right args to the hyper functions when it's a PR 1`] = `
+Object {
+  "dslType": "pr",
+  "installation": Object {
+    "iID": 4766,
+    "settings": Object {},
+  },
+  "paths": Array [
+    "org/repo@warn_with_api.ts#branch",
+  ],
+  "payload": Object {
+    "dsl": Object {
+      "git": Object {
+        "JSONDiffForFile": [Function],
+        "JSONPatchForFile": [Function],
+        "commits": Array [
+          Object {
+            "author": Object {
+              "date": "1",
+              "email": "1",
+              "name": "1",
+            },
+            "committer": Object {
+              "date": "1",
+              "email": "1",
+              "name": "1",
+            },
+            "message": "456",
+            "sha": "123",
+            "tree": Object {
+              "sha": "123",
+              "url": "123",
+            },
+            "url": "123",
+          },
+        ],
+        "created_files": Array [],
+        "deleted_files": Array [],
+        "diffForFile": [Function],
+        "modified_files": Array [],
+        "structuredDiffForFile": [Function],
+      },
+      "github": Object {},
+      "settings": Object {
+        "cliArgs": Object {},
+        "github": Object {
+          "accessToken": "token",
+          "additionalHeaders": Object {
+            "Accept": "application/vnd.github.machine-man-preview+json",
+          },
+          "baseURL": undefined,
+        },
+      },
+    },
+    "webhook": null,
+  },
+  "perilSettings": Object {
+    "envVars": Object {
+      "hello": "world",
+    },
+    "perilAPIRoot": undefined,
+    "perilJWT": "[skipped]",
+    "perilRunID": "[run-id]",
+  },
+}
+`;

@@ -2556,9 +2556,9 @@ danger-plugin-yarn@^1.3.0:
   optionalDependencies:
     esdoc "^0.5.2"
 
-danger@^3.7.14:
-  version "3.7.14"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-3.7.14.tgz#5fc0f3140eb766a2a5d4c94c3329823058594040"
+danger@^3.7.15:
+  version "3.7.15"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-3.7.15.tgz#ef380471d381c8571739a986d62a5dbfb9095d2d"
   dependencies:
     "@octokit/rest" "^15.5.0"
     babel-polyfill "^6.23.0"
@@ -8541,7 +8541,11 @@ typescript@^2.1.4:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.2.tgz#f0f045e196f69a72f06b25fd3bd39d01c3ce9984"
 
-typescript@^2.8.3, typescript@~2.8.3:
+typescript@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.1.tgz#fdb19d2c67a15d11995fd15640e373e09ab09961"
+
+typescript@~2.8.3:
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.8.3.tgz#5d817f9b6f31bb871835f4edf0089f21abe6c170"
 
