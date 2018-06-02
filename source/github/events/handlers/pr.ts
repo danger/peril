@@ -57,7 +57,7 @@ export const runPRRun = async (
   const dangerDSL = await createPRJSONDSL(githubAPI)
   const results = await runDangerForInstallation(
     contents,
-    runs.map(r => r.dangerfilePath),
+    runs.map(r => r.referenceString),
     githubAPI,
     runs[0].dslType,
     installationSettings,

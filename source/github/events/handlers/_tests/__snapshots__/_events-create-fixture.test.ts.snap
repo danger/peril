@@ -8,7 +8,7 @@ Object {
     "settings": Object {},
   },
   "paths": Array [
-    "warn_with_api.ts",
+    "org/repo@warn_with_api.ts#branch",
   ],
   "payload": Object {
     "dsl": Object {

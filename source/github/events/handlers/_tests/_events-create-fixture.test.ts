@@ -38,7 +38,8 @@ it("passes the right args to the hyper functions", async () => {
   const dangerfileForRun = "warn(danger.github.api)"
   mockGetGitHubFileContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
 
-  const run = dangerRunForRules("issue_comment", "created", { issue_comment: "warn_with_api.ts" }, body)[0]
+  const runSettings = { issue_comment: "org/repo@warn_with_api.ts#branch" }
+  const run = dangerRunForRules("issue_comment", "created", runSettings, body)[0]
 
   await runEventRun([run], settings, "token", body)
 
