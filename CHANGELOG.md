@@ -1,53 +1,65 @@
+## 2018 - May 28
+
+- Adds a webhook system which allows admins to see:
+
+  - when a dangerfile is triggered
+  - the logs for a dangerfile
+
+  I'm still a little stuck on the client side (haven't figured how to run some code client-side with next) so it's still
+  incubating, but the whole idea works. - orta
+
+- Adds apollo engine for debugging to the graphql api - orta
+
 ## 2018 - May 21
 
-* Adds a new mutation for scheduling a task from a sandboxed run, where it doesn't have access to the agenda runtime -
+- Adds a new mutation for scheduling a task from a sandboxed run, where it doesn't have access to the agenda runtime -
   orta
 
 ## 2018 - May 21
 
-* Adds a JSON schema for the settings json - orta
+- Adds a JSON schema for the settings json - orta
 
 ## 2018 - May 20
 
-* Uses checks now - orta
+- Uses checks now - orta
 
 ## 2018 - May 17
 
-* Merged in Danger JS changes for multiple execution runs, and checks instead of comments - orta
+- Merged in Danger JS changes for multiple execution runs, and checks instead of comments - orta
 
 ## 2018 - May 13
 
-* Danger rules can use keypaths to determine if they should run - orta
+- Danger rules can use keypaths to determine if they should run - orta
 
 ## 2018 - May 9
 
-* Added mutations for adding/editing/deleting env vars for hosted Peril - orta
-* Hosted Peril can now have env vars in the DSL - orta
+- Added mutations for adding/editing/deleting env vars for hosted Peril - orta
+- Hosted Peril can now have env vars in the DSL - orta
 
 ## 2018 - May 7
 
-* Added mutations for re-sending a webhook through Peril - orta
-* Fixed CORs support - orta
+- Added mutations for re-sending a webhook through Peril - orta
+- Fixed CORs support - orta
 
 ## 2018 - May 6
 
-* Allows multiple inline events to trigger rules - SD10
+- Allows multiple inline events to trigger rules - SD10
 
 ## 2018 - April 28
 
-* Adds initial support for recording all Webhooks going to an installation for 5 minutes - orta (idea from ashfurrow)
-* Refactored a bunch of disparate event based routing into "plugins" still some better abstractions to go there but this
+- Adds initial support for recording all Webhooks going to an installation for 5 minutes - orta (idea from ashfurrow)
+- Refactored a bunch of disparate event based routing into "plugins" still some better abstractions to go there but this
   is a good start - orta/pedrovereza
 
 ## 2018 - April 27
 
-* The logs have been artistically hand crafted to feel good - orta
+- The logs have been artistically hand crafted to feel good - orta
 
 ## 2018 - April 26
 
 [BREAKING CHANGES]
 
-* Events, Tasks and Jobs all support Dangerfiles which have a default export function, in those cases the webhook/task
+- Events, Tasks and Jobs all support Dangerfiles which have a default export function, in those cases the webhook/task
   data will be passed into the function as it's first argument. This is now the recommended way to get the event data.
 
   Before:
@@ -86,35 +98,35 @@
 
 ## 2018 - April 24
 
-* You can authenticate to Peril using 'Authenticate: Basic xxxyyzzz" with your JWT - orta
+- You can authenticate to Peril using 'Authenticate: Basic xxxyyzzz" with your JWT - orta
 
 ## 2018 - April 23
 
-* Peril can redirect you to the GitHub app install page - orta
+- Peril can redirect you to the GitHub app install page - orta
 
 ## 2018 - April 22
 
-* Improvements to the GQL API - orta
+- Improvements to the GQL API - orta
 
 ## 2018 - April 21
 
-* Created a real staging environment: https://staging-api.peril.systems/ - orta
-* Peril is much more liberal about updating an installation's DB, PRs or pushes to the settings repo will trigger
+- Created a real staging environment: https://staging-api.peril.systems/ - orta
+- Peril is much more liberal about updating an installation's DB, PRs or pushes to the settings repo will trigger
   updates - orta
 
 ## 2018 - April 20
 
-* Updated node to 9 - orta
-* Does CHANGELOG checking on push - orta
-* Adds a JWT auth system for API access to installations - orta
-* Adds a GraphQL API for installation data - orta
-* Consolidates the mongoDB representation, and the in-memory GitHubInstallation interfaces - orta
+- Updated node to 9 - orta
+- Does CHANGELOG checking on push - orta
+- Adds a JWT auth system for API access to installations - orta
+- Adds a GraphQL API for installation data - orta
+- Consolidates the mongoDB representation, and the in-memory GitHubInstallation interfaces - orta
 
 ## 2017-09-21
 
-* Updated node to 8.4 - orta
-* Updated Danger to 2.0a16 - orta
-* Added the ability to skip specific repos - orta
+- Updated node to 8.4 - orta
+- Updated Danger to 2.0a16 - orta
+- Added the ability to skip specific repos - orta
 
 ## 2017-08-25
 

@@ -17,6 +17,8 @@ import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 import inlineRunner from "danger/distribution/runner/runners/inline"
 
+import { graphqlAPI } from "../api/graphql/api"
+import { gql } from "../api/graphql/gql"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "../danger/append_peril"
 import { dangerRepresentationForPath, RunType } from "../danger/danger_run"
 import { executorForInstallation, InstallationToRun, ValidatedPayload } from "../danger/danger_runner"
@@ -161,8 +163,34 @@ const runDangerPR = async (
   // host process to create a message from the logs.
   exitHook((callback: () => void) => {
     logger.info(`Process finished, sending results`)
-    exec.handleResultsPostingToPlatform(results, runtimeDSL.git).then(callback)
+    Promise.all([
+      postResultsCall(
+        input.perilSettings.perilAPIRoot,
+        input.perilSettings.perilJWT,
+        input.paths,
+        1234,
+        process.env.HYPER_CALL_ID || ""
+      ),
+      exec.handleResultsPostingToPlatform(results, runtimeDSL.git),
+    ]).then(callback)
   })
 
   logger.info("Done")
 }
+
+const postResultsCall = (url: string, jwt: string, dangerfiles: string[], time: number, hyperID: string) =>
+  graphqlAPI(
+    url,
+    gql`
+  mutation {
+    dangerfileFinished(
+      jwt: "${jwt}",
+      dangerfiles: [${dangerfiles.map(d => `"${d}"`).join(", ")}],
+      time: ${time},
+      hyperCallID: "${hyperID}"
+    ) {
+      success
+    }
+  }
+`
+  )

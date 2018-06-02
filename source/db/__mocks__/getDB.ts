@@ -21,6 +21,7 @@ export interface MockDB extends DatabaseAdaptor {
   updateInstallation: InstallationIDToNullInstallation & jest.Mock<InstallationIDToNullInstallation>
   saveInstallation: InstallationIDToInstallation & jest.Mock<InstallationIDToNullInstallation>
   deleteInstallation: InstallationToVoid & jest.Mock<InstallationToVoid>
+
   clear: () => void
 }
 

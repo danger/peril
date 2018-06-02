@@ -6,9 +6,16 @@ import {
   wipeAllRecordedWebhooks,
 } from "../../../plugins/utils/recordWebhookWithRequest"
 import { sendWebhookThroughGitHubRunner } from "../../../plugins/utils/sendWebhookThroughGitHubRunner"
+import { getHyperLogs } from "../../../runner/hyper-api"
 import { getDetailsFromPerilSandboxAPIJWT } from "../../../runner/sandbox/jwt"
 import { agenda, runTaskForInstallation } from "../../../tasks/startTaskScheduler"
-import { GraphQLContext } from "../../api"
+import {
+  GraphQLContext,
+  MSGDangerfileFinished,
+  MSGDangerfileLog,
+  sendAsyncMessageToConnectionsWithAccessToInstallation,
+  sendMessageToConnectionsWithAccessToInstallation,
+} from "../../api"
 import { getDetailsFromPerilJWT } from "../../auth/generate"
 import { authD } from "../utils/auth"
 import { getUserInstallations } from "../utils/installations"
@@ -62,7 +69,7 @@ export const mutations = {
     }
 
     await sendWebhookThroughGitHubRunner(webhook)
-    return webhook
+    return { success: true }
   }),
 
   changeEnvVarForInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
@@ -137,11 +144,56 @@ export const mutations = {
     }
 
     // see createPerilSandboxAPIJWT
-    if (!opts.data.actions || opts.data.actions.includes("scheduleTasks")) {
+    if (!decodedJWT.data.actions || decodedJWT.data.actions.includes("scheduleTask")) {
       throw new Error(`This JWT does not have the credentials to schedule a task`)
     }
 
     agenda.schedule(opts.time, opts.task, opts.data)
+    return { success: true }
+  },
+
+  dangerfileFinished: async (_: any, params: any, __: GraphQLContext) => {
+    const opts = params as { dangerfiles: string[]; time: number; jwt: string; hyperCallID: string }
+    const decodedJWT = await getDetailsFromPerilSandboxAPIJWT(opts.jwt)
+
+    const db = getDB() as MongoDB
+    const installation = await db.getInstallation(parseInt(decodedJWT.iss[0]!, 10))
+    if (!installation) {
+      throw new Error(`Installation not found from JWT`)
+    }
+
+    if (!decodedJWT.data.actions || decodedJWT.data.actions.includes("dangerfileFinished")) {
+      throw new Error(`JWT did not have access to run dangerfileFinished`)
+    }
+
+    const message: MSGDangerfileFinished = {
+      filenames: opts.dangerfiles,
+      time: opts.time,
+      action: "finished",
+    }
+
+    sendMessageToConnectionsWithAccessToInstallation(installation.iID, message)
+
+    // TODO: Store the time in some kind of per-installation analytics document
+
+    // Wait 2 seconds for the container to finish
+    setTimeout(() => {
+      // Get Hyper logs
+      // Send another message
+      sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
+        // TODO: Cache the hyper call, because the logs will disappear after the first
+        // connected client gets access to them.
+        const logs = await getHyperLogs(opts.hyperCallID)
+        // I'm pretty sure this is just text
+        const logMessage: MSGDangerfileLog = {
+          action: "log",
+          filenames: opts.dangerfiles,
+          log: logs,
+        }
+        spark.write(logMessage)
+      })
+    }, 2000)
+
     return { success: true }
   },
 }

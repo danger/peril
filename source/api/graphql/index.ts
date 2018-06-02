@@ -120,6 +120,10 @@ const schemaSDL = gql`
     ${nodeField}
   }
 
+  type MutationWithSuccess {
+    success: Boolean
+  }
+
   type Mutation {
     # Building this out incrementally, but basically this provides
     # the ability to set the URL that Peril should grab data from
@@ -128,12 +132,15 @@ const schemaSDL = gql`
     makeInstallationRecord(iID: Int!): Installation
     # Send webhook
     sendWebhookForInstallation(iID: Int!, eventID: String!): RecordedWebhook
-    # Adds/edits/removes a new ENV var to an installation
+    # Adds/edits/removes a new ENV var to an installation.
+    # Returns the whole env for the installation.
     changeEnvVarForInstallation(iID: Int!, key: String!, value: String): JSON
     # Trigger a named task from the installation's settings 
-    runTask(iID: Int!, task: String!, data: JSON): JSON
+    runTask(iID: Int!, task: String!, data: JSON): MutationWithSuccess
     # Schedule a named task, with a JWT passed by Peril to a unique sandbox run
-    scheduleTask(jwt: String!, task: String!, time: String!, data: JSON): JSON
+    scheduleTask(jwt: String!, task: String!, time: String!, data: JSON): MutationWithSuccess
+    # Triggers a message to admins in the dashboard, and prepares to grab the logs
+    dangerfileFinished(jwt: String!, dangerfiles: [String!]!, time: Int!, hyperCallID: String!): MutationWithSuccess
   }
 `
 
