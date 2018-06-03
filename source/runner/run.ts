@@ -145,7 +145,7 @@ const runDangerPR = async (
   }
 
   // Because it's not feasible to get stderr from hyper
-  process.stderr = process.stdout
+  process.stderr.write = process.stdout.write
 
   // Run it
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
