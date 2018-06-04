@@ -144,7 +144,7 @@ export const mutations = {
     }
 
     // see createPerilSandboxAPIJWT
-    if (!decodedJWT.data.actions || decodedJWT.data.actions.includes("scheduleTask")) {
+    if (!decodedJWT.data.actions || !decodedJWT.data.actions.includes("scheduleTask")) {
       throw new Error(`This JWT does not have the credentials to schedule a task`)
     }
 
@@ -162,7 +162,7 @@ export const mutations = {
       throw new Error(`Installation not found from JWT`)
     }
 
-    if (!decodedJWT.data.actions || decodedJWT.data.actions.includes("dangerfileFinished")) {
+    if (!decodedJWT.data.actions || !decodedJWT.data.actions.includes("dangerfileFinished")) {
       throw new Error(`JWT did not have access to run dangerfileFinished`)
     }
 

@@ -19,9 +19,8 @@ beforeEach(() => mockDB.clear())
 
 describe("handle mutations", () => {
   it("sends a message to all connected clients", async () => {
-    // const jwt = createPerilUserJWT({ name: "Orta", avatar_url: "hi" }, [123])
     mockDB.getInstallation.mockReturnValueOnce({ iID: 1 })
-    const sandboxJWT = createPerilSandboxAPIJWT(1, [""])
+    const sandboxJWT = createPerilSandboxAPIJWT(1, ["dangerfileFinished"])
 
     const mutate = gql`
       mutation {
