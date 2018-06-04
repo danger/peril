@@ -3,7 +3,7 @@ FROM node:9.11-slim
 ADD . /app
 WORKDIR /app
 
-ENV COMMIT_SHA=$(git rev-parse HEAD)
+# ENV COMMIT_SHA=$(git rev-parse HEAD)
 
 # This will also trigger the build process
 RUN yarn install
