@@ -26,7 +26,7 @@ import { run } from "./run"
 // }
 
 // Log that the process has started, and on what commit
-logger.info(`☢️ ${process.env.SOURCE_COMMIT}`)
+logger.info(`☢️ ${process.env.COMMIT_SHA}`)
 
 // Empty the auth ENV VAR before running code
 process.env.authorization = ""

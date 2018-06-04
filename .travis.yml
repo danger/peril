@@ -4,7 +4,7 @@ cache: yarn
 
 script:
   - yarn test
-  - yarn docker:build:runner  --build-arg "SOURCE_COMMIT=master"
+  - yarn docker:build:runner
 
 after_success:
   - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && scripts/deploy_staging.sh
