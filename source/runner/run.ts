@@ -103,6 +103,17 @@ const runDangerEvent = async (
     contents.push(dangerfileContent)
   }
 
+  exitHook((callback: () => void) => {
+    logger.info(`Process finished, sending results`)
+    postResultsCall(
+      input.perilSettings.perilAPIRoot,
+      input.perilSettings.perilJWT,
+      input.paths,
+      1234,
+      process.env.HYPER_CALL_ID || ""
+    ).then(callback)
+  })
+
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
   await inlineRunner.runDangerfileEnvironment(paths, contents, runtimeEnv, payload.webhook)
 }
