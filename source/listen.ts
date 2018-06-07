@@ -31,7 +31,7 @@ export const startApp = (app: express.Express, callback: any) => {
   const engine = new ApolloEngine({ apiKey: APOLLO_ENGINE_KEY })
   const httpServer = createServer(app as any)
 
-  primus = new Primus(httpServer, { transformer: "websockets" })
+  primus = new Primus(httpServer, { transformer: "websockets", iknowclusterwillbreakconnections: true })
   setupPublicWebsocket()
 
   // Call engine.listen instead of app.listen(port)
