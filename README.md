@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://danger.systems/images/js/peril-logo-hero-cachable@2x.png" width=250 />
+  <img src="http://danger.systems/images/js/peril-logo-hero-cachable@2x.png" width=250/>
 </p>
 
 [per·il](https://en.oxforddictionaries.com/definition/peril) **ˈperəl** _noun_
@@ -8,7 +8,8 @@
 
 ---
 
-Peril is the API, and code runner behind a centralized [Danger](https://github.com/danger/danger-js) server, freeing Danger from running on CI. 👍
+Peril is the API, and code runner behind a centralized [Danger](https://github.com/danger/danger-js) server, freeing
+Danger from running on CI. 👍
 
 Want to understand what the plan is? Consult the [VISION.md](/VISION.md)
 
@@ -18,12 +19,12 @@ Want to understand what the plan is? Consult the [VISION.md](/VISION.md)
 
 [Danger JS](https://github.com/danger/danger-js) is a service that runs after your CI, automating things like:
 
-* Enforce CHANGELOGs
-* Enforce links to Trello/JIRA in PR/MR bodies
-* Enforce using descriptive labels
-* Look out for common anti-patterns
-* Highlight interesting build artifacts
-* Give warnings when specific files change
+- Enforce CHANGELOGs
+- Enforce links to Trello/JIRA in PR/MR bodies
+- Enforce using descriptive labels
+- Look out for common anti-patterns
+- Highlight interesting build artifacts
+- Give warnings when specific files change
 
 ... and any other rules specific to your team's culture and needs.
 
@@ -42,9 +43,9 @@ find out [more here](./docs/local_dev.md)
 
 There are three files where the magic happens:
 
-* [source/danger/danger_runner.ts](source/danger/danger_runner.ts) - Running and coordinating a Dangerfile
-* [source/githubevents/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
-* [source/routing/router.ts](source/routing/router.ts) - Any unique work on GitHub events
+- [source/danger/danger_runner.ts](source/danger/danger_runner.ts) - Running and coordinating a Dangerfile
+- [source/githubevents/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
+- [source/routing/router.ts](source/routing/router.ts) - Any unique work on GitHub events
 
 This is an _reasonably tested_ project, there's a lot in places where the code isn't going to change much now so they're
 slowly getting covered.
@@ -54,7 +55,7 @@ slowly getting covered.
 In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING_API"` that when truthy will expose an
 extra API route.
 
-* `GET /api/v1/pr/dsl?owner=danger&repo=peril&number=14`
+- `GET /api/v1/pr/dsl?owner=danger&repo=peril&number=14`
 
   This will return the DSL JSON for a specific Pull Request. Supports JSONP.
 

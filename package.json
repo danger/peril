@@ -32,7 +32,7 @@
   "availablePerilRuntimeDependencies": {
     "@slack/client": "3.15.0",
     "danger": "^3",
-    "danger-plugin-spellcheck": "1.2.2",
+    "danger-plugin-spellcheck": "1.2.3",
     "danger-plugin-yarn": "1.2.1",
     "jira-client": "6.4.1",
     "lodash": "4.17.4",
@@ -115,7 +115,6 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.3.1",
-    "danger-plugin-spellcheck": "^1.2.3",
     "husky": "^0.14.0",
     "lint-staged": "^7.0.4",
     "mockingoose": "^2.9.1",

@@ -7,9 +7,9 @@ before _I'm_ confident using it myself, and thus writing tutorials for it.
 
 So, you will need to have:
 
-* A heroku instance for Peril
-* A unique GitHub App
-* A repo where you can keep Peril settings
+- A heroku instance for Peril
+- A unique GitHub App
+- A repo where you can keep Peril settings
 
 ## Creating your GitHub App
 
@@ -34,19 +34,19 @@ you webhooks. It can be any string, so long as it's the same in the heroku setup
 
 With respect to **permissions**, my recommendations are:
 
-* `Repo Metadata: Read` - _no option on this one_
-* `Repository contents: Read` - _Let Peril read your code_
-* `Issues: Read & Write` - _let Peril see/amend new issues_
-* `Pull Requests: Read & Write` - _let Peril act on prs_
-* `Commit Statuses: Read & Write` - _let Peril provide green/red status indicators_
+- `Repo Metadata: Read` - _no option on this one_
+- `Repository contents: Read` - _Let Peril read your code_
+- `Issues: Read & Write` - _let Peril see/amend new issues_
+- `Pull Requests: Read & Write` - _let Peril act on prs_
+- `Commit Statuses: Read & Write` - _let Peril provide green/red status indicators_
 
 And if you want to run Peril only for org members: `Organization Members: Read`. Note: it's trivial to go and change
 these later as you think of more rules that need different events.
 
 With respect to **webhooks**, my recommendations are:
 
-* `Issues`
-* `Pull Request`
+- `Issues`
+- `Pull Request`
 
 At the bottom is the option to only allow this integration to run on your org, you want this ticked probably.
 
@@ -61,8 +61,8 @@ github there is a sidebar which should have a link "Install App" - click that.
 It'll show a list of potential places to install, which may just be your org. Click install for your org. Here you can
 choose either:
 
-* install on all repos
-* install on a few repos
+- install on all repos
+- install on a few repos
 
 Either is fine, for very large orgs, I'd start with a few repos, get it stable then move to all.
 
@@ -116,20 +116,20 @@ You can look at the both the [pull_request](https://github.com/orta/peril-bootst
 
 This JSON file is split into 3 parts:
 
-* Settings for Peril
-* Rules for the organization
-* Rules per repo
+- Settings for Peril
+- Rules for the organization
+- Rules per repo
 
 This setup will:
 
-* Listen for the event `"pull_request"`, and will pull `"dangerfiles/pr.js"` from the repo: `orta/peril-bootstrap`.
-* Listen for the event `"issues"`, and will pull `"dangerfiles/issue.js"` from the repo: `orta/peril-bootstrap`.
-* Listen for the event `"issues"` event, and only if the action is `"opened"` and will pull `"lock_old_issues.ts"` from
+- Listen for the event `"pull_request"`, and will pull `"dangerfiles/pr.js"` from the repo: `orta/peril-bootstrap`.
+- Listen for the event `"issues"`, and will pull `"dangerfiles/issue.js"` from the repo: `orta/peril-bootstrap`.
+- Listen for the event `"issues"` event, and only if the action is `"opened"` and will pull `"lock_old_issues.ts"` from
   the same repo: `orta/ORStackView`. So it would ignore issue updates or deletes.
 
 You can actually use `orta/example-peril` BTW, I have some dummy Dangerfiles on that repo exactly for this purpose. Save
 the above JSON as `peril-settings.json`. Add that to a repo, push it to master on your GitHub remote. Here's one
-[I did earlier](https://github.com/artsy/artsy-danger/commit/03a1745b1f9f83fc2367ed6cdc72dee3f466b75f).
+[I did earlier](https://github.com/artsy/peril-settings/commit/03a1745b1f9f83fc2367ed6cdc72dee3f466b75f).
 
 Note: when you make updates to this file, you need to restart your Peril server, until
 [#88](https://github.com/danger/peril/issues/88) is resolved.
@@ -149,13 +149,13 @@ import { warn, danger } from "danger"
 
 ### Compare against known settings repos
 
-* <https://github.com/danger/peril-settings>
-* <https://github.com/artsy/artsy-danger>
-* <https://github.com/CocoaPods/peril-settings>
-* <https://github.com/Moya/moya-peril>
-* <https://github.com/RxSwiftCommunity/peril>
-* <https://github.com/ashfurrow/peril-settings> (personal repo)
-* <https://github.com/orta/peril-settings> (personal repo)
+- <https://github.com/danger/peril-settings>
+- <https://github.com/artsy/peril-settings>
+- <https://github.com/CocoaPods/peril-settings>
+- <https://github.com/Moya/moya-peril>
+- <https://github.com/RxSwiftCommunity/peril>
+- <https://github.com/ashfurrow/peril-settings> (personal repo)
+- <https://github.com/orta/peril-settings> (personal repo)
 
 (Note: Peril can technically be installed on personal accounts, too, because an account is just a specific type of org
 from the GitHub API's perspective.)

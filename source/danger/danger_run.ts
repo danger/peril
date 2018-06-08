@@ -113,9 +113,13 @@ export const dangerRunForRules = (
 }
 
 export interface RepresentationForURL {
+  /** The path the the file aka folder/file.ts  */
   dangerfilePath: string
+  /** The branch to find the dangerfile on  */
   branch: string
+  /** An optional repo */
   repoSlug: string | undefined
+  /** The original full string, with repo etc  */
   referenceString: DangerfileReferenceString
 }
 

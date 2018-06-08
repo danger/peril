@@ -1,8 +1,8 @@
 ## References
 
-* <https://github.com/danger/peril-settings>
-* <https://github.com/artsy/peril-settings>
-* <https://github.com/CocoaPods/peril-settings>
+- <https://github.com/danger/peril-settings>
+- <https://github.com/artsy/peril-settings>
+- <https://github.com/CocoaPods/peril-settings>
 
 # Config JSON
 
@@ -70,13 +70,13 @@ For example:
 
 ```json5
 {
-  "rules": {
-    "pull_request": "...", // all events
+  rules: {
+    pull_request: "...", // all events
     "pull_request.assigned": "...", // only on when a PR has someone assigned
     "pull_request.closed": "...", // only on when a PR is closed
-    "pull_request.synchronize": "..." // only when the commits for a PR's branch have changed
+    "pull_request.synchronize": "...", // only when the commits for a PR's branch have changed
     // ...
-  }
+  },
 }
 ```
 
@@ -85,10 +85,10 @@ replicate the exact process of running Danger on CI, you could use:
 
 ```json5
 {
-  "rules": {
-    "pull_request.opened": "artsy/artsy-danger@org/all-prs.ts",
-    "pull_request.synchronize": "artsy/artsy-danger@org/all-prs.ts"
-  }
+  rules: {
+    "pull_request.opened": "artsy/peril-settings@org/all-prs.ts",
+    "pull_request.synchronize": "artsy/peril-settings@org/all-prs.ts",
+  },
 }
 ```
 
@@ -100,9 +100,9 @@ You can use commas to have a single run be triggered by many events and actions.
 
 ```json5
 {
-  "rules": {
-    "pull_request.opened, pull_request.synchronize": "artsy/artsy-danger@org/all-prs.ts"
-  }
+  rules: {
+    "pull_request.opened, pull_request.synchronize": "artsy/peril-settings@org/all-prs.ts",
+  },
 }
 ```
 
@@ -154,11 +154,11 @@ You have _all sorts_ of potential bits of data to work with:
 
 ```json5
 {
-  "rules": {
+  rules: {
     "issue (sender.site_admin == true)": "org/welcome-admins.ts",
     "issue.closed (sender.type == Bot)": "org/post-peril-auto-close.ts",
-    "issue.opened (issue.number == 1000)": "org/congrats-issue-one-thousand.ts"
-  }
+    "issue.opened (issue.number == 1000)": "org/congrats-issue-one-thousand.ts",
+  },
 }
 ```
 
@@ -169,17 +169,17 @@ Happy to take PRs improving this if you want it :+1:.
 
 The value in these keys is a reference to a Dangerfile. There are two ways of specifying a Dangerfile, remote or local.
 
-* Remote references are Dangerfiles that do not live on the repo from which the event came.
-* Local references come from the same repo as the event.
+- Remote references are Dangerfiles that do not live on the repo from which the event came.
+- Local references come from the same repo as the event.
 
 For Dangerfiles which run on many repos, you probably want to use a remote reference. It would look something like:
 
-* `repo/slug@path/to/dangerfile.js` - _in abstract_
-* `artsy/artsy-danger@org/closed-prs.ts`- _in concrete_
+- `repo/slug@path/to/dangerfile.js` - _in abstract_
+- `artsy/peril-settings@org/closed-prs.ts`- _in concrete_
 
 For a Dangerfile which exists on the repo your running events from, you can use a local reference
 
-* `path/to/dangerfile.js`
+- `path/to/dangerfile.js`
 
 You can also append `#branch` to the end of a string to select a branch to run from.
 
@@ -193,8 +193,8 @@ Rules are for every repo, `repos` are rules for a single repo.
 ```json
 {
   "rules": {
-    "pull_request": "artsy/artsy-danger@org/all-prs.ts",
-    "pull_request.closed": "artsy/artsy-danger@org/closed-prs.ts"
+    "pull_request": "artsy/peril-settings@org/all-prs.ts",
+    "pull_request.closed": "artsy/peril-settings@org/closed-prs.ts"
   },
   "repos": {
     "artsy/reaction": {
@@ -209,14 +209,14 @@ Rules are for every repo, `repos` are rules for a single repo.
 
 So, let's say a PR is closed on `artsy/reaction`, it would trigger three Dangerfiles to run:
 
-* `"artsy/artsy-danger@org/all-prs.ts"`
-* `"artsy/artsy-danger@org/closed-prs.ts"`
-* `"danger/pr.ts"` - _this comes from artsy/reaction_
+- `"artsy/peril-settings@org/all-prs.ts"`
+- `"artsy/peril-settings@org/closed-prs.ts"`
+- `"danger/pr.ts"` - _this comes from artsy/reaction_
 
 If a PR were `edited` or `opened`, it would trigger two dangerfiles:
 
-* `"artsy/artsy-danger@org/all-prs.ts"`
-* `"danger/pr.ts"` - _this comes from artsy/reaction_
+- `"artsy/peril-settings@org/all-prs.ts"`
+- `"danger/pr.ts"` - _this comes from artsy/reaction_
 
 I'm not sure the order in which they're ran, so don't rely on that. You can also use an array to execute a set of
 dangerfiles instead of making a single mega-file.
@@ -225,8 +225,8 @@ dangerfiles instead of making a single mega-file.
 
 You can write your Dangerfiles in JavaScript or TypeScript. It will be transpiled with these settings:
 
-* [tsconfig.json](https://github.com/danger/peril/blob/master/tsconfig.json)
-* [.babelrc](https://github.com/danger/peril/blob/master/.babelrc)
+- [tsconfig.json](https://github.com/danger/peril/blob/master/tsconfig.json)
+- [.babelrc](https://github.com/danger/peril/blob/master/.babelrc)
 
 These are not set in stone. You're welcome to improve them.
 
@@ -234,9 +234,9 @@ These are not set in stone. You're welcome to improve them.
 
 There are two types of Dangerfile runs.
 
-* _PR_ runs, which are related to PR events. This is the normal DSL in the
+- _PR_ runs, which are related to PR events. This is the normal DSL in the
   [Danger JS Reference](http://danger.systems/js/reference.html)
-* _Event_ runs, which are anything other than PR events. In these cases the `github` instance in the DSL is replaced
+- _Event_ runs, which are anything other than PR events. In these cases the `github` instance in the DSL is replaced
   with the JSON that came in from the event.
 
 Not all events have something they can comment on, only `pull_request` and `issues`. So `fail`, `warn`, `markdown` and
@@ -253,7 +253,7 @@ This works by defining tasks in your `peril.settings.json`:
 
 ```json
   "tasks": {
-    "slack-dev-channel": "artsy/artsy-danger@tasks/slack-dev-channel.ts"
+    "slack-dev-channel": "artsy/peril-settings@tasks/slack-dev-channel.ts"
   },
 ```
 
@@ -370,8 +370,8 @@ The default export
 
 ### Known limitations
 
-* You cannot do a relative import of a JS file
-* Async work needs to be `schedule`'d - rather than relying on the node process to handle all async work
+- You cannot do a relative import of a JS file
+- Async work needs to be `schedule`'d - rather than relying on the node process to handle all async work
 
 # Writing Tests for your Dangerfile
 
