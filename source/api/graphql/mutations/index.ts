@@ -150,12 +150,13 @@ export const mutations = {
 
     // We need to attach an installation so we can look it up on the
     // running aspect
-    const dataForScheduler = {
-      ...opts.data,
+    const schedulerConfig = {
+      data: opts.data,
       installationID: installation.iID,
+      taskName: opts.task,
     }
 
-    agenda.schedule(opts.time, runDangerfileTaskName, dataForScheduler)
+    agenda.schedule(opts.time, runDangerfileTaskName, schedulerConfig)
     return { success: true }
   },
 
