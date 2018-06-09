@@ -148,7 +148,14 @@ export const mutations = {
       throw new Error(`This JWT does not have the credentials to schedule a task`)
     }
 
-    agenda.schedule(opts.time, runDangerfileTaskName, opts.data)
+    // We need to attach an installation so we can look it up on the
+    // running aspect
+    const dataForScheduler = {
+      ...opts.data,
+      installationID: installation.iID,
+    }
+
+    agenda.schedule(opts.time, runDangerfileTaskName, dataForScheduler)
     return { success: true }
   },
 
