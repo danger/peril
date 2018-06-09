@@ -1,3 +1,8 @@
+## 2018 - June 8
+
+- Running a task fixes - orta
+- GitHubUtils now are now generated at runtime for event based PRs - orta
+
 ## 2018 - May 28
 
 - Adds a webhook system which allows admins to see:

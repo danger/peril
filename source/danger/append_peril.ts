@@ -1,9 +1,12 @@
 import * as NodeGithub from "@octokit/rest"
 
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
-import GitHubUtils from "danger/distribution/platforms/github/GitHubUtils"
+import { GitHubUtilsDSL } from "danger/distribution/dsl/GitHubDSL"
+import GitHubUtils, { createUpdatedIssueWithIDGenerator } from "danger/distribution/platforms/github/GitHubUtils"
 import { DangerContext } from "danger/distribution/runner/Dangerfile"
+import { href, sentence } from "danger/distribution/runner/DangerUtils"
 
+import { basename } from "path"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { runtimeEnvironment } from "../db/getDB"
 import { RuntimeEnvironment } from "../db/runtimeEnv"
@@ -30,6 +33,48 @@ export const octokitAPIForPeril = async (installationID: number, authToken: stri
 }
 
 /**
+ * When running an event with nothing to do with a PR
+ * we need to have custom versions of these functions.
+ *
+ * @param api GitHub API instance
+ */
+const recreateGitHubUtils = (api: NodeGithub): GitHubUtilsDSL => ({
+  fileLinks: (paths: string[], useBasename: boolean = true, repoSlug: string, branch?: string): string => {
+    if (!repoSlug) {
+      throw new Error("Need a repo slug")
+    }
+    const ref = branch || "master"
+
+    const toHref = (path: string) => `https://github.com/${repoSlug}/blob/${ref}/${path}`
+    // As we should only be getting paths we can ignore the nullability
+    const hrefs = paths.map(p => href(toHref(p), useBasename ? basename(p) : p)) as string[]
+    return sentence(hrefs)
+  },
+
+  // A one off version of file contents
+  fileContents: async (path: string, repoSlug: string, ref?: string) => {
+    if (!repoSlug) {
+      throw new Error("fileContents must include a repo in an event")
+    }
+
+    const [owner, repo] = repoSlug.split("/")
+    try {
+      const response = await api.repos.getContent({ repo, owner, path, ref })
+      if (response && response.data && response.data.type === "file") {
+        const buffer = new Buffer(response.data.content, response.data.encoding)
+        return buffer.toString()
+      } else {
+        return ""
+      }
+    } catch {
+      return ""
+    }
+  },
+
+  createUpdatedIssueWithID: createUpdatedIssueWithIDGenerator(api),
+})
+
+/**
  * Basically adds a re-authenticated GH API client for the Dangerfile
  * can either happen by passing in the installation ID to generate a new token, or
  * by passing in an existing token.
@@ -50,14 +95,18 @@ export async function appendPerilContextToDSL(
   if (sandbox.danger) {
     // @ts-ignore - .github is readonly according to the types, but we have to have something here
     sandbox.danger.github = sandbox.danger.github || ({} as any)
-    sandbox.danger.github.api = await octokitAPIForPeril(installationID, authToken)
-    if (sandbox.danger.github.pr && sandbox.danger.github.api) {
-      sandbox.danger.github.utils = GitHubUtils(sandbox.danger.github.pr, sandbox.danger.github.api)
-    }
-  }
+    const api = await octokitAPIForPeril(installationID, authToken)
+    sandbox.danger.github.api = api
 
-  const anySandbox = sandbox as any
-  anySandbox.peril = peril
+    if (sandbox.danger.github.pr && api) {
+      sandbox.danger.github.utils = GitHubUtils(sandbox.danger.github.pr, api)
+    } else if (api) {
+      sandbox.danger.github.utils = recreateGitHubUtils(api)
+    }
+
+    const anySandbox = sandbox as any
+    anySandbox.peril = peril
+  }
 }
 
 /**
