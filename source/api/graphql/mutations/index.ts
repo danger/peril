@@ -8,7 +8,7 @@ import {
 import { sendWebhookThroughGitHubRunner } from "../../../plugins/utils/sendWebhookThroughGitHubRunner"
 import { getHyperLogs } from "../../../runner/hyper-api"
 import { getDetailsFromPerilSandboxAPIJWT } from "../../../runner/sandbox/jwt"
-import { agenda, runTaskForInstallation } from "../../../tasks/startTaskScheduler"
+import { agenda, runDangerfileTaskName, runTaskForInstallation } from "../../../tasks/startTaskScheduler"
 import {
   GraphQLContext,
   MSGDangerfileFinished,
@@ -148,7 +148,7 @@ export const mutations = {
       throw new Error(`This JWT does not have the credentials to schedule a task`)
     }
 
-    agenda.schedule(opts.time, opts.task, opts.data)
+    agenda.schedule(opts.time, runDangerfileTaskName, opts.data)
     return { success: true }
   },
 
