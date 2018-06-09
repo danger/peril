@@ -39,7 +39,9 @@ export const generateTaskSchedulerForInstallation = (
           task: "${runDangerfileTaskName}",
           time: "${sanitizedTime}",
           data: ${objectToGraphQLInput(data)}
-        )
+        ) {
+          success
+        }
       }`
 
       // Make the API call
