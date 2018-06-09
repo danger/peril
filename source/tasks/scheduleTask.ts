@@ -36,7 +36,7 @@ export const generateTaskSchedulerForInstallation = (
       mutation {
         scheduleTask(
           jwt: "${settings.perilSettings.perilJWT}",
-          task: "${runDangerfileTaskName}",
+          task: "${taskName}",
           time: "${sanitizedTime}",
           data: ${objectToGraphQLInput(data)}
         ) {

@@ -140,7 +140,7 @@ export const mutations = {
     }
 
     if (!installation.tasks[opts.task]) {
-      throw new Error(`Task not found on installation`)
+      throw new Error(`Task not found on installation, found ${Object.keys(installation.tasks)}`)
     }
 
     // see createPerilSandboxAPIJWT
