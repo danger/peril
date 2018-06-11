@@ -37,7 +37,9 @@ it("handles making a working graphql mutation", () => {
   expect(response.query.replace(/\s/g, "")).toEqual(
     gql`
       mutation {
-        scheduleTask(jwt: "123.asd.zxc", task: "mockTask", time: "1 month", data: { hello: "world" })
+        scheduleTask(jwt: "123.asd.zxc", task: "My Task", time: "1 month", data: { hello: "world" }) {
+          success
+        }
       }
     `.replace(/\s/g, "")
   )
