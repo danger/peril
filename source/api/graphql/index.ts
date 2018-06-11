@@ -80,7 +80,7 @@ const schemaSDL = gql`
     # Tasks which you can schedule to run in the future
     tasks: JSON!
     # Saved webhooks which can be re-sent
-    webhooks${connectionArgs()}: RecordedWebhookConnection
+    webhooks${connectionArgs()}: RecordedWebhookConnection!
     # User-environment variables
     envVars: JSON
   }
@@ -92,9 +92,9 @@ const schemaSDL = gql`
     # Use this to show an avatar
     avatarURL: String!
     # The installations that a user has access to
-    installations${connectionArgs()}: InstallationConnection
+    installations${connectionArgs()}: InstallationConnection!
     # The installations that a user has access to, but hasn't been set up yet
-    installationsToSetUp${connectionArgs()}: PartialInstallationConnection
+    installationsToSetUp${connectionArgs()}: PartialInstallationConnection!
   }
 
   # A stored webhook from GitHub so we can re-send it in the future
@@ -117,6 +117,7 @@ const schemaSDL = gql`
     me: User
     # Get information about an installation
     installation(iID: Int!): Installation
+    
     ${nodeField}
   }
 
