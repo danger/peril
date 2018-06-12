@@ -65,7 +65,6 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
   }
 
   const installations = await getUserInstallations(token)
-
   const user = await getUserAccount(token)
 
   const authToken = createPerilUserJWT({ name: user.name, avatar_url: user.avatar_url }, installations)
@@ -74,7 +73,7 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
   res.cookie("jwt", authToken, { domain: ".peril.systems" })
 
   if (redirect) {
-    res.redirect(redirect)
+    res.redirect(redirect + "?perilJWT=" + encodeURIComponent(authToken))
   } else {
     res.status(200).send({ jwt: authToken })
   }
