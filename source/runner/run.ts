@@ -108,6 +108,7 @@ const runDangerEvent = async (
     postResultsCall(
       input.perilSettings.perilAPIRoot,
       input.perilSettings.perilJWT,
+      input.perilSettings.event,
       input.paths,
       1234,
       process.env.HYPER_CALL_ID || ""
@@ -178,6 +179,7 @@ const runDangerPR = async (
       postResultsCall(
         input.perilSettings.perilAPIRoot,
         input.perilSettings.perilJWT,
+        input.perilSettings.event,
         input.paths,
         1234,
         process.env.HYPER_CALL_ID || ""
@@ -189,13 +191,21 @@ const runDangerPR = async (
   logger.info("Done")
 }
 
-const postResultsCall = (url: string, jwt: string, dangerfiles: string[], time: number, hyperID: string) =>
+const postResultsCall = (
+  url: string,
+  jwt: string,
+  name: string,
+  dangerfiles: string[],
+  time: number,
+  hyperID: string
+) =>
   graphqlAPI(
     url,
     gql`
   mutation {
     dangerfileFinished(
       jwt: "${jwt}",
+      name: "${name}",
       dangerfiles: [${dangerfiles.map(d => `"${d}"`).join(", ")}],
       time: ${time},
       hyperCallID: "${hyperID}"

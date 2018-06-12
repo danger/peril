@@ -50,9 +50,8 @@
     "envVars": {
       "hello": "world"
     },
-    "perilRunID": "[run-id]"
+    "perilRunID": "[run-id]",
+    "event": "eventName"
   },
-  "paths": [
-    "org/repo@warn_with_api.ts#branch"
-  ]
+  "paths": ["org/repo@warn_with_api.ts#branch"]
 }

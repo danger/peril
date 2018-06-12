@@ -116,18 +116,22 @@ export const setupPublicWebsocket = () => {
 export interface MSGDangerfileStarted {
   event: string
   action: "started"
+
   filenames: string[]
 }
 
 export interface MSGDangerfileFinished {
+  event: string
   action: "finished"
-  filenames: string[]
 
+  filenames: string[]
   time: number
 }
 
 export interface MSGDangerfileLog {
+  event: string
   action: "log"
+
   filenames: string[]
   log: string
 }

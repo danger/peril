@@ -512,6 +512,7 @@ Skip New Tests",
     "envVars": Object {
       "hello": "world",
     },
+    "event": "mockEvent",
     "perilAPIRoot": undefined,
     "perilJWT": "[skipped]",
     "perilRunID": "[run-id]",
