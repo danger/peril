@@ -104,12 +104,12 @@ export const setupPublicWebsocket = () => {
   })
 
   primus.on("connection", (spark: any) => {
-    spark.write({ hello: "world" })
+    spark.write({ connected: true })
   })
 
   primus.on("disconnection", (spark: any) => {
     // the spark that disconnected
-    spark.write({ bye: "world" })
+    spark.write({ connected: false })
   })
 }
 
@@ -140,7 +140,7 @@ export const sendMessageToConnectionsWithAccessToInstallation = (iID: number, me
   }
 
   primus.forEach((spark: any) => {
-    if (spark.query.iID === iID) {
+    if (spark.query.iID === iID.toString()) {
       spark.write(message)
     }
   })
@@ -155,7 +155,7 @@ export const sendAsyncMessageToConnectionsWithAccessToInstallation = (
   }
 
   primus.forEach((spark: any, finalCallback: any) => {
-    if (spark.query.iID === iID) {
+    if (spark.query.iID === iID.toString()) {
       callback(spark).then(finalCallback)
     } else {
       finalCallback()
