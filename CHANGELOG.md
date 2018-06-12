@@ -1,5 +1,9 @@
 ## 2018 - June 8
 
+- Improvements to the websockets information, all events now send names. - orta
+
+## 2018 - June 8
+
 - Running a task fixes - orta
 - GitHubUtils now are now generated at runtime for event based PRs - orta
 
