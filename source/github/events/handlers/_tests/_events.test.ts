@@ -53,7 +53,7 @@ it("runs an Dangerfile for an issue with a local", async () => {
     body
   )[0]
 
-  const result = await runEventRun([run], settings, "token", body)
+  const result = await runEventRun("mockEvent", [run], settings, "token", body)
   // See above in the mock for the link
   expect(result!.warnings[0].message).toEqual("issue worked: 631")
 })
@@ -76,7 +76,7 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
     body
   )[0]
 
-  const result = await runEventRun([run], settings, "token", body)
+  const result = await runEventRun("mockEvent", [run], settings, "token", body)
   expect(result!.warnings[0].message).not.toEqual("null")
 })
 
@@ -99,7 +99,7 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
     body
   )[0]
 
-  const result = await runEventRun([run], settings, "token", body)
+  const result = await runEventRun("mockEvent", [run], settings, "token", body)
   expect(result!.warnings[0].message).toEqual(23511)
 })
 
@@ -120,7 +120,7 @@ it("can handle a db returning nil for the repo with an Dangerfile for an issue w
     body
   )[0]
 
-  const result = await runEventRun([run], settings, "token", body)
+  const result = await runEventRun("mockEvent", [run], settings, "token", body)
   // See above in the mock for the link
   expect(result!.warnings[0].message).toEqual("issue worked: 631")
 })

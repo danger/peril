@@ -41,7 +41,7 @@ it("passes the right args to the hyper functions", async () => {
   const runSettings = { issue_comment: "org/repo@warn_with_api.ts#branch" }
   const run = dangerRunForRules("issue_comment", "created", runSettings, body)[0]
 
-  await runEventRun([run], settings, "token", body)
+  await runEventRun("mockEvent", [run], settings, "token", body)
 
   // Take the payload, remove the JWT and save a copy of the JSON into a fixture dir, then snapshot it
   const payload = (callHyperFunction as any).mock.calls[0][0] as PerilRunnerBootstrapJSON

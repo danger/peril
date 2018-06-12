@@ -47,13 +47,14 @@ export interface PerilRunnerBootstrapJSON {
 
 /** This function is used inside Peril */
 export const triggerSandboxDangerRun = async (
+  eventName: string,
   type: RunType,
   installation: InstallationToRun,
   paths: DangerfileReferenceString[],
   payload: Payload
 ) => {
   const start: MSGDangerfileStarted = {
-    event: "TODO",
+    event: eventName,
     action: "started",
     filenames: paths,
   }

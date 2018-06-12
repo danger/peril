@@ -5,7 +5,12 @@ import { DangerfileReferenceString, GitHubInstallation } from "../db/index"
 import { getGitHubFileContents } from "../github/lib/github_helpers"
 import logger from "../logger"
 
-export const runTask = async (installation: GitHubInstallation, rules: DangerfileReferenceString, data: any) => {
+export const runTask = async (
+  taskName: string,
+  installation: GitHubInstallation,
+  rules: DangerfileReferenceString,
+  data: any
+) => {
   logger.info(`\n## task ${rules} on ${installation.login}`)
 
   const rep = dangerRepresentationForPath(rules)
@@ -21,5 +26,13 @@ export const runTask = async (installation: GitHubInstallation, rules: Dangerfil
   }
   const token = await getTemporaryAccessTokenForInstallation(installation.iID)
   const dangerfile = await getGitHubFileContents(token, rep.repoSlug!, rep.dangerfilePath, rep.branch)
-  return runDangerForInstallation([dangerfile], [rep.referenceString], null, RunType.import, installation, payload)
+  return runDangerForInstallation(
+    taskName,
+    [dangerfile],
+    [rep.referenceString],
+    null,
+    RunType.import,
+    installation,
+    payload
+  )
 }

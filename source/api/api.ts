@@ -104,12 +104,12 @@ export const setupPublicWebsocket = () => {
   })
 
   primus.on("connection", (spark: any) => {
-    spark.write({ connected: true })
+    spark.write({ connected: true, action: "connected" })
   })
 
   primus.on("disconnection", (spark: any) => {
     // the spark that disconnected
-    spark.write({ connected: false })
+    spark.write({ connected: false, action: "connected" })
   })
 }
 

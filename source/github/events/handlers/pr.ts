@@ -8,6 +8,7 @@ import { Pull_request } from "../types/pull_request_updated.types"
 import { githubAPIForCommentable } from "../utils/commenting"
 
 export const runPRRun = async (
+  eventName: string,
   runs: DangerRun[],
   settings: GitHubRunSettings,
   token: string,
@@ -56,6 +57,7 @@ export const runPRRun = async (
 
   const dangerDSL = await createPRJSONDSL(githubAPI)
   const results = await runDangerForInstallation(
+    eventName,
     contents,
     runs.map(r => r.referenceString),
     githubAPI,
