@@ -133,7 +133,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
     logger.info(`${name} on ${installation.login || "heroku"} skipped`)
   }
 
-  await runEverything(runs, settings, installation, req, res, next)
+  await runEverything(event, runs, settings, installation, req, res, next)
 }
 
 export function runsForEvent(
@@ -149,6 +149,7 @@ export function runsForEvent(
 }
 
 export const runEverything = async (
+  eventName: string,
   runs: DangerRun[],
   settings: GitHubRunSettings,
   _: GitHubInstallation,
@@ -176,12 +177,12 @@ export const runEverything = async (
   const eventRuns = runs.filter(r => r.dslType === RunType.import)
 
   // Loop through all PRs, which are require difference DSL logic compared to simple GH webhook events
-  const prResults = await runPRRun(prRuns, settings, token, req.body.pull_request || req.body)
+  const prResults = await runPRRun(eventName, prRuns, settings, token, req.body.pull_request || req.body)
   if (prResults) {
     allResults.push(prResults)
   }
 
-  const eventResults = await runEventRun(eventRuns, settings, token, req.body)
+  const eventResults = await runEventRun(eventName, eventRuns, settings, token, req.body)
   if (eventResults) {
     allResults.push(eventResults)
   }

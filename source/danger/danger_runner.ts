@@ -43,6 +43,7 @@ export interface ValidatedPayload {
  * The single function to run danger against an installationRun
  */
 export async function runDangerForInstallation(
+  eventName: string,
   contents: string[],
   references: DangerfileReferenceString[],
   api: GitHubAPI | null,
@@ -68,7 +69,7 @@ export async function runDangerForInstallation(
     const peril = await perilObjectForInstallation(installationRun, process.env, perilFromRunOrTask)
     return await runDangerAgainstFileInline(localDangerfilePaths, contents, installationRun, exec, peril, payload)
   } else {
-    return await triggerSandboxDangerRun(type, installationRun, references, payload)
+    return await triggerSandboxDangerRun(eventName, type, installationRun, references, payload)
   }
 }
 

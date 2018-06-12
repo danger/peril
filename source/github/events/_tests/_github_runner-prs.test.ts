@@ -45,11 +45,11 @@ it("runs a Dangerfile for a PR with a local", async () => {
     body
   )[0]
 
-  await runPRRun([run], settings, "token", body.pull_request)
+  await runPRRun("eventName", [run], settings, "token", body.pull_request)
   const call = mockRunner.mock.calls[0]
   expect(mockRunner).toBeCalled()
-  expect(call[0]).toEqual(["fail('dangerfile')"])
-  expect(call[1]).toEqual(["dangerfile.pr"])
+  expect(call[1]).toEqual(["fail('dangerfile')"])
+  expect(call[2]).toEqual(["dangerfile.pr"])
 })
 
 describe("when someone edits the dangerfile", () => {
@@ -74,7 +74,7 @@ describe("when someone edits the dangerfile", () => {
       body
     )[0]
 
-    const results = await runPRRun([run], settings, "token", body.pull_request)
+    const results = await runPRRun("eventName", [run], settings, "token", body.pull_request)
     expect(mockRunner).not.toBeCalled()
     expect(results!.messages[0].message).toContain("Not running Danger rules")
   })
@@ -96,7 +96,7 @@ describe("when someone edits the dangerfile", () => {
       body
     )[0]
 
-    await runPRRun([run], settings, "token", body.pull_request)
+    await runPRRun("eventName", [run], settings, "token", body.pull_request)
     expect(mockRunner).toBeCalled()
   })
 })

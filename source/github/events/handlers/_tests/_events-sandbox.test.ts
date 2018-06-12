@@ -39,11 +39,11 @@ it("sets up the right call to trigger sandbox run", async () => {
 
   const run = dangerRunForRules("issue_comment", "created", { issue_comment: "warn_with_api" }, body)[0]
 
-  await runEventRun([run], settings, "token", body)
+  await runEventRun("mockEvent", [run], settings, "token", body)
   const mock = (triggerSandboxDangerRun as any).mock.calls[0]
 
-  expect(mock[0]).toMatchSnapshot("type")
-  expect(mock[1]).toMatchSnapshot("installation")
-  expect(mock[2]).toMatchSnapshot("paths")
-  expect(mock[3]).toMatchSnapshot("payload")
+  expect(mock[1]).toMatchSnapshot("type")
+  expect(mock[2]).toMatchSnapshot("installation")
+  expect(mock[3]).toMatchSnapshot("paths")
+  expect(mock[4]).toMatchSnapshot("payload")
 })

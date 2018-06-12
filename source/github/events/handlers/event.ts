@@ -7,6 +7,7 @@ import { GitHubRunSettings } from "../github_runner"
 import { githubAPIForCommentable } from "../utils/commenting"
 
 export const runEventRun = async (
+  eventName: string,
   runs: DangerRun[],
   settings: GitHubRunSettings,
   token: string,
@@ -42,6 +43,7 @@ export const runEventRun = async (
   }
 
   const results = await runDangerForInstallation(
+    eventName,
     contents,
     runs.map(r => r.referenceString),
     githubAPI,

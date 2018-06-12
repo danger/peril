@@ -60,6 +60,7 @@ Object {
     "envVars": Object {
       "hello": "world",
     },
+    "event": "eventName",
     "perilAPIRoot": undefined,
     "perilJWT": "[skipped]",
     "perilRunID": "[run-id]",

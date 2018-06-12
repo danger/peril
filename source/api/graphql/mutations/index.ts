@@ -161,7 +161,7 @@ export const mutations = {
   },
 
   dangerfileFinished: async (_: any, params: any, __: GraphQLContext) => {
-    const opts = params as { dangerfiles: string[]; time: number; jwt: string; hyperCallID: string }
+    const opts = params as { dangerfiles: string[]; time: number; jwt: string; hyperCallID: string; name: string }
     const decodedJWT = await getDetailsFromPerilSandboxAPIJWT(opts.jwt)
 
     const db = getDB() as MongoDB
@@ -175,6 +175,7 @@ export const mutations = {
     }
 
     const message: MSGDangerfileFinished = {
+      event: opts.name,
       filenames: opts.dangerfiles,
       time: opts.time,
       action: "finished",
@@ -194,6 +195,7 @@ export const mutations = {
         const logs = await getHyperLogs(opts.hyperCallID)
         // I'm pretty sure this is just text
         const logMessage: MSGDangerfileLog = {
+          event: opts.name,
           action: "log",
           filenames: opts.dangerfiles,
           log: logs,

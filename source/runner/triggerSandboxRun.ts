@@ -24,6 +24,8 @@ export interface PerilSettings {
   perilRunID: string
   /** The environment variables sent over from Peril */
   envVars: any
+  /** The name of the run */
+  event: string
 }
 
 // Sidenote: auth token is in  dsl.settings.github
@@ -47,13 +49,14 @@ export interface PerilRunnerBootstrapJSON {
 
 /** This function is used inside Peril */
 export const triggerSandboxDangerRun = async (
+  eventName: string,
   type: RunType,
   installation: InstallationToRun,
   paths: DangerfileReferenceString[],
   payload: Payload
 ) => {
   const start: MSGDangerfileStarted = {
-    event: "TODO",
+    event: eventName,
     action: "started",
     filenames: paths,
   }
@@ -87,6 +90,7 @@ export const triggerSandboxDangerRun = async (
       perilAPIRoot: PUBLIC_API_ROOT_URL,
       envVars,
       perilRunID,
+      event: eventName,
     },
     paths,
   }

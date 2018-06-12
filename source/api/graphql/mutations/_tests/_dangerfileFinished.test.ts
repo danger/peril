@@ -26,6 +26,7 @@ describe("handle mutations", () => {
       mutation {
         dangerfileFinished(
           jwt: "${sandboxJWT}",
+          name: "mockEvent",
           dangerfiles: ["app.ts"],
           time: 123,
           hyperCallID: "123-654"
@@ -39,6 +40,7 @@ describe("handle mutations", () => {
     expect(result).toEqual({ data: { dangerfileFinished: { success: true } } })
 
     expect(sendMessageToConnectionsWithAccessToInstallation).toBeCalledWith(1, {
+      event: "mockEvent",
       action: "finished",
       filenames: ["app.ts"],
       time: 123,

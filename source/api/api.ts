@@ -104,30 +104,34 @@ export const setupPublicWebsocket = () => {
   })
 
   primus.on("connection", (spark: any) => {
-    spark.write({ hello: "world" })
+    spark.write({ connected: true, action: "connected" })
   })
 
   primus.on("disconnection", (spark: any) => {
     // the spark that disconnected
-    spark.write({ bye: "world" })
+    spark.write({ connected: false, action: "connected" })
   })
 }
 
 export interface MSGDangerfileStarted {
   event: string
   action: "started"
+
   filenames: string[]
 }
 
 export interface MSGDangerfileFinished {
+  event: string
   action: "finished"
-  filenames: string[]
 
+  filenames: string[]
   time: number
 }
 
 export interface MSGDangerfileLog {
+  event: string
   action: "log"
+
   filenames: string[]
   log: string
 }
@@ -140,7 +144,7 @@ export const sendMessageToConnectionsWithAccessToInstallation = (iID: number, me
   }
 
   primus.forEach((spark: any) => {
-    if (spark.query.iID === iID) {
+    if (spark.query.iID === iID.toString()) {
       spark.write(message)
     }
   })
@@ -155,7 +159,7 @@ export const sendAsyncMessageToConnectionsWithAccessToInstallation = (
   }
 
   primus.forEach((spark: any, finalCallback: any) => {
-    if (spark.query.iID === iID) {
+    if (spark.query.iID === iID.toString()) {
       callback(spark).then(finalCallback)
     } else {
       finalCallback()
