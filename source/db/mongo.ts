@@ -121,7 +121,7 @@ export const mongoDatabase = {
   /** Gets a set of Integrations */
   getInstallations: async (installationID: number[]): Promise<GitHubInstallation[]> => {
     const dbInstallations = await Installation.where("iID").in(installationID)
-    return dbInstallations
+    return dbInstallations.map(convertDBRepresentationToModel)
   },
 
   /** Deletes an Integration */
