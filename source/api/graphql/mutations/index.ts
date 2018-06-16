@@ -1,6 +1,7 @@
 import { getDB } from "../../../db/getDB"
 import { MongoDB } from "../../../db/mongo"
 
+import { GitHubInstallation } from "../../../db"
 import {
   getRecordedWebhook,
   setInstallationToRecord,
@@ -23,8 +24,10 @@ import { getUserInstallations } from "../utils/installations"
 
 export const mutations = {
   editInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
+    const opts = params as Partial<GitHubInstallation>
+
     const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-    const installationID = String(params.iID)
+    const installationID = String(opts.iID)
 
     // Check the installation's ID is included inside the signed JWT, to verify access
     if (!decodedJWT.iss.includes(installationID)) {
@@ -33,7 +36,7 @@ export const mutations = {
 
     // Save the changes, then trigger an update from the new repo
     const db = getDB() as MongoDB
-    const updatedInstallation = await db.saveInstallation(params)
+    const updatedInstallation = await db.saveInstallation(opts)
     await db.updateInstallation(updatedInstallation.iID)
     return updatedInstallation
   }),
