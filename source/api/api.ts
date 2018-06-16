@@ -8,6 +8,7 @@ import expressPlayground from "graphql-playground-middleware-express"
 
 import { GITHUB_CLIENT_SECRET } from "../globals"
 import { primus } from "../listen"
+import logger from "../logger"
 import { getDetailsFromPerilJWT } from "./auth/generate"
 import { getJWTFromRequest } from "./auth/getJWTFromRequest"
 import { fakeAuthToken, generateAuthToken, redirectForGHOauth } from "./auth/github"
@@ -158,11 +159,17 @@ export const sendAsyncMessageToConnectionsWithAccessToInstallation = (
     return
   }
 
-  primus.forEach((spark: any, finalCallback: any) => {
-    if (spark.query.iID === iID.toString()) {
-      callback(spark).then(finalCallback)
-    } else {
-      finalCallback()
+  primus.forEach(
+    (spark: any, finalCallback: any) => {
+      if (spark.query.iID === iID.toString()) {
+        callback(spark).then(finalCallback)
+      } else {
+        finalCallback()
+      }
+    },
+    (err: Error) => {
+      logger.error("Got an error messaging in sendAsyncMessageToConnectionsWithAccessToInstallation:")
+      logger.error(JSON.stringify(err, null, "  "))
     }
-  })
+  )
 }
