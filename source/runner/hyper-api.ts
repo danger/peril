@@ -6,6 +6,7 @@ import logger from "../logger"
 // For usage, check out these tests, https://github.com/Tim-Zhang/hyper-aws4/blob/master/test/unit.js
 
 let funcUUID: string | null = null
+const hyperFuncHost = "https://us-west-1.hyperfunc.io"
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/index.html
 
@@ -53,17 +54,17 @@ export const hyper = (path: string, method: "GET" | "PUT" | "POST" | "DELETE", b
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Image/create.html
 export const updateHyperFuncImageUpdate = (name: string) => hyper(`images/create?fromImage=${name}`, "POST")
 
-// https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/update.html
-export const callHyperFuncUpdate = () => hyper(`func/${HYPER_FUNC_NAME}`, "PUT")
-
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Image/list.html
 export const getAllHyperImages = () => hyper("/images/json?all=0", "GET")
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Image/remove.html
 export const deleteHyperImage = (name: string) => hyper(`/images/${name}`, "DELETE")
 
-// https://docs.hyper.sh/hyper/Reference/API/2016-04-04%20[Ver.%201.23]/Func/logs.html
-export const getHyperLogs = (callID: string) => hyper(`/logs/${HYPER_FUNC_NAME}/${funcUUID}?callid${callID}`, "GET")
+// https://docs.hyper.sh/hyper/Reference/API/2016-04-04%20[Ver.%201.23]/Func/get.html
+// GET https://$region.hyperfunc.io/output/$name/$uuid/$call_id[/wait]
+// Note: different API host:
+export const getHyperLogs = (callID: string) =>
+  hyper(`${hyperFuncHost}/output/${HYPER_FUNC_NAME}/${funcUUID}/${callID}/wait`, "GET")
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/call.html
 export const callHyperFunction = async (body: any) => {
@@ -74,8 +75,7 @@ export const callHyperFunction = async (body: any) => {
   }
 
   // Note: different API host:
-  const host = "https://us-west-1.hyperfunc.io"
-  return hyper(host + `/call/${HYPER_FUNC_NAME}/${funcUUID}`, "POST", body)
+  return hyper(hyperFuncHost + `/call/${HYPER_FUNC_NAME}/${funcUUID}`, "POST", body)
 }
 
 interface FuncInfo {
