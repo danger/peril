@@ -83,6 +83,10 @@ const schemaSDL = gql`
     webhooks${connectionArgs()}: RecordedWebhookConnection!
     # User-environment variables
     envVars: JSON
+    # If this is set to be in the future, any webhook for this installation will get saved in the db
+    recordWebhooksUntilTime: String
+    # The time when a user requested recording webhooks
+    startedRecordingWebhooksTime: String
   }
 
   # Someone logged in to the API, all user data is stored inside the JWT

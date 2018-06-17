@@ -18,6 +18,8 @@ const d = debug("peril:mongo")
 export interface MongoGithubInstallationModel extends Document, GitHubInstallation {
   /** If this is set to be in the future, any webhook for this installation will get saved in the db */
   recordWebhooksUntilTime: Date
+  /** The time when a user requested recording webhooks */
+  startedRecordingWebhooksTime: Date
 }
 
 /** The model for an installation in the DB */
@@ -35,6 +37,7 @@ const Installation = model<MongoGithubInstallationModel>(
     iID: Number,
     login: String,
     perilSettingsJSONURL: String,
+    startedRecordingWebhooksTime: Date,
     recordWebhooksUntilTime: Date,
     envVars: Schema.Types.Mixed,
   })

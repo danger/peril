@@ -2,6 +2,7 @@ import { getDB } from "../../../db/getDB"
 import { MongoDB } from "../../../db/mongo"
 
 import { GitHubInstallation } from "../../../db"
+import logger from "../../../logger"
 import {
   getRecordedWebhook,
   setInstallationToRecord,
@@ -196,8 +197,12 @@ export const mutations = {
       sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
         // TODO: Cache the hyper call, because the logs will disappear after the first
         // connected client gets access to them.
-        const logs = await getHyperLogs(opts.hyperCallID)
-        // I'm pretty sure this is just text
+        let logs = null
+        try {
+          logs = await getHyperLogs(opts.hyperCallID)
+        } catch (error) {
+          logger.error(`Requesting the hyper logs for ${installation.iID} with callID ${opts.hyperCallID} - ${error}`)
+        }
         const logMessage: MSGDangerfileLog = {
           event: opts.name,
           action: "log",
