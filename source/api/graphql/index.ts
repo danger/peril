@@ -143,7 +143,7 @@ const schemaSDL = gql`
     # Trigger a named task from the installation's settings 
     runTask(iID: Int!, task: String!, data: JSON): MutationWithSuccess
     # Schedule a named task, with a JWT passed by Peril to a unique sandbox run
-    scheduleTask(jwt: String!, task: String!, time: String!, data: JSON): MutationWithSuccess
+    scheduleTask(jwt: String!, task: String!, time: String!, data: String!): MutationWithSuccess
     # Triggers a message to admins in the dashboard, and prepares to grab the logs
     dangerfileFinished(jwt: String!, name: String!, dangerfiles: [String!]!, time: Int!, hyperCallID: String!): MutationWithSuccess
   }

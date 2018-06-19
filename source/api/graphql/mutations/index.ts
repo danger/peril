@@ -135,7 +135,7 @@ export const mutations = {
   }),
 
   scheduleTask: async (_: any, params: any, __: GraphQLContext) => {
-    const opts = params as { task: string; time: string; data: any; jwt: string }
+    const opts = params as { task: string; time: string; data: string; jwt: string }
     const decodedJWT = await getDetailsFromPerilSandboxAPIJWT(opts.jwt)
 
     const db = getDB() as MongoDB
@@ -156,7 +156,7 @@ export const mutations = {
     // We need to attach an installation so we can look it up on the
     // running aspect
     const schedulerConfig = {
-      data: opts.data,
+      data: JSON.parse(opts.data),
       installationID: installation.iID,
       taskName: opts.task,
     }
