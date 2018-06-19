@@ -38,7 +38,7 @@ export const generateTaskSchedulerForInstallation = (
           jwt: "${settings.perilSettings.perilJWT}",
           task: "${taskName}",
           time: "${sanitizedTime}",
-          data: ${objectToGraphQLInput(data)}
+          data: ${JSON.stringify(data)}
         ) {
           success
         }

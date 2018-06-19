@@ -18,6 +18,8 @@ const d = debug("peril:mongo")
 export interface MongoGithubInstallationModel extends Document, GitHubInstallation {
   /** If this is set to be in the future, any webhook for this installation will get saved in the db */
   recordWebhooksUntilTime: Date
+  /** The time when a user requested recording webhooks */
+  startedRecordingWebhooksTime: Date
 }
 
 /** The model for an installation in the DB */
@@ -29,11 +31,13 @@ const Installation = model<MongoGithubInstallationModel>(
     rules: Schema.Types.Mixed,
     settings: Schema.Types.Mixed,
     tasks: Schema.Types.Mixed,
+    scheduler: Schema.Types.Mixed,
 
     // Needed by Peril
     iID: Number,
     login: String,
     perilSettingsJSONURL: String,
+    startedRecordingWebhooksTime: Date,
     recordWebhooksUntilTime: Date,
     envVars: Schema.Types.Mixed,
   })
@@ -44,7 +48,7 @@ const Installation = model<MongoGithubInstallationModel>(
  * isn't great for us, because 'x.y' is real common, so, we amend the keys in
  * the JSON on load/save to ensure it can be saved.
  */
-const userInput = ["repos", "rules", "settings", "tasks"]
+const userInput = ["repos", "rules", "settings", "tasks", "scheduler"]
 
 export const prepareToSave = (installation: Partial<GitHubInstallation>) => {
   const amendedInstallation: any = installation
@@ -61,6 +65,9 @@ export const convertDBRepresentationToModel = (installation: GitHubInstallation)
   userInput.forEach(i => {
     if (amendedInstallation[i]) {
       amendedInstallation[i] = bringBackDots(amendedInstallation[i])
+    } else {
+      // Handles the potential nullability of the userInputs above
+      amendedInstallation[i] = {}
     }
   })
   return installation
@@ -117,7 +124,7 @@ export const mongoDatabase = {
   /** Gets a set of Integrations */
   getInstallations: async (installationID: number[]): Promise<GitHubInstallation[]> => {
     const dbInstallations = await Installation.where("iID").in(installationID)
-    return dbInstallations
+    return dbInstallations.map(convertDBRepresentationToModel)
   },
 
   /** Deletes an Integration */

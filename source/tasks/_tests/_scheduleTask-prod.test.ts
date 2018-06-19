@@ -22,7 +22,7 @@ it("handles making a working graphql mutation", () => {
   } as Partial<PerilRunnerBootstrapJSON>
 
   const scheduleFunc = generateTaskSchedulerForInstallation(123, bootstrap)
-  scheduleFunc("My Task", "1 month", { hello: "world" })
+  scheduleFunc("My Task", "1 month", JSON.stringify({ hello: "world" }))
 
   expect(fetch).toBeCalledWith("https://murphdog.com/api/graphql", {
     body: expect.anything(),
@@ -34,13 +34,16 @@ it("handles making a working graphql mutation", () => {
   const mockFetch = fetch as any
   const body = mockFetch.mock.calls[0][1].body
   const response = JSON.parse(body)
-  expect(response.query.replace(/\s/g, "")).toEqual(
+
+  expect(response.query.replace(/\s/g, "").replace(/\\/g, "")).toEqual(
     gql`
       mutation {
-        scheduleTask(jwt: "123.asd.zxc", task: "My Task", time: "1 month", data: { hello: "world" }) {
+        scheduleTask(jwt: "123.asd.zxc", task: "My Task", time: "1 month", data: "{ \"hello\": \"world\" }") {
           success
         }
       }
-    `.replace(/\s/g, "")
+    `
+      .replace(/\s/g, "")
+      .replace(/\\/g, "")
   )
 })

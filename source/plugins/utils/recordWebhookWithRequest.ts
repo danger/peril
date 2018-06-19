@@ -3,6 +3,7 @@ import { Document, model, Schema } from "mongoose"
 import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
 import { actionForWebhook } from "../../github/events/utils/actions"
+import logger from "../../logger"
 
 export interface RecordedWebhook {
   iID: number
@@ -49,9 +50,12 @@ export const recordWebhookWithRequest = async (req: express.Request) => {
 export const setInstallationToRecord = async (installationID: number) => {
   const db = getDB() as MongoDB
   const inFiveMin = new Date(new Date().getTime() + 5 * 60000)
+  logger.info(`Starting to record webhooks for ${installationID}`)
+
   await db.saveInstallation({
     iID: installationID,
     recordWebhooksUntilTime: inFiveMin,
+    startedRecordingWebhooksTime: new Date(),
   })
 }
 

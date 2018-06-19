@@ -1,6 +1,8 @@
 import { getDB } from "../../../db/getDB"
 import { MongoDB } from "../../../db/mongo"
 
+import { GitHubInstallation } from "../../../db"
+import logger from "../../../logger"
 import {
   getRecordedWebhook,
   setInstallationToRecord,
@@ -23,8 +25,10 @@ import { getUserInstallations } from "../utils/installations"
 
 export const mutations = {
   editInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
+    const opts = params as Partial<GitHubInstallation>
+
     const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-    const installationID = String(params.iID)
+    const installationID = String(opts.iID)
 
     // Check the installation's ID is included inside the signed JWT, to verify access
     if (!decodedJWT.iss.includes(installationID)) {
@@ -33,7 +37,7 @@ export const mutations = {
 
     // Save the changes, then trigger an update from the new repo
     const db = getDB() as MongoDB
-    const updatedInstallation = await db.saveInstallation(params)
+    const updatedInstallation = await db.saveInstallation(opts)
     await db.updateInstallation(updatedInstallation.iID)
     return updatedInstallation
   }),
@@ -131,7 +135,7 @@ export const mutations = {
   }),
 
   scheduleTask: async (_: any, params: any, __: GraphQLContext) => {
-    const opts = params as { task: string; time: string; data: any; jwt: string }
+    const opts = params as { task: string; time: string; data: string; jwt: string }
     const decodedJWT = await getDetailsFromPerilSandboxAPIJWT(opts.jwt)
 
     const db = getDB() as MongoDB
@@ -152,7 +156,7 @@ export const mutations = {
     // We need to attach an installation so we can look it up on the
     // running aspect
     const schedulerConfig = {
-      data: opts.data,
+      data: JSON.parse(opts.data),
       installationID: installation.iID,
       taskName: opts.task,
     }
@@ -193,8 +197,12 @@ export const mutations = {
       sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
         // TODO: Cache the hyper call, because the logs will disappear after the first
         // connected client gets access to them.
-        const logs = await getHyperLogs(opts.hyperCallID)
-        // I'm pretty sure this is just text
+        let logs = null
+        try {
+          logs = await getHyperLogs(opts.hyperCallID)
+        } catch (error) {
+          logger.error(`Requesting the hyper logs for ${installation.iID} with callID ${opts.hyperCallID} - ${error}`)
+        }
         const logMessage: MSGDangerfileLog = {
           event: opts.name,
           action: "log",
