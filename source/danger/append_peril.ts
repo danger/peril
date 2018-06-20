@@ -61,7 +61,7 @@ const recreateGitHubUtils = (api: NodeGithub): GitHubUtilsDSL => ({
     try {
       const response = await api.repos.getContent({ repo, owner, path, ref })
       if (response && response.data && response.data.type === "file") {
-        const buffer = new Buffer(response.data.content, response.data.encoding)
+        const buffer = Buffer.from(response.data.content, response.data.encoding)
         return buffer.toString()
       } else {
         return ""

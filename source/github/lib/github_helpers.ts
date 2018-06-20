@@ -29,7 +29,7 @@ export async function getGitHubFileContents(token: string | null, repoSlug: stri
   const res = await api(token, `repos/${repoSlug}/contents/${path}?${refString}`)
   const data = await res.json()
   if (res.ok) {
-    const buffer = new Buffer(data.content, "base64")
+    const buffer = Buffer.from(data.content, "base64")
     return buffer.toString()
   } else {
     winston.error("res: " + res.url)
