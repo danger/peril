@@ -24,7 +24,7 @@ export async function getGitHubFileContentsFromLocation(
  * given a token.
  * Returns either the contents or an empty string.
  */
-export async function getGitHubFileContents(token: string | null, repoSlug: string, path: string, ref: string | null) {
+export async function getGitHubFileContents(token: string | null, repoSlug: string, path: string, ref: string | null, showError: boolean = true) {
   const refString = ref ? `ref=${ref}` : ""
   const res = await api(token, `repos/${repoSlug}/contents/${path}?${refString}`)
   const data = await res.json()
@@ -32,8 +32,10 @@ export async function getGitHubFileContents(token: string | null, repoSlug: stri
     const buffer = Buffer.from(data.content, "base64")
     return buffer.toString()
   } else {
-    winston.error("res: " + res.url)
-    winston.error("Getting GitHub file failed: " + JSON.stringify(data))
+    if (showError) {
+      winston.error("res: " + res.url)
+      winston.error("Getting GitHub file failed: " + JSON.stringify(data))
+    }
     return ""
   }
 }
@@ -47,7 +49,7 @@ export async function getGitHubFileContents(token: string | null, repoSlug: stri
  */
 export async function getGitHubFileContentsWithoutToken(repo: string, path: string) {
   // Try see if we can pull it without an access token
-  const file = await getGitHubFileContents(null, repo, path, null)
+  const file = await getGitHubFileContents(null, repo, path, null, false);
   if (file !== "") {
     return file
   }
