@@ -56,43 +56,10 @@ There are some key files where the magic happens:
 This is an _reasonably tested_ project, there's a lot in places where the code isn't going to change much now so they're
 slowly getting covered.
 
-### Exposing Peril to the public
+### Docs
 
-In order to support danger.systems features, there is an ENV var `"PUBLIC_FACING_API"` that when truthy will expose an
-extra API route.
-
-- `GET /api/v1/pr/dsl?owner=danger&repo=peril&number=14`
-
-  This will return the DSL JSON for a specific Pull Request. Supports JSONP.
-
-### Peril Settings
-
-The `"settings"` section of the JSON file is how you can configure peril at a global level. It looks something like
-this:
-
-```json
-{
-  "settings": {
-    "modules": ["danger-plugin-yarn", "danger-plugin-spellcheck"],
-    "env_vars": ["MY_CUSTOM_ENV_VAR"]
-  }
-  ...
-}
-```
-
-The full DSL is available inside
-[this file](https://github.com/danger/peril/blob/master/source/db/GitHubRepoSettings.ts).
-
-#### Plugins / Modules
-
-Right now you can add Danger plugins by adding a key `modules` with an array of string inside the settings object of
-your database.
-
-These will be added to your install via `yarn add [plugins]` at heroku build-time. This means that to update your
-modules you will need to ship a new commit to heroku. I'd recommend
-[this gist's](https://gist.github.com/csu/d22e60114051a0a182d2) technique.
-
-#### Env Vars
-
-You might want to expose specific ENV VARs to your Dangerfiles, this will take the values from your `process.env` and
-put them on `peril.env` inside the Dangerfiles.
+- [Introducing Peril to the Artsy Org](http://artsy.github.io/blog/2017/09/04/Introducing-Peril/)
+- [On the obsessive statelessness of Peril](http://artsy.github.io/blog/2018/06/18/On-Obsessive-Statelessness/)
+- [Reference: Terminology](https://github.com/danger/peril/blob/master/docs/terminology.md)
+- [Reference: Settings Repo JSON](https://github.com/danger/peril/blob/master/docs/settings_repo_info.md)
+- [Reference: Running Peril Locally](https://github.com/danger/peril/blob/master/docs/local_dev.md)
