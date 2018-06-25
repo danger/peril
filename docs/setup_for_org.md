@@ -34,6 +34,7 @@ you webhooks. It can be any string, so long as it's the same in the heroku setup
 
 With respect to **permissions**, my recommendations are:
 
+- `Checks: Read & Write` - _Peril comments on PRs via the Checks API_
 - `Repo Metadata: Read` - _no option on this one_
 - `Repository contents: Read` - _Let Peril read your code_
 - `Issues: Read & Write` - _let Peril see/amend new issues_
