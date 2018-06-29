@@ -123,9 +123,11 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
 
   const runs = runsForEvent(event, action, installation, req.body, settings)
   const name = action ? `${event}.${action}` : event
+  const maybeRepo = req.body.repository ? `on ${req.body.repository.full_name}` : ""
+
   if (runs.length) {
     logger.info("")
-    logger.info(`## ${name} on ${installation.login}`)
+    logger.info(`## ${name} on ${installation.login} ${maybeRepo}`)
     logger.info(
       `   ${runs.length} run${runs.length > 1 ? "s" : ""} needed: ${runs.map(r => r.dangerfilePath).join(", ")}`
     )

@@ -168,8 +168,10 @@ export const sendAsyncMessageToConnectionsWithAccessToInstallation = (
       }
     },
     (err: Error) => {
-      logger.error("Got an error messaging in sendAsyncMessageToConnectionsWithAccessToInstallation:")
-      logger.error(JSON.stringify(err, null, "  "))
+      if (err) {
+        logger.error("Got an error messaging in sendAsyncMessageToConnectionsWithAccessToInstallation:")
+        logger.error(JSON.stringify(err, null, "  "))
+      }
     }
   )
 }
