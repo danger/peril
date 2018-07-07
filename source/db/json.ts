@@ -35,8 +35,6 @@ let org: GitHubInstallation = null as any
 export const jsonDatabase = (dangerFilePath: DangerfileReferenceString): DatabaseAdaptor => ({
   /** Gets an Integration */
   getInstallation: async (_: number): Promise<GitHubInstallation | null> => {
-    const db = await getDB()
-    await db.setup()
     return org
   },
 
