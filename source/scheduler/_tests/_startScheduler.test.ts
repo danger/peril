@@ -7,7 +7,7 @@ import { getDB } from "../../db/getDB"
 const mockDB = getDB() as MockDB
 
 import installationFactory from "../../testing/installationFactory"
-import { startScheduler } from "../startScheduler"
+import { runSchedule } from "../startScheduler"
 
 it("runs scheduleJob for your tasks", async () => {
   const scheduler = {
@@ -16,7 +16,7 @@ it("runs scheduleJob for your tasks", async () => {
 
   mockDB.getInstallation.mockResolvedValueOnce(installationFactory({ scheduler }))
 
-  await startScheduler()
+  await runSchedule()
 
   expect(getDB().getInstallation).toBeCalledWith(0)
   expect(mockSchedule.scheduleJob).toBeCalledWith("1 2 3 4 5", expect.anything())
