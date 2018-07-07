@@ -34,7 +34,9 @@
 
 ## 2018 - May 17
 
-- Merged in Danger JS changes for multiple execution runs, and checks instead of comments - orta
+[BREAKING CHANGES]
+
+- Merged in Danger JS changes for multiple execution runs, and checks instead of comments you will need Checks API permissions, see the updated setup docs - orta
 
 ## 2018 - May 13
 
