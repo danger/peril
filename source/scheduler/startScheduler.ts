@@ -4,7 +4,17 @@ import { getDB } from "../db/getDB"
 import { runTaskForInstallation } from "../tasks/startTaskScheduler"
 
 export const startScheduler = async () => {
-  // TODO: This will only work for JSON-based setups right now
+  // TODO: There is an inherent disconnect here. The setup function on a db, is async, but we *want* a sync API
+  // to the db that may call this. So, instead we add a 5s delay to setting up the scheduler. Probably enough
+  // time for the installation to be set up.
+
+  // TODO: This does not iterate through all the installations
+
+  // TODO: This doesn't handle the case when someone adds a new scheduler and the server hasn't been restarted
+  setTimeout(runSchedule, 5000)
+}
+
+export const runSchedule = async () => {
   const db = getDB()
   const installation = await db.getInstallation(0)
   if (!installation) {

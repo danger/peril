@@ -1,3 +1,7 @@
+## 2018 - July 7
+
+- Fixes to the scheduled tasks feature - orta / MrCloud
+
 ## 2018 - June 8
 
 - Improvements to the websockets information, all events now send names. - orta
@@ -36,7 +40,8 @@
 
 [BREAKING CHANGES]
 
-- Merged in Danger JS changes for multiple execution runs, and checks instead of comments you will need Checks API permissions, see the updated setup docs - orta
+- Merged in Danger JS changes for multiple execution runs, and checks instead of comments you will need Checks API
+  permissions, see the updated setup docs - orta
 
 ## 2018 - May 13
 
