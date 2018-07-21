@@ -14,10 +14,9 @@ it("runs scheduleJob for your tasks", async () => {
     "1 2 3 4 5": "every_so_often.ts",
   }
 
-  mockDB.getInstallation.mockResolvedValueOnce(installationFactory({ scheduler }))
+  mockDB.getSchedulableInstallations.mockResolvedValueOnce([installationFactory({ scheduler })])
 
   await runSchedule()
 
-  expect(getDB().getInstallation).toBeCalledWith(0)
   expect(mockSchedule.scheduleJob).toBeCalledWith("1 2 3 4 5", expect.anything())
 })
