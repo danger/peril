@@ -35,9 +35,12 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
       getFileContents: github ? github.getFileContents.bind(github) : nullFunc,
 
       // Checks Support
+      platformResultsPreMapper: () =>
+        github ? github.platformResultsPreMapper && github.platformResultsPreMapper.bind(github) : nullFunc,
+
+      // deprecated, and not used to my knowledge
       handlePostingResults: () =>
         github ? github.handlePostingResults && github.handlePostingResults.bind(github) : nullFunc,
-      supportsHandlingResultsManually: () => true,
 
       createComment: github ? github.createComment.bind(github) : nullFunc,
       deleteMainComment: github ? github.deleteMainComment.bind(github) : nullFunc,
