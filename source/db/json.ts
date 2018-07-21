@@ -56,6 +56,9 @@ export const jsonDatabase = (dangerFilePath: DangerfileReferenceString): Databas
     return org
   },
 
+  /** Just return the main one */
+  getSchedulableInstallations: () => Promise.resolve([org]),
+
   setup: async () => {
     const repo = dangerFilePath.split("@")[0]
     const path = dangerFilePath.split("@")[1]
