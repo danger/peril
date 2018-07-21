@@ -127,6 +127,12 @@ export const mongoDatabase = {
     return dbInstallations.map(convertDBRepresentationToModel)
   },
 
+  /** Just return the main one */
+  getSchedulableInstallations: async (): Promise<GitHubInstallation[]> => {
+    const dbInstallations = await Installation.find({ scheduler: { $exists: true } })
+    return dbInstallations.map(convertDBRepresentationToModel)
+  },
+
   /** Deletes an Integration */
   updateInstallation: async (installationID: number) => {
     const dbInstallation = await Installation.findOne({ iID: installationID })

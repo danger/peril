@@ -33,7 +33,6 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
     const platform: Platform = {
       name: "Peril",
       getFileContents: github ? github.getFileContents.bind(github) : nullFunc,
-
       // Checks Support
       platformResultsPreMapper: () =>
         github ? github.platformResultsPreMapper && github.platformResultsPreMapper.bind(github) : nullFunc,

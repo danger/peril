@@ -139,4 +139,6 @@ export interface DatabaseAdaptor {
   saveInstallation: (installation: GitHubInstallation) => Promise<GitHubInstallation>
   /** Deletes the operation */
   deleteInstallation: (installationID: number) => Promise<void>
+  /** Gets an integrations settings */
+  getSchedulableInstallations: () => Promise<GitHubInstallation[]>
 }

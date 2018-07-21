@@ -10,6 +10,7 @@ type NullFunc = () => Promise<void>
 type InstallationIDToNullInstallation = (installationID: number) => Promise<GitHubInstallation | null>
 type InstallationIDToInstallation = (installationID: number) => Promise<GitHubInstallation>
 type InstallationIDsToInstallations = (installationID: number[]) => Promise<GitHubInstallation[]>
+type NoArgsToInstallations = () => Promise<GitHubInstallation[]>
 type InstallationToVoid = (installationID: number) => Promise<void>
 
 // Take the DB and rewrite all of its functions to be both the original version and potentially the
@@ -21,7 +22,7 @@ export interface MockDB extends DatabaseAdaptor {
   updateInstallation: InstallationIDToNullInstallation & jest.Mock<InstallationIDToNullInstallation>
   saveInstallation: InstallationIDToInstallation & jest.Mock<InstallationIDToNullInstallation>
   deleteInstallation: InstallationToVoid & jest.Mock<InstallationToVoid>
-
+  getSchedulableInstallations: NoArgsToInstallations & jest.Mock<NoArgsToInstallations>
   clear: () => void
 }
 
@@ -40,6 +41,7 @@ export const getDB = (): MockDB => {
     deleteInstallation: jest.fn(),
     saveInstallation: jest.fn(),
     updateInstallation: jest.fn(),
+    getSchedulableInstallations: jest.fn(),
     setup: jest.fn(),
     clear: () => "void",
   }
@@ -50,6 +52,7 @@ export const getDB = (): MockDB => {
     perTestFileMock.deleteInstallation.mockClear()
     perTestFileMock.saveInstallation.mockClear()
     perTestFileMock.updateInstallation.mockClear()
+    perTestFileMock.getSchedulableInstallations.mockClear()
     perTestFileMock.setup.mockClear()
   }
 
