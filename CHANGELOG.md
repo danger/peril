@@ -1,3 +1,7 @@
+## 2018 - July 21
+
+- Adds scheduler to staging - orta
+
 ## 2018 - July 7
 
 - Fixes to the scheduled tasks feature - orta / MrCloud
