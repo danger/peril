@@ -20,4 +20,15 @@ describe("routing for GitHub", () => {
 
     expect(getDB().deleteInstallation).toBeCalledWith(12345)
   })
+
+  it("skips a non-installation event", async () => {
+    const body = {
+      action: "created",
+      created: false,
+      deleted: false,
+      forced: false,
+    }
+    installationLifeCycle("push", { ...validRequest, body }, {} as any, {} as any)
+    expect(createInstallation).toBeCalled()
+  })
 })

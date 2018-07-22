@@ -1,5 +1,9 @@
 ## 2018 - July 21
 
+- Bug fix for recording webhooks, and updating the settings json from PR/pushes - orta
+
+## 2018 - July 21
+
 - Adds scheduler to staging - orta
 
 ## 2018 - July 7

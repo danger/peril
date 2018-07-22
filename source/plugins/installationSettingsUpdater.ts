@@ -48,6 +48,7 @@ export const installationSettingsUpdater = async (
     // When you just push to master
     if (event === "push") {
       const body = req.body as Push
+      winston.info("> push")
 
       const installation = await db.getInstallation(installationID)
       if (!installation) {
