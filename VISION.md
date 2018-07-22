@@ -23,26 +23,26 @@ what we ship with. This is effectively the launch checklist.
 
 ## Runner
 
-- [ ] Runs a Dangerfile with the Danger DSL on a PR event
-- [ ] Runs a Dangerfile with webhook issue on other events
-- [ ] Supports running async Dangerfiles easily
-- [ ] Supports safely evaluating code
+- [x] Runs a Dangerfile with the Danger DSL on a PR event
+- [x] Runs a Dangerfile with webhook issue on other events
+- [x] Supports running async Dangerfiles easily
+- [x] Supports safely evaluating code
 
 ## Peril
 
-- [ ] Allows regular scheduling of a task
-- [ ] Allows scheduling of tasks in the future
-- [ ] Allows deciding what events you're interested in running code from
-- [ ] Allows storing ENV vars in a non-public way
-- [ ] Keeps the database representation up-to-date with the repo
+- [x] Allows regular scheduling of a task
+- [x] Allows scheduling of tasks in the future
+- [x] Allows deciding what events you're interested in running code from
+- [x] Allows storing ENV vars in a non-public way
+- [x] Keeps the database representation up-to-date with the repo
 
 ## Admin
 
-- [ ] Can see orgs I need to set up
-- [ ] Can see all the settings and keys for any orgs I'm in
-- [ ] Can trigger a dev mode to record webhooks
-- [ ] Can see the results of Danger runs inside the dashboard
-- [ ] Can run any task from the admin to verify
+- [x] Can see orgs I need to set up
+- [x] Can see all the settings and keys for any orgs I'm in
+- [x] Can trigger a dev mode to record webhooks
+- [x] Can see the results of Danger runs inside the dashboard
+- [x] Can run any task from the admin to verify
 
 ## Homepage
 
