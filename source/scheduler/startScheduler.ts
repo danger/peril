@@ -13,7 +13,7 @@ export const runSchedule = async () => {
   const installations = await db.getSchedulableInstallations()
 
   installations.forEach(installation => {
-    if (Object.keys(installation.scheduler)) {
+    if (installation && Object.keys(installation.scheduler)) {
       // Loop through the object's properties and set up the scheduler
       for (const cronTask in installation.scheduler) {
         if (installation.scheduler.hasOwnProperty(cronTask)) {
