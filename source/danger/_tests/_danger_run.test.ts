@@ -48,6 +48,60 @@ describe("for PRs", () => {
     ])
   })
 
+  describe("for issues.* events that are actually pull-requests", () => {
+    it("returns PR rules when the issues.milestoned is actually a PR", () => {
+      const rules = { pull_request: ['pr.js'], issues: ['issue.js'] }
+      const payload = {
+        issue: {
+          number: 123,
+          title: 'My PR',
+          pull_request: {
+            "url": "https://api.github.com/repos/MyRepo/MyProject/pulls/123",
+            "html_url": "https://github.com/MyRepo/MyProject/pull/123",
+            "diff_url": "https://github.com/MyRepo/MyProject/pull/123.diff",
+            "patch_url": "https://github.com/MyRepo/MyProject/pull/123.patch"
+          }
+        }
+      }
+
+      expect(dangerRunForRules("issues", "milestoned", rules, payload)).toEqual([
+        {
+          action: "milestoned",
+          branch: "master",
+          dangerfilePath: "pr.js",
+          dslType: RunType.pr,
+          event: "pull_request",
+          feedback: RunFeedback.commentable,
+          referenceString: "pr.js",
+          repoSlug: undefined,
+        },
+      ])
+    })
+
+    it("returns issue rules when the issues.milestoned is actually a issue", () => {
+      const rules = { pull_request: ['pr.js'], issues: ['issue.js'] }
+      const payload = {
+        issue: {
+          number: 123,
+          title: 'My issue',
+        }
+      }
+
+      expect(dangerRunForRules("issues", "milestoned", rules, payload)).toEqual([
+        {
+          action: "milestoned",
+          branch: "master",
+          dangerfilePath: "issue.js",
+          dslType: RunType.import,
+          event: "issues",
+          feedback: RunFeedback.commentable,
+          referenceString: "issue.js",
+          repoSlug: undefined,
+        },
+      ])
+    })
+  })
+
   // Same semantics
   it("returns a PR run when all sub events are globbed in the rules", () => {
     const rules = { "pull_request.*": "dangerfile.js" }

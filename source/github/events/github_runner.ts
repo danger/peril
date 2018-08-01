@@ -177,6 +177,7 @@ export const runEverything = async (
   const eventRuns = runs.filter(r => r.dslType === RunType.import)
 
   // Loop through all PRs, which are require difference DSL logic compared to simple GH webhook events
+  // TODO a re-mapped PR from an issue event won't have pr.head so how do we handle that in this method?
   const prResults = await runPRRun(eventName, prRuns, settings, token, req.body.pull_request || req.body)
   if (prResults) {
     allResults.push(prResults)
