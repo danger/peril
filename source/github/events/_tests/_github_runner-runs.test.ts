@@ -59,6 +59,24 @@ it("handles a platform only run", () => {
   ])
 })
 
+it("Gets the right paths from both installation wide, and per repo rules", () => {
+  const installation = generateInstallation({
+    iID: 12,
+    rules: {
+      "pull_request.labeled": "orta/peril-dangerfiles/org@pr.ts",
+    },
+    settings: defaultSettings,
+  })
+
+  const settings = getSettings({ repoSpecificRules: { "pull_request.labeled": "orta/peril-dangerfiles/local@pr.ts" } })
+
+  const runs = runsForEvent("pull_request", "labeled", installation, {}, settings)
+  expect(runs.map(r => r.referenceString)).toEqual([
+    "orta/peril-dangerfiles/org@pr.ts",
+    "orta/peril-dangerfiles/local@pr.ts",
+  ])
+})
+
 it("gets the expected runs for platform + repo rules", () => {
   const installation = generateInstallation({
     iID: 12,
