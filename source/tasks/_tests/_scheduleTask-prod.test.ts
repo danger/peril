@@ -22,7 +22,7 @@ it("handles making a working graphql mutation", () => {
   } as Partial<PerilRunnerBootstrapJSON>
 
   const scheduleFunc = generateTaskSchedulerForInstallation(123, bootstrap)
-  scheduleFunc("My Task", "1 month", JSON.stringify({ hello: "world" }))
+  scheduleFunc("My Task", "1 month", { hello: "world" })
 
   expect(fetch).toBeCalledWith("https://murphdog.com/api/graphql", {
     body: expect.anything(),

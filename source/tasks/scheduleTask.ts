@@ -31,18 +31,20 @@ export const generateTaskSchedulerForInstallation = (
       agenda.schedule(sanitizedTime, runDangerfileTaskName, config)
     } else {
       const settings = sandboxSettings!
-
+      const mutationData = JSON.stringify(data).replace(/\"/g, '\\"')
       const query = gql`
       mutation {
         scheduleTask(
           jwt: "${settings.perilSettings.perilJWT}",
           task: "${taskName}",
           time: "${sanitizedTime}",
-          data: ${JSON.stringify(data)}
+          data: "${mutationData}"
         ) {
           success
         }
       }`
+
+      console.log(query)
 
       // Make the API call
       await graphqlAPI(settings.perilSettings.perilAPIRoot, query)
