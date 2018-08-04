@@ -52,7 +52,6 @@ export const setupPublicAPI = (app: Application) => {
 
   // GQL
   // The main GraphQL route for Peril
-  // TODO: Figure out authentication
   app.use(
     "/api/graphql",
     cors(),
