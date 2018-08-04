@@ -10,11 +10,8 @@ export const graphqlAPI = (url: string, query: string) =>
       if (res.ok) {
         return res.json()
       } else {
-        throw new Error(
-          `GraphQL API HTTP error\n> ${res.status} ${res.statusText} \n\nQuery: ${JSON.stringify({
-            query,
-          })}`
-        )
+        const errorURL = `${url}/api/graphiql?query=${encodeURI(query)}`
+        throw new Error(`GraphQL API HTTP error\n> ${res.status} ${res.statusText} \n\nQuery: ${errorURL}}`)
       }
     })
     .then(body => {
