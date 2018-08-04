@@ -10,7 +10,7 @@ export const graphqlAPI = (url: string, query: string) =>
       if (res.ok) {
         return res.json()
       } else {
-        throw new Error("HTTP error\n" + JSON.stringify(res, null, "  "))
+        throw new Error("GraphQL API HTTP error\n> " + res.statusText + "\n")
       }
     })
     .then(body => {
