@@ -29,6 +29,7 @@ import logger from "../logger"
 import { PerilRunnerBootstrapJSON } from "./triggerSandboxRun"
 
 let runtimeEnv = {} as any
+const startTime = new Date().getTime()
 
 export const run = async (stdin: string) => {
   if (stdin.trim().length === 0) {
@@ -174,14 +175,17 @@ const runDangerPR = async (
   // only post the results when the process has succeeded, leaving the
   // host process to create a message from the logs.
   exitHook((callback: () => void) => {
-    logger.info(`Process finished, sending results`)
+    const endTime = new Date().getTime()
+    const duration = (startTime - endTime) / 1000
+    logger.info(`Danger run finished in ${duration}, sending results`)
+
     Promise.all([
       postResultsCall(
         input.perilSettings.perilAPIRoot,
         input.perilSettings.perilJWT,
         input.perilSettings.event,
         input.paths,
-        1234,
+        duration,
         process.env.HYPER_CALL_ID || ""
       ),
       exec.handleResultsPostingToPlatform(results, runtimeDSL.git),
