@@ -8,7 +8,7 @@ Object {
     "settings": Object {},
   },
   "paths": Array [
-    "org/repo@warn_with_api.ts#branch",
+    "danger/peril-settings@testing/logger.ts",
   ],
   "payload": Object {
     "dsl": Object {
@@ -46,7 +46,7 @@ Object {
       "settings": Object {
         "cliArgs": Object {},
         "github": Object {
-          "accessToken": "token",
+          "accessToken": "12345",
           "additionalHeaders": Object {
             "Accept": "application/vnd.github.machine-man-preview+json",
           },
@@ -62,7 +62,7 @@ Object {
     },
     "event": "eventName",
     "perilAPIRoot": undefined,
-    "perilJWT": "[skipped]",
+    "perilJWT": "12345",
     "perilRunID": "[run-id]",
   },
 }

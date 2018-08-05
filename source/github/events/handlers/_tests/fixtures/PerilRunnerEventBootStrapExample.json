@@ -247,7 +247,7 @@
       },
       "settings": {
         "github": {
-          "accessToken": "token",
+          "accessToken": "12345",
           "additionalHeaders": {
             "Accept": "application/vnd.github.machine-man-preview+json"
           }
@@ -498,12 +498,14 @@
   },
   "dslType": "run",
   "perilSettings": {
-    "perilJWT": "[skipped]",
+    "perilJWT": "12345",
     "envVars": {
       "hello": "world"
     },
     "perilRunID": "[run-id]",
     "event": "mockEvent"
   },
-  "paths": ["org/repo@warn_with_api.ts#branch"]
+  "paths": [
+    "danger/peril-settings@testing/async_import.ts"
+  ]
 }

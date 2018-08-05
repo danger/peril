@@ -34,7 +34,7 @@
       "github": {},
       "settings": {
         "github": {
-          "accessToken": "token",
+          "accessToken": "12345",
           "additionalHeaders": {
             "Accept": "application/vnd.github.machine-man-preview+json"
           }
@@ -46,12 +46,12 @@
   },
   "dslType": "pr",
   "perilSettings": {
-    "perilJWT": "[skipped]",
+    "perilJWT": "12345",
     "envVars": {
       "hello": "world"
     },
     "perilRunID": "[run-id]",
     "event": "eventName"
   },
-  "paths": ["org/repo@warn_with_api.ts#branch"]
+  "paths": ["danger/peril-settings@testing/logger.ts"]
 }

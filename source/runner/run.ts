@@ -1,6 +1,6 @@
 // I test this locally by renaming the .env file, then running:
 //
-// ❯ yarn build; cat source/runner/fixtures/branch-push.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | env DEBUG="*" node out/runner/index.js
+// ❯ yarn build; cat source/github/events/handlers/_tests/fixtures/PerilRunnerEventBootStrapExample.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | env DEBUG="*" node out/runner/index.js
 // ❯
 
 // If you want to be testing this via hyper
@@ -16,7 +16,7 @@ import { GitHub } from "danger/distribution/platforms/GitHub"
 import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 import { jsonToDSL } from "danger/distribution/runner/jsonToDSL"
 import inlineRunner from "danger/distribution/runner/runners/inline"
-
+import * as overrideRequire from "override-require"
 import { graphqlAPI } from "../api/graphql/api"
 import { gql } from "../api/graphql/gql"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "../danger/append_peril"
@@ -26,6 +26,7 @@ import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { githubAPIForCommentable } from "../github/events/utils/commenting"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import logger from "../logger"
+import { customGitHubResolveRequest, perilPrefix, shouldUseGitHubOverride } from "./customGitHubRequire"
 import { PerilRunnerBootstrapJSON } from "./triggerSandboxRun"
 
 let runtimeEnv = {} as any
@@ -95,7 +96,9 @@ const runDangerEvent = async (
   }
 
   // Start getting the details for what code to eval.
-  const paths = input.paths.map(p => dangerRepresentationForPath(p).dangerfilePath)
+
+  // Provide a prefix to files so that we know what requires are based on a dangerfile relative path
+  const paths = input.paths.map(p => `${perilPrefix}${p}`)
   // Grab all the contents before to pass into the runner
   const contents: string[] = []
   for (const path of input.paths) {
@@ -117,7 +120,13 @@ const runDangerEvent = async (
   })
 
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
+
+  // Use custom module resolution inside the danger env
+  const restoreOriginalModuleLoader = overrideRequire(shouldUseGitHubOverride, customGitHubResolveRequest(token))
   await inlineRunner.runDangerfileEnvironment(paths, contents, runtimeEnv, payload.webhook)
+
+  // Restore the original module loader.
+  restoreOriginalModuleLoader()
 }
 
 const runDangerPR = async (
@@ -145,8 +154,9 @@ const runDangerPR = async (
   const peril = await perilObjectForInstallation(installation, input.perilSettings.envVars, input)
   await appendPerilContextToDSL(installation.iID, token, context, peril)
 
-  // Start getting the details for what code to eval.
-  const paths = input.paths.map(p => dangerRepresentationForPath(p).dangerfilePath)
+  // Provide a prefix to files so that we know what requires are based on a dangerfile relative path
+  const paths = input.paths.map(p => `${perilPrefix}${p}`)
+
   // Grab all the contents before to pass into the runner
   const contents: string[] = []
   for (const path of input.paths) {
@@ -162,7 +172,10 @@ const runDangerPR = async (
 
   // Run it
   runtimeEnv = await inlineRunner.createDangerfileRuntimeEnvironment(context)
+  // Use custom module resolution inside the danger env
+  const restoreOriginalModuleLoader = overrideRequire(shouldUseGitHubOverride, customGitHubResolveRequest(token))
   const results = await inlineRunner.runDangerfileEnvironment(paths, contents, runtimeEnv)
+  restoreOriginalModuleLoader()
 
   // Give a small summary
   logger.info(

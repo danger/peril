@@ -4,7 +4,7 @@ import { getDB } from "../../../../db/getDB"
 const mockDB = getDB() as MockDB
 
 jest.mock("../../../../api/github", () => ({
-  getTemporaryAccessTokenForInstallation: () => Promise.resolve("token"),
+  getTemporaryAccessTokenForInstallation: () => Promise.resolve("12345"),
 }))
 
 jest.mock("../../../../github/lib/github_helpers", () => ({
@@ -47,14 +47,14 @@ it("passes the right args to the hyper functions when it's a PR", async () => {
   const dangerfileForRun = "warn(danger.github.api)"
   mockGetGitHubFileContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
 
-  const runSettings = { pull_request: "org/repo@warn_with_api.ts#branch" }
+  const runSettings = { pull_request: "danger/peril-settings@testing/logger.ts" }
   const run = dangerRunForRules("pull_request", "created", runSettings, body)
 
-  await runPRRun("eventName", run, settings, "token", body.pull_request)
+  await runPRRun("eventName", run, settings, "12345", body.pull_request)
 
   // Take the payload, remove the JWT and save a copy of the JSON into a fixture dir, then snapshot it
   const payload = (callHyperFunction as any).mock.calls[0][0] as PerilRunnerBootstrapJSON
-  payload.perilSettings.perilJWT = "[skipped]"
+  payload.perilSettings.perilJWT = "12345"
   payload.perilSettings.perilRunID = "[run-id]"
   writeFileSync(__dirname + "/fixtures/PerilRunnerPRBootStrapExample.json", JSON.stringify(payload, null, "  "), "utf8")
 

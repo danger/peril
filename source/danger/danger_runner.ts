@@ -86,7 +86,6 @@ export async function runDangerAgainstFileInline(
 ) {
   const dangerDSL = payload.dsl as any | undefined
   const context = contextForDanger(dangerDSL)
-  const runner = exec.runner
   const dangerRuntimeEnv = await exec.runner.createDangerfileRuntimeEnvironment(context)
 
   if (dangerRuntimeEnv.sandbox) {
