@@ -44,8 +44,6 @@ export const generateTaskSchedulerForInstallation = (
         }
       }`
 
-      console.log(query)
-
       // Make the API call
       await graphqlAPI(settings.perilSettings.perilAPIRoot, query)
     }
