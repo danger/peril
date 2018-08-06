@@ -1,3 +1,7 @@
+## 2018 - August 5
+
+- Adds support for relative file imports inside a Dangerfile - orta
+
 ## 2018 - July 21
 
 - Bug fix for recording webhooks, and updating the settings json from PR/pushes - orta
