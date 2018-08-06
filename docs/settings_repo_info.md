@@ -366,12 +366,41 @@ export default async (webhook: Issues) => {
 }
 ```
 
-The default export
+### Known limitations for the Heroku version
 
-### Known limitations
-
-- You cannot do a relative import of a JS file
+- You cannot do a relative import of a JS/TS file in the same repo
 - Async work needs to be `schedule`'d - rather than relying on the node process to handle all async work
+
+Neither of these are issues when working with the main prod/staging Peril.
+
+# Importing other files
+
+For Peril prod/staging you have access to all of the dependencies used in Peril, as well as all of the dependencies
+noted in the `"availablePerilRuntimeDependencies"` section of the [`package.json`](../package.json). I'm pretty chill
+about expanding those dependencies, so long as they feel on topic to Danger - no using my VMs for mining please
+
+You can import and access any of those dependencies like normal. The one weird edge case is with relative imports inside
+your repos. Instead of writing a Dangerfile like this:
+
+```ts
+import { openFile } from "./open"
+export default () => {
+  openFile("name.thing")
+}
+```
+
+You need to use `async import` to import from another file:
+
+```ts
+export default async () => {
+  const {openFile} = async import("./open")
+  openFile("name.thing")
+}
+```
+
+This is because Peril will need to use the GitHub API to grab the contents of that file, rather than relying on
+synchronous filesystem access like normal. TypeScript will have no problem with this, the type system at dev time will
+basically treat it the same.
 
 # Writing Tests for your Dangerfile
 

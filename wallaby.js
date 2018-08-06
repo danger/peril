@@ -4,6 +4,7 @@ module.exports = function(wallaby) {
       "tsconfig.json",
       "jsconfig.json",
       ".env.sample",
+      "source/testing/setupScript.js",
       "source/**/*.ts?(x)",
       "source/**/*.snap",
       "source/**/*.json",
