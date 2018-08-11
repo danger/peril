@@ -61,3 +61,6 @@ declare module "graphql-relay-tools" {
 
 // shame, https://github.com/primus/primus/pull/623
 declare module "primus"
+
+// Basically does one thing
+declare module "override-require"
