@@ -2,7 +2,10 @@ import * as NodeGithub from "@octokit/rest"
 
 import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import { GitHubUtilsDSL } from "danger/distribution/dsl/GitHubDSL"
-import GitHubUtils, { createUpdatedIssueWithIDGenerator } from "danger/distribution/platforms/github/GitHubUtils"
+import GitHubUtils, {
+  createOrAddLabel,
+  createUpdatedIssueWithIDGenerator,
+} from "danger/distribution/platforms/github/GitHubUtils"
 import { DangerContext } from "danger/distribution/runner/Dangerfile"
 import { href, sentence } from "danger/distribution/runner/DangerUtils"
 
@@ -72,6 +75,9 @@ const recreateGitHubUtils = (api: NodeGithub): GitHubUtilsDSL => ({
   },
 
   createUpdatedIssueWithID: createUpdatedIssueWithIDGenerator(api),
+  // TODO: Is this right?
+  //       Do I need to move the PR object into here if needed?
+  createOrAddLabel: createOrAddLabel(undefined as any, api),
 })
 
 /**
