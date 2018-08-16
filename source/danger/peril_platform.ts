@@ -9,6 +9,8 @@ import {
 import { Platform } from "danger/distribution/platforms/platform"
 import { RunType } from "./danger_run"
 
+const { SKIP_CHECKS_SUPPORT } = process.env
+
 /**
  * When Peril is running a dangerfile for a PR we can use the default GitHub from Danger
  * however, an event like an issue comment or a user creation has no way to provide any kind of
@@ -37,7 +39,9 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
       getFileContents: github ? github.getFileContents.bind(github) : nullFunc,
       // Checks Support
       platformResultsPreMapper: () =>
-        github ? github.platformResultsPreMapper && github.platformResultsPreMapper.bind(github) : nullFunc,
+        github
+          ? !SKIP_CHECKS_SUPPORT && github.platformResultsPreMapper && github.platformResultsPreMapper.bind(github)
+          : nullFunc,
 
       // deprecated, and not used to my knowledge
       handlePostingResults: () =>
