@@ -61,7 +61,7 @@
     "@types/winston": "^2.3.9",
     "agenda": "^2.0.0",
     "apollo-engine": "^1.1.1",
-    "apollo-server-express": "^1.3.6",
+    "apollo-server-express": "^2.0.3",
     "async-exit-hook": "^2.0.1",
     "babel-cli": "7.0.0-alpha.19",
     "babel-core": "7.0.0-alpha.19",
