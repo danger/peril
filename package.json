@@ -125,7 +125,7 @@
     "typescript-json-schema": "^0.31.0"
   },
   "engines": {
-    "node": "9"
+    "node": ">=8 <=9"
   },
   "jest": {
     "transform": {

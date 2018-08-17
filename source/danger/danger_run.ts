@@ -46,6 +46,13 @@ export const dangerRunForRules = (
     return []
   }
 
+  if (event === 'issues') {
+    // check if it is really a pull request
+    if (_.get(webhook, 'issue.pull_request')) {
+      event = 'pull_request'
+    }
+  }
+
   // These are the potential keys that could trigger a run
   const directKey = event
   const globsKey = event + ".*"
