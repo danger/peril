@@ -122,7 +122,7 @@
     "now-travis": "^1.2.0",
     "prettier": "^1.14.0",
     "tslint-config-prettier": "^1.14.0",
-    "typescript-json-schema": "^0.31.0"
+    "typescript-json-schema": "^0.32.0"
   },
   "engines": {
     "node": "9"
