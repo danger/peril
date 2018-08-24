@@ -16,6 +16,8 @@
     "setup": "yarn run setup:plugins && yarn run setup:env",
     "setup:env": "node out/scripts/setup-env.js",
     "setup:plugins": "node out/scripts/setup-plugins.js",
+    "deploy:staging": "nf run scripts/deploy_staging.sh",
+    "logs:staging": "/usr/local/bin/now logs --team peril staging-api.peril.systems",
     "docker:build:site": "docker build .",
     "docker:build:runner": "docker build -f Dockerfile.runner  -t runner .",
     "runner": "node out/runner/index.js",
@@ -114,12 +116,12 @@
     "ws": "^5.2.0"
   },
   "devDependencies": {
+    "@heroku/foreman": "^2.0.2",
     "@types/cookie": "^0.3.1",
     "@types/require-from-string": "^1.2.0",
     "husky": "^0.14.0",
     "lint-staged": "^7.2.0",
     "mockingoose": "^2.10.1",
-    "now-travis": "^1.2.0",
     "prettier": "^1.14.0",
     "tslint-config-prettier": "^1.14.0",
     "typescript-json-schema": "^0.31.0"
