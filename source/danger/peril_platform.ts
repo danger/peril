@@ -34,14 +34,14 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
     }
 
     const nullFunc: any = () => ""
+    const platformResultsPreMapper = github
+      ? !SKIP_CHECKS_SUPPORT && github.platformResultsPreMapper && github.platformResultsPreMapper.bind(github)
+      : nullFunc
     const platform: Platform = {
       name: "Peril",
       getFileContents: github ? github.getFileContents.bind(github) : nullFunc,
       // Checks Support
-      platformResultsPreMapper: () =>
-        github
-          ? !SKIP_CHECKS_SUPPORT && github.platformResultsPreMapper && github.platformResultsPreMapper.bind(github)
-          : nullFunc,
+      platformResultsPreMapper,
 
       // deprecated, and not used to my knowledge
       handlePostingResults: () =>
