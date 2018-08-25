@@ -7,7 +7,7 @@ import { getDB } from "../../db/getDB"
 const mockDB = getDB() as MockDB
 
 import installationFactory from "../../testing/installationFactory"
-import { runSchedule } from "../startScheduler"
+import { runSchedule } from "../startRepeatedTaskScheduler"
 
 it("runs scheduleJob for your tasks", async () => {
   const scheduler = {

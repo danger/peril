@@ -41,6 +41,5 @@ export const startApp = (app: express.Express, callback: any) => {
     const tick = chalk.bold.greenBright("✓")
     logger.info("  - " + tick + " Apollo Engine")
     logger.info("  - " + tick + " Primus Sockets")
-    logger.info("")
   })
 }
