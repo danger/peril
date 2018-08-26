@@ -160,7 +160,13 @@ export const mongoDatabase = {
     }
 
     // Only allow the JSON to overwrite user editable settings in mongo
-    const json = JSON5.parse(file)
+    let json = {} as any
+    try {
+      json = JSON5.parse(file)
+    } catch (error) {
+      d.log(`Settings for ${installationID} were not valid json`)
+      return
+    }
     const parsedSettings: Partial<GitHubInstallation> = _.pick(json, userInput)
 
     const sanitizedSettings = prepareToSave(parsedSettings)
