@@ -21,7 +21,7 @@
     "docker:build:site": "docker build .",
     "docker:build:runner": "docker build -f Dockerfile.runner  -t runner .",
     "runner": "node out/runner/index.js",
-    "precommit": "lint-staged; yarn build;",
+    "precommit": "lint-staged; yarn type-check;",
     "postcommit": "yarn danger local --dangerfile dangerfile.lite.ts",
     "prepush": "jest"
   },
