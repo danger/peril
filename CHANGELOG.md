@@ -32,6 +32,8 @@
 }
 ```
 
+I'll update thee docs later, once I'm certain all the edge cases are handled.
+
 ## 2018 - August 5
 
 - Adds support for relative file imports inside a Dangerfile - orta
