@@ -1,7 +1,11 @@
+## 2018 - August 26
+
+- All Peril run logs get sent to slack - orta
+
 ## 2018 - August 25
 
 - The edit an installation mutation allows setting a `installationSlackUpdateWebhookURL` on your installation, which
-  Peril will use to send messages to your installation
+  Peril will use to send messages to your installation - orta
 
 - Generic rules for all the org now default to the settings JSON repo, reducing dupes in the settings json - orta
 

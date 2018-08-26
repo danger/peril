@@ -74,7 +74,7 @@ export const sendLogsToSlackForInstallation = async (
         text: message,
         attachments: [
           {
-            title: `${logs.event}.${logs.action} - ${sentence(logs.filenames)}`,
+            title: `${logs.event} - ${sentence(logs.filenames)}`,
             text: `\`\`\`\n${filteredLogs}\n\`\`\``,
           },
         ],

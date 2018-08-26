@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+# This is so that hopefully we can get the commit into the build log of a Dangerfile runner
+echo "DOCKER_TAG: ${DOCKER_TAG}"
+echo "SOURCE_BRANCH: ${SOURCE_BRANCH}"
+echo "SOURCE_COMMIT: ${SOURCE_COMMIT}"
+echo "GIT_REV_PARSE: $(git rev-parse --short HEAD)"
+echo "COMMIT_MSG: ${COMMIT_MSG}"
+echo "DOCKER_REPO: ${DOCKER_REPO}"
+echo "DOCKER_TAG: ${DOCKER_TAG}"
+echo "IMAGE_NAME: ${IMAGE_NAME}"
+
+if [ -z "${DOCKER_TAG}" ]; then
+  docker build --build-arg=COMMIT=$(git rev-parse --short HEAD) --build-arg=BRANCH=${SOURCE_BRANCH} -t $IMAGE_NAME .
+else
+  docker build --build-arg=COMMIT=$(git rev-parse --short HEAD) --build-arg=BRANCH=${DOCKER_TAG} -t $IMAGE_NAME .
+fi

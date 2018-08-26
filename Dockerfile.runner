@@ -1,12 +1,22 @@
 FROM node:9.11-slim
 
+MAINTAINER Orta Therox
+ARG BRANCH="master"
+ARG COMMIT=""
+LABEL branch=${BRANCH}
+LABEL commit=${COMMIT}
+
+RUN echo "BRANCH: ${BRANCH}" \
+ && echo "COMMIT: ${COMMIT}" \
+
 ADD . /app
 WORKDIR /app
 
-# ENV COMMIT_SHA=$(git rev-parse HEAD)
+# Now set it as an env var
+ENV COMMIT_SHA=${COMMIT}
 
 # This will also trigger the build process
 RUN yarn install
 
-# TODO: Get the additional node modules installed
+# Get the additional node modules installed
 RUN node out/scripts/hyper/install-hyper-deps.js
