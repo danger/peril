@@ -29,6 +29,9 @@
     "type": "git",
     "url": "https://github.com/danger/peril.git"
   },
+  "engines": {
+    "node": "9"
+  },
   "author": "Orta",
   "license": "MIT",
   "availablePerilRuntimeDependencies": {
