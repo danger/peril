@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 
 # This is so that hopefully we can get the commit into the build log of a Dangerfile runner
+# These come from https://docs.docker.com/docker-cloud/builds/advanced/
+
+printenv
+env
+
 echo "DOCKER_TAG: ${DOCKER_TAG}"
 echo "SOURCE_BRANCH: ${SOURCE_BRANCH}"
 echo "SOURCE_COMMIT: ${SOURCE_COMMIT}"
