@@ -2,6 +2,7 @@ import { getDB } from "../../../db/getDB"
 import { MongoDB } from "../../../db/mongo"
 
 import { GitHubInstallation } from "../../../db"
+import { sendLogsToSlackForInstallation } from "../../../infrastructure/installationSlackMessaging"
 import logger from "../../../logger"
 import {
   getRecordedWebhook,
@@ -191,25 +192,43 @@ export const mutations = {
     // TODO: Store the time in some kind of per-installation analytics document
 
     // Wait 2 seconds for the container to finish
-    setTimeout(() => {
+    setTimeout(async () => {
+      let dangerfileLog: MSGDangerfileLog | undefined
+
       // Get Hyper logs
-      // Send another message
-      sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
-        // TODO: Cache the hyper call, because the logs will disappear after the first
-        // connected client gets access to them.
+      const getLogs = async () => {
         let logs = null
         try {
           logs = await getHyperLogs(opts.hyperCallID)
         } catch (error) {
           logger.error(`Requesting the hyper logs for ${installation.iID} with callID ${opts.hyperCallID} - ${error}`)
+          return
         }
         const logMessage: MSGDangerfileLog = {
           event: opts.name,
           action: "log",
           filenames: opts.dangerfiles,
-          log: logs,
+          log: logs as string,
         }
-        spark.write(logMessage)
+        return logMessage
+      }
+
+      // If you have a connected slack webhook, then always grab the logs
+      // and store the value somewhere where the websocket to admin connections
+      // can also read.
+      if (installation.installationSlackUpdateWebhookURL) {
+        dangerfileLog = await getLogs()
+        sendLogsToSlackForInstallation("Received logs from Peril", dangerfileLog!, installation)
+      }
+
+      // Callback inside is lazy loaded and only called if there are people
+      // in the dashboard
+      sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
+        // If the slack trigger above didn't grab the logs, then re-grab them.
+        if (!dangerfileLog) {
+          dangerfileLog = await getLogs()
+        }
+        spark.write(dangerfileLog)
       })
     }, 2000)
 

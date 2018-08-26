@@ -36,7 +36,7 @@ export const peril = () => {
 
   // Error logging
   process.on("unhandledRejection", (reason: string, _: any) => {
-    logger.error("Error: ", reason)
+    logger.error("UnhandledRejection Error: ", reason)
     throw reason
   })
 

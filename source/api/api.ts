@@ -150,6 +150,10 @@ export const sendMessageToConnectionsWithAccessToInstallation = (iID: number, me
   })
 }
 
+/**
+ * This is a lazy loaded version of the above, the callback func will only get called
+ * if there is a connected websocket.
+ */
 export const sendAsyncMessageToConnectionsWithAccessToInstallation = (
   iID: number,
   callback: (spark: any) => Promise<any>

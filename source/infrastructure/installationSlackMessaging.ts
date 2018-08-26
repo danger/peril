@@ -1,4 +1,6 @@
 import { IncomingWebhook } from "@slack/client"
+import { sentence } from "danger/distribution/runner/DangerUtils"
+import { MSGDangerfileLog } from "../api/api"
 import { GitHubInstallation } from "../db"
 import { getDB } from "../db/getDB"
 import { MongoDB } from "../db/mongo"
@@ -14,8 +16,7 @@ export const replaceAllKeysInString = (obj: any, message: string) => {
   let mutableMessage = message
   const keys = Object.keys(obj)
   keys.forEach(key => {
-    const re = new RegExp(obj[key], "g")
-    mutableMessage = mutableMessage.replace(re, `[${key}]`)
+    mutableMessage = mutableMessage.split(obj[key]).join(`[${key}]`)
   })
 
   return mutableMessage
@@ -50,6 +51,36 @@ export const sendSlackMessageToInstallation = async (message: string, installati
       })
     } catch (error) {
       logger.error(`Sending a slack message failed for ${installation.login}`)
+    }
+  }
+}
+
+export const sendLogsToSlackForInstallation = async (
+  message: string,
+  logs: MSGDangerfileLog,
+  installation: GitHubInstallation
+) => {
+  if (installation.installationSlackUpdateWebhookURL) {
+    let filteredLogs = replaceAllKeysInString(globals, logs.log)
+    filteredLogs = replaceAllKeysInString(installation.envVars, filteredLogs)
+
+    // Doesn't matter if it fails, so long as it's logged. Shouldn't take down the server.
+    try {
+      const webhook = new IncomingWebhook(installation.installationSlackUpdateWebhookURL)
+
+      await webhook.send({
+        unfurl_links: false,
+        username: `Peril for ${installation.login}`,
+        text: message,
+        attachments: [
+          {
+            title: `${logs.event}.${logs.action} - ${sentence(logs.filenames)}`,
+            text: `\`\`\`\n${filteredLogs}\n\`\`\``,
+          },
+        ],
+      })
+    } catch (error) {
+      logger.error(`Sending a slack logs failed for ${installation.login}`)
     }
   }
 }
