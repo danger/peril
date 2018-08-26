@@ -38,7 +38,8 @@ export const dangerRunForRules = (
   event: string,
   action: string | null,
   rule: RunnerRuleset | undefined | null,
-  webhook: any
+  webhook: any,
+  prefixRepo?: string
 ): DangerRun[] => {
   // tslint:disable-line
   // Can't do anything with nothing
@@ -102,6 +103,12 @@ export const dangerRunForRules = (
   arrayVersions.forEach(arr => {
     possibilities = possibilities.concat(arr)
   })
+
+  // Basically, if we provide a prefix repo, the blank repos
+  // should use that repo
+  if (prefixRepo) {
+    possibilities = possibilities.map(p => (p.includes("@") ? p : `${prefixRepo}@${p}`))
+  }
 
   return possibilities.map(path => ({
     action,

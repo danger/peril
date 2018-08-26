@@ -86,7 +86,7 @@ describe("for PRs", () => {
     ])
   })
 
-  it("returns many runs when there are mutliple potential matches", () => {
+  it("returns many runs when there are multiple potential matches", () => {
     const rules = {
       issue: "dangerfile.js",
       pull_request: "dangerfile.js",
@@ -112,6 +112,28 @@ describe("for PRs", () => {
         repoSlug: undefined,
       },
     ])
+  })
+
+  it("prefixes the repo when that's passed in", () => {
+    const rules = {
+      "issue.created, issue.closed": "dangerfile.js",
+      pull_request: "dangerfile.js",
+    }
+
+    expect(
+      dangerRunForRules("pull_request", "created", rules, {}, "danger/olives").map(m => m.referenceString)
+    ).toEqual(["danger/olives@dangerfile.js"])
+  })
+
+  it("doesn't prefix the repo when that's passed in and has a repo reference", () => {
+    const rules = {
+      "issue.created, issue.closed": "dangerfile.js",
+      pull_request: "danger/phone@dangerfile.js",
+    }
+
+    expect(
+      dangerRunForRules("pull_request", "created", rules, {}, "danger/olives").map(m => m.referenceString)
+    ).toEqual(["danger/phone@dangerfile.js"])
   })
 
   it("returns null when no multi inline rules match", () => {
