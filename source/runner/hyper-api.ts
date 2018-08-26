@@ -6,15 +6,18 @@ import logger from "../logger"
 // For usage, check out these tests, https://github.com/Tim-Zhang/hyper-aws4/blob/master/test/unit.js
 
 let funcUUID: string | null = null
-const hyperFuncHost = "https://us-west-1.hyperfunc.io"
+
+// TEMPORARY workaround
+// See: https://forum.hyper.sh/t/ssl-error-in-hyper-func-api-endpoints-via-https/873
+const hyperFuncHost = "http://us-west-1.hyperfunc.io"
+const hyperHost = "https://us-west-1.hyper.sh/"
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/index.html
 
 // Path is either an absolute URL, or relative to the hyper API
-
 export const hyper = (path: string, method: "GET" | "PUT" | "POST" | "DELETE", body?: any) => {
   const signOption: any = {
-    url: path.startsWith("http") ? path : "https://us-west-1.hyper.sh/" + path,
+    url: path.startsWith("http") ? path : hyperHost + path,
     method,
     credential: {
       accessKey: HYPER_ACCESS_KEY,

@@ -104,6 +104,11 @@ export interface PerilInstallationSettings extends PerilSettingsRepoJSON {
    * is the initial string when working in the public mode
    */
   perilSettingsJSONURL: DangerfileReferenceString
+
+  /**
+   * Slack URL that Peril can send system messages to
+   */
+  installationSlackUpdateWebhookURL: string | undefined
 }
 
 export interface UniqueRepoRuleset {

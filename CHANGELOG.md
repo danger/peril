@@ -1,5 +1,8 @@
 ## 2018 - August 25
 
+- The edit an installation mutation allows setting a `installationSlackUpdateWebhookURL` on your installation, which
+  Peril will use to send messages to your installation
+
 - Generic rules for all the org now default to the settings JSON repo, reducing dupes in the settings json - orta
 
 ```diff

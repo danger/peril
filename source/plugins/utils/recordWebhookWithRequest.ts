@@ -3,6 +3,7 @@ import { Document, model, Schema } from "mongoose"
 import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
 import { actionForWebhook } from "../../github/events/utils/actions"
+import { sendSlackMessageToInstallationID } from "../../infrastructure/installationSlackMessaging"
 import logger from "../../logger"
 
 export interface RecordedWebhook {
@@ -57,6 +58,8 @@ export const setInstallationToRecord = async (installationID: number) => {
     recordWebhooksUntilTime: inFiveMin,
     startedRecordingWebhooksTime: new Date(),
   })
+
+  sendSlackMessageToInstallationID("Started to record webhooks", installationID)
 }
 
 /** Removes all recorded webhooks for a specific installation */

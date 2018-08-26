@@ -7,6 +7,7 @@ import _ = require("lodash")
 import { dangerRepresentationForPath } from "../danger/danger_run"
 import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
 import { MONGODB_URI } from "../globals"
+import { sendSlackMessageToInstallation } from "../infrastructure/installationSlackMessaging"
 import { GitHubInstallation } from "./index"
 
 const d = debug("peril:mongo")
@@ -20,6 +21,8 @@ export interface MongoGithubInstallationModel extends Document, GitHubInstallati
   recordWebhooksUntilTime: Date
   /** The time when a user requested recording webhooks */
   startedRecordingWebhooksTime: Date
+  /** A string Peril can use to pass critical message */
+  installationSlackUpdateWebhookURL: string
 }
 
 /** The model for an installation in the DB */
@@ -39,6 +42,7 @@ const Installation = model<MongoGithubInstallationModel>(
     perilSettingsJSONURL: String,
     startedRecordingWebhooksTime: Date,
     recordWebhooksUntilTime: Date,
+    installationSlackUpdateWebhookURL: String,
     envVars: Schema.Types.Mixed,
   })
 )
@@ -165,6 +169,10 @@ export const mongoDatabase = {
       json = JSON5.parse(file)
     } catch (error) {
       d.log(`Settings for ${installationID} were not valid json`)
+      sendSlackMessageToInstallation(
+        `Settings at \`${dbInstallation.perilSettingsJSONURL}\` did not parse as JSON.`,
+        dbInstallation
+      )
       return
     }
     const parsedSettings: Partial<GitHubInstallation> = _.pick(json, userInput)

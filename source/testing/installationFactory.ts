@@ -14,6 +14,7 @@ const emptyInstallation: GitHubInstallation = {
   },
   tasks: {},
   perilSettingsJSONURL: "",
+  installationSlackUpdateWebhookURL: "",
 }
 
 /** Creates an installation from a blank template */

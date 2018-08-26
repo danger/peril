@@ -3,6 +3,7 @@ import * as express from "express"
 import { PullRequest, Push } from "github-webhook-event-types"
 import { dangerRepresentationForPath } from "../danger/danger_run"
 import { getDB } from "../db/getDB"
+import { sendSlackMessageToInstallation } from "../infrastructure/installationSlackMessaging"
 import winston from "../logger"
 
 const d = debug("Peril Settings Updater")
@@ -41,6 +42,7 @@ export const installationSettingsUpdater = async (
           winston.info("## Installation settings on " + installation.login)
           winston.info("   Updated due to merged PR")
           await db.updateInstallation(installationID)
+          sendSlackMessageToInstallation("Synced your Peril settings", installation)
         }
       }
     }
@@ -67,6 +69,7 @@ export const installationSettingsUpdater = async (
         if (modifiedPerilSettings) {
           winston.info("Updating JSON settings due to merged changes on push for " + path)
           await db.updateInstallation(installationID)
+          sendSlackMessageToInstallation("Synced your Peril settings", installation)
         }
       }
     }
