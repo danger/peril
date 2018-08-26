@@ -4,7 +4,6 @@
 # These come from https://docs.docker.com/docker-cloud/builds/advanced/
 
 printenv
-env
 
 echo "DOCKER_TAG: ${DOCKER_TAG}"
 echo "SOURCE_BRANCH: ${SOURCE_BRANCH}"
@@ -14,10 +13,14 @@ echo "COMMIT_MSG: ${COMMIT_MSG}"
 echo "DOCKER_REPO: ${DOCKER_REPO}"
 echo "DOCKER_TAG: ${DOCKER_TAG}"
 echo "IMAGE_NAME: ${IMAGE_NAME}"
-echo "PATH: ${DOCKERFILE_PATH}"
+echo "BUILD_PATH: ${BUILD_PATH}"
+
+echo "before"
+FILE=$(echo -n $BUILD_PATH | tail -c +2)
+echo "after"
 
 if [ -z "${DOCKER_TAG}" ]; then
-  docker build --build-arg=COMMIT=$(git rev-parse --short HEAD) --build-arg=BRANCH=${SOURCE_BRANCH} -t $IMAGE_NAME -f $DOCKERFILE_PATH .
+  docker build --build-arg=COMMIT=$(git rev-parse --short HEAD) --build-arg=BRANCH=$SOURCE_BRANCH -t $IMAGE_NAME -f $FILE .
 else
-  docker build --build-arg=COMMIT=$(git rev-parse --short HEAD) --build-arg=BRANCH=${DOCKER_TAG} -t $IMAGE_NAME -f $DOCKERFILE_PATH .
+  docker build --build-arg=COMMIT=$(git rev-parse --short HEAD) --build-arg=BRANCH=$DOCKER_TAG -t $IMAGE_NAME -f $FILE .
 fi

@@ -6,9 +6,6 @@ ARG COMMIT=""
 LABEL branch=${BRANCH}
 LABEL commit=${COMMIT}
 
-RUN echo "BRANCH: ${BRANCH}" \
- && echo "COMMIT: ${COMMIT}" \
-
 ADD . /app
 WORKDIR /app
 
