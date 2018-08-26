@@ -1,4 +1,4 @@
-import generateInstallation from "../../../testing/installationFactory"
+import { generateInstallation } from "../../../testing/installationFactory"
 import { GitHubRunSettings, runsForEvent } from "../github_runner"
 
 // Default settings

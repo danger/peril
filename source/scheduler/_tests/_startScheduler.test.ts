@@ -6,7 +6,7 @@ import { MockDB } from "../../db/__mocks__/getDB"
 import { getDB } from "../../db/getDB"
 const mockDB = getDB() as MockDB
 
-import installationFactory from "../../testing/installationFactory"
+import { generateInstallation } from "../../testing/installationFactory"
 import { runSchedule } from "../startRepeatedTaskScheduler"
 
 it("runs scheduleJob for your tasks", async () => {
@@ -14,7 +14,7 @@ it("runs scheduleJob for your tasks", async () => {
     "1 2 3 4 5": "every_so_often.ts",
   }
 
-  mockDB.getSchedulableInstallations.mockResolvedValueOnce([installationFactory({ scheduler })])
+  mockDB.getSchedulableInstallations.mockResolvedValueOnce([generateInstallation({ scheduler })])
 
   await runSchedule()
 

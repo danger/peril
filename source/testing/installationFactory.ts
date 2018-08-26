@@ -18,7 +18,5 @@ const emptyInstallation: GitHubInstallation = {
 }
 
 /** Creates an installation from a blank template */
-const generateInstallation = (diff: Partial<GitHubInstallation>): GitHubInstallation =>
+export const generateInstallation = (diff: Partial<GitHubInstallation>): GitHubInstallation =>
   Object.assign({}, emptyInstallation, diff)
-
-export default generateInstallation

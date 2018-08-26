@@ -1,6 +1,6 @@
 import { readFileSync } from "fs"
 import { resolve } from "path"
-import generateInstallation from "../../../testing/installationFactory"
+import { generateInstallation } from "../../../testing/installationFactory"
 
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
