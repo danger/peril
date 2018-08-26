@@ -1,3 +1,42 @@
+## 2018 - August 25
+
+- The edit an installation mutation allows setting a `installationSlackUpdateWebhookURL` on your installation, which
+  Peril will use to send messages to your installation
+
+- Generic rules for all the org now default to the settings JSON repo, reducing dupes in the settings json - orta
+
+```diff
+{
+  "$schema": "https://raw.githubusercontent.com/danger/peril/master/peril-settings-json.schema",
+  "rules": {
+    "create (ref_type == tag)": [
++      "org/new_tag.ts",
+-      "danger/peril-settings@org/new_tag.ts",
++      "org/updateDangerSystems.ts",
+-      "danger/peril-settings@org/updateDangerSystems.ts"
+    ],
++    "pull_request.closed": "org/aeryn.ts",
+-    "pull_request.closed": "danger/peril-settings@org/aeryn.ts",
++    "pull_request": ["org/debug.ts", "org/changelog.ts"],
+-    "pull_request": ["danger/peril-settings@org/debug.ts", "danger/peril-settings@org/changelog.ts"],
++    "issue_comment": "org/markAsMergeOnGreen.ts",
+-    "issue_comment": "danger/peril-settings@org/markAsMergeOnGreen.ts",
++    "issues.opened": "org/checkTemplate.ts",
+-    "issues.opened": "danger/peril-settings@org/checkTemplate.ts",
++    "status.success": "org/mergeOnGreen.ts"
+-    "status.success": "danger/peril-settings@org/mergeOnGreen.ts"
+  },
+  "tasks": {
++    "trigger-scheduler": "testing/trigger-scheduler.ts",
+-    "trigger-scheduler": "danger/peril-settings@testing/trigger-scheduler.ts",
++    "logger": "testing/logger.ts"
+-    "logger": "danger/peril-settings@testing/logger.ts"
+  }
+}
+```
+
+I'll update thee docs later, once I'm certain all the edge cases are handled.
+
 ## 2018 - August 5
 
 - Adds support for relative file imports inside a Dangerfile - orta

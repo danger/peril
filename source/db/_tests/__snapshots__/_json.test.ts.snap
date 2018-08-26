@@ -6,6 +6,7 @@ exports[`makes the right calls to GitHub with a legit stubbed JSON file 1`] = `
 Object {
   "avatarURL": "",
   "iID": 23511,
+  "installationSlackUpdateWebhookURL": undefined,
   "login": "unknown",
   "perilSettingsJSONURL": "orta/peril@settings.json",
   "repos": Object {

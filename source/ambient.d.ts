@@ -6,8 +6,9 @@ declare module "json2ts"
 declare module "async-exit-hook"
 declare module "graphql-resolvers"
 
-// TODO: Make types for these two
+// TODO: Make types for these two?
 declare module "graphql-tools-types"
+declare module "winston"
 
 // https://github.com/excitement-engineer/graphql-relay-tools
 declare module "graphql-relay-tools" {

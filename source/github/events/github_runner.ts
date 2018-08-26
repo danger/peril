@@ -2,12 +2,18 @@ import * as express from "express"
 
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
-import { DangerRun, dangerRunForRules, RunFeedback, RunType } from "../../danger/danger_run"
+import {
+  dangerRepresentationForPath,
+  DangerRun,
+  dangerRunForRules,
+  RunFeedback,
+  RunType,
+} from "../../danger/danger_run"
 import { GitHubInstallation, GithubRepo } from "../../db"
 import { getDB } from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
-import logger from "../../logger"
 import winston from "../../logger"
+import logger from "../../logger"
 import { runEventRun } from "./handlers/event"
 import { runPRRun } from "./handlers/pr"
 import { actionForWebhook } from "./utils/actions"
@@ -145,7 +151,8 @@ export function runsForEvent(
   webhook: any,
   settings: GitHubRunSettings
 ) {
-  const installationRun = dangerRunForRules(event, action, installation.rules, webhook)
+  const prefix = dangerRepresentationForPath(installation.perilSettingsJSONURL).repoSlug
+  const installationRun = dangerRunForRules(event, action, installation.rules, webhook, prefix)
   const repoRun = dangerRunForRules(event, action, settings.repoSpecificRules, webhook)
   return [...installationRun, ...repoRun].filter(r => !!r) as DangerRun[]
 }

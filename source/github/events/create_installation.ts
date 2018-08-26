@@ -3,7 +3,7 @@ import * as express from "express"
 import { Installation } from "../events/types/integration_installation_created.types"
 
 import { getDB } from "../../db/getDB"
-import generateInstallation from "../../testing/installationFactory"
+import { generateInstallation } from "../../testing/installationFactory"
 
 export async function createInstallation(installationJSON: Installation, _: express.Request, res: express.Response) {
   const installation = generateInstallation({

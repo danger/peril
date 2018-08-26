@@ -1,6 +1,7 @@
 import { MONGODB_URI } from "../globals"
 
 import * as Agenda from "agenda"
+import chalk from "chalk"
 import { GitHubInstallation } from "../db"
 import { getDB } from "../db/getDB"
 import logger from "../logger"
@@ -15,29 +16,36 @@ export interface DangerFileTaskConfig {
 export let agenda: Agenda
 export const runDangerfileTaskName = "runDangerfile"
 
+const tick = chalk.bold.greenBright("✓")
+
 export const startTaskScheduler = async () => {
   agenda = new Agenda({ db: { address: MONGODB_URI } })
-  agenda.on("ready", () => {
-    agenda.start()
-  })
+  agenda.on("ready", async () => {
+    await agenda.start()
+    logger.info("  - " + tick + " Agenda Task Scheduler")
 
-  agenda.define(runDangerfileTaskName, async (job, done) => {
-    const data = job.attrs.data as DangerFileTaskConfig
-    logger.info(`Received a new task, ${data.taskName}`)
-
-    const db = getDB()
-    const installation = await db.getInstallation(data.installationID)
-    if (!installation) {
-      logger.error(`Could not find installation for task: ${data.taskName}`)
-      return
-    }
-
-    await runTaskForInstallation(installation, data.taskName, data.data)
-    done()
+    agenda.define(runDangerfileTaskName, { priority: "high", concurrency: 10, lockLimit: 0 }, (job, done) => {
+      const data = job.attrs.data as DangerFileTaskConfig
+      logger.info(`Received a new task, ${data.taskName}`)
+      done()
+      startRunningTask(data)
+    })
   })
 }
 
+const startRunningTask = async (data: DangerFileTaskConfig) => {
+  const db = getDB()
+  const installation = await db.getInstallation(data.installationID)
+  if (!installation) {
+    logger.error(`Could not find installation for task: ${data.taskName}`)
+    return
+  }
+
+  await runTaskForInstallation(installation, data.taskName, data.data)
+}
+
 export const runTaskForInstallation = async (installation: GitHubInstallation, task: string, data: any) => {
+  logger.info(`Running task ${task} for ${installation.login}:`)
   const taskDangerfiles = installation.tasks[task]
   if (!taskDangerfiles) {
     logger.error(`Could not find the task: ${task} on installation ${installation.iID}`)

@@ -11,7 +11,7 @@ jest.mock("../../globals", () => ({
 
 import { readFileSync } from "fs"
 import { resolve } from "path"
-import generateInstallation from "../../testing/installationFactory"
+import { generateInstallation } from "../../testing/installationFactory"
 import { installationSettingsUpdater } from "../installationSettingsUpdater"
 
 const requestWithFixturedJSON = (name: string): any => {

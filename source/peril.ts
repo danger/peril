@@ -24,7 +24,7 @@ import { setupPublicAPI } from "./api/api"
 import logger from "./logger"
 import { hyperUpdater } from "./routing/hyper_updater"
 import { githubRouter } from "./routing/router"
-import { startScheduler } from "./scheduler/startScheduler"
+import { startScheduler } from "./scheduler/startRepeatedTaskScheduler"
 import { startTaskScheduler } from "./tasks/startTaskScheduler"
 
 const welcomeMessages = [] as string[]
@@ -36,7 +36,7 @@ export const peril = () => {
 
   // Error logging
   process.on("unhandledRejection", (reason: string, _: any) => {
-    logger.error("Error: ", reason)
+    logger.error("UnhandledRejection Error: ", reason)
     throw reason
   })
 

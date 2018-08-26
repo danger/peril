@@ -97,6 +97,7 @@ export const partialInstallationToInstallation = (
   scheduler: partial.scheduler || {},
   tasks: partial.tasks || {},
   perilSettingsJSONURL: dangerfileRefString,
+  installationSlackUpdateWebhookURL: undefined,
   settings: {
     env_vars: (partial.settings && partial.settings.env_vars) || [],
     ignored_repos: (partial.settings && partial.settings.ignored_repos) || [],

@@ -87,6 +87,8 @@ const schemaSDL = gql`
     recordWebhooksUntilTime: String
     # The time when a user requested recording webhooks
     startedRecordingWebhooksTime: String
+    # A URL for Slack which Peril can send notifications about an installation to
+    installationSlackUpdateWebhookURL: String
   }
 
   # Someone logged in to the API, all user data is stored inside the JWT
@@ -131,8 +133,8 @@ const schemaSDL = gql`
 
   type Mutation {
     # Building this out incrementally, but basically this provides
-    # the ability to set the URL that Peril should grab data from
-    editInstallation(iID: Int!, perilSettingsJSONURL: String!): Installation
+    # the ability to set changes
+    editInstallation(iID: Int!, perilSettingsJSONURL: String, installationSlackUpdateWebhookURL: String): Installation
     # Sets the installation to record webhooks for the next 5m
     makeInstallationRecord(iID: Int!): Installation
     # Send webhook

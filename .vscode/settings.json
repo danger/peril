@@ -32,9 +32,11 @@
     "PAPERTRAIL",
     "PRDSL",
     "PRJSONDSL",
+    "Schedulable",
     "Sidenote",
     "dockerhub",
     "doggos",
+    "mockingoose",
     "prioritise"
   ]
 }

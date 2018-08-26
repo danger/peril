@@ -6,7 +6,7 @@ import { schema } from "../index"
 jest.mock("../../../db/getDB")
 import { MockDB } from "../../../db/__mocks__/getDB"
 import { getDB } from "../../../db/getDB"
-import generateInstallation from "../../../testing/installationFactory"
+import { generateInstallation } from "../../../testing/installationFactory"
 const mockDB = getDB() as MockDB
 
 beforeEach(() => mockDB.clear())
