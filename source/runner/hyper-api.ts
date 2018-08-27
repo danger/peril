@@ -9,7 +9,7 @@ let funcUUID: string | null = null
 
 // TEMPORARY workaround
 // See: https://forum.hyper.sh/t/ssl-error-in-hyper-func-api-endpoints-via-https/873
-const hyperFuncHost = "http://us-west-1.hyperfunc.io"
+const hyperFuncHost = "https://us-west-1.hyperfunc.io"
 const hyperHost = "https://us-west-1.hyper.sh/"
 
 // https://docs.hyper.sh/Reference/API/2016-04-04%20[Ver.%201.23]/Func/index.html
