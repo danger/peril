@@ -11,14 +11,15 @@ export const runTask = async (
   rules: DangerfileReferenceString,
   data: any
 ) => {
-  logger.info(`\n## task ${rules} on ${installation.login}`)
-
   const rep = dangerRepresentationForPath(rules)
-  if (rep.repoSlug === undefined) {
+  if (!rep.repoSlug) {
     // If you don't provide a repo slug, assume that the
     // dangerfile comes from inside the same repo as your settings.
     rep.repoSlug = dangerRepresentationForPath(installation.perilSettingsJSONURL).repoSlug
+    rep.referenceString = `${rep.repoSlug}@${rep.dangerfilePath}`
   }
+
+  logger.info(`\n## task ${rules} on ${installation.login}`)
 
   const payload: ValidatedPayload = {
     dsl: {} as any, // This can't have a git,

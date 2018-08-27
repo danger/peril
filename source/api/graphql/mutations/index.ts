@@ -218,7 +218,7 @@ export const mutations = {
       // can also read.
       if (installation.installationSlackUpdateWebhookURL) {
         dangerfileLog = await getLogs()
-        sendLogsToSlackForInstallation("Received logs from Peril", dangerfileLog!, installation)
+        sendLogsToSlackForInstallation("Received logs", dangerfileLog!, installation)
       }
 
       // Callback inside is lazy loaded and only called if there are people

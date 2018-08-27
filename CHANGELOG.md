@@ -1,3 +1,9 @@
+## 2018 - August 27
+
+Migrated the repeated task scheduler to use agenda, this means it can take human readable strings, not just cron jobs -
+orta Decided to migrate schedulers to not allow free-form cron-like syntax - so expect breaking changes here in the
+future. - orta (see https://github.com/danger/peril/issues/361)
+
 ## 2018 - August 26
 
 - All Peril run logs get sent to slack - orta

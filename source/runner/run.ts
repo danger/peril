@@ -90,7 +90,7 @@ const runDangerEvent = async (
   for (const path of input.paths) {
     const rep = dangerRepresentationForPath(path)
     if (!rep.repoSlug) {
-      logger.error(`No repo slug in ${path} given for event based run, which is not supported yet`)
+      logger.error(`No repo slug in ${path} given for event based run, which can't really be supported.`)
       return
     }
   }

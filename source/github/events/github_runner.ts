@@ -151,9 +151,9 @@ export function runsForEvent(
   webhook: any,
   settings: GitHubRunSettings
 ) {
-  const prefix = dangerRepresentationForPath(installation.perilSettingsJSONURL).repoSlug
-  const installationRun = dangerRunForRules(event, action, installation.rules, webhook, prefix)
-  const repoRun = dangerRunForRules(event, action, settings.repoSpecificRules, webhook)
+  const settingsRepo = dangerRepresentationForPath(installation.perilSettingsJSONURL).repoSlug
+  const installationRun = dangerRunForRules(event, action, installation.rules, webhook, settingsRepo)
+  const repoRun = dangerRunForRules(event, action, settings.repoSpecificRules, webhook, settings.repoName || undefined)
   return [...installationRun, ...repoRun].filter(r => !!r) as DangerRun[]
 }
 
