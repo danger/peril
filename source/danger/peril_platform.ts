@@ -26,7 +26,7 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
     const utils: GitHubUtilsDSL | null = github && {
       fileContents: fileContentsGenerator(github.api.getExternalAPI(), repoSlug, ref),
       createUpdatedIssueWithID: createUpdatedIssueWithIDGenerator(github.api.getExternalAPI()),
-      createOrAddLabel: createOrAddLabel(undefined as any, github.api.getExternalAPI()),
+      createOrAddLabel: createOrAddLabel(undefined, github.api.getExternalAPI()),
       // Not sure what this looks like for non-PR events
       fileLinks: (paths, _, __, ___) => paths.join(", "),
     }
