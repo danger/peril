@@ -1,3 +1,21 @@
+## 2018 - August 29
+
+**BREAKING**
+
+Replaces the scheduled task system with a fresh re-write and a new perspective now that I've had it running for a few
+months.
+
+This [issue covers](https://github.com/danger/peril/issues/361) what I want from the new scheduler (and why)
+
+Basically if you're using the regular occurring scheduler I'd recommend reading the docs for
+[the scheduler](https://github.com/danger/peril/blob/master/docs/settings_repo_info.md#scheduler)
+
+but roughly, the keys in your `"scheduler"` now need to be one of the following: `"hourly"`, `"daily"`, `"weekly"`,
+`"monday-morning-est"`, `"tuesday-morning-est"`, `"wednesday-morning-est"`, `"thursday-morning-est"`,
+`"friday-morning-est"`.
+
+There will be more keys in the future, but this covers all of my cases today.
+
 ## 2018 - August 27
 
 Migrated the repeated task scheduler to use agenda, this means it can take human readable strings, not just cron jobs -
