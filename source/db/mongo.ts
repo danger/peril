@@ -131,9 +131,12 @@ export const mongoDatabase = {
     return dbInstallations.map(convertDBRepresentationToModel)
   },
 
-  /** Just return the main one */
-  getSchedulableInstallations: async (): Promise<GitHubInstallation[]> => {
-    const dbInstallations = await Installation.find({ scheduler: { $exists: true } })
+  /** Search through the installations for ones that match a particular scheduler key */
+  getSchedulableInstallationsWithKey: async (key: string): Promise<GitHubInstallation[]> => {
+    // e.g:  db.getCollection('githubinstallations').find( {"scheduler.daily": { $exists: true } })
+    const query: any = {}
+    query[`scheduler.${key}`] = { $exists: true }
+    const dbInstallations = await Installation.find(query)
     return dbInstallations.map(convertDBRepresentationToModel)
   },
 

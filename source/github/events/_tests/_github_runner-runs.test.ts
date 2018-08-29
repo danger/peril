@@ -97,8 +97,8 @@ it("gets the expected runs for platform + repo rules", () => {
       dslType: 0,
       event: "pull_request",
       feedback: 0,
-      repoSlug: "orta/peril-dangerfiles",
       referenceString: "orta/peril-dangerfiles@pr.ts",
+      repoSlug: "orta/peril-dangerfiles",
     },
     {
       action: "created",
@@ -107,8 +107,8 @@ it("gets the expected runs for platform + repo rules", () => {
       dslType: 0,
       event: "pull_request",
       feedback: 0,
-      repoSlug: undefined,
-      referenceString: "pr.ts",
+      referenceString: "danger/peril@pr.ts",
+      repoSlug: "danger/peril",
     },
   ])
 })
@@ -145,8 +145,8 @@ it("gets the expected runs for platform", () => {
       dslType: 1,
       event: "issues",
       feedback: 0,
-      referenceString: "pr.ts",
-      repoSlug: undefined,
+      referenceString: "danger/peril@pr.ts",
+      repoSlug: "danger/peril",
     },
   ])
 })

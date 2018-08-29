@@ -17,10 +17,11 @@ export type DangerfileReferenceString = string
  */
 export type PerilEventString = string
 
-// TODO: Figure out how to separate things users put in settings, and stuff we need inside peril
-
 /** An individual integration of Danger via Peril, this is like the org */
 export interface GitHubInstallation extends PerilInstallationSettings {
+  // Not these settings are things added by Peril, and it's not expected
+  // that they are in the settings.json nor available to JSON-based hosts
+
   /** The associated name of the installation owner */
   login: string
   /** An image url for the installation owner */
@@ -40,36 +41,28 @@ export interface PerilSettingsRepoJSON {
   rules: RunnerRuleset
 
   /**
-   * Scheduled tasks to run using a cron-like syntax.
+   * Scheduled tasks to run using a human readable syntax. This runs from a set of standard hooks
+   * which will trigger running a task. The current hooks (may be out of date, see `InstallationSchedulerKeys` in
+   * the codebase) are "hourly", "daily", "weekly", "monday-morning-est", "tuesday-morning-est",
+   * "wednesday-morning-est", "thursday-morning-est", "friday-morning-est"
    *
-   * This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The
-   * object is similar to the rules section, in that you define a cron-string with the following format:
-   *
-   *    *    *    *    *    *    *
-   *    ┬    ┬    ┬    ┬    ┬    ┬
-   *    │    │    │    │    │    |
-   *    │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
-   *    │    │    │    │    └───── month (1 - 12)
-   *    │    │    │    └────────── day of month (1 - 31)
-   *    │    │    └─────────────── hour (0 - 23)
-   *    │    └──────────────────── minute (0 - 59)
-   *    └───────────────────────── second (0 - 59, OPTIONAL)
-   *
-   * Which would look something like:
-   *
-   *    "scheduler": {
-   *      "0 0 12 * * ?": "daily_at_twelve",
-   *      "0 9 * * 1-5": "weekday_wakeup_email"
-   *    }
-   *
-   * in practice. There's a lot of great resources on the net showing the general syntax. The values
-   * are tasks which are defined in the tasks object.
+   *     "scheduler" : {
+   *       "daily": "daily-license-check",
+   *       "weekly": "cleanup-stale-issues"
+   *     }
    */
   scheduler: TaskObject
 
   /**
    * Individual tasks which a Peril can schedule, either via the Dangerfile API or via the
-   * scheduler object below.
+   * scheduler object. These keys are used by the scheduler in the settings JSON, and can be used
+   * to trigger a job to occur in the future via `peril.scheduleTask` in a Dangerfile.
+   *
+   *   "tasks" : {
+   *     "message-slack-dev-channel": "tasks/slackDevChannel.ts",
+   *     "daily-license-check": "tasks/dailyLicenseCheck.ts",
+   *     "standup": ["tasks/checkForOpenRFCs.ts", "tasks/checkForNewRepos.ts"],
+   *   }
    */
   tasks: RunnerRuleset
 
@@ -115,9 +108,18 @@ export interface UniqueRepoRuleset {
   [name: string]: RunnerRuleset
 }
 
-export interface TaskObject {
-  [name: string]: string
-}
+/** The available keys for scheduling a task against */
+export type InstallationSchedulerKeys =
+  | "hourly"
+  | "daily"
+  | "weekly"
+  | "monday-morning-est"
+  | "tuesday-morning-est"
+  | "wednesday-morning-est"
+  | "thursday-morning-est"
+  | "friday-morning-est"
+
+type TaskObject = { [P in InstallationSchedulerKeys]?: string }
 
 export interface RunnerRuleset {
   [name: string]: DangerfileReferenceString | DangerfileReferenceString[]
@@ -145,5 +147,5 @@ export interface DatabaseAdaptor {
   /** Deletes the operation */
   deleteInstallation: (installationID: number) => Promise<void>
   /** Gets an integrations settings */
-  getSchedulableInstallations: () => Promise<GitHubInstallation[]>
+  getSchedulableInstallationsWithKey: (key: string) => Promise<GitHubInstallation[]>
 }

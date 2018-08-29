@@ -2,7 +2,7 @@ import { MONGODB_URI } from "../globals"
 
 import * as Agenda from "agenda"
 import chalk from "chalk"
-import { GitHubInstallation } from "../db"
+import { GitHubInstallation, InstallationSchedulerKeys } from "../db"
 import { getDB } from "../db/getDB"
 import logger from "../logger"
 import { runTask } from "./runTask"
@@ -21,60 +21,84 @@ const tick = chalk.bold.greenBright("✓")
 export const startTaskScheduler = async () => {
   agenda = new Agenda({ db: { address: MONGODB_URI } })
 
-  const runTasker = (job: any, done: any) => {
-    const data = job.attrs.data as DangerFileTaskConfig
-    logger.info(`Received a new task, ${data.taskName}`)
-    done()
-    startRunningTask(data)
-  }
-
-  agenda.define(runDangerfileTaskName, { priority: "high", concurrency: 10, lockLimit: 0, lockLifetime: 10 }, runTasker)
-
   agenda.on("error", err => {
     logger.error("Error with Agenda", err)
   })
 
   await agenda.start()
-
   logger.info("  - " + tick + " Agenda Task Scheduler")
 
-  // TODO: This is unresolved async potentially
-  const db = getDB()
-  const installations = await db.getSchedulableInstallations()
-  logger.info("  - " + tick + ` Setup ${installations.length} installations with schedulers`)
-
-  installations.forEach(installation => {
-    if (installation && Object.keys(installation.scheduler)) {
-      // Loop through the object's properties and set up the scheduler
-      for (const cronTask in installation.scheduler) {
-        if (installation.scheduler.hasOwnProperty(cronTask)) {
-          // Uses the same task definition as above
-          const config: DangerFileTaskConfig = {
-            taskName: installation.scheduler[cronTask],
-            installationID: installation.iID,
-            data: {},
-          }
-          const taskName = `${installation.login}-${cronTask}-${config.taskName}-${runDangerfileTaskName}`
-          agenda.define(taskName, runTasker)
-          agenda.every(cronTask, taskName, config)
-        }
-      }
-    }
-  })
-}
-
-/**
- * Sets up and verifies the installation
- */
-const startRunningTask = async (data: DangerFileTaskConfig) => {
-  const db = getDB()
-  const installation = await db.getInstallation(data.installationID)
-  if (!installation) {
-    logger.error(`Could not find installation for task: ${data.taskName}`)
-    return
+  // Defines the Agenda scheduled job, and sets up an agenda.every to trigger it
+  // The extra faff is so that we can be sure about all keys being `InstallationSchedulerKeys`
+  const every = (key: InstallationSchedulerKeys, interval: string) => {
+    agenda.define(key, runSchedulerFunc(key))
+    agenda.every(interval, key)
   }
 
-  await runTaskForInstallation(installation, data.taskName, data.data)
+  // Defines the Agenda scheduled job, and sets up an agenda.every to trigger it
+  // But supports passing in a particular timezone, given that you likely have to
+  // faff by using the cron syntax instead of human-readable interval
+  const everyTZ = (key: InstallationSchedulerKeys, interval: string, timezone: string) => {
+    agenda.define(key, runSchedulerFunc(key))
+    agenda.every(interval, key, {}, { timezone })
+  }
+
+  // Hourly
+  every("hourly", "1 hour")
+
+  // Daily
+  every("daily", "1 day")
+
+  // Weekly
+  every("weekly", "1 week")
+
+  // Agenda uses the "cron" library,
+  // You can see how that works with https://github.com/kelektiv/node-cron#cron-ranges
+  // NOTE, crontab skips seconds and the "cron" module doesn't
+  // https://crontab.guru/#0_9_*_*_1
+
+  // Weekday Morning for Artsy
+  everyTZ("monday-morning-est", "0 0 9 * * 1", "America/New_York")
+  everyTZ("tuesday-morning-est", "0 0 9 * * 2", "America/New_York")
+  everyTZ("wednesday-morning-est", "0 0 9 * * 3", "America/New_York")
+  everyTZ("thursday-morning-est", "0 0 9 * * 4", "America/New_York")
+  everyTZ("friday-morning-est", "0 0 9 * * 5", "America/New_York")
+}
+
+// This is the generic env runtime, it takes in a key from the above keys and
+// grabs all the installations which have that, then run their tasks async
+const runSchedulerFunc = (key: InstallationSchedulerKeys) => async (_: any, done: any) => {
+  // This works on both JSON based, and mongo based DBs
+  const db = getDB()
+  const installations = await db.getSchedulableInstallationsWithKey(key)
+  const validInstallations = installations.filter(installation => {
+    if (!installation || !installation.scheduler) {
+      return false
+    }
+    // Yeah, they have a scheduler, but we need to verify that key - the JSON
+    // version of an installation is always returned, which could not have the key we're looking for
+    if (!Object.keys(installation.scheduler).includes(key)) {
+      return false
+    }
+
+    // Cool
+    return true
+  })
+
+  if (validInstallations.length) {
+    logger.info(`Running the ${key} scheduler for ${validInstallations.length} installs`)
+  } else {
+    logger.info(`Skipping scheduler ${key} because nothing is subscribed`)
+  }
+
+  validInstallations.forEach(installation => {
+    // Trigger the task name
+    const taskName = installation.scheduler[key]!
+    runTaskForInstallation(installation, taskName, {})
+  })
+
+  // The final callback for agenda
+  done()
 }
 
 /**
@@ -89,9 +113,10 @@ export const runTaskForInstallation = async (installation: GitHubInstallation, t
     return
   }
 
+  // Let tasks also be an array if you want, sure, why not?
   const dangerfiles = Array.isArray(taskDangerfiles) ? taskDangerfiles : [taskDangerfiles]
   for (const dangerfile of dangerfiles) {
-    const results = await runTask(task, installation, dangerfile, data)
+    const results = await runTask(task, installation, dangerfiles, data)
     // There aren't results when it's process separated
     if (results) {
       if (!results.fails.length) {
