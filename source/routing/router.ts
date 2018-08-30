@@ -12,6 +12,14 @@ export const githubRouter = (req: Request, res: Response, next: NextFunction) =>
   const event = req.header("X-GitHub-Event")
   winston.log("router", `Received ${event}:`)
 
+  // Creating / Removing installations from the DB
+  installationLifeCycle(event, req, res, next)
+
+  // There are some webhook events that shouldn't be passed through to users/plugins
+  if (webhookSkipListForPeril.includes(event)) {
+    return
+  }
+
   githubEventPluginHandler(event, req, res, next)
 
   // The Peril/Danger runner
@@ -29,14 +37,13 @@ export const githubEventPluginHandler = (event: string, req: Request, res: Respo
     return
   }
 
-  // Creating / Removing installations from the DB
-  if (installationLifeCycle(event, req, res, next)) {
-    return
-  }
-
   // Allow a dev mode
   recordWebhook(event, req, res, next)
 
   // Updating an install when the JSON changes
   installationSettingsUpdater(event, req, res, next)
 }
+
+// Installation addition/removal isn't too useful, and knowing when the repos
+// have changed isn't of much value to peril considering how the JSON file is set up
+export const webhookSkipListForPeril = ["integration_installation", "installation"]
