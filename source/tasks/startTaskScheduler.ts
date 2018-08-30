@@ -7,13 +7,16 @@ import { getDB } from "../db/getDB"
 import logger from "../logger"
 import { runTask } from "./runTask"
 
+/** The shape of data sent through peril.runTask in the db */
 export interface DangerFileTaskConfig {
   installationID: number
   taskName: string
   data: any
 }
 
+/** The singleton agenda instance */
 export let agenda: Agenda
+/** The runTask name */
 export const runDangerfileTaskName = "runDangerfile"
 
 const tick = chalk.bold.greenBright("✓")
@@ -27,6 +30,9 @@ export const startTaskScheduler = async () => {
 
   await agenda.start()
   logger.info("  - " + tick + " Agenda Task Scheduler")
+
+  // Support running one-off tasks in the future
+  setupForRunTask(agenda)
 
   // Defines the Agenda scheduled job, and sets up an agenda.every to trigger it
   // The extra faff is so that we can be sure about all keys being `InstallationSchedulerKeys`
@@ -67,39 +73,54 @@ export const startTaskScheduler = async () => {
 
 // This is the generic env runtime, it takes in a key from the above keys and
 // grabs all the installations which have that, then run their tasks async
-const runSchedulerFunc = (key: InstallationSchedulerKeys) => async (_: any, done: any) => {
+const runSchedulerFunc = (key: InstallationSchedulerKeys) => (_: any) => {
   // This works on both JSON based, and mongo based DBs
   const db = getDB()
-  const installations = await db.getSchedulableInstallationsWithKey(key)
-  const validInstallations = installations.filter(installation => {
-    if (!installation || !installation.scheduler) {
-      return false
+  // Avoiding declaring this code as async
+  db.getSchedulableInstallationsWithKey(key).then(installations => {
+    const validInstallations = installations.filter(installation => {
+      if (!installation || !installation.scheduler) {
+        return false
+      }
+      // Yeah, they have a scheduler, but we need to verify that key - the JSON
+      // version of an installation is always returned, which could not have the key we're looking for
+      if (!Object.keys(installation.scheduler).includes(key)) {
+        return false
+      }
+
+      // Cool
+      return true
+    })
+
+    if (validInstallations.length) {
+      logger.info(`Running the ${key} scheduler for ${validInstallations.length} installs`)
+    } else {
+      logger.info(`Skipping scheduler ${key} because nothing is subscribed`)
     }
-    // Yeah, they have a scheduler, but we need to verify that key - the JSON
-    // version of an installation is always returned, which could not have the key we're looking for
-    if (!Object.keys(installation.scheduler).includes(key)) {
-      return false
-    }
 
-    // Cool
-    return true
+    // Run the related task for the scheduler
+    validInstallations.forEach(installation => {
+      const taskName = installation.scheduler[key]!
+      runTaskForInstallation(installation, taskName, {})
+    })
   })
-
-  if (validInstallations.length) {
-    logger.info(`Running the ${key} scheduler for ${validInstallations.length} installs`)
-  } else {
-    logger.info(`Skipping scheduler ${key} because nothing is subscribed`)
-  }
-
-  validInstallations.forEach(installation => {
-    // Trigger the task name
-    const taskName = installation.scheduler[key]!
-    runTaskForInstallation(installation, taskName, {})
-  })
-
-  // The final callback for agenda
-  done()
 }
+
+/** Makes sure that we can handle `peril.runTask` functions being called */
+export const setupForRunTask = (agendaLocal: Agenda) =>
+  agendaLocal.define(runDangerfileTaskName, { priority: "high", concurrency: 10, lockLimit: 0 }, job => {
+    const data = job.attrs.data as DangerFileTaskConfig
+    logger.info(`Received a new task, ${data.taskName}`)
+
+    const db = getDB()
+    db.getInstallation(data.installationID).then(installation => {
+      if (!installation) {
+        logger.error(`Could not find installation for task: ${data.taskName}`)
+        return
+      }
+      runTaskForInstallation(installation, data.taskName, {})
+    })
+  })
 
 /**
  * Runs a dangerfile for a particular task name
