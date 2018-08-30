@@ -59,7 +59,7 @@
     "@types/lodash": "^4.14.116",
     "@types/mongodb": "^3.1.4",
     "@types/mongoose": "^5.2.7",
-    "@types/node": "^9.1.2",
+    "@types/node": "^10.9.4",
     "@types/node-cleanup": "^2.1.0",
     "@types/node-fetch": "^2.1.2",
     "@types/node-schedule": "^1.2.2",
