@@ -1,3 +1,5 @@
+import { runsForEvent } from "../../github/events/github_runner"
+import { generateInstallation } from "../../testing/installationFactory"
 import { dangerRepresentationForPath, dangerRunForRules, dslTypeForEvent, RunFeedback, RunType } from "../danger_run"
 
 describe("for ping", () => {
@@ -111,6 +113,27 @@ describe("for PRs", () => {
         referenceString: "dangerfile.js",
         repoSlug: undefined,
       },
+    ])
+  })
+
+  it("doesn't return unexpected dupes", () => {
+    const rules = {
+      "pull_request.closed": "loadsmart/peril-settings@rules/delete-merged-pr-branch.ts",
+      pull_request: "loadsmart/peril-settings@rules/all-prs.ts",
+      "issue_comment.created": "loadsmart/peril-settings@rules/mark-as-merge-on-green.ts",
+      "status.success": "loadsmart/peril-settings@rules/merge-on-green.ts",
+      "pull_request_review.submitted": "loadsmart/peril-settings@rules/merge-on-green.ts",
+    }
+
+    const repoSpecificRules = {
+      pull_request: "loadsmart/peril-settings@rules/python-prs.ts",
+    }
+
+    const installation = generateInstallation({ rules })
+    const runs = runsForEvent("pull_request", "created", installation, {}, { repoSpecificRules } as any)
+    expect(runs.map(r => r.referenceString)).toEqual([
+      "loadsmart/peril-settings@rules/all-prs.ts",
+      "loadsmart/peril-settings@rules/python-prs.ts",
     ])
   })
 
