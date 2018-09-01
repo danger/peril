@@ -1,5 +1,5 @@
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
-import { DangerRun } from "../../../danger/danger_run"
+import { DangerRun, RunType } from "../../../danger/danger_run"
 import { runDangerForInstallation } from "../../../danger/danger_runner"
 import { canUserWriteToRepo, getGitHubFileContents } from "../../lib/github_helpers"
 import { createPRJSONDSL } from "../createPRDSL"
@@ -40,16 +40,18 @@ export const runPRRun = async (
     return errorResults
   }
 
-  const dangerfileRepoForPR = pr.head.repo.full_name
-  const repoForDangerfile = runs[0].repoSlug || dangerfileRepoForPR
-
+  const dangerfileReferences: string[] = []
   const contents: string[] = []
   for (const run of runs) {
+    const dangerfileRepoForPR = pr.head.repo.full_name
+    const repoForDangerfile = run.repoSlug || dangerfileRepoForPR
+
     const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, run.branch)
     contents.push(headDangerfile)
+    dangerfileReferences.push(run.referenceString)
   }
-  // Everything is :+1:
 
+  // Everything is :+1:
   const installationSettings = {
     iID: settings.installationID,
     settings: settings.installationSettings,
@@ -59,9 +61,9 @@ export const runPRRun = async (
   const results = await runDangerForInstallation(
     eventName,
     contents,
-    runs.map(r => r.referenceString),
+    dangerfileReferences,
     githubAPI,
-    runs[0].dslType,
+    RunType.pr,
     installationSettings,
     {
       dsl: dangerDSL,
@@ -91,6 +93,7 @@ const validateRuns = async (
     // Either it's dictated in the run as an external repo, or we use the most natural repo
     const repoForDangerfileRun = run.repoSlug || dangerfileRepoForPR
 
+    // TODO: This can't be right, they're the same branch/repo reference?
     const baseDangerfile = await getGitHubFileContents(token, repoForDangerfileRun, run.dangerfilePath, branch)
     const headDangerfile = await getGitHubFileContents(token, repoForDangerfileRun, run.dangerfilePath, branch)
     const dangerfilesExist = headDangerfile !== "" && baseDangerfile !== ""

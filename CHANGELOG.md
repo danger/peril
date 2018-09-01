@@ -1,3 +1,7 @@
+## 2018 - Sept 1
+
+- Fixes mis-attribution of the repo when an event's dangerfiles are between more than one repo - orta/barbosa
+
 ## 2018 - August 29
 
 **BREAKING**
