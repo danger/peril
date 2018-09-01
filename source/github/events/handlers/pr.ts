@@ -93,6 +93,7 @@ const validateRuns = async (
     // Either it's dictated in the run as an external repo, or we use the most natural repo
     const repoForDangerfileRun = run.repoSlug || dangerfileRepoForPR
 
+    // TODO: This can't be right, they're the same branch/repo reference?
     const baseDangerfile = await getGitHubFileContents(token, repoForDangerfileRun, run.dangerfilePath, branch)
     const headDangerfile = await getGitHubFileContents(token, repoForDangerfileRun, run.dangerfilePath, branch)
     const dangerfilesExist = headDangerfile !== "" && baseDangerfile !== ""
