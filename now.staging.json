@@ -25,6 +25,7 @@
     "GITHUB_CLIENT_ID": "@stag_github_client_id",
     "GITHUB_CLIENT_SECRET": "@stag_github_client_secret",
 
-    "APOLLO_ENGINE_KEY": "@stag_apollo_engine_key"
+    "APOLLO_ENGINE_KEY": "@stag_apollo_engine_key",
+    "DEBUG": "*"
   }
 }

@@ -23,7 +23,7 @@ export const runTask = async (
     return rep
   })
 
-  logger.info(`\n## task ${references} on ${installation.login}`)
+  logger.info(`\n## task ${references} on ${installation.login}.`)
 
   const payload: ValidatedPayload = {
     dsl: {} as any, // This can't have a DSL for git, etc

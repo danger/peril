@@ -1,6 +1,7 @@
 import * as express from "express"
 
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
+import { sentence } from "danger/distribution/runner/DangerUtils"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import {
   dangerRepresentationForPath,
@@ -12,8 +13,8 @@ import {
 import { GitHubInstallation, GithubRepo } from "../../db"
 import { getDB } from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
-import winston from "../../logger"
 import logger from "../../logger"
+import winston from "../../logger"
 import { runEventRun } from "./handlers/event"
 import { runPRRun } from "./handlers/pr"
 import { actionForWebhook } from "./utils/actions"
@@ -135,7 +136,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
     logger.info("")
     logger.info(`## ${name} on ${installation.login} ${maybeRepo}`)
     logger.info(
-      `   ${runs.length} run${runs.length > 1 ? "s" : ""} needed: ${runs.map(r => r.dangerfilePath).join(", ")}`
+      `   ${runs.length} run${runs.length > 1 ? "s" : ""} needed: ${sentence(runs.map(r => r.referenceString))}`
     )
   } else {
     logger.info(`${name} on ${installation.login || "heroku"} skipped`)

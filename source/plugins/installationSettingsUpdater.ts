@@ -67,7 +67,9 @@ export const installationSettingsUpdater = async (
         const commits = req.body.commits as any[]
         const modifiedPerilSettings = commits.find(c => c.modified.includes(path))
         if (modifiedPerilSettings) {
-          winston.info("Updating JSON settings due to merged changes on push for " + path)
+          winston.info("")
+          winston.info("## Installation settings on " + installation.login)
+          winston.info("   Updated due to pushed changes including " + path)
           await db.updateInstallation(installationID)
           sendSlackMessageToInstallation("Synced your Peril settings", installation)
         }

@@ -1,7 +1,7 @@
 import { graphqlAPI } from "../api/graphql/api"
 import { gql } from "../api/graphql/gql"
 import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRun"
-import { agenda, DangerFileTaskConfig, runDangerfileTaskName } from "./startTaskScheduler"
+import { DangerFileTaskConfig, hasAgendaInRuntime, triggerAFutureDangerRun } from "./startTaskScheduler"
 
 export const generateTaskSchedulerForInstallation = (
   installationID: number,
@@ -23,11 +23,16 @@ export const generateTaskSchedulerForInstallation = (
       installationID,
     }
 
-    const sanitizedTime = time.replace("in ", "")
+    // Removes the "in "
+    let sanitizedTime = time
+    if (time.startsWith("in ")) {
+      sanitizedTime = time.substr(3)
+    }
+
     // If you're running on your own server, you can just call agenda
     // but if you're not then you're going to need to make an API call
-    if (agenda) {
-      agenda.schedule(sanitizedTime, runDangerfileTaskName, config)
+    if (hasAgendaInRuntime()) {
+      triggerAFutureDangerRun(sanitizedTime, config)
     } else {
       const settings = sandboxSettings!
       const mutationData = JSON.stringify(data).replace(/\"/g, '\\"')
