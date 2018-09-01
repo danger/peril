@@ -1,6 +1,6 @@
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import { DangerRun, RunFeedback } from "../../../danger/danger_run"
+import { DangerRun, RunFeedback, RunType } from "../../../danger/danger_run"
 import { runDangerForInstallation } from "../../../danger/danger_runner"
 import { getGitHubFileContents } from "../../lib/github_helpers"
 import { GitHubRunSettings } from "../github_runner"
@@ -47,7 +47,7 @@ export const runEventRun = async (
     contents,
     runs.map(r => r.referenceString),
     githubAPI,
-    runs[0].dslType,
+    RunType.import,
     installationSettings,
     { dsl: { github: dangerDSL }, webhook: dangerDSL }
   )
