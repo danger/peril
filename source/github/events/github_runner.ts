@@ -135,7 +135,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
     logger.info("")
     logger.info(`## ${name} on ${installation.login} ${maybeRepo}`)
     logger.info(
-      `   ${runs.length} run${runs.length > 1 ? "s" : ""} needed: ${runs.map(r => r.dangerfilePath).join(", ")}`
+      `   ${runs.length} run${runs.length > 1 ? "s" : ""} needed: ${runs.map(r => r.referenceString).join(", ")}`
     )
   } else {
     logger.info(`${name} on ${installation.login || "heroku"} skipped`)
