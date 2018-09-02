@@ -73,9 +73,9 @@
     retry "^0.12.0"
     ws "^5.2.0"
 
-"@types/agenda@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@types/agenda/-/agenda-2.0.3.tgz#7977923420b6c3d8d1d3a032c31ca4e3f544203c"
+"@types/agenda@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/agenda/-/agenda-1.0.3.tgz#27e9fbca2d197746d5c52bebcde3fd5d27d0505c"
   dependencies:
     "@types/events" "*"
     "@types/mongodb" "*"
@@ -376,16 +376,16 @@ acorn@^5.0.0, acorn@^5.1.2:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.3.0.tgz#7446d39459c54fb49a80e6ee6478149b940ec822"
 
-agenda@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/agenda/-/agenda-2.0.1.tgz#ea99e092279ebcfed54ce4ce1983b210fc35c6ee"
+agenda@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/agenda/-/agenda-1.0.3.tgz#736e9f12932303898639d779b9e40a44b10ff63b"
   dependencies:
     cron "~1.3.0"
     date.js "~0.3.2"
     debug "~3.1.0"
     human-interval "~0.1.3"
     moment-timezone "~0.5.0"
-    mongodb "~3.1"
+    mongodb "~2.2.33"
 
 agent-base@2:
   version "2.0.1"
@@ -1655,7 +1655,7 @@ buffer-from@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
 
-buffer-shims@^1.0.0:
+buffer-shims@^1.0.0, buffer-shims@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/buffer-shims/-/buffer-shims-1.0.0.tgz#9978ce317388c649ad8793028c3477ef044a8b51"
 
@@ -2646,6 +2646,10 @@ es-to-primitive@^1.1.1:
     is-callable "^1.1.1"
     is-date-object "^1.0.1"
     is-symbol "^1.0.1"
+
+es6-promise@3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.2.1.tgz#ec56233868032909207170c39448e24449dd1fc4"
 
 es6-promise@^4.0.3:
   version "4.2.2"
@@ -5317,14 +5321,12 @@ moment-timezone@^0.5.x, moment-timezone@~0.5.0:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
-mongodb-core@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.1.0.tgz#af91f36fd560ed785f4e61e694432df4d3698aad"
+mongodb-core@2.1.20:
+  version "2.1.20"
+  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-2.1.20.tgz#fece8dd76b59ee7d7f2d313b65322c160492d8f1"
   dependencies:
     bson "~1.0.4"
-    require_optional "^1.0.1"
-  optionalDependencies:
-    saslprep "^1.0.0"
+    require_optional "~1.0.0"
 
 mongodb-core@3.1.2:
   version "3.1.2"
@@ -5341,11 +5343,13 @@ mongodb@3.1.3:
   dependencies:
     mongodb-core "3.1.2"
 
-mongodb@~3.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.1.1.tgz#c018c4b277614e8b1e08426d5bcbe1a7e5cdbd74"
+mongodb@~2.2.33:
+  version "2.2.36"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.36.tgz#1c573680b2849fb0f47acbba3dc5fa228de975f5"
   dependencies:
-    mongodb-core "3.1.0"
+    es6-promise "3.2.1"
+    mongodb-core "2.1.20"
+    readable-stream "2.2.7"
 
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
@@ -6234,6 +6238,18 @@ readable-stream@1.1.x:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
+readable-stream@2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.2.7.tgz#07057acbe2467b22042d36f98c5ad507054e95b1"
+  dependencies:
+    buffer-shims "~1.0.0"
+    core-util-is "~1.0.0"
+    inherits "~2.0.1"
+    isarray "~1.0.0"
+    process-nextick-args "~1.0.6"
+    string_decoder "~1.0.0"
+    util-deprecate "~1.0.1"
+
 "readable-stream@^2.0.0 || ^1.1.13", readable-stream@^2.0.2, readable-stream@^2.1.4, readable-stream@^2.2.2:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.2.6.tgz#8b43aed76e71483938d12a8d46c6cf1a00b1f816"
@@ -6470,7 +6486,7 @@ require-main-filename@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/require-main-filename/-/require-main-filename-1.0.1.tgz#97f717b69d48784f5f526a6c5aa8ffdda055a4d1"
 
-require_optional@^1.0.1:
+require_optional@^1.0.1, require_optional@~1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/require_optional/-/require_optional-1.0.1.tgz#4cf35a4247f64ca3df8c2ef208cc494b1ca8fc2e"
   dependencies:
@@ -6996,7 +7012,7 @@ string_decoder@~0.10.x:
   version "0.10.31"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-0.10.31.tgz#62e203bc41766c6c28c9fc84301dab1c5310fa94"
 
-string_decoder@~1.0.3:
+string_decoder@~1.0.0, string_decoder@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.0.3.tgz#0fc67d7c141825de94282dd536bec6b9bce860ab"
   dependencies:
