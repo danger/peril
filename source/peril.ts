@@ -27,8 +27,8 @@ import { githubRouter } from "./routing/router"
 import { startTaskScheduler } from "./tasks/startTaskScheduler"
 
 const welcomeMessages = [] as string[]
-const tick = chalk.bold.greenBright("✓")
-const cross = chalk.bold.redBright("ⅹ")
+export const tick = chalk.bold.greenBright("✓")
+export const cross = chalk.bold.redBright("ⅹ")
 
 export const peril = () => {
   validateENVForPerilServer()

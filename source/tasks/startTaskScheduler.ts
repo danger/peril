@@ -1,10 +1,10 @@
 import { MONGODB_URI } from "../globals"
 
 import * as Agenda from "agenda"
-import chalk from "chalk"
 import { GitHubInstallation, InstallationSchedulerKeys } from "../db"
 import { getDB } from "../db/getDB"
 import logger from "../logger"
+import { tick } from "../peril"
 import { runTask } from "./runTask"
 
 /** The shape of data sent through peril.runTask in the db */
@@ -18,8 +18,6 @@ export interface DangerFileTaskConfig {
 let agenda: Agenda
 /** The runTask name */
 export const runDangerfileTaskName = "runDangerfile"
-
-const tick = chalk.bold.greenBright("✓")
 
 export const startTaskScheduler = async () => {
   agenda = new Agenda({ db: { address: MONGODB_URI }, processEvery: "3 minutes" }) // 5s
@@ -71,41 +69,6 @@ export const startTaskScheduler = async () => {
     everyTZ("wednesday-morning-est", "0 0 9 * * 3", "America/New_York")
     everyTZ("thursday-morning-est", "0 0 9 * * 4", "America/New_York")
     everyTZ("friday-morning-est", "0 0 9 * * 5", "America/New_York")
-
-    // This is the generic env runtime, it takes in a key from the above keys and
-    // grabs all the installations which have that, then run their tasks async
-    const runSchedulerFunc = (key: InstallationSchedulerKeys) => (_: any) => {
-      // This works on both JSON based, and mongo based DBs
-      const db = getDB()
-      // Avoiding declaring this code as async
-      db.getSchedulableInstallationsWithKey(key).then(installations => {
-        const validInstallations = installations.filter(installation => {
-          if (!installation || !installation.scheduler) {
-            return false
-          }
-          // Yeah, they have a scheduler, but we need to verify that key - the JSON
-          // version of an installation is always returned, which could not have the key we're looking for
-          if (!Object.keys(installation.scheduler).includes(key)) {
-            return false
-          }
-
-          // Cool
-          return true
-        })
-
-        if (validInstallations.length) {
-          logger.info(`Running the ${key} scheduler for ${validInstallations.length} installs`)
-        } else {
-          logger.info(`Skipping scheduler ${key} because nothing is subscribed`)
-        }
-
-        // Run the related task for the scheduler
-        validInstallations.forEach(installation => {
-          const taskName = installation.scheduler[key]!
-          runTaskForInstallation(installation, taskName, {})
-        })
-      })
-    }
   })
 }
 
@@ -153,6 +116,43 @@ export const runTaskForInstallation = async (installation: GitHubInstallation, t
         logger.error(results.markdowns.join("\n"))
       }
     }
+  }
+}
+
+// This is the generic env runtime, it takes in a key from the above keys and
+// grabs all the installations which have that, then run their tasks async
+function runSchedulerFunc(key: InstallationSchedulerKeys) {
+  return (_: any) => {
+    // This works on both JSON based, and mongo based DBs
+    const db = getDB()
+    // Avoiding declaring this code as async
+    db.getSchedulableInstallationsWithKey(key).then(installations => {
+      const validInstallations = installations.filter(installation => {
+        if (!installation || !installation.scheduler) {
+          return false
+        }
+        // Yeah, they have a scheduler, but we need to verify that key - the JSON
+        // version of an installation is always returned, which could not have the key we're looking for
+        if (!Object.keys(installation.scheduler).includes(key)) {
+          return false
+        }
+
+        // Cool
+        return true
+      })
+
+      if (validInstallations.length) {
+        logger.info(`Running the ${key} scheduler for ${validInstallations.length} installs`)
+      } else {
+        logger.info(`Skipping scheduler ${key} because nothing is subscribed`)
+      }
+
+      // Run the related task for the scheduler
+      validInstallations.forEach(installation => {
+        const taskName = installation.scheduler[key]!
+        runTaskForInstallation(installation, taskName, {})
+      })
+    })
   }
 }
 
