@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "GitHubInstallationSettings": {
             "properties": {
@@ -43,6 +43,35 @@
             },
             "type": "object"
         },
+        "TaskObject": {
+            "properties": {
+                "daily": {
+                    "type": "string"
+                },
+                "friday-morning-est": {
+                    "type": "string"
+                },
+                "hourly": {
+                    "type": "string"
+                },
+                "monday-morning-est": {
+                    "type": "string"
+                },
+                "thursday-morning-est": {
+                    "type": "string"
+                },
+                "tuesday-morning-est": {
+                    "type": "string"
+                },
+                "wednesday-morning-est": {
+                    "type": "string"
+                },
+                "weekly": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
         "UniqueRepoRuleset": {
             "additionalProperties": {
                 "$ref": "#/definitions/RunnerRuleset"
@@ -60,8 +89,8 @@
             "description": "Having rules in here would mean that it would happen on _any_ event, another JSON type in the DB"
         },
         "scheduler": {
-            "$ref": "#/definitions/RunnerRuleset",
-            "description": "Scheduled tasks to run using a cron-like syntax.\n\nThis uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The\nobject is similar to the rules section, in that you define a cron-string with the following format:\n\n    *    *    *    *    *    *\n    ┬    ┬    ┬    ┬    ┬    ┬\n    │    │    │    │    │    |\n    │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)\n    │    │    │    │    └───── month (1 - 12)\n    │    │    │    └────────── day of month (1 - 31)\n    │    │    └─────────────── hour (0 - 23)\n    │    └──────────────────── minute (0 - 59)\n    └───────────────────────── second (0 - 59, OPTIONAL)\n\nWhich would look something like:\n\n    \"scheduler\": {\n      \"0 0 12 * * ?\": \"schedule/daily_at_twelve.ts\",\n      \"0 9 * * 1-5\": \"schedule/weekday_wakeup_email.ts\"\n    }\n\nin practice. There's a lot of great resources on the net showing the general syntax."
+            "$ref": "#/definitions/TaskObject",
+            "description": "Scheduled tasks to run using a human readable syntax. This runs from a set of standard hooks\nwhich will trigger running a task. The current hooks (may be out of date, see `InstallationSchedulerKeys` in\nthe codebase) are \"hourly\", \"daily\", \"weekly\", \"monday-morning-est\", \"tuesday-morning-est\",\n\"wednesday-morning-est\", \"thursday-morning-est\", \"friday-morning-est\"\n\n     \"scheduler\" : {\n       \"daily\": \"daily-license-check\",\n       \"weekly\": \"cleanup-stale-issues\"\n     }"
         },
         "settings": {
             "$ref": "#/definitions/GitHubInstallationSettings",
@@ -69,7 +98,7 @@
         },
         "tasks": {
             "$ref": "#/definitions/RunnerRuleset",
-            "description": "Individual tasks which a Dangerfile can schedule against"
+            "description": "Individual tasks which a Peril can schedule, either via the Dangerfile API or via the\nscheduler object. These keys are used by the scheduler in the settings JSON, and can be used\nto trigger a job to occur in the future via `peril.scheduleTask` in a Dangerfile.\n\n   \"tasks\" : {\n     \"message-slack-dev-channel\": \"tasks/slackDevChannel.ts\",\n     \"daily-license-check\": \"tasks/dailyLicenseCheck.ts\",\n     \"standup\": [\"tasks/checkForOpenRFCs.ts\", \"tasks/checkForNewRepos.ts\"],\n   }"
         }
     },
     "type": "object"

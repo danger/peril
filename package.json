@@ -30,7 +30,7 @@
     "url": "https://github.com/danger/peril.git"
   },
   "engines": {
-    "node": "9"
+    "node": "10"
   },
   "author": "Orta",
   "license": "MIT",
@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@slack/client": "^4.5.0",
-    "@types/agenda": "^2.0.2",
+    "@types/agenda": "1.0.3",
     "@types/body-parser": "^1.17.0",
     "@types/cookie-parser": "^1.4.1",
     "@types/debug": "^0.0.30",
@@ -64,7 +64,7 @@
     "@types/node-fetch": "^2.1.2",
     "@types/node-schedule": "^1.2.2",
     "@types/winston": "^2.4.4",
-    "agenda": "^2.0.0",
+    "agenda": "1.0.3",
     "apollo-server-express": "^1.3.6",
     "async-exit-hook": "^2.0.1",
     "babel-cli": "7.0.0-alpha.19",
@@ -110,7 +110,7 @@
     "ts-jest": "^23.1.4",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
-    "typescript": "^3.0.1",
+    "typescript": "^3.0.3",
     "typings": "^2.1.1",
     "winston": "^2.4.2",
     "winston-papertrail": "^1.0.5",
@@ -126,6 +126,9 @@
     "prettier": "^1.14.2",
     "tslint-config-prettier": "^1.15.0",
     "typescript-json-schema": "^0.32.0"
+  },
+  "resolutions": {
+    "jest/jest-cli/jest-haste-map/sane": "1.7.0"
   },
   "jest": {
     "transform": {

@@ -1,4 +1,5 @@
 import { fetch } from "../../api/fetch"
+import logger from "../../logger"
 
 export const graphqlAPI = (url: string, query: string) =>
   fetch(`${url}/api/graphql`, {
@@ -15,10 +16,8 @@ export const graphqlAPI = (url: string, query: string) =>
     })
     .then(body => {
       if (body.errors) {
-        // tslint:disable-next-line:no-console
-        console.log("Received errors from the GraphQL API")
-        // tslint:disable-next-line:no-console
-        console.log(body.errors)
+        logger.info("Received errors from the GraphQL API")
+        logger.info(body.errors)
       }
       return body
     })

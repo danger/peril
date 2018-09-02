@@ -24,12 +24,11 @@ import { setupPublicAPI } from "./api/api"
 import logger from "./logger"
 import { hyperUpdater } from "./routing/hyper_updater"
 import { githubRouter } from "./routing/router"
-import { startScheduler } from "./scheduler/startRepeatedTaskScheduler"
 import { startTaskScheduler } from "./tasks/startTaskScheduler"
 
 const welcomeMessages = [] as string[]
-const tick = chalk.bold.greenBright("✓")
-const cross = chalk.bold.redBright("ⅹ")
+export const tick = chalk.bold.greenBright("✓")
+export const cross = chalk.bold.redBright("ⅹ")
 
 export const peril = () => {
   validateENVForPerilServer()
@@ -98,6 +97,5 @@ export const peril = () => {
       welcomeMessages.push(`  - Local: http://localhost:${port}`)
     }
     welcomeMessages.forEach(l => logger.info(l))
-    startScheduler()
   })
 }

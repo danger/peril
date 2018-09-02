@@ -3,6 +3,7 @@ import { generateTaskSchedulerForInstallation } from "../../tasks/scheduleTask"
 jest.mock("../startTaskScheduler", () => ({
   agenda: undefined,
   runDangerfileTaskName: "mockTask",
+  hasAgendaInRuntime: () => false,
 }))
 
 jest.mock("../../api/fetch", () => ({

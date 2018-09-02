@@ -16,8 +16,8 @@ Let's deep dive into the JSON:
     [your settings]
   },
   "rules": {
-    "pull_request": "orta/peril-bootstrap@dangerfiles/pr.js",
-    "issues": "orta/peril-bootstrap@dangerfiles/issue.js"
+    "pull_request": "dangerfiles/pr.js",
+    "issues": "orta/peril-settings@dangerfiles/issue.js"
   },
   "repos" : {
     "orta/ORStackView": {
@@ -27,7 +27,7 @@ Let's deep dive into the JSON:
 }
 ```
 
-It's is parsed via JSON5, so you can add comments.
+It is parsed via JSON5, so you can add comments.
 
 ### `settings`
 
@@ -194,7 +194,7 @@ Rules are for every repo, `repos` are rules for a single repo.
 {
   "rules": {
     "pull_request": "artsy/peril-settings@org/all-prs.ts",
-    "pull_request.closed": "artsy/peril-settings@org/closed-prs.ts"
+    "pull_request.closed": "org/closed-prs.ts"
   },
   "repos": {
     "artsy/reaction": {
@@ -210,7 +210,7 @@ Rules are for every repo, `repos` are rules for a single repo.
 So, let's say a PR is closed on `artsy/reaction`, it would trigger three Dangerfiles to run:
 
 - `"artsy/peril-settings@org/all-prs.ts"`
-- `"artsy/peril-settings@org/closed-prs.ts"`
+- `"org/closed-prs.ts"` - _this comes from whatever repo hosts the settings JSON_
 - `"danger/pr.ts"` - _this comes from artsy/reaction_
 
 If a PR were `edited` or `opened`, it would trigger two dangerfiles:
@@ -252,9 +252,13 @@ creating an RFC issue will send notifications for a few days into our slack.
 This works by defining tasks in your `peril.settings.json`:
 
 ```json
+{
   "tasks": {
-    "slack-dev-channel": "artsy/peril-settings@tasks/slack-dev-channel.ts"
-  },
+    "message-slack-dev-channel": "tasks/slackDevChannel.ts",
+    "daily-license-check": "tasks/dailyLicenseCheck.ts",
+    "standup": ["tasks/checkForOpenRFCs.ts", "tasks/checkForNewRepos.ts"]
+  }
+}
 ```
 
 Which maps a task name to a file in a repo. You schedule tasks either by using the Peril object inside a Dangerfile:
@@ -271,9 +275,9 @@ const slackify = (text: string) => ({
 export default async (webhook: Issues) => {
   const issue = webhook.issue
   if (issue.title.includes("RFC:") || issue.title.includes("[RFC]")) {
-    await peril.runTask("slack-dev-channel", "in 5 minutes", slackify("🎉: A new RFC has been published."))
-    await peril.runTask("slack-dev-channel", "in 3 days", slackify("🕰: A new RFC was published 3 days ago."))
-    await peril.runTask("slack-dev-channel", "in 7 days", slackify("🕰: A new RFC is ready to be resolved."))
+    await peril.runTask("message-slack-dev-channel", "in 5 minutes", slackify("🎉: A new RFC has been published."))
+    await peril.runTask("message-slack-dev-channel", "in 3 days", slackify("🕰: A new RFC was published 3 days ago."))
+    await peril.runTask("message-slack-dev-channel", "in 7 days", slackify("🕰: A new RFC is ready to be resolved."))
   }
 }
 ```
@@ -300,34 +304,19 @@ export default (data: any) => {
 
 ### Scheduler
 
-Scheduled tasks to run using a cron-like syntax.
-
-This uses [node-schedule](https://github.com/node-schedule/node-schedule) under the hood. The object is similar to the
-rules section, in that you define a cron-string with the following format:
-
-```
-    *    *    *    *    *    *
-    ┬    ┬    ┬    ┬    ┬    ┬
-    │    │    │    │    │    |
-    │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
-    │    │    │    │    └───── month (1 - 12)
-    │    │    │    └────────── day of month (1 - 31)
-    │    │    └─────────────── hour (0 - 23)
-    │    └──────────────────── minute (0 - 59)
-    └───────────────────────── second (0 - 59, OPTIONAL)
-```
-
-Which, inside the Peril settings, would look something like:
+Scheduled tasks to run using a human readable syntax. This runs from a set of standard hooks which will trigger running
+a task. The current hooks (may be out of date, see `InstallationSchedulerKeys` in the codebase) are `"hourly"`,
+`"daily"`, `"weekly"`, `"monday-morning-est"`, `"tuesday-morning-est"`, `"wednesday-morning-est"`,
+`"thursday-morning-est"`, `"friday-morning-est"`.
 
 ```json
-    "scheduler": {
-      "0 0 12 * * ?": "daily_at_twelve",
-      "0 9 * * 1-5": "weekday_wakeup_email"
-    }
+{
+  "scheduler": {
+    "daily": "daily-license-check",
+    "weekly": "cleanup-stale-issues"
+  }
+}
 ```
-
-There's a lot of great resources on the net showing the general syntax for the cron format. The right hand value should
-be the name of a task.
 
 ### Types
 

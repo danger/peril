@@ -12,7 +12,7 @@ import {
 import { sendWebhookThroughGitHubRunner } from "../../../plugins/utils/sendWebhookThroughGitHubRunner"
 import { getHyperLogs } from "../../../runner/hyper-api"
 import { getDetailsFromPerilSandboxAPIJWT } from "../../../runner/sandbox/jwt"
-import { agenda, runDangerfileTaskName, runTaskForInstallation } from "../../../tasks/startTaskScheduler"
+import { runTaskForInstallation, triggerAFutureDangerRun } from "../../../tasks/startTaskScheduler"
 import {
   GraphQLContext,
   MSGDangerfileFinished,
@@ -36,6 +36,8 @@ export const mutations = {
       throw new Error(`You don't have access to this installation`)
     }
 
+    logger.info(`mutation: editInstallation ${installationID}`)
+
     // Save the changes, then trigger an update from the new repo
     const db = getDB() as MongoDB
     const updatedInstallation = await db.saveInstallation(opts)
@@ -51,6 +53,8 @@ export const mutations = {
     if (!decodedJWT.iss.includes(installationID)) {
       throw new Error(`You don't have access to this installation`)
     }
+
+    logger.info(`mutation: makeInstallationRecord ${installationID}`)
 
     await wipeAllRecordedWebhooks(params.iID)
     await setInstallationToRecord(params.iID)
@@ -68,6 +72,8 @@ export const mutations = {
     if (!decodedJWT.iss.includes(installationID)) {
       throw new Error(`You don't have access to this installation`)
     }
+
+    logger.info(`mutation: sendWebhookForInstallation ${installationID} webhook ${params.eventID}`)
 
     const webhook = await getRecordedWebhook(params.iID, params.eventID)
     if (!webhook) {
@@ -93,6 +99,8 @@ export const mutations = {
     if (!installation) {
       throw new Error(`Installation not found`)
     }
+
+    logger.info(`mutation: changeEnvVarForInstallation ${installationID} edited ${opts.key}`)
 
     // Make it if it doesn't exist
     const envVars = installation.envVars || {}
@@ -130,6 +138,7 @@ export const mutations = {
       throw new Error(`Task not found on installation`)
     }
 
+    logger.info(`mutation: runTask ${installationID} task ${opts.task}`)
     await runTaskForInstallation(installation, opts.task, opts.data || {})
 
     return { success: true }
@@ -154,15 +163,17 @@ export const mutations = {
       throw new Error(`This JWT does not have the credentials to schedule a task`)
     }
 
+    logger.info(`mutation: scheduleTask ${installation.iID} task ${opts.task} ${opts.time}`)
+
     // We need to attach an installation so we can look it up on the
-    // running aspect
+    // running aspect.
     const schedulerConfig = {
       data: JSON.parse(opts.data),
       installationID: installation.iID,
       taskName: opts.task,
     }
 
-    agenda.schedule(opts.time, runDangerfileTaskName, schedulerConfig)
+    triggerAFutureDangerRun(opts.time, schedulerConfig)
     return { success: true }
   },
 
@@ -218,7 +229,7 @@ export const mutations = {
       // can also read.
       if (installation.installationSlackUpdateWebhookURL) {
         dangerfileLog = await getLogs()
-        sendLogsToSlackForInstallation("Received logs from Peril", dangerfileLog!, installation)
+        sendLogsToSlackForInstallation("Received logs", dangerfileLog!, installation)
       }
 
       // Callback inside is lazy loaded and only called if there are people
