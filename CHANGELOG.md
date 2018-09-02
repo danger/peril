@@ -1,8 +1,4 @@
-## 2018 - Sept 1
-
-- Fixes mis-attribution of the repo when an event's dangerfiles are between more than one repo - orta/barbosa
-
-## 2018 - August 29
+## 2018 - Sept 2
 
 **BREAKING**
 
@@ -19,6 +15,10 @@ but roughly, the keys in your `"scheduler"` now need to be one of the following:
 `"friday-morning-est"`.
 
 There will be more keys in the future, but this covers all of my cases today.
+
+## 2018 - Sept 1
+
+- Fixes mis-attribution of the repo when an event's dangerfiles are between more than one repo - orta/barbosa
 
 ## 2018 - August 27
 

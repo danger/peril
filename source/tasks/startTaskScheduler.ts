@@ -75,9 +75,9 @@ export const startTaskScheduler = async () => {
 /** Makes sure that we can handle `peril.runTask` functions being called */
 export const setupForRunTask = (agendaLocal: Agenda) =>
   agendaLocal.define(runDangerfileTaskName, (job, done) => {
-    // soon: job.remove()
     const data = job.attrs.data as DangerFileTaskConfig
     logger.info(`Received a new task, ${data.taskName}`)
+    // Just trying to get that done handled asap
     done()
 
     const db = getDB()
@@ -86,7 +86,12 @@ export const setupForRunTask = (agendaLocal: Agenda) =>
         logger.error(`Could not find installation for task: ${data.taskName}`)
         return
       }
+
+      // Run them Dangerfiles
       runTaskForInstallation(installation, data.taskName, data.data)
+
+      // I don't want to be storing all these jobs in my db, thanks
+      job.remove()
     })
   })
 
@@ -122,7 +127,8 @@ export const runTaskForInstallation = async (installation: GitHubInstallation, t
 // This is the generic env runtime, it takes in a key from the above keys and
 // grabs all the installations which have that, then run their tasks async
 function runSchedulerFunc(key: InstallationSchedulerKeys) {
-  return (_: any) => {
+  return (_: any, done: any) => {
+    done()
     // This works on both JSON based, and mongo based DBs
     const db = getDB()
     // Avoiding declaring this code as async
