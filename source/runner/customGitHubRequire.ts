@@ -1,5 +1,6 @@
 import * as requireFromString from "require-from-string"
 
+import cleanDangerfile from "danger/distribution/runner/runners/utils/cleanDangerfile"
 import transpiler from "danger/distribution/runner/runners/utils/transpiler"
 import { dirname, extname, resolve } from "path"
 import { dangerRepresentationForPath } from "../danger/danger_run"
@@ -50,8 +51,10 @@ export const customGitHubResolveRequest = (token: string) => async (request: str
     if (dangerfileContent) {
       // We want to ensure we don't lose the prefix for any potential imports in there
       const newPerilFileReference = `${perilPrefix}${newReferenceString}`
+      // Remove the danger import
+      const newDangerfile = cleanDangerfile(dangerfileContent)
       // Cool, transpile it into something we can run
-      const transpiled = transpiler(dangerfileContent, newPerilFileReference)
+      const transpiled = transpiler(newDangerfile, newPerilFileReference)
       return requireFromString(transpiled, newPerilFileReference)
     }
   }
