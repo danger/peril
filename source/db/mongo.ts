@@ -144,25 +144,25 @@ export const mongoDatabase = {
   updateInstallation: async (installationID: number) => {
     const dbInstallation = await Installation.findOne({ iID: installationID })
     if (!dbInstallation) {
-      d.log(`Could not get a db reference for installation ${installationID} when updating`)
+      d(`Could not get a db reference for installation ${installationID} when updating`)
       return
     }
 
     if (!dbInstallation.perilSettingsJSONURL) {
-      d.log(`Could not get installation ${installationID} did not have a perilSettingsJSONURL when updating`)
+      d(`Could not get installation ${installationID} did not have a perilSettingsJSONURL when updating`)
       return
     }
 
     const pathRep = dangerRepresentationForPath(dbInstallation.perilSettingsJSONURL)
 
     if (!pathRep.repoSlug || !pathRep.dangerfilePath) {
-      d.log(`DangerfilePath for ${installationID} did not have a repoSlug/dangerfilePath when updating`)
+      d(`DangerfilePath for ${installationID} did not have a repoSlug/dangerfilePath when updating`)
       return
     }
 
     const file = await getGitHubFileContentsWithoutToken(pathRep.repoSlug, pathRep.dangerfilePath)
     if (file === "") {
-      d.log(`Settings for ${installationID} at ${dbInstallation.perilSettingsJSONURL} were empty`)
+      d(`Settings for ${installationID} at ${dbInstallation.perilSettingsJSONURL} were empty`)
       return
     }
 
@@ -171,7 +171,7 @@ export const mongoDatabase = {
     try {
       json = JSON5.parse(file)
     } catch (error) {
-      d.log(`Settings for ${installationID} were not valid json`)
+      d(`Settings for ${installationID} were not valid json`)
       sendSlackMessageToInstallation(
         `Settings at \`${dbInstallation.perilSettingsJSONURL}\` did not parse as JSON.`,
         dbInstallation
