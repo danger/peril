@@ -24,37 +24,66 @@ import { getDetailsFromPerilJWT } from "../../auth/generate"
 import { authD } from "../utils/auth"
 import { getUserInstallations } from "../utils/installations"
 
+const confirmAccessToJWT = async (iID: number, jwt: string) => {
+  const decodedJWT = await getDetailsFromPerilJWT(jwt)
+  const installationID = String(iID)
+
+  // Check the installation's ID is included inside the signed JWT, to verify access
+  if (!decodedJWT.iss.includes(installationID)) {
+    throw new Error(`You don't have access to this installation`)
+  }
+}
+
+type PartialInstallation = Partial<GitHubInstallation> & { iID: number }
+
 export const mutations = {
-  editInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
-    const opts = params as Partial<GitHubInstallation>
+  convertPartialInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
+    const opts = params as PartialInstallation
+    await confirmAccessToJWT(opts.iID, context.jwt)
 
-    const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-    const installationID = String(opts.iID)
-
-    // Check the installation's ID is included inside the signed JWT, to verify access
-    if (!decodedJWT.iss.includes(installationID)) {
-      throw new Error(`You don't have access to this installation`)
-    }
-
-    logger.info(`mutation: editInstallation ${installationID}`)
+    logger.info(`mutation: editInstallation ${opts.iID}`)
 
     // Save the changes, then trigger an update from the new repo
     const db = getDB() as MongoDB
     const updatedInstallation = await db.saveInstallation(opts)
-    await db.updateInstallation(updatedInstallation.iID)
-    return updatedInstallation
+    try {
+      // Try run the mongo updater
+      await db.updateInstallation(updatedInstallation.iID)
+      return updatedInstallation
+    } catch (error) {
+      // This is basically the difference between `convertPartialInstallation` and `editInstallation`
+      //
+      // Reset the perilSettingsJSONURL so that the next one starts from scratch.
+      await db.saveInstallation({ perilSettingsJSONURL: undefined })
+      return {
+        error: { description: error.message },
+      }
+    }
+  }),
+
+  editInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
+    const opts = params as PartialInstallation
+    await confirmAccessToJWT(opts.iID, context.jwt)
+
+    logger.info(`mutation: editInstallation ${opts.iID}`)
+
+    // Save the changes, then trigger an update from the new repo
+    const db = getDB() as MongoDB
+    const updatedInstallation = await db.saveInstallation(opts)
+    try {
+      await db.updateInstallation(updatedInstallation.iID)
+      return updatedInstallation
+    } catch (error) {
+      return {
+        error: { description: error.message },
+      }
+    }
   }),
 
   makeInstallationRecord: authD(async (_: any, params: any, context: GraphQLContext) => {
-    const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-    const installationID = String(params.iID)
+    await confirmAccessToJWT(params.iID, context.jwt)
 
-    // Check the installation's ID is included inside the signed JWT, to verify access
-    if (!decodedJWT.iss.includes(installationID)) {
-      throw new Error(`You don't have access to this installation`)
-    }
-
-    logger.info(`mutation: makeInstallationRecord ${installationID}`)
+    logger.info(`mutation: makeInstallationRecord ${params.iID}`)
 
     await wipeAllRecordedWebhooks(params.iID)
     await setInstallationToRecord(params.iID)
@@ -65,15 +94,8 @@ export const mutations = {
   }),
 
   sendWebhookForInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
-    const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-    const installationID = String(params.iID)
-
-    // Check the installation's ID is included inside the signed JWT, to verify access
-    if (!decodedJWT.iss.includes(installationID)) {
-      throw new Error(`You don't have access to this installation`)
-    }
-
-    logger.info(`mutation: sendWebhookForInstallation ${installationID} webhook ${params.eventID}`)
+    await confirmAccessToJWT(params.iID, context.jwt)
+    logger.info(`mutation: sendWebhookForInstallation ${params.iiD} webhook ${params.eventID}`)
 
     const webhook = await getRecordedWebhook(params.iID, params.eventID)
     if (!webhook) {
@@ -86,13 +108,7 @@ export const mutations = {
 
   changeEnvVarForInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
     const opts = params as { iID: number; key: string; value: string | undefined }
-    const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-    const installationID = String(params.iID)
-
-    // Check the installation's ID is included inside the signed JWT, to verify access
-    if (!decodedJWT.iss.includes(installationID)) {
-      throw new Error(`You don't have access to this installation`)
-    }
+    await confirmAccessToJWT(opts.iID, context.jwt)
 
     const db = getDB() as MongoDB
     const installation = await db.getInstallation(opts.iID)
@@ -100,7 +116,7 @@ export const mutations = {
       throw new Error(`Installation not found`)
     }
 
-    logger.info(`mutation: changeEnvVarForInstallation ${installationID} edited ${opts.key}`)
+    logger.info(`mutation: changeEnvVarForInstallation ${opts.iID} edited ${opts.key}`)
 
     // Make it if it doesn't exist
     const envVars = installation.envVars || {}
@@ -120,13 +136,7 @@ export const mutations = {
 
   runTask: authD(async (_: any, params: any, context: GraphQLContext) => {
     const opts = params as { iID: number; task: string; data: any }
-    const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-    const installationID = String(params.iID)
-
-    // Check the installation's ID is included inside the signed JWT, to verify access
-    if (!decodedJWT.iss.includes(installationID)) {
-      throw new Error(`You don't have access to this installation`)
-    }
+    await confirmAccessToJWT(opts.iID, context.jwt)
 
     const db = getDB() as MongoDB
     const installation = await db.getInstallation(opts.iID)
@@ -138,7 +148,7 @@ export const mutations = {
       throw new Error(`Task not found on installation`)
     }
 
-    logger.info(`mutation: runTask ${installationID} task ${opts.task}`)
+    logger.info(`mutation: runTask ${opts.iID} task ${opts.task}`)
     await runTaskForInstallation(installation, opts.task, opts.data || {})
 
     return { success: true }
@@ -200,7 +210,7 @@ export const mutations = {
 
     sendMessageToConnectionsWithAccessToInstallation(installation.iID, message)
 
-    // TODO: Store the time in some kind of per-installation analytics document
+    // TODO: Store the time in some kind of per-installation analytics document?
 
     // Wait 2 seconds for the container to finish
     setTimeout(async () => {

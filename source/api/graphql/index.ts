@@ -131,12 +131,25 @@ const schemaSDL = gql`
     success: Boolean
   }
 
+  type Error {
+    description: String!
+    context: String
+  }
+
+  type MutationError {
+    error: Error
+  }
+
+  union MutationWithInstallationOrError = Installation | MutationError
+
   type Mutation {
+    # Only really lets you set the perilSettingsJSONURL - which is kinda important for setting up y'know?
+    convertPartialInstallation(iID: Int!, perilSettingsJSONURL: String): MutationWithInstallationOrError
     # Building this out incrementally, but basically this provides
     # the ability to set changes
-    editInstallation(iID: Int!, perilSettingsJSONURL: String, installationSlackUpdateWebhookURL: String): Installation
+    editInstallation(iID: Int!, perilSettingsJSONURL: String, installationSlackUpdateWebhookURL: String): MutationWithInstallationOrError
     # Sets the installation to record webhooks for the next 5m
-    makeInstallationRecord(iID: Int!): Installation
+    makeInstallationRecord(iID: Int!): MutationWithInstallationOrError
     # Send webhook
     sendWebhookForInstallation(iID: Int!, eventID: String!): RecordedWebhook
     # Adds/edits/removes a new ENV var to an installation.
@@ -177,6 +190,7 @@ const resolvers = {
     }),
     id: globalIdResolver(),
   },
+
   PartialInstallation: {
     id: globalIdResolver(),
   },
@@ -196,13 +210,16 @@ const resolvers = {
     node: nodeResolver,
   },
 
+  MutationWithInstallationOrError: {
+    __resolveType: (obj: any) => (obj.error ? "MutationError" : "Installation"),
+  },
+
   Mutation: {
     ...mutations,
   },
+
   Node: {
-    __resolveType: (obj: any) => {
-      return obj.perilSettingsJSONURL ? "Installation" : "PartialInstallation"
-    },
+    __resolveType: (obj: any) => (obj.perilSettingsJSONURL ? "Installation" : "PartialInstallation"),
   },
 }
 

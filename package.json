@@ -16,7 +16,7 @@
     "setup": "yarn run setup:plugins && yarn run setup:env",
     "setup:env": "node out/scripts/setup-env.js",
     "setup:plugins": "node out/scripts/setup-plugins.js",
-    "deploy:staging": "nf run scripts/deploy_staging.sh",
+    "deploy:staging": "yarn type-check && nf run scripts/deploy_staging.sh",
     "logs:staging": "/usr/local/bin/now logs --team peril staging-api.peril.systems",
     "docker:build:site": "docker build .",
     "docker:build:runner": "docker build -f Dockerfile.runner  -t runner .",
