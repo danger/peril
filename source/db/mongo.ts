@@ -4,8 +4,9 @@ import * as JSON5 from "json5"
 import { connect, Document, model, Schema } from "mongoose"
 
 import _ = require("lodash")
+import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { dangerRepresentationForPath } from "../danger/danger_run"
-import { getGitHubFileContentsWithoutToken } from "../github/lib/github_helpers"
+import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import { MONGODB_URI } from "../globals"
 import { sendSlackMessageToInstallation } from "../infrastructure/installationSlackMessaging"
 import { GitHubInstallation } from "./index"
@@ -133,7 +134,6 @@ export const mongoDatabase = {
 
   /** Search through the installations for ones that match a particular scheduler key */
   getSchedulableInstallationsWithKey: async (key: string): Promise<GitHubInstallation[]> => {
-    // e.g:  db.getCollection('githubinstallations').find( {"scheduler.daily": { $exists: true } })
     const query: any = {}
     query[`scheduler.${key}`] = { $exists: true }
     const dbInstallations = await Installation.find(query)
@@ -145,25 +145,27 @@ export const mongoDatabase = {
     const dbInstallation = await Installation.findOne({ iID: installationID })
     if (!dbInstallation) {
       d(`Could not get a db reference for installation ${installationID} when updating`)
-      return
+      throw new Error("Could not find installation")
     }
 
     if (!dbInstallation.perilSettingsJSONURL) {
       d(`Could not get installation ${installationID} did not have a perilSettingsJSONURL when updating`)
-      return
+      throw new Error("Installation did not have a settings JSON url.")
     }
 
     const pathRep = dangerRepresentationForPath(dbInstallation.perilSettingsJSONURL)
-
     if (!pathRep.repoSlug || !pathRep.dangerfilePath) {
       d(`DangerfilePath for ${installationID} did not have a repoSlug/dangerfilePath when updating`)
-      return
+      throw new Error(
+        "Settings reference string did not contain a repo. Please use a string like 'org/repo@path/to/settings.json'."
+      )
     }
 
-    const file = await getGitHubFileContentsWithoutToken(pathRep.repoSlug, pathRep.dangerfilePath)
+    const token = await getTemporaryAccessTokenForInstallation(dbInstallation.iID)
+    const file = await getGitHubFileContentsFromLocation(token, pathRep, pathRep.repoSlug!)
     if (file === "") {
       d(`Settings for ${installationID} at ${dbInstallation.perilSettingsJSONURL} were empty`)
-      return
+      throw new Error("The settings file was empty.")
     }
 
     // Only allow the JSON to overwrite user editable settings in mongo
@@ -176,10 +178,11 @@ export const mongoDatabase = {
         `Settings at \`${dbInstallation.perilSettingsJSONURL}\` did not parse as JSON.`,
         dbInstallation
       )
-      return
-    }
-    const parsedSettings: Partial<GitHubInstallation> = _.pick(json, userInput)
 
+      throw error
+    }
+
+    const parsedSettings: Partial<GitHubInstallation> = _.pick(json, userInput)
     const sanitizedSettings = prepareToSave(parsedSettings)
     return await Installation.updateOne({ iID: installationID }, sanitizedSettings)
   },
