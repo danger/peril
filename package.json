@@ -112,7 +112,7 @@
     "tslint": "^5.11.0",
     "typescript": "^3.0.3",
     "typings": "^2.1.1",
-    "winston": "^2.4.2",
+    "winston": "^3.1.0",
     "winston-papertrail": "^1.0.5",
     "ws": "^5.2.0"
   },
