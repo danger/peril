@@ -15,10 +15,12 @@ import {
   PUBLIC_API_ROOT_URL,
   PUBLIC_FACING_API,
   PUBLIC_WEB_ROOT_URL,
+  SENTRY_DSN,
   validateENVForPerilServer,
   WEB_CONCURRENCY,
 } from "./globals"
 
+import { init } from "@sentry/node"
 import { URL } from "url"
 import { setupPublicAPI } from "./api/api"
 import logger from "./logger"
@@ -60,6 +62,12 @@ export const peril = () => {
     welcomeMessages.push(tick + ` Mongo at ${uri.host}`)
   } else {
     welcomeMessages.push(tick + ` JSON Db at ${DATABASE_JSON_FILE}`)
+  }
+
+  if (SENTRY_DSN) {
+    // Set up Sentry first
+    init({ dsn: SENTRY_DSN })
+    welcomeMessages.push(tick + ` Sentry`)
   }
 
   if (MONGODB_URI) {

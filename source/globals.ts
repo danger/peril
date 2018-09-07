@@ -136,6 +136,9 @@ export const HYPER_FUNC_NAME = getEnv("HYPER_FUNC_NAME")
 /** Optional: Any truthy value here will start up clustering for Peril  */
 export const WEB_CONCURRENCY = getEnv("WEB_CONCURRENCY")
 
+/** Optional: A DSN (url) for sentry support */
+export const SENTRY_DSN = getEnv("SENTRY_DSN")
+
 export const validateENVForPerilServer = () => {
   // Can't run without these
   validates(["PRIVATE_GITHUB_SIGNING_KEY", "PERIL_INTEGRATION_ID"])

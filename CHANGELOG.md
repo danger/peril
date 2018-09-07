@@ -1,3 +1,7 @@
+## 2018 - Sept 7
+
+Adds support for Sentry using if you set `SENTRY_DSN` in the env - orta
+
 ## 2018 - Sept 2
 
 **BREAKING**
