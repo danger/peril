@@ -119,7 +119,7 @@ export const GITHUB_CLIENT_ID = getEnv("GITHUB_CLIENT_ID")
 /** The GitHub OAuth Client Secret */
 export const GITHUB_CLIENT_SECRET = getEnv("GITHUB_CLIENT_SECRET")
 
-/** The URL for a Mongo DB instance, currently used for  */
+/** The URL for a Mongo DB instance, currently used for installations and scheduling */
 export const MONGODB_URI = getEnv("MONGODB_URI")
 
 /** Optional: the hyper access key, adding this will convert
@@ -138,6 +138,9 @@ export const WEB_CONCURRENCY = getEnv("WEB_CONCURRENCY")
 
 /** Optional: A DSN (url) for sentry support */
 export const SENTRY_DSN = getEnv("SENTRY_DSN")
+
+/** Optional: Is this the production Peril Server? */
+export const IS_PRODUCTION = getEnv("PRODUCTION") === "true"
 
 export const validateENVForPerilServer = () => {
   // Can't run without these

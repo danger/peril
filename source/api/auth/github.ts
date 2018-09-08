@@ -33,7 +33,7 @@ export const redirectForGHOauth = (req: Request, res: Response, ___: NextFunctio
 export const fakeAuthToken = async (_: Request, res: Response, ___: NextFunction) => {
   const authToken = createPerilUserJWT(
     { name: "Orta", avatar_url: "https://avatars2.githubusercontent.com/u/49038?v=4" },
-    [123, 321]
+    [123, 321] // these don\t exist
   )
   res.cookie("jwt", authToken, { domain: ".localhost" })
   res.status(200).send({ jwt: authToken })
@@ -69,9 +69,7 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
 
   const authToken = createPerilUserJWT({ name: user.name, avatar_url: user.avatar_url }, installations)
   // TODO: add max age
-  // TODO: This needs to change when we have production vs staging
   res.cookie("jwt", authToken, { domain: ".peril.systems" })
-
   if (redirect) {
     res.redirect(redirect + "?perilJWT=" + encodeURIComponent(authToken))
   } else {

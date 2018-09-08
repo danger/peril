@@ -18,6 +18,7 @@
     "MONGODB_URI": "@stag_mongodb_uri",
 
     "PUBLIC_FACING_API": "true",
+    "PRODUCTION": "false",
     "PUBLIC_API_ROOT_URL": "https://staging-api.peril.systems",
     "PUBLIC_WEB_ROOT_URL": "https://staging.peril.systems",
     "PUBLIC_GITHUB_APP_URL": "https://github.com/apps/peril-staging",
