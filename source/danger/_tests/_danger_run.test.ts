@@ -28,9 +28,9 @@ describe("for ping", () => {
 describe("for PRs", () => {
   it("returns a PR when PR is in the rules", () => {
     const rules = { pull_request: "dangerfile.js" }
-    expect(dangerRunForRules("pull_request", "created", rules, {})).toEqual([
+    expect(dangerRunForRules("pull_request", "opened", rules, {})).toEqual([
       {
-        action: "created",
+        action: "opened",
         branch: "master",
         dangerfilePath: "dangerfile.js",
         dslType: RunType.pr,
@@ -44,7 +44,7 @@ describe("for PRs", () => {
 
   it("returns two events when rule contains two files", () => {
     const rules = { pull_request: ["dangerfile.js", "anotherdangerfile.ts"] }
-    expect(dangerRunForRules("pull_request", "created", rules, {}).map(r => r.dangerfilePath)).toEqual([
+    expect(dangerRunForRules("pull_request", "opened", rules, {}).map(r => r.dangerfilePath)).toEqual([
       "dangerfile.js",
       "anotherdangerfile.ts",
     ])
@@ -93,9 +93,9 @@ describe("for PRs", () => {
       issue: "dangerfile.js",
       pull_request: "dangerfile.js",
       "pull_request.*": "dangerfile.js",
-      "pull_request.updated": "dangerfile.js",
+      "pull_request.edited": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "updated", rules, {}).length).toEqual(3)
+    expect(dangerRunForRules("pull_request", "edited", rules, {}).length).toEqual(3)
   })
 
   it("returns a PR when multiple rules are declared inline", () => {
@@ -130,7 +130,7 @@ describe("for PRs", () => {
     }
 
     const installation = generateInstallation({ rules })
-    const runs = runsForEvent("pull_request", "created", installation, {}, { repoSpecificRules } as any)
+    const runs = runsForEvent("pull_request", "opened", installation, {}, { repoSpecificRules } as any)
     expect(runs.map(r => r.referenceString)).toEqual([
       "loadsmart/peril-settings@rules/all-prs.ts",
       "loadsmart/peril-settings@rules/python-prs.ts",
@@ -143,9 +143,9 @@ describe("for PRs", () => {
       pull_request: "dangerfile.js",
     }
 
-    expect(
-      dangerRunForRules("pull_request", "created", rules, {}, "danger/olives").map(m => m.referenceString)
-    ).toEqual(["danger/olives@dangerfile.js"])
+    expect(dangerRunForRules("pull_request", "opened", rules, {}, "danger/olives").map(m => m.referenceString)).toEqual(
+      ["danger/olives@dangerfile.js"]
+    )
   })
 
   it("doesn't prefix the repo when that's passed in and has a repo reference", () => {
@@ -154,16 +154,16 @@ describe("for PRs", () => {
       pull_request: "danger/phone@dangerfile.js",
     }
 
-    expect(
-      dangerRunForRules("pull_request", "created", rules, {}, "danger/olives").map(m => m.referenceString)
-    ).toEqual(["danger/phone@dangerfile.js"])
+    expect(dangerRunForRules("pull_request", "opened", rules, {}, "danger/olives").map(m => m.referenceString)).toEqual(
+      ["danger/phone@dangerfile.js"]
+    )
   })
 
   it("returns null when no multi inline rules match", () => {
     const rules = {
       "issue.created, pull_request.closed": "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "created", rules, {})).toEqual([])
+    expect(dangerRunForRules("pull_request", "opened", rules, {})).toEqual([])
   })
 
   it("returns a PR when PR is in the rules and there are multi inline rules", () => {
@@ -171,9 +171,9 @@ describe("for PRs", () => {
       "issue.created, issue.closed": "dangerfile.js",
       pull_request: "dangerfile.js",
     }
-    expect(dangerRunForRules("pull_request", "created", rules, {})).toEqual([
+    expect(dangerRunForRules("pull_request", "opened", rules, {})).toEqual([
       {
-        action: "created",
+        action: "opened",
         branch: "master",
         dangerfilePath: "dangerfile.js",
         dslType: RunType.pr,
@@ -275,5 +275,22 @@ describe("dslTypeForEvent", () => {
 
   it("recommends creating the Dangerfile DSL for a pull request", () => {
     expect(dslTypeForEvent("pull_request")).toEqual(RunType.pr)
+  })
+})
+
+describe("special casing pull_request", () => {
+  it("when writing 'pull_request' an assign is ignored", () => {
+    const rules = { pull_request: "dangerfile.js" }
+    expect(dangerRunForRules("pull_request", "assign", rules, {}).length).toEqual(0)
+  })
+
+  it("when writing 'pull_request' an opened is sent", () => {
+    const rules = { pull_request: "dangerfile.js" }
+    expect(dangerRunForRules("pull_request", "opened", rules, {}).length).toEqual(1)
+  })
+
+  it("the glob still works tho", () => {
+    const rules = { "pull_request.*": "dangerfile.js" }
+    expect(dangerRunForRules("pull_request", "assign", rules, {}).length).toEqual(1)
   })
 })

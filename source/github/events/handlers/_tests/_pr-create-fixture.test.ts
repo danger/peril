@@ -48,7 +48,7 @@ it("passes the right args to the hyper functions when it's a PR", async () => {
   mockGetGitHubFileContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
 
   const runSettings = { pull_request: "danger/peril-settings@testing/logger.ts" }
-  const run = dangerRunForRules("pull_request", "created", runSettings, body)
+  const run = dangerRunForRules("pull_request", "opened", runSettings, body)
 
   await runPRRun("eventName", run, settings, "12345", body.pull_request)
 
