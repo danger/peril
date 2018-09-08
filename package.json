@@ -44,6 +44,7 @@
     "semver-sort": "0.0.4"
   },
   "dependencies": {
+    "@sentry/node": "^4.0.0-rc.1",
     "@slack/client": "^4.5.0",
     "@types/agenda": "1.0.3",
     "@types/body-parser": "^1.17.0",

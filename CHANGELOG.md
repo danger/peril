@@ -1,3 +1,23 @@
+## 2018 - Sept 8
+
+**BREAKING**
+
+This isn't _breaking_ per-say, more that the default behavior for `pull_request` will now be more inline with how people
+perceive it to act. Including myself.
+
+Prior to this change; creating a new PR could trigger `1 to n` webhooks depending on whether you've assigned reviewers,
+assignees, added labels etc. Realistically, Peril shouldn't be running 5-6 times on the creation of a PR and that can
+have simple side effects like duped comments, or do more work than you expect. So, this really simplifies the
+responsibilities of `pull_request` and makes it just the _key_ things that people are interested in.
+
+If you need that functionality, use `pull_request.*` instead, and you'll get them all :+1:
+
+- orta (see https://github.com/danger/peril/issues/371)
+
+## 2018 - Sept 7
+
+Adds support for Sentry using if you set `SENTRY_DSN` in the env - orta
+
 ## 2018 - Sept 2
 
 **BREAKING**

@@ -33,17 +33,49 @@ export interface DangerRun extends RepresentationForURL {
   feedback: RunFeedback
 }
 
-/** Takes an event and action, and defines whether to do a dangerfile run with it. */
+/**
+ * If the user's settings JSON includes a particular key,
+ * switch it out to be something else
+ */
+const keyMapper = (key: string) => {
+  // See: https://github.com/danger/peril/issues/371
+  if (key === "pull_request") {
+    return "pull_request.opened, pull_request.synchronize, pull_request.edited"
+  }
+  return key
+}
+
+// The opposite of the above, so it can get back when looking up settings object
+const reverseKeyMapper = (key: string) => {
+  if (key === "pull_request.opened, pull_request.synchronize, pull_request.edited") {
+    return "pull_request"
+  }
+  return key
+}
+
+/**
+ * Takes an event and action, and defines whether to do a dangerfile run with it.
+ *
+ * This is a complex function, because it has complex behaviors.
+ * Here is what it supports, at a high level:
+ *
+ *  - Simple direct key matches
+ *  - Sub-key action matches (e.g. `pull_request.opened`)
+ *  - Glob matches (e.g. `pull_Request.*`)
+ *  - Comma separated keys (e.g. `pull_request.opened, pull_request.closed`)
+ *  - JSON evaluated keys (e.g. `pull_request (pull_request.id == 12)`)
+ *  - Support internal mapping keys (e.g. `pull_request` -> `pull_request.opened, pull_request.closed`)
+ */
 export const dangerRunForRules = (
   event: string,
   action: string | null,
-  rule: RunnerRuleset | undefined | null,
+  rules: RunnerRuleset | undefined | null,
   webhook: any,
   prefixRepo?: string
 ): DangerRun[] => {
   // tslint:disable-line
   // Can't do anything with nothing
-  if (!rule) {
+  if (!rules) {
     return []
   }
 
@@ -52,9 +84,10 @@ export const dangerRunForRules = (
   const globsKey = event + ".*"
   const dotActionKey = event + "." + action
 
-  const arrayVersions = Object.keys(rule)
+  const arrayVersions = Object.keys(rules)
+    .map(keyMapper)
     // Look through all existing rules to see if we can
-    // find a key that matches the incoming rule
+    // find a key that matches the incoming rules
     .filter(key => {
       // Take into account comma split strings:
       //   "pull_request.opened, pull_request.closed"
@@ -96,7 +129,7 @@ export const dangerRunForRules = (
     })
     .map(key => {
       const alwaysArray = (t: any) => (Array.isArray(t) ? t : [t])
-      return alwaysArray(rule[key])
+      return alwaysArray(rules[reverseKeyMapper(key)])
     })
 
   let possibilities: string[] = []

@@ -44,10 +44,10 @@ it("handles a platform only run", () => {
 
   const settings = getSettings({ repoSpecificRules: {} })
 
-  const runs = runsForEvent("pull_request", "created", installation, {}, settings)
+  const runs = runsForEvent("pull_request", "opened", installation, {}, settings)
   expect(runs).toEqual([
     {
-      action: "created",
+      action: "opened",
       branch: "master",
       dangerfilePath: "pr.ts",
       dslType: 0,
@@ -88,10 +88,10 @@ it("gets the expected runs for platform + repo rules", () => {
 
   const settings = getSettings({})
 
-  const runs = runsForEvent("pull_request", "created", installation, {}, settings)
+  const runs = runsForEvent("pull_request", "opened", installation, {}, settings)
   expect(runs).toEqual([
     {
-      action: "created",
+      action: "opened",
       branch: "master",
       dangerfilePath: "pr.ts",
       dslType: 0,
@@ -101,7 +101,7 @@ it("gets the expected runs for platform + repo rules", () => {
       repoSlug: "orta/peril-dangerfiles",
     },
     {
-      action: "created",
+      action: "opened",
       branch: "master",
       dangerfilePath: "pr.ts",
       dslType: 0,
@@ -113,7 +113,7 @@ it("gets the expected runs for platform + repo rules", () => {
   ])
 })
 
-it("gets the expected runs for platform", () => {
+it("gets the expected runs for installation only", () => {
   const installation = generateInstallation({
     iID: 12,
     rules: {
@@ -136,17 +136,17 @@ it("gets the expected runs for platform", () => {
     repoName: repo.fullName,
   })
 
-  const runs = runsForEvent("issues", "created", installation, {}, settings)
+  const runs = runsForEvent("pull_request", "opened", installation, {}, settings)
   expect(runs).toEqual([
     {
-      action: "created",
+      action: "opened",
       branch: "master",
       dangerfilePath: "pr.ts",
-      dslType: 1,
-      event: "issues",
+      dslType: 0,
+      event: "pull_request",
       feedback: 0,
-      referenceString: "danger/peril@pr.ts",
-      repoSlug: "danger/peril",
+      referenceString: "orta/peril-dangerfiles@pr.ts",
+      repoSlug: "orta/peril-dangerfiles",
     },
   ])
 })
