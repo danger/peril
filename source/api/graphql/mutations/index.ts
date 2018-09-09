@@ -26,6 +26,13 @@ import { authD } from "../utils/auth"
 import { getUserInstallations } from "../utils/installations"
 
 const confirmAccessToJWT = async (iID: number, jwt: string) => {
+  if (!iID) {
+    throw new Error(`No installation ID given`)
+  }
+  if (!jwt) {
+    throw new Error(`No JWT given`)
+  }
+
   const decodedJWT = await getDetailsFromPerilJWT(jwt)
   const installationID = String(iID)
 
@@ -116,7 +123,7 @@ export const mutations = {
     }
 
     await sendWebhookThroughGitHubRunner(webhook)
-    return { success: true }
+    return webhook
   }),
 
   changeEnvVarForInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {

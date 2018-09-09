@@ -70,5 +70,5 @@ export const getRecordedWebhooksForInstallation = async (installationID: number)
   RecordedWebhook.find({ iID: installationID }, "iID event eventID createdAt")
 
 /** Gets an webhook */
-export const getRecordedWebhook = async (installationID: string, eventID: string) =>
+export const getRecordedWebhook = async (installationID: number, eventID: string) =>
   RecordedWebhook.findOne({ iID: installationID, eventID })
