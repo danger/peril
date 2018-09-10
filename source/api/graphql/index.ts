@@ -16,7 +16,7 @@ import { Date, JSON } from "graphql-tools-types"
 import { GitHubInstallation } from "../../db"
 import { getDB } from "../../db/getDB"
 import { MongoDB } from "../../db/mongo"
-import { getRecordedWebhooksForInstallation } from "../../plugins/utils/recordWebhookWithRequest"
+import { getRecordedWebhook, getRecordedWebhooksForInstallation } from "../../plugins/utils/recordWebhookWithRequest"
 
 import { GraphQLContext } from "../api"
 import { getDetailsFromPerilJWT } from "../auth/generate"
@@ -68,7 +68,7 @@ const schemaSDL = gql`
     # The name of a user/org which the installation is attached to
     login: String!
     # The URL for an image representing the installation owner
-    avatarURL: String!
+    avatarURL: String
     # A set of per repo rules
     repos: JSON!
     # Rules that are for all repos
@@ -123,7 +123,9 @@ const schemaSDL = gql`
     me: User
     # Get information about an installation
     installation(iID: Int!): Installation
-    
+    # Gets a single webhook
+    webhook(iID: Int!, eventID: String!): RecordedWebhook
+
     ${nodeField}
   }
 
@@ -205,6 +207,17 @@ const resolvers = {
     installation: authD(async (_: any, params: { iID: number }, context: GraphQLContext) => {
       const installations = await getUserInstallations(context.jwt)
       return installations.find(i => i.iID === params.iID)
+    }),
+
+    // Get just a single webhook
+    webhook: authD(async (_: any, params: { iID: number; eventID: string }, context: GraphQLContext) => {
+      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
+      if (!decodedJWT.iss.includes(String(params.iID))) {
+        throw new Error("You don't have access to this installation")
+      }
+
+      const webhook = await getRecordedWebhook(params.iID, params.eventID)
+      return webhook
     }),
 
     node: nodeResolver,

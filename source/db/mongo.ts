@@ -24,6 +24,8 @@ export interface MongoGithubInstallationModel extends Document, GitHubInstallati
   startedRecordingWebhooksTime: Date
   /** A string Peril can use to pass critical message */
   installationSlackUpdateWebhookURL: string
+  /** An image representation of the installation */
+  avatarURL: string
 }
 
 /** The model for an installation in the DB */
@@ -40,6 +42,7 @@ const Installation = model<MongoGithubInstallationModel>(
     // Needed by Peril
     iID: Number,
     login: String,
+    avatarURL: String,
     perilSettingsJSONURL: String,
     startedRecordingWebhooksTime: Date,
     recordWebhooksUntilTime: Date,
