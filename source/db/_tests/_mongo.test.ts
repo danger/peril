@@ -46,6 +46,7 @@ it("handles missing data", () => {
     scheduler: {},
     settings: {},
     tasks: {},
+    envVars: {},
   }
 
   // from mongo

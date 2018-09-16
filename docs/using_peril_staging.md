@@ -3,6 +3,7 @@
 Peril Staging and Peril Production are orta-hosted instances of Peril with a few differences:
 
 - There's a peril dashboard: https://staging-dashboard.peril.systems
+- You can have many orgs running on the same server (I run artsy, danger, orta, CocoaPods, PerilTest for example)
 - Each Peril run is a fresh Docker VM
 - Peril can send logs of a Dangerfile run to Slack, or to the admin dashboard (WIP, currently broken)
 - Peril can store 5 minutes of webhooks from GitHub to your org, and replay them so you can work on a feature
