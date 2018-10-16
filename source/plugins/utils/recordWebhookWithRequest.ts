@@ -31,8 +31,8 @@ const RecordedWebhook = model<RecordedWebhookModel>(
 /** Takes any webhook and stores it into the DB */
 export const recordWebhookWithRequest = async (req: express.Request) => {
   const installationID = req.body.installation.id as number
-  const event = req.header("X-GitHub-Event")
-  const eventID = req.header("X-GitHub-Delivery")
+  const event = req.header("X-GitHub-Event")!
+  const eventID = req.header("X-GitHub-Delivery")!
   const action = actionForWebhook(req.body)
   const eventName = action ? `${event}.${action}` : event
 

@@ -10,6 +10,9 @@ import { validatesGithubWebhook } from "../plugins/validatesGithubWebhook"
 
 export const githubRouter = (req: Request, res: Response, next: NextFunction) => {
   const event = req.header("X-GitHub-Event")
+  if (!event) {
+    return
+  }
   winston.log("router", `Received ${event}:`)
 
   // Creating / Removing installations from the DB
