@@ -119,15 +119,6 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
     return
   }
 
-  // Some events aren't tied to a repo (like creating a user) and so
-  // right now I've not thought through what is necessary to run those
-  if (!settings.isRepoEvent) {
-    res
-      .status(404)
-      .send({ error: `WIP - not built out support for non-repo related events - sorry`, iID: installationID })
-    return
-  }
-
   const runs = runsForEvent(event, action, installation, req.body, settings)
   const name = action ? `${event}.${action}` : event
   const maybeRepo = req.body.repository ? `on ${req.body.repository.full_name}` : ""
