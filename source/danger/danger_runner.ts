@@ -60,8 +60,9 @@ export async function runDangerForInstallation(
 
   const exec = await executorForInstallation(platform, vm2)
 
-  const randomName = Math.random().toString(36)
-  const localDangerfilePaths = references.map(ref => path.resolve("./" + "danger-" + randomName + path.extname(ref)))
+  const localDangerfilePaths = references.map(ref =>
+    path.resolve("./" + "danger-" + Math.random().toString(36) + path.extname(ref))
+  )
 
   // Allow custom peril funcs to come from the task/scheduler DSL
   if (runtimeEnvironment === RuntimeEnvironment.Standalone) {
