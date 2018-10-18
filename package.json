@@ -93,7 +93,7 @@
     "graphql-playground-middleware-express": "^1.7.3",
     "graphql-relay-tools": "^0.1.1",
     "graphql-resolvers": "^0.2.2",
-    "graphql-tools": "^3.1.1",
+    "graphql-tools": "^4.0.2",
     "graphql-tools-types": "^1.1.26",
     "graphql-yoga": "^1.16.1",
     "hyper-aws4": "^1.1.3",
