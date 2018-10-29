@@ -122,7 +122,7 @@
     "@types/cookie": "^0.3.1",
     "@types/require-from-string": "^1.2.0",
     "husky": "^0.14.0",
-    "lint-staged": "^7.2.2",
+    "lint-staged": "^8.0.1",
     "mockingoose": "^2.10.1",
     "prettier": "^1.14.2",
     "tslint-config-prettier": "^1.15.0",
