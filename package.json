@@ -126,7 +126,7 @@
     "mockingoose": "^2.10.1",
     "prettier": "^1.14.2",
     "tslint-config-prettier": "^1.15.0",
-    "typescript-json-schema": "^0.32.0"
+    "typescript-json-schema": "^0.33.0"
   },
   "resolutions": {
     "jest/jest-cli/jest-haste-map/sane": "1.7.0"
