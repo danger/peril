@@ -4,6 +4,7 @@ import { PerilDSL } from "danger/distribution/dsl/DangerDSL"
 import { GitHubUtilsDSL } from "danger/distribution/dsl/GitHubDSL"
 import GitHubUtils, {
   createOrAddLabel,
+  createOrUpdatePR,
   createUpdatedIssueWithIDGenerator,
 } from "danger/distribution/platforms/github/GitHubUtils"
 import { DangerContext } from "danger/distribution/runner/Dangerfile"
@@ -78,6 +79,7 @@ const recreateGitHubUtils = (api: NodeGithub): GitHubUtilsDSL => ({
   // TODO: Is this right?
   //       Do I need to move the PR object into here if needed?
   createOrAddLabel: createOrAddLabel(undefined as any, api),
+  createOrUpdatePR: createOrUpdatePR(undefined as any, api),
 })
 
 /**

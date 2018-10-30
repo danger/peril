@@ -79,10 +79,11 @@ export const setupForRequest = async (req: express.Request, installationSettings
   const hasRelatedCommentable = getIssueNumber(req.body) !== null
   const dbRepo = isRepoEvent ? getRepoSpecificRules(installation!, repoName) : null
   const repoSpecificRules = dbRepo && dbRepo.rules ? dbRepo.rules : {}
+  const eventID = (req.headers["X-GitHub-Delivery"] as string) || "Unknown"
 
   return {
     commentableID: hasRelatedCommentable ? getIssueNumber(req.body) : null,
-    eventID: req.headers["X-GitHub-Delivery"] || "Unknown",
+    eventID,
     hasRelatedCommentable,
     installationID,
     installationSettings,
