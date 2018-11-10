@@ -3,6 +3,10 @@
     "definitions": {
         "GitHubInstallationSettings": {
             "properties": {
+                "disable_github_check": {
+                    "description": "Disables using GitHub checks in the messages posted by Danger.",
+                    "type": "boolean"
+                },
                 "env_vars": {
                     "description": "An array of allowed ENV vars which are passed into Dangerfiles.",
                     "items": {

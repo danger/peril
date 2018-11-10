@@ -29,7 +29,7 @@
     "type": "git",
     "url": "https://github.com/danger/peril.git"
   },
-  "engine": {
+  "engines": {
     "node": "10"
   },
   "author": "Orta",
