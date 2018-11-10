@@ -20,7 +20,7 @@ it("Uses the event json when it's a non-PR event", async () => {
   const myEvent = { event: true }
 
   const platform = getPerilPlatformForDSL(RunType.import, gh, myEvent)
-  const platformDSL = await platform.getPlatformDSLRepresentation()
+  const platformDSL = await platform.getPlatformReviewDSLRepresentation()
 
   expect(platformDSL).toEqual({
     api: { api: true },

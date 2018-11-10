@@ -58,7 +58,7 @@ export const getPerilPlatformForDSL = (type: RunType, github: GitHubType | null,
       supportsInlineComments: () => (github ? github.supportsInlineComments.bind(github) : nullFunc),
 
       updateStatus: () => (github ? github.supportsInlineComments.bind(github) : nullFunc),
-      getPlatformDSLRepresentation: async () => {
+      getPlatformReviewDSLRepresentation: async () => {
         return {
           ...githubEvent,
           api: github && github.api.getExternalAPI(),

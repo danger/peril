@@ -22,6 +22,7 @@ import { gql } from "../api/graphql/gql"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "../danger/append_peril"
 import { dangerRepresentationForPath, RunType } from "../danger/danger_run"
 import { executorForInstallation, InstallationToRun, ValidatedPayload } from "../danger/danger_runner"
+import { source } from "../danger/peril_ci_source"
 import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { githubAPIForCommentable } from "../github/events/utils/commenting"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
@@ -149,7 +150,7 @@ const runDangerPR = async (
   const exec = await executorForInstallation(platform, inlineRunner)
 
   // Set up the Danger runtime env
-  const runtimeDSL = await jsonToDSL(payload.dsl)
+  const runtimeDSL = await jsonToDSL(payload.dsl, source)
   const context = contextForDanger(runtimeDSL)
   const peril = await perilObjectForInstallation(installation, input.perilSettings.envVars, input)
   await appendPerilContextToDSL(installation.iID, token, context, peril)

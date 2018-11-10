@@ -5,6 +5,7 @@ import { getPerilPlatformForDSL } from "../../danger/peril_platform"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
 import { RunType } from "../../danger/danger_run"
+import { source } from "../../danger/peril_ci_source"
 
 /**
  * Generates a full DSL for a PR
@@ -13,7 +14,7 @@ import { RunType } from "../../danger/danger_run"
  */
 export const createPRDSL = async (githubAPI: GitHubAPI) => {
   const jsonDSL = await createPRJSONDSL(githubAPI)
-  return await jsonToDSL(jsonDSL)
+  return await jsonToDSL(jsonDSL, source)
 }
 
 /**
@@ -24,5 +25,5 @@ export const createPRDSL = async (githubAPI: GitHubAPI) => {
 export const createPRJSONDSL = async (githubAPI: GitHubAPI) => {
   const gh = GitHub(githubAPI)
   const platform = getPerilPlatformForDSL(RunType.pr, gh, {})
-  return await jsonDSLGenerator(platform)
+  return await jsonDSLGenerator(platform, source)
 }

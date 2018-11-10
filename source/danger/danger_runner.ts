@@ -16,6 +16,7 @@ import { RuntimeEnvironment } from "../db/runtimeEnv"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import { RunType } from "./danger_run"
+import { source } from "./peril_ci_source"
 import { getPerilPlatformForDSL } from "./peril_platform"
 
 export interface InstallationToRun {
@@ -136,22 +137,11 @@ export function executorForInstallation(platform: Platform, runner: DangerRunner
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
-  const source = {
-    env: process.env,
-    isCI: true,
-    isPR: true,
-    name: "Peril",
-    pullRequestID: "not used",
-    repoSlug: "not used",
-    supportedPlatforms: [],
-  }
-
   const config: ExecutorOptions = {
     dangerID: "peril", // TODO: multiple Peril runs?
     jsonOnly: false,
     stdoutOnly: false,
     verbose: !!process.env.LOG_FETCH_REQUESTS,
-    accessTokenIsGitHubApp: true,
   }
 
   // Source can be removed in the next release of Danger
