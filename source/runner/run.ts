@@ -147,7 +147,7 @@ const runDangerPR = async (
   const perilGH = GitHub(perilGHAPI)
 
   const platform = getPerilPlatformForDSL(RunType.pr, perilGH, payload.dsl)
-  const exec = await executorForInstallation(platform, inlineRunner)
+  const exec = await executorForInstallation(platform, inlineRunner, input.perilSettings)
 
   // Set up the Danger runtime env
   const runtimeDSL = await jsonToDSL(payload.dsl, source)

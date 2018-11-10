@@ -11,11 +11,12 @@ import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { RunType } from "../danger/danger_run"
 import { InstallationToRun, Payload } from "../danger/danger_runner"
 import { getDB } from "../db/getDB"
+import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { MongoDB } from "../db/mongo"
 import { createPerilSandboxAPIJWT } from "./sandbox/jwt"
 
 /** Peril specific settings */
-export interface PerilSettings {
+export interface PerilSettings extends GitHubInstallationSettings {
   /** A short-lived JWT that can be used to make API requests back to Peril */
   perilJWT: string
   /** The root address of the Peril server */
@@ -86,6 +87,7 @@ export const triggerSandboxDangerRun = async (
     payload,
     dslType: type === RunType.pr ? "pr" : "run",
     perilSettings: {
+      ...installation.settings,
       perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTask", "dangerfileFinished"]),
       perilAPIRoot: PUBLIC_API_ROOT_URL,
       envVars,

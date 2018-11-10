@@ -6,6 +6,7 @@ import vm2 from "danger/distribution/runner/runners/vm2"
 import { RunType } from "../../../danger/danger_run"
 import { executorForInstallation } from "../../../danger/danger_runner"
 import { getPerilPlatformForDSL } from "../../../danger/peril_platform"
+import { GitHubInstallationSettings } from "../../../db/GitHubRepoSettings"
 import { PERIL_BOT_USER_ID } from "../../../globals"
 import { GitHubRunSettings } from "../github_runner"
 
@@ -16,12 +17,13 @@ export const commentOnResults = async (
   dslType: RunType,
   results: DangerResults,
   token: string,
-  settings: GitHubRunSettings
+  settings: GitHubRunSettings,
+  installationSettings: GitHubInstallationSettings
 ) => {
   const githubAPI = githubAPIForCommentable(token, settings.repoName!, settings.commentableID)
   const gh = GitHub(githubAPI)
   const platform = getPerilPlatformForDSL(dslType, gh, {})
-  const exec = executorForInstallation(platform, vm2)
+  const exec = executorForInstallation(platform, vm2, installationSettings)
 
   // TODO: Figure what happens here with `git` as being nully,
   // for one I think it would mean non-sandbox runs cant use inline?
