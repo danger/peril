@@ -18,7 +18,7 @@ import { readFileSync, writeFileSync } from "fs"
 import { resolve } from "path"
 import { dangerRunForRules } from "../../../../danger/danger_run"
 import { callHyperFunction } from "../../../../runner/hyper-api"
-import { PerilRunnerBootstrapJSON } from "../../../../runner/triggerSandboxRun"
+import { PerilRunnerBootstrapJSON } from "../../../../runner/triggerSandboxRunFromExternalHost"
 import { setupForRequest } from "../../github_runner"
 
 import { runPRRun } from "../pr"

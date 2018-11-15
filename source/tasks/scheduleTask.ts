@@ -1,6 +1,6 @@
 import { graphqlAPI } from "../api/graphql/api"
 import { gql } from "../api/graphql/gql"
-import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRun"
+import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRunFromExternalHost"
 import { DangerFileTaskConfig, hasAgendaInRuntime, triggerAFutureDangerRun } from "./startTaskScheduler"
 
 export const generateTaskSchedulerForInstallation = (

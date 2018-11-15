@@ -16,11 +16,11 @@ const mockGetGitHubFileContents: any = getGitHubFileContents
 import { readFileSync } from "fs"
 import { resolve } from "path"
 import { dangerRunForRules } from "../../../../danger/danger_run"
-import { triggerSandboxDangerRun } from "../../../../runner/triggerSandboxRun"
+import { triggerSandboxDangerRun } from "../../../../runner/triggerSandboxRunFromExternalHost"
 import { setupForRequest } from "../../github_runner"
 import { runEventRun } from "../event"
 
-jest.mock("../../../../runner/triggerSandboxRun", () => ({
+jest.mock("../../../../runner/triggerSandboxRunFromExternalHost", () => ({
   triggerSandboxDangerRun: jest.fn(),
 }))
 

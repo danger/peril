@@ -28,7 +28,7 @@ import { githubAPIForCommentable } from "../github/events/utils/commenting"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import logger from "../logger"
 import { customGitHubResolveRequest, perilPrefix, shouldUseGitHubOverride } from "./customGitHubRequire"
-import { PerilRunnerBootstrapJSON } from "./triggerSandboxRun"
+import { PerilRunnerBootstrapJSON } from "./triggerSandboxRunFromExternalHost"
 
 let runtimeEnv = {} as any
 const startTime = new Date().getTime()
