@@ -2,7 +2,6 @@ import { getDB } from "../../../db/getDB"
 import { MongoDB } from "../../../db/mongo"
 
 import { GitHubInstallation } from "../../../db"
-import { IS_PRODUCTION } from "../../../globals"
 import { sendLogsToSlackForInstallation } from "../../../infrastructure/installationSlackMessaging"
 import logger from "../../../logger"
 import {
@@ -44,21 +43,16 @@ const confirmAccessToJWT = async (iID: number, jwt: string) => {
 
 type PartialInstallation = Partial<GitHubInstallation> & { iID: number }
 
-const dangerOrgStagingInstallationID = 135226
+// const dangerOrgStagingInstallationID = 135226
 
 export const mutations = {
   convertPartialInstallation: authD(async (_: any, params: any, context: GraphQLContext) => {
     const opts = params as PartialInstallation
     await confirmAccessToJWT(opts.iID, context.jwt)
+    const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
 
-    // Basically only danger contributors can use staging
-    if (!IS_PRODUCTION) {
-      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
-      const installationID = String(dangerOrgStagingInstallationID)
-
-      if (!decodedJWT.iss.includes(installationID)) {
-        throw new Error(`You don't have access to the Danger org, which is required for staging.`)
-      }
+    if (decodedJWT.data.user.name !== "orta") {
+      throw new Error(`Sorry folks, only Orta can create a new installation.`)
     }
 
     logger.info(`mutation: editInstallation ${opts.iID}`)

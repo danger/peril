@@ -36,7 +36,7 @@
   "license": "MIT",
   "availablePerilRuntimeDependencies": {
     "@slack/client": "^4.5.0",
-    "danger": "^3",
+    "danger": "*",
     "danger-plugin-spellcheck": "^1.2.3",
     "danger-plugin-yarn": "^1.2.1",
     "jira-client": "6.4.1",
