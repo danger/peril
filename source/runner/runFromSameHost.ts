@@ -16,7 +16,7 @@ export const runFromSameHost = async (
   const nodePath = which.stdout.toString().trim()
 
   const path = "out/runner/index.js"
-  const child = spawn(nodePath, [path], { env: process.env })
+  const child = spawn(nodePath, [path], { env: { ...process.env, ...stdOUT.perilSettings.envVars } })
 
   // Pipe in the STDOUT
   child.stdin.write(JSON.stringify(stdOUT))
