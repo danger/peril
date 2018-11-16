@@ -4,7 +4,7 @@ import { InstallationToRun } from "../danger/danger_runner"
 import { sendSlackMessageToInstallationID } from "../infrastructure/installationSlackMessaging"
 import { PerilRunnerBootstrapJSON } from "./triggerSandboxRun"
 
-const d = debug("runDangerSubprocess")
+const d = debug("runFromSameHost")
 
 export const runFromSameHost = async (
   stdOUT: PerilRunnerBootstrapJSON,
