@@ -208,7 +208,13 @@ export const mutations = {
   },
 
   dangerfileFinished: async (_: any, params: any, __: GraphQLContext) => {
-    const opts = params as { dangerfiles: string[]; time: number; jwt: string; hyperCallID: string; name: string }
+    const opts = params as {
+      dangerfiles: string[]
+      time: number
+      jwt: string
+      hyperCallID: string | undefined
+      name: string
+    }
     const decodedJWT = await getDetailsFromPerilSandboxAPIJWT(opts.jwt)
 
     const db = getDB() as MongoDB
@@ -232,47 +238,48 @@ export const mutations = {
 
     // TODO: Store the time in some kind of per-installation analytics document?
 
-    // Wait 2 seconds for the container to finish
-    setTimeout(async () => {
-      let dangerfileLog: MSGDangerfileLog | undefined
-
-      // Get Hyper logs
-      const getLogs = async () => {
-        let logs = null
-        try {
-          logs = await getHyperLogs(opts.hyperCallID)
-        } catch (error) {
-          logger.error(`Requesting the hyper logs for ${installation.iID} with callID ${opts.hyperCallID} - ${error}`)
-          return
+    // Calls can come from outside hyper now
+    const hyperCallID = opts.hyperCallID
+    if (hyperCallID) {
+      // Wait 2 seconds for the container to finish
+      setTimeout(async () => {
+        let dangerfileLog: MSGDangerfileLog | undefined
+        // Get Hyper logs
+        const getLogs = async () => {
+          let logs = null
+          try {
+            logs = await getHyperLogs(hyperCallID)
+          } catch (error) {
+            logger.error(`Requesting the hyper logs for ${installation.iID} with callID ${hyperCallID} - ${error}`)
+            return
+          }
+          const logMessage: MSGDangerfileLog = {
+            event: opts.name,
+            action: "log",
+            filenames: opts.dangerfiles,
+            log: logs as string,
+          }
+          return logMessage
         }
-        const logMessage: MSGDangerfileLog = {
-          event: opts.name,
-          action: "log",
-          filenames: opts.dangerfiles,
-          log: logs as string,
-        }
-        return logMessage
-      }
 
-      // If you have a connected slack webhook, then always grab the logs
-      // and store the value somewhere where the websocket to admin connections
-      // can also read.
-      if (installation.installationSlackUpdateWebhookURL) {
-        dangerfileLog = await getLogs()
-        sendLogsToSlackForInstallation("Received logs", dangerfileLog!, installation)
-      }
-
-      // Callback inside is lazy loaded and only called if there are people
-      // in the dashboard
-      sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
-        // If the slack trigger above didn't grab the logs, then re-grab them.
-        if (!dangerfileLog) {
+        // If you have a connected slack webhook, then always grab the logs
+        // and store the value somewhere where the websocket to admin connections
+        // can also read.
+        if (installation.installationSlackUpdateWebhookURL) {
           dangerfileLog = await getLogs()
+          sendLogsToSlackForInstallation("Received logs", dangerfileLog!, installation)
         }
-        spark.write(dangerfileLog)
-      })
-    }, 2000)
-
+        // Callback inside is lazy loaded and only called if there are people
+        // in the dashboard
+        sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
+          // If the slack trigger above didn't grab the logs, then re-grab them.
+          if (!dangerfileLog) {
+            dangerfileLog = await getLogs()
+          }
+          spark.write(dangerfileLog)
+        })
+      }, 2000)
+    }
     return { success: true }
   },
 }

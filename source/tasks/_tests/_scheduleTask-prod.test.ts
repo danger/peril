@@ -12,7 +12,7 @@ jest.mock("../../api/fetch", () => ({
 
 import { fetch } from "../../api/fetch"
 import { gql } from "../../api/graphql/gql"
-import { PerilRunnerBootstrapJSON } from "../../runner/triggerSandboxRunFromExternalHost"
+import { PerilRunnerBootstrapJSON } from "../../runner/triggerSandboxRun"
 
 it("handles making a working graphql mutation", () => {
   const bootstrap: any = {

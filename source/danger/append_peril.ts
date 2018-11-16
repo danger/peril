@@ -14,7 +14,7 @@ import { basename } from "path"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { runtimeEnvironment } from "../db/getDB"
 import { RuntimeEnvironment } from "../db/runtimeEnv"
-import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRunFromExternalHost"
+import { PerilRunnerBootstrapJSON } from "../runner/triggerSandboxRun"
 import { generateTaskSchedulerForInstallation } from "../tasks/scheduleTask"
 import { InstallationToRun } from "./danger_runner"
 
