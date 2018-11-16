@@ -40,7 +40,7 @@ global.regeneratorRuntime = {}
 describe("evaling an issue", () => {
   it("runs a typescript dangerfile with fixtured data", async () => {
     const platform = fixturedAPI()
-    const executor = executorForInstallation(platform, vm2)
+    const executor = executorForInstallation(platform, vm2, {})
     const dangerfile = `
     warn("Issue number: " + danger.github.issue.id)
     `

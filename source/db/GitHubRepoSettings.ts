@@ -17,4 +17,8 @@ export interface GitHubInstallationSettings {
    * turn on Peril for an entire org, and just make the occasional edge case.
    */
   ignored_repos?: string[]
+  /**
+   * Disables using GitHub checks in the messages posted by Danger.
+   */
+  disable_github_check?: boolean
 }

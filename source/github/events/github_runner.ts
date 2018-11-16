@@ -154,7 +154,7 @@ export const runEverything = async (
   eventName: string,
   runs: DangerRun[],
   settings: GitHubRunSettings,
-  _: GitHubInstallation,
+  installation: GitHubInstallation,
   req: express.Request,
   res: express.Response,
   next: any
@@ -194,7 +194,7 @@ export const runEverything = async (
     const finalResults = mergeResults(allResults)
     log(`Commenting, with results: ${mdResults(finalResults)}`)
     const isPRDSL = runs.find(r => r.dslType === RunType.pr) ? RunType.pr : RunType.import
-    commentOnResults(isPRDSL, finalResults, token, settings)
+    commentOnResults(isPRDSL, finalResults, token, settings, installation.settings)
   }
 
   // TODO: Get the hyper function metadata into here

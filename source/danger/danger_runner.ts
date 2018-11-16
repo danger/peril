@@ -59,7 +59,7 @@ export async function runDangerForInstallation(
   const gh = api ? GitHub(api) : null
   const platform = getPerilPlatformForDSL(type, gh, payload.dsl)
 
-  const exec = await executorForInstallation(platform, vm2)
+  const exec = await executorForInstallation(platform, vm2, installationRun.settings)
 
   const localDangerfilePaths = references.map(ref =>
     path.resolve("./" + "danger-" + Math.random().toString(36) + path.extname(ref))
@@ -133,7 +133,7 @@ ${contents}
 /**
  * Generates a Danger Executor based on the installationRun's context
  */
-export function executorForInstallation(platform: Platform, runner: DangerRunner) {
+export function executorForInstallation(platform: Platform, runner: DangerRunner, options: GitHubInstallationSettings) {
   // We need this for things like repo slugs, PR IDs etc
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
@@ -142,6 +142,7 @@ export function executorForInstallation(platform: Platform, runner: DangerRunner
     jsonOnly: false,
     stdoutOnly: false,
     verbose: !!process.env.LOG_FETCH_REQUESTS,
+    disableGitHubChecksSupport: options.disable_github_check,
   }
 
   // Source can be removed in the next release of Danger

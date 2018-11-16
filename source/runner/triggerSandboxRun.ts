@@ -1,21 +1,21 @@
 import * as uuid from "uuid/v1"
-import logger from "../logger"
-
-import { HYPER_FUNC_NAME, PUBLIC_API_ROOT_URL } from "../globals"
-import { callHyperFunction } from "../runner/hyper-api"
-
 import { DangerfileReferenceString } from "../db/index"
+import { PUBLIC_API_ROOT_URL } from "../globals"
 
 import { MSGDangerfileStarted, sendMessageToConnectionsWithAccessToInstallation } from "../api/api"
 import { getTemporaryAccessTokenForInstallation } from "../api/github"
 import { RunType } from "../danger/danger_run"
 import { InstallationToRun, Payload } from "../danger/danger_runner"
 import { getDB } from "../db/getDB"
+import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { MongoDB } from "../db/mongo"
+
+// import { runExternally } from "./runFromExternalHost"
+import { runFromSameHost } from "./runFromSameHost"
 import { createPerilSandboxAPIJWT } from "./sandbox/jwt"
 
 /** Peril specific settings */
-export interface PerilSettings {
+export interface PerilSettings extends GitHubInstallationSettings {
   /** A short-lived JWT that can be used to make API requests back to Peril */
   perilJWT: string
   /** The root address of the Peril server */
@@ -86,6 +86,7 @@ export const triggerSandboxDangerRun = async (
     payload,
     dslType: type === RunType.pr ? "pr" : "run",
     perilSettings: {
+      ...installation.settings,
       perilJWT: createPerilSandboxAPIJWT(installation.iID, ["scheduleTask", "dangerfileFinished"]),
       perilAPIRoot: PUBLIC_API_ROOT_URL,
       envVars,
@@ -95,14 +96,8 @@ export const triggerSandboxDangerRun = async (
     paths,
   }
 
-  const call = await callHyperFunction(stdOUT)
-  const callID = JSON.parse(call).CallId
-  if (callID) {
-    // Make it easy to grab logs from
-    logger.info(` Logs`)
-    logger.info(` summary: hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
-    logger.info(`  stdout: hyper func get ${callID}`)
-  }
+  // await runExternally(stdOUT, eventName, installation)
+  await runFromSameHost(stdOUT, eventName, installation)
 }
 
 /** Sandbox runs need their envVars to be sent from Peril to the sandbox */

@@ -44,7 +44,7 @@ export const prDSLRunner = async (req: express.Request, res: express.Response, _
   const gh = GitHub(githubAPI)
   const platform = getPerilPlatformForDSL(RunType.pr, gh, {})
 
-  const exec = await executorForInstallation(platform, inline)
+  const exec = await executorForInstallation(platform, inline, {})
   const dangerDSL = await exec.dslForDanger()
 
   // Remove this to reduce data

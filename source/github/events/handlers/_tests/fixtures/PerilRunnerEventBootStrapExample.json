@@ -505,7 +505,5 @@
     "perilRunID": "[run-id]",
     "event": "mockEvent"
   },
-  "paths": [
-    "danger/peril-settings@testing/async_import.ts"
-  ]
+  "paths": ["danger/peril-settings@testing/async_import.ts"]
 }
