@@ -1,3 +1,5 @@
+import { format } from "prettier"
+
 jest.mock("../../../../db/getDB")
 import { MockDB } from "../../../../db/__mocks__/getDB"
 import { getDB } from "../../../../db/getDB"
@@ -54,7 +56,9 @@ it("passes the right args to the hyper functions when it's a PR", async () => {
   const payload = (runFromSameHost as any).mock.calls[0][0] as PerilRunnerBootstrapJSON
   payload.perilSettings.perilJWT = "12345"
   payload.perilSettings.perilRunID = "[run-id]"
-  writeFileSync(__dirname + "/fixtures/PerilRunnerPRBootStrapExample.json", JSON.stringify(payload, null, "  "), "utf8")
+
+  const file = format(JSON.stringify(payload, null, "  "), { parser: "json" })
+  writeFileSync(__dirname + "/fixtures/PerilRunnerPRBootStrapExample.json", file, "utf8")
 
   expect(payload).toMatchSnapshot()
 })

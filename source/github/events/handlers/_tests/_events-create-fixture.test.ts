@@ -1,3 +1,5 @@
+import { format } from "prettier"
+
 jest.mock("../../../../db/getDB")
 import { MockDB } from "../../../../db/__mocks__/getDB"
 import { getDB } from "../../../../db/getDB"
@@ -48,7 +50,7 @@ it("passes the right args to the hyper functions", async () => {
   payload.perilSettings.perilRunID = "[run-id]"
   writeFileSync(
     __dirname + "/fixtures/PerilRunnerEventBootStrapExample.json",
-    JSON.stringify(payload, null, "  "),
+    format(JSON.stringify(payload, null, "  "), { parser: "json" }),
     "utf8"
   )
 
