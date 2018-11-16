@@ -7,6 +7,9 @@ jest.mock("../../../../api/github", () => ({
   getTemporaryAccessTokenForInstallation: () => Promise.resolve("12345"),
 }))
 
+jest.mock("../../../../runner/runFromSameHost")
+import { runFromSameHost } from "../../../../runner/runFromSameHost"
+
 jest.mock("../../../../github/lib/github_helpers", () => ({
   getGitHubFileContents: jest.fn(),
 }))
@@ -16,14 +19,10 @@ const mockGetGitHubFileContents: any = getGitHubFileContents
 import { readFileSync, writeFileSync } from "fs"
 import { resolve } from "path"
 import { dangerRunForRules } from "../../../../danger/danger_run"
-import { callHyperFunction } from "../../../../runner/hyper-api"
+
 import { PerilRunnerBootstrapJSON } from "../../../../runner/triggerSandboxRun"
 import { setupForRequest } from "../../github_runner"
 import { runEventRun } from "../event"
-
-jest.mock("../../../../runner/hyper-api", () => ({
-  callHyperFunction: jest.fn(() => Promise.resolve('{ "CallId": 123 }')),
-}))
 
 const apiFixtures = resolve(__dirname, "../../_tests/fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
@@ -44,7 +43,7 @@ it("passes the right args to the hyper functions", async () => {
   await runEventRun("mockEvent", [run], settings, "12345", body)
 
   // Take the payload, remove the JWT and save a copy of the JSON into a fixture dir, then snapshot it
-  const payload = (callHyperFunction as any).mock.calls[0][0] as PerilRunnerBootstrapJSON
+  const payload = (runFromSameHost as any).mock.calls[0][0] as PerilRunnerBootstrapJSON
   payload.perilSettings.perilJWT = "12345"
   payload.perilSettings.perilRunID = "[run-id]"
   writeFileSync(
