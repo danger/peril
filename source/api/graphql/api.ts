@@ -21,3 +21,7 @@ export const graphqlAPI = (url: string, query: string) =>
       }
       return body
     })
+    .catch(e => {
+      logger.error("Error making an API call to the GraphQL API")
+      logger.error(e)
+    })
