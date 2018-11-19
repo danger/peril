@@ -202,9 +202,8 @@ Rules are for every repo, `repos` are rules for a single repo.
     },
     "artsy/positron": {
       "pull_request": ["dangerfile.ts", "check-for-assignee.ts"]
-      ]
-    },
-  }
+    }
+  },
 ```
 
 So, let's say a PR is closed on `artsy/reaction`, it would trigger three Dangerfiles to run:
