@@ -25,5 +25,8 @@ export const createPRDSL = async (githubAPI: GitHubAPI) => {
 export const createPRJSONDSL = async (githubAPI: GitHubAPI) => {
   const gh = GitHub(githubAPI)
   const platform = getPerilPlatformForDSL(RunType.pr, gh, {})
-  return await jsonDSLGenerator(platform, source)
+  // These are what Danger JS uses to pass info to sub-commands
+  // peril scopes all of its settings elsewhere, so a blank is fine
+  const cliArgs = {} as any
+  return await jsonDSLGenerator(platform, source, cliArgs)
 }

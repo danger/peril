@@ -143,6 +143,7 @@ export function executorForInstallation(platform: Platform, runner: DangerRunner
     stdoutOnly: false,
     verbose: !!process.env.LOG_FETCH_REQUESTS,
     disableGitHubChecksSupport: options.disable_github_check,
+    passURLForDSL: false,
   }
 
   // Source can be removed in the next release of Danger
