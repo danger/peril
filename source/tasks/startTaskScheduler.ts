@@ -110,7 +110,7 @@ export const runTaskForInstallation = async (installation: GitHubInstallation, t
   // Let tasks also be an array if you want, sure, why not?
   const dangerfiles = Array.isArray(taskDangerfiles) ? taskDangerfiles : [taskDangerfiles]
   for (const dangerfile of dangerfiles) {
-    const results = await runTask(task, installation, dangerfiles, data)
+    const results = await runTask(dangerfile, installation, dangerfiles, data)
     // There aren't results when it's process separated
     if (results) {
       if (!results.fails.length) {
