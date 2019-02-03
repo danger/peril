@@ -33,9 +33,17 @@ you could write tests which:
 
 ---
 
+### I want to use Peril
+
+You gave two choices:
+
+- Wait for me to ship Peril to production (probably mid-2019)
+- Self-host your own Peril
+
 ### I want to run Peril for my org
 
-OK, I made a quick tutorial for [running a private Peril against your org](./docs/setup_for_org.md).
+OK, I made a quick tutorial for [running a private Peril against your org](./docs/setup_for_org.md) - this is for
+Heroku, but the underlying principles work for all of them.
 
 ### I want to hack on Peril!
 
@@ -49,7 +57,7 @@ find out [more here](./docs/local_dev.md)
 There are some key files where the magic happens:
 
 - [source/routing/router.ts](source/routing/router.ts) - Decide what work to with GitHub events
-- [source/githubevents/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
+- [source/github/events/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
 - [source/danger/danger_runner.ts](source/danger/danger_runner.ts) - Coordinating running the Dangerfiles
 - [source/runner/run.ts](source/runner/run.ts) - Run the Dangerfile in a sandbox
 
