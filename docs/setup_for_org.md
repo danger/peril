@@ -1,7 +1,8 @@
 ### Setting up a Peril server
 
-I'm assuming you're going to use heroku. Peril is set up for being used in Docker, but it'll require a bit of time
-before _I'm_ confident using it myself, and thus writing tutorials for it.
+This doc is for Peril who want to self-host. I'm using Heroku as the example, but it will work with most process-level
+server abstraction, e.g. next (which Peril Staging works with) or anything which can run a server from a Docker
+container.
 
 > Sidenote: here's a note with [terminology](./terminology.md) as it's a little tricky.
 

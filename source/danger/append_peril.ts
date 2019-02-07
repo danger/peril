@@ -63,7 +63,7 @@ const recreateGitHubUtils = (api: NodeGithub): GitHubUtilsDSL => ({
 
     const [owner, repo] = repoSlug.split("/")
     try {
-      const response = await api.repos.getContent({ repo, owner, path, ref })
+      const response = await api.repos.getContents({ repo, owner, path, ref })
       if (response && response.data && response.data.type === "file") {
         const buffer = Buffer.from(response.data.content, response.data.encoding)
         return buffer.toString()
