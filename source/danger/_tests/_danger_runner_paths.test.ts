@@ -1,5 +1,5 @@
 const mockRunDangerfileEnvironment = jest.fn()
-jest.mock("danger/distribution/runner/runners/vm2", () => ({
+jest.mock("danger/distribution/runner/runners/inline", () => ({
   default: {
     createDangerfileRuntimeEnvironment: () => ({}),
     runDangerfileEnvironment: mockRunDangerfileEnvironment,

@@ -1,7 +1,7 @@
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHub } from "danger/distribution/platforms/GitHub"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
-import vm2 from "danger/distribution/runner/runners/vm2"
+import vm2 from "danger/distribution/runner/runners/inline"
 
 import { RunType } from "../../../danger/danger_run"
 import { executorForInstallation } from "../../../danger/danger_runner"

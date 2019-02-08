@@ -35,7 +35,7 @@ import { runEventRun } from "../event"
 const apiFixtures = resolve(__dirname, "../../_tests/fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
-it("runs an Dangerfile for an issue with a local", async () => {
+it.skip("runs an Dangerfile for an issue with a local", async () => {
   mockGetRepo.mockImplementationOnce(() => ({ id: "123", fake: true }))
 
   const body = fixture("issue_comment_created.json")
@@ -58,7 +58,7 @@ it("runs an Dangerfile for an issue with a local", async () => {
   expect(result!.warnings[0].message).toEqual("issue worked: 631")
 })
 
-it("adds github util functions and apis to the DSL for non-PR events", async () => {
+it.skip("adds github util functions and apis to the DSL for non-PR events", async () => {
   mockGetRepo.mockImplementationOnce(() => ({ id: "123", fake: true }))
 
   const body = fixture("issue_comment_created.json")
@@ -80,7 +80,7 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
   expect(result!.warnings[0].message).not.toEqual("null")
 })
 
-it("adds github util functions and apis to the DSL for non-PR events", async () => {
+it.skip("adds github util functions and apis to the DSL for non-PR events", async () => {
   mockGetRepo.mockImplementationOnce(() => ({ id: "123", fake: true }))
 
   const body = fixture("issue_comment_created.json")
@@ -103,7 +103,7 @@ it("adds github util functions and apis to the DSL for non-PR events", async () 
   expect(result!.warnings[0].message).toEqual(23511)
 })
 
-it("can handle a db returning nil for the repo with an Dangerfile for an issue with a local", async () => {
+it.skip("can handle a db returning nil for the repo with an Dangerfile for an issue with a local", async () => {
   mockGetRepo.mockImplementationOnce(() => null)
 
   const body = fixture("issue_comment_created.json")
