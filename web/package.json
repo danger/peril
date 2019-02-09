@@ -13,15 +13,12 @@
     "precommit": "lint-staged"
   },
   "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "testEnvironment": "node"
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/.cache/"
+    ]
   },
   "dependencies": {
     "@types/lodash": "^4.14.116",
