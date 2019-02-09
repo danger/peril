@@ -1,0 +1,205 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gatsby-node createPages pagination should create 1 page with 5 posts 1`] = `
+Array [
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-page.tsx",
+      "context": Object {
+        "skip": 0,
+      },
+      "path": "/blog/page/1/",
+    },
+  ],
+]
+`;
+
+exports[`gatsby-node createPages pagination should create 2 pages with 15 posts 1`] = `
+Array [
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-page.tsx",
+      "context": Object {
+        "skip": 0,
+      },
+      "path": "/blog/page/1/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-page.tsx",
+      "context": Object {
+        "skip": 10,
+      },
+      "path": "/blog/page/2/",
+    },
+  ],
+]
+`;
+
+exports[`gatsby-node createPages pagination should create 3 pages with 30 posts 1`] = `
+Array [
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-page.tsx",
+      "context": Object {
+        "skip": 0,
+      },
+      "path": "/blog/page/1/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-page.tsx",
+      "context": Object {
+        "skip": 10,
+      },
+      "path": "/blog/page/2/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-page.tsx",
+      "context": Object {
+        "skip": 20,
+      },
+      "path": "/blog/page/3/",
+    },
+  ],
+]
+`;
+
+exports[`gatsby-node createPages should create blog posts 1`] = `
+Array [
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-post.tsx",
+      "context": Object {
+        "slug": "/blog/2017-04-18--welcoming/",
+      },
+      "path": "/blog/2017-04-18--welcoming/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-post.tsx",
+      "context": Object {
+        "slug": "/blog/2017-05-02--article-2/",
+      },
+      "path": "/blog/2017-05-02--article-2/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-post.tsx",
+      "context": Object {
+        "slug": "/blog/2017-05-02--article-1/",
+      },
+      "path": "/blog/2017-05-02--article-1/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-page.tsx",
+      "context": Object {
+        "skip": 0,
+      },
+      "path": "/blog/page/1/",
+    },
+  ],
+]
+`;
+
+exports[`gatsby-node createPages should create tags pages 1`] = `
+Array [
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-post.tsx",
+      "context": Object {
+        "slug": "/blog/2017-04-18--welcoming/",
+      },
+      "path": "/blog/2017-04-18--welcoming/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-post.tsx",
+      "context": Object {
+        "slug": "/blog/2017-05-02--article-2/",
+      },
+      "path": "/blog/2017-05-02--article-2/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-post.tsx",
+      "context": Object {
+        "slug": "/blog/2017-05-02--article-1/",
+      },
+      "path": "/blog/2017-05-02--article-1/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-post.tsx",
+      "context": Object {
+        "slug": "/blog/2017-05-02--article-0/",
+      },
+      "path": "/blog/2017-05-02--article-0/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/tags-page.tsx",
+      "context": Object {
+        "tag": "starter",
+      },
+      "path": "/blog/tags/starter/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/tags-page.tsx",
+      "context": Object {
+        "tag": "gatsby",
+      },
+      "path": "/blog/tags/gatsby/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/tags-page.tsx",
+      "context": Object {
+        "tag": "test",
+      },
+      "path": "/blog/tags/test/",
+    },
+  ],
+  Array [
+    Object {
+      "component": "base-path/src/templates/blog-page.tsx",
+      "context": Object {
+        "skip": 0,
+      },
+      "path": "/blog/page/1/",
+    },
+  ],
+]
+`;
+
+exports[`gatsby-node onCreateNode should create slugs for MarkdownRemark file 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "slug",
+      "node": Object {
+        "internal": Object {
+          "type": "MarkdownRemark",
+        },
+        "parent": "parent",
+      },
+      "value": "/blog/2017-04-18--welcoming/",
+    },
+  ],
+]
+`;

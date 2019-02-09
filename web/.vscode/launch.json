@@ -1,0 +1,29 @@
+{
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Start a dev server",
+      "program": "${workspaceRoot}/node_modules/gatsby/dist/bin/cli.js",
+      "args": [
+        "develop"
+      ],
+      "env":{
+        "REDUX_DEVTOOLS": "true"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Build a static site",
+      "program": "${workspaceRoot}/node_modules/gatsby/dist/bin/cli.js",
+      "args": [
+        "build"
+      ]
+    }
+  ]
+}

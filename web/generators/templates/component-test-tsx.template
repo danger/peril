@@ -1,0 +1,23 @@
+import { render, configure } from "enzyme";
+import "jest";
+import * as React from "react";
+import {{pascalCase name}} from "./{{pascalCase name}}";
+
+// Configure enzyme with react 16 adapter
+const Adapter: any = require("enzyme-adapter-react-16");
+configure({ adapter: new Adapter() });
+
+describe("{{pascalCase name}} component", () => {
+  it("should render correctly", () => {
+    {{#if haveRequiredProps}}
+    {{#each props}}
+    {{#if required}}
+    const {{name}}: {{{type}}} = null; // TODO assign real value
+    {{/if}}
+    {{/each}}
+
+    {{/if}}
+    const wrapper = render(<{{pascalCase name}}{{#each props}}{{#if required}} {{name}}={{propsHelper name}}{{/if}}{{/each}} />);
+    expect(wrapper).toMatchSnapshot();
+  });
+});

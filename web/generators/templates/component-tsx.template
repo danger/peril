@@ -1,0 +1,15 @@
+import * as React from "react";
+
+{{#if props}}
+interface {{pascalCase name}}Props extends React.HTMLProps<HTMLDivElement> {
+{{#each props}}
+  {{name}}{{#if optional}}?{{/if}}: {{{type}}};
+{{/each}}
+}
+
+{{/if}}
+export default ({{#if props}}props: {{pascalCase name}}Props{{/if}}) => {
+  return (
+    <div>My awesome component</div>
+  );
+};

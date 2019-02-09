@@ -1,0 +1,1070 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TagsCard component should have on tag active 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Unknown
+    Link={[Function]}
+    tag="tag01"
+    tags={
+        Array [
+            Object {
+              "fieldValue": "tag01",
+              "totalCount": 2,
+            },
+            Object {
+              "fieldValue": "tag02",
+              "totalCount": 4,
+            },
+            Object {
+              "fieldValue": "tag03",
+              "totalCount": 6,
+            },
+          ]
+    }
+/>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "children": Array [
+        <CardContent>
+          <CardHeader>
+                    Tags
+          </CardHeader>
+</CardContent>,
+        <CardContent>
+          <List>
+                    <ListItem
+                              as="span"
+                    >
+                              <ListIcon
+                                        color="blue"
+                                        name="tag"
+                              />
+                              <ListContent
+                                        style={
+                                                  Object {
+                                                            "fontWeight": "700",
+                                                          }
+                                        }
+                              >
+                                        <LinkStub
+                                                  to="/blog"
+                                        >
+                                                  tag01
+                                                   (
+                                                  2
+                                                  )
+                                        </LinkStub>
+                              </ListContent>
+                    </ListItem>
+                    <ListItem
+                              as="span"
+                    >
+                              <ListIcon
+                                        color={null}
+                                        name="tag"
+                              />
+                              <ListContent
+                                        style={null}
+                              >
+                                        <LinkStub
+                                                  to="/blog/tags/tag02/"
+                                        >
+                                                  tag02
+                                                   (
+                                                  4
+                                                  )
+                                        </LinkStub>
+                              </ListContent>
+                    </ListItem>
+                    <ListItem
+                              as="span"
+                    >
+                              <ListIcon
+                                        color={null}
+                                        name="tag"
+                              />
+                              <ListContent
+                                        style={null}
+                              >
+                                        <LinkStub
+                                                  to="/blog/tags/tag03/"
+                                        >
+                                                  tag03
+                                                   (
+                                                  6
+                                                  )
+                                        </LinkStub>
+                              </ListContent>
+                    </ListItem>
+          </List>
+</CardContent>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": <CardHeader>
+            Tags
+</CardHeader>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": "Tags",
+          },
+          "ref": null,
+          "rendered": "Tags",
+          "type": [Function],
+        },
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": <List>
+            <ListItem
+                        as="span"
+            >
+                        <ListIcon
+                                    color="blue"
+                                    name="tag"
+                        />
+                        <ListContent
+                                    style={
+                                                Object {
+                                                            "fontWeight": "700",
+                                                          }
+                                    }
+                        >
+                                    <LinkStub
+                                                to="/blog"
+                                    >
+                                                tag01
+                                                 (
+                                                2
+                                                )
+                                    </LinkStub>
+                        </ListContent>
+            </ListItem>
+            <ListItem
+                        as="span"
+            >
+                        <ListIcon
+                                    color={null}
+                                    name="tag"
+                        />
+                        <ListContent
+                                    style={null}
+                        >
+                                    <LinkStub
+                                                to="/blog/tags/tag02/"
+                                    >
+                                                tag02
+                                                 (
+                                                4
+                                                )
+                                    </LinkStub>
+                        </ListContent>
+            </ListItem>
+            <ListItem
+                        as="span"
+            >
+                        <ListIcon
+                                    color={null}
+                                    name="tag"
+                        />
+                        <ListContent
+                                    style={null}
+                        >
+                                    <LinkStub
+                                                to="/blog/tags/tag03/"
+                                    >
+                                                tag03
+                                                 (
+                                                6
+                                                )
+                                    </LinkStub>
+                        </ListContent>
+            </ListItem>
+</List>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "children": Array [
+              <ListItem
+                as="span"
+>
+                <ListIcon
+                                color="blue"
+                                name="tag"
+                />
+                <ListContent
+                                style={
+                                                Object {
+                                                                "fontWeight": "700",
+                                                              }
+                                }
+                >
+                                <LinkStub
+                                                to="/blog"
+                                >
+                                                tag01
+                                                 (
+                                                2
+                                                )
+                                </LinkStub>
+                </ListContent>
+</ListItem>,
+              <ListItem
+                as="span"
+>
+                <ListIcon
+                                color={null}
+                                name="tag"
+                />
+                <ListContent
+                                style={null}
+                >
+                                <LinkStub
+                                                to="/blog/tags/tag02/"
+                                >
+                                                tag02
+                                                 (
+                                                4
+                                                )
+                                </LinkStub>
+                </ListContent>
+</ListItem>,
+              <ListItem
+                as="span"
+>
+                <ListIcon
+                                color={null}
+                                name="tag"
+                />
+                <ListContent
+                                style={null}
+                >
+                                <LinkStub
+                                                to="/blog/tags/tag03/"
+                                >
+                                                tag03
+                                                 (
+                                                6
+                                                )
+                                </LinkStub>
+                </ListContent>
+</ListItem>,
+            ],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": "tag01",
+              "nodeType": "class",
+              "props": Object {
+                "as": "span",
+                "children": Array [
+                  <ListIcon
+                    color="blue"
+                    name="tag"
+/>,
+                  <ListContent
+                    style={
+                                        Object {
+                                                            "fontWeight": "700",
+                                                          }
+                    }
+>
+                    <LinkStub
+                                        to="/blog"
+                    >
+                                        tag01
+                                         (
+                                        2
+                                        )
+                    </LinkStub>
+</ListContent>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "color": "blue",
+                    "name": "tag",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": <LinkStub
+                      to="/blog"
+>
+                      tag01
+                       (
+                      2
+                      )
+</LinkStub>,
+                    "style": Object {
+                      "fontWeight": "700",
+                    },
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "children": Array [
+                        "tag01",
+                        " (",
+                        2,
+                        ")",
+                      ],
+                      "to": "/blog",
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      "tag01",
+                      " (",
+                      2,
+                      ")",
+                    ],
+                    "type": [Function],
+                  },
+                  "type": [Function],
+                },
+              ],
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": "tag02",
+              "nodeType": "class",
+              "props": Object {
+                "as": "span",
+                "children": Array [
+                  <ListIcon
+                    color={null}
+                    name="tag"
+/>,
+                  <ListContent
+                    style={null}
+>
+                    <LinkStub
+                                        to="/blog/tags/tag02/"
+                    >
+                                        tag02
+                                         (
+                                        4
+                                        )
+                    </LinkStub>
+</ListContent>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "color": null,
+                    "name": "tag",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": <LinkStub
+                      to="/blog/tags/tag02/"
+>
+                      tag02
+                       (
+                      4
+                      )
+</LinkStub>,
+                    "style": null,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "children": Array [
+                        "tag02",
+                        " (",
+                        4,
+                        ")",
+                      ],
+                      "to": "/blog/tags/tag02/",
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      "tag02",
+                      " (",
+                      4,
+                      ")",
+                    ],
+                    "type": [Function],
+                  },
+                  "type": [Function],
+                },
+              ],
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": "tag03",
+              "nodeType": "class",
+              "props": Object {
+                "as": "span",
+                "children": Array [
+                  <ListIcon
+                    color={null}
+                    name="tag"
+/>,
+                  <ListContent
+                    style={null}
+>
+                    <LinkStub
+                                        to="/blog/tags/tag03/"
+                    >
+                                        tag03
+                                         (
+                                        6
+                                        )
+                    </LinkStub>
+</ListContent>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "color": null,
+                    "name": "tag",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": <LinkStub
+                      to="/blog/tags/tag03/"
+>
+                      tag03
+                       (
+                      6
+                      )
+</LinkStub>,
+                    "style": null,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "children": Array [
+                        "tag03",
+                        " (",
+                        6,
+                        ")",
+                      ],
+                      "to": "/blog/tags/tag03/",
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      "tag03",
+                      " (",
+                      6,
+                      ")",
+                    ],
+                    "type": [Function],
+                  },
+                  "type": [Function],
+                },
+              ],
+              "type": [Function],
+            },
+          ],
+          "type": [Function],
+        },
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "children": Array [
+          <CardContent>
+            <CardHeader>
+                        Tags
+            </CardHeader>
+</CardContent>,
+          <CardContent>
+            <List>
+                        <ListItem
+                                    as="span"
+                        >
+                                    <ListIcon
+                                                color="blue"
+                                                name="tag"
+                                    />
+                                    <ListContent
+                                                style={
+                                                            Object {
+                                                                        "fontWeight": "700",
+                                                                      }
+                                                }
+                                    >
+                                                <LinkStub
+                                                            to="/blog"
+                                                >
+                                                            tag01
+                                                             (
+                                                            2
+                                                            )
+                                                </LinkStub>
+                                    </ListContent>
+                        </ListItem>
+                        <ListItem
+                                    as="span"
+                        >
+                                    <ListIcon
+                                                color={null}
+                                                name="tag"
+                                    />
+                                    <ListContent
+                                                style={null}
+                                    >
+                                                <LinkStub
+                                                            to="/blog/tags/tag02/"
+                                                >
+                                                            tag02
+                                                             (
+                                                            4
+                                                            )
+                                                </LinkStub>
+                                    </ListContent>
+                        </ListItem>
+                        <ListItem
+                                    as="span"
+                        >
+                                    <ListIcon
+                                                color={null}
+                                                name="tag"
+                                    />
+                                    <ListContent
+                                                style={null}
+                                    >
+                                                <LinkStub
+                                                            to="/blog/tags/tag03/"
+                                                >
+                                                            tag03
+                                                             (
+                                                            6
+                                                            )
+                                                </LinkStub>
+                                    </ListContent>
+                        </ListItem>
+            </List>
+</CardContent>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": <CardHeader>
+              Tags
+</CardHeader>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "Tags",
+            },
+            "ref": null,
+            "rendered": "Tags",
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": <List>
+              <ListItem
+                            as="span"
+              >
+                            <ListIcon
+                                          color="blue"
+                                          name="tag"
+                            />
+                            <ListContent
+                                          style={
+                                                        Object {
+                                                                      "fontWeight": "700",
+                                                                    }
+                                          }
+                            >
+                                          <LinkStub
+                                                        to="/blog"
+                                          >
+                                                        tag01
+                                                         (
+                                                        2
+                                                        )
+                                          </LinkStub>
+                            </ListContent>
+              </ListItem>
+              <ListItem
+                            as="span"
+              >
+                            <ListIcon
+                                          color={null}
+                                          name="tag"
+                            />
+                            <ListContent
+                                          style={null}
+                            >
+                                          <LinkStub
+                                                        to="/blog/tags/tag02/"
+                                          >
+                                                        tag02
+                                                         (
+                                                        4
+                                                        )
+                                          </LinkStub>
+                            </ListContent>
+              </ListItem>
+              <ListItem
+                            as="span"
+              >
+                            <ListIcon
+                                          color={null}
+                                          name="tag"
+                            />
+                            <ListContent
+                                          style={null}
+                            >
+                                          <LinkStub
+                                                        to="/blog/tags/tag03/"
+                                          >
+                                                        tag03
+                                                         (
+                                                        6
+                                                        )
+                                          </LinkStub>
+                            </ListContent>
+              </ListItem>
+</List>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": Array [
+                <ListItem
+                  as="span"
+>
+                  <ListIcon
+                                    color="blue"
+                                    name="tag"
+                  />
+                  <ListContent
+                                    style={
+                                                      Object {
+                                                                        "fontWeight": "700",
+                                                                      }
+                                    }
+                  >
+                                    <LinkStub
+                                                      to="/blog"
+                                    >
+                                                      tag01
+                                                       (
+                                                      2
+                                                      )
+                                    </LinkStub>
+                  </ListContent>
+</ListItem>,
+                <ListItem
+                  as="span"
+>
+                  <ListIcon
+                                    color={null}
+                                    name="tag"
+                  />
+                  <ListContent
+                                    style={null}
+                  >
+                                    <LinkStub
+                                                      to="/blog/tags/tag02/"
+                                    >
+                                                      tag02
+                                                       (
+                                                      4
+                                                      )
+                                    </LinkStub>
+                  </ListContent>
+</ListItem>,
+                <ListItem
+                  as="span"
+>
+                  <ListIcon
+                                    color={null}
+                                    name="tag"
+                  />
+                  <ListContent
+                                    style={null}
+                  >
+                                    <LinkStub
+                                                      to="/blog/tags/tag03/"
+                                    >
+                                                      tag03
+                                                       (
+                                                      6
+                                                      )
+                                    </LinkStub>
+                  </ListContent>
+</ListItem>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": "tag01",
+                "nodeType": "class",
+                "props": Object {
+                  "as": "span",
+                  "children": Array [
+                    <ListIcon
+                      color="blue"
+                      name="tag"
+/>,
+                    <ListContent
+                      style={
+                                            Object {
+                                                                  "fontWeight": "700",
+                                                                }
+                      }
+>
+                      <LinkStub
+                                            to="/blog"
+                      >
+                                            tag01
+                                             (
+                                            2
+                                            )
+                      </LinkStub>
+</ListContent>,
+                  ],
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "color": "blue",
+                      "name": "tag",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "children": <LinkStub
+                        to="/blog"
+>
+                        tag01
+                         (
+                        2
+                        )
+</LinkStub>,
+                      "style": Object {
+                        "fontWeight": "700",
+                      },
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "children": Array [
+                          "tag01",
+                          " (",
+                          2,
+                          ")",
+                        ],
+                        "to": "/blog",
+                      },
+                      "ref": null,
+                      "rendered": Array [
+                        "tag01",
+                        " (",
+                        2,
+                        ")",
+                      ],
+                      "type": [Function],
+                    },
+                    "type": [Function],
+                  },
+                ],
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": "tag02",
+                "nodeType": "class",
+                "props": Object {
+                  "as": "span",
+                  "children": Array [
+                    <ListIcon
+                      color={null}
+                      name="tag"
+/>,
+                    <ListContent
+                      style={null}
+>
+                      <LinkStub
+                                            to="/blog/tags/tag02/"
+                      >
+                                            tag02
+                                             (
+                                            4
+                                            )
+                      </LinkStub>
+</ListContent>,
+                  ],
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "color": null,
+                      "name": "tag",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "children": <LinkStub
+                        to="/blog/tags/tag02/"
+>
+                        tag02
+                         (
+                        4
+                        )
+</LinkStub>,
+                      "style": null,
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "children": Array [
+                          "tag02",
+                          " (",
+                          4,
+                          ")",
+                        ],
+                        "to": "/blog/tags/tag02/",
+                      },
+                      "ref": null,
+                      "rendered": Array [
+                        "tag02",
+                        " (",
+                        4,
+                        ")",
+                      ],
+                      "type": [Function],
+                    },
+                    "type": [Function],
+                  },
+                ],
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": "tag03",
+                "nodeType": "class",
+                "props": Object {
+                  "as": "span",
+                  "children": Array [
+                    <ListIcon
+                      color={null}
+                      name="tag"
+/>,
+                    <ListContent
+                      style={null}
+>
+                      <LinkStub
+                                            to="/blog/tags/tag03/"
+                      >
+                                            tag03
+                                             (
+                                            6
+                                            )
+                      </LinkStub>
+</ListContent>,
+                  ],
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "color": null,
+                      "name": "tag",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "children": <LinkStub
+                        to="/blog/tags/tag03/"
+>
+                        tag03
+                         (
+                        6
+                        )
+</LinkStub>,
+                      "style": null,
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "children": Array [
+                          "tag03",
+                          " (",
+                          6,
+                          ")",
+                        ],
+                        "to": "/blog/tags/tag03/",
+                      },
+                      "ref": null,
+                      "rendered": Array [
+                        "tag03",
+                        " (",
+                        6,
+                        ")",
+                      ],
+                      "type": [Function],
+                    },
+                    "type": [Function],
+                  },
+                ],
+                "type": [Function],
+              },
+            ],
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
