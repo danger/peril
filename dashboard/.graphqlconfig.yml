@@ -1,0 +1,8 @@
+projects:
+  app:
+    schemaPath: relay_data/schema.graphql
+    includes: ["**/*.graphql"]
+    extensions:
+      endpoints:
+        default: http://localhost:4000
+  

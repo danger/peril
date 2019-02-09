@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TagsCard component should have on tag active 1`] = `ShallowWrapper {}`;

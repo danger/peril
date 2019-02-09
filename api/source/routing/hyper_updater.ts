@@ -35,8 +35,6 @@ interface DockerHubWebhook {
   repository: Repository
 }
 
-//
-
 interface HyperImage {
   RepoTags: string[]
   Id: string

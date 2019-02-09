@@ -1,0 +1,45 @@
+{
+  "name": "Peril API",
+  "description": "Org-Wide Cultural Rules.",
+  "website": "https://github.com/danger/peril",
+  "repository": "https://github.com/danger/peril",
+  "keywords": ["culture", "danger", "javascript"],
+  "env": {
+    "PERIL_INTEGRATION_ID": {
+      "description": "The ID for your custom Peril GitHub App. You can find this inside the 'General' setting of your Integration, down under 'Basic information'.",
+      "value": "-1"
+    },
+    "PERIL_ORG_INSTALLATION_ID": {
+      "description": "The ID for the installation of your Peril GitHub App. You can find it in the URL for the installations of your app (where you pick the repos) or by looking at any event JSON from GitHub.",
+      "value": "-1"
+    },
+    "PRIVATE_GITHUB_SIGNING_KEY": {
+      "description": "This is your key from the GitHub App. First download the private key, then type this into terminal `cat '` then drag your file in to the terminal, then add `' | pbcopy` to the end. Press enter, and it will copy the contents to your pasteboard. The command should look like: `cat '/Users/orta/Downloads/artsy-peril.2017-05-05.private-key.pem' | pbcopy`"
+    },
+    "DATABASE_JSON_FILE": {
+      "description": "The GitHub repo address where you can get to the settings JSON file. This is formatted as org/repo@filepath",
+      "value": "orta/peril@settings-peril.json"
+    },
+    "PERIL_BOT_USER_ID": {
+      "description": "You can't do this yet, but you should do it later. This is the user ID for the bot that Peril uses to comment. If you add this, then Peril can update and delete its own comments.",
+      "value": "-1"
+    },
+    "PERIL_WEBHOOK_SECRET": {
+      "description": "This is the secret from your GitHub App. You need to set this so that Peril can verify that incoming requests come from GitHub rather than some rando using cURL.",
+      "value": "-1"
+    },
+    "PAPERTRAIL_URL": {
+      "description": "Optional: If you want to see logs via papertrail, this is your URL.",
+      "required": false
+    },
+    "PAPERTRAIL_PORT": {
+      "description": "Optional: If you want to see logs via papertrail, this is your port.",
+      "required": false
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
