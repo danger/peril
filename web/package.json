@@ -61,7 +61,6 @@
     "flat": "^2.0.1",
     "jest": "19.0.2",
     "mkdirp": "^0.5.1",
-    "plop": "^1.7.4",
     "raw-loader": "^0.5.1",
     "react-addons-test-utils": "^15.5.1",
     "react-test-renderer": "16",
