@@ -50,19 +50,13 @@ Heroku, but the underlying principles work for all of them.
 Ace, great, cool. So, it's a bit of a process. I'm not sure if this will get easier in time. It's a complex app. You can
 find out [more here](./docs/local_dev.md)
 
-## How does Peril work?
+### This Repo
 
-<img src="https://github.com/danger/peril/raw/master/docs/images/peril-setup.png">
+This repo is a mono-repo with three main responsibilities:
 
-There are some key files where the magic happens:
-
-- [source/routing/router.ts](source/routing/router.ts) - Decide what work to with GitHub events
-- [source/github/events/github_runner.ts](source/github/events/github_runner.ts) - Figuring out what Dangerfiles to run
-- [source/danger/danger_runner.ts](source/danger/danger_runner.ts) - Coordinating running the Dangerfiles
-- [source/runner/run.ts](source/runner/run.ts) - Run the Dangerfile in a sandbox
-
-This is a _reasonably tested_ project, there's a lot in places where the code isn't going to change much now so they're
-slowly getting covered.
+- [api](/api) - The Peril WebHook + API
+- [dashboard](/dashboard) - The Admin Panel for logged in users
+- [web](/web) - A static website for the public
 
 ### Docs
 
