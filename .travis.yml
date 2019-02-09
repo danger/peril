@@ -2,7 +2,10 @@ language: node_js
 node_js: 10
 cache: yarn
 
-script:
+before_install:
+  - cd api
+
+  script:
   - yarn test
   - yarn docker:build:runner
 

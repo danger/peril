@@ -1,5 +1,5 @@
 {
-  "action": "opened",
+  "action": "synchronize",
   "number": 2,
   "pull_request": {
     "url": "https://api.github.com/repos/danger/peril/pulls/2",
@@ -31,13 +31,12 @@
       "type": "User",
       "site_admin": false
     },
-    "body":
-      "Moves a lot of the API setup and faffing into a github api object\r\nExposes a `fetch` function which wraps auth + re-auth.",
+    "body": "Moves a lot of the API setup and faffing into a github api object\r\nExposes a `fetch` function which wraps auth + re-auth.",
     "created_at": "2016-12-18T21:15:04Z",
-    "updated_at": "2016-12-18T21:15:04Z",
+    "updated_at": "2016-12-18T21:34:04Z",
     "closed_at": null,
     "merged_at": null,
-    "merge_commit_sha": null,
+    "merge_commit_sha": "5a4c53c1c85d173998fe7650f91df9674460c881",
     "assignee": null,
     "assignees": [],
     "milestone": null,
@@ -45,11 +44,11 @@
     "review_comments_url": "https://api.github.com/repos/danger/peril/pulls/2/comments",
     "review_comment_url": "https://api.github.com/repos/danger/peril/pulls/comments{/number}",
     "comments_url": "https://api.github.com/repos/danger/peril/issues/2/comments",
-    "statuses_url": "https://api.github.com/repos/danger/peril/statuses/b6328c5b926793147798ec05dc3b55128b2f35df",
+    "statuses_url": "https://api.github.com/repos/danger/peril/statuses/2554fa4412ae607ba66fb8db056e46c76c2422e8",
     "head": {
       "label": "danger:auth",
       "ref": "auth",
-      "sha": "b6328c5b926793147798ec05dc3b55128b2f35df",
+      "sha": "2554fa4412ae607ba66fb8db056e46c76c2422e8",
       "user": {
         "login": "danger",
         "id": 17147106,
@@ -135,7 +134,7 @@
         "deployments_url": "https://api.github.com/repos/danger/peril/deployments",
         "created_at": "2016-12-17T02:03:10Z",
         "updated_at": "2016-12-18T21:11:55Z",
-        "pushed_at": "2016-12-18T21:14:08Z",
+        "pushed_at": "2016-12-18T21:34:04Z",
         "git_url": "git://github.com/danger/peril.git",
         "ssh_url": "git@github.com:danger/peril.git",
         "clone_url": "https://github.com/danger/peril.git",
@@ -247,7 +246,7 @@
         "deployments_url": "https://api.github.com/repos/danger/peril/deployments",
         "created_at": "2016-12-17T02:03:10Z",
         "updated_at": "2016-12-18T21:11:55Z",
-        "pushed_at": "2016-12-18T21:14:08Z",
+        "pushed_at": "2016-12-18T21:34:04Z",
         "git_url": "git://github.com/danger/peril.git",
         "ssh_url": "git@github.com:danger/peril.git",
         "clone_url": "https://github.com/danger/peril.git",
@@ -293,7 +292,7 @@
         "href": "https://api.github.com/repos/danger/peril/pulls/2/commits"
       },
       "statuses": {
-        "href": "https://api.github.com/repos/danger/peril/statuses/b6328c5b926793147798ec05dc3b55128b2f35df"
+        "href": "https://api.github.com/repos/danger/peril/statuses/2554fa4412ae607ba66fb8db056e46c76c2422e8"
       }
     },
     "merged": false,
@@ -302,11 +301,13 @@
     "merged_by": null,
     "comments": 0,
     "review_comments": 0,
-    "commits": 1,
-    "additions": 167,
-    "deletions": 48,
-    "changed_files": 6
+    "commits": 3,
+    "additions": 607,
+    "deletions": 50,
+    "changed_files": 8
   },
+  "before": "da06a14163f8d730fae585034dacc82525cf2ac8",
+  "after": "2554fa4412ae607ba66fb8db056e46c76c2422e8",
   "repository": {
     "id": 76698280,
     "name": "peril",
@@ -373,7 +374,7 @@
     "deployments_url": "https://api.github.com/repos/danger/peril/deployments",
     "created_at": "2016-12-17T02:03:10Z",
     "updated_at": "2016-12-18T21:11:55Z",
-    "pushed_at": "2016-12-18T21:14:08Z",
+    "pushed_at": "2016-12-18T21:34:04Z",
     "git_url": "git://github.com/danger/peril.git",
     "ssh_url": "git@github.com:danger/peril.git",
     "clone_url": "https://github.com/danger/peril.git",

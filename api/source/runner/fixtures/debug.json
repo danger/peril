@@ -437,16 +437,13 @@
             "verification": {
               "verified": true,
               "reason": "valid",
-              "signature":
-                "-----BEGIN PGP SIGNATURE-----\n\nwsBcBAABCAAQBQJaiXebCRBK7hj4Ov3rIwAAdHIIAIxYeMoB0BCT6mK3zQWWTybf\nfFIhjs42xnLKDa1AwtyK/G7Pg1dFXNaJ6yfRBtgeRY1SorrihR4hZiWqCJlHHP/E\nCZEc6GeI+hCZhJxz2EIaADbjTk11E6Gzwy7HEk3Tn89S7fgvgnPXU9CYpEe4rGd2\nIiYmgy85s1iPXlHXVvqBh0eQUxA93bAycYo9v6OzMui9DyH5bjjYHpyJGKYooTWT\nKQUvLi9rvCpxHtUUkM3m+GSN4ML6NhqH7TSoMNxGRCc80XtOXM+7FE1yoEDIr+SB\nmphmq6mnxcWQl2lhrL8fSX41DQ1hnPVDhjwOvlMulgVx/WEeTriM3LxjYxImBLo=\n=viVO\n-----END PGP SIGNATURE-----\n",
-              "payload":
-                "tree 081725d2b9186ac2ab992c20d7869033cfb34970\nparent fc3f5992f0db5a29e81d34ec91af093acaab4a7e\nauthor Orta <orta.therox+github@gmail.com> 1518958491 -0500\ncommitter GitHub <noreply@github.com> 1518958491 -0500\n\nUpdate CHANGELOG.md"
+              "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsBcBAABCAAQBQJaiXebCRBK7hj4Ov3rIwAAdHIIAIxYeMoB0BCT6mK3zQWWTybf\nfFIhjs42xnLKDa1AwtyK/G7Pg1dFXNaJ6yfRBtgeRY1SorrihR4hZiWqCJlHHP/E\nCZEc6GeI+hCZhJxz2EIaADbjTk11E6Gzwy7HEk3Tn89S7fgvgnPXU9CYpEe4rGd2\nIiYmgy85s1iPXlHXVvqBh0eQUxA93bAycYo9v6OzMui9DyH5bjjYHpyJGKYooTWT\nKQUvLi9rvCpxHtUUkM3m+GSN4ML6NhqH7TSoMNxGRCc80XtOXM+7FE1yoEDIr+SB\nmphmq6mnxcWQl2lhrL8fSX41DQ1hnPVDhjwOvlMulgVx/WEeTriM3LxjYxImBLo=\n=viVO\n-----END PGP SIGNATURE-----\n",
+              "payload": "tree 081725d2b9186ac2ab992c20d7869033cfb34970\nparent fc3f5992f0db5a29e81d34ec91af093acaab4a7e\nauthor Orta <orta.therox+github@gmail.com> 1518958491 -0500\ncommitter GitHub <noreply@github.com> 1518958491 -0500\n\nUpdate CHANGELOG.md"
             }
           },
           "url": "https://api.github.com/repos/danger/peril/commits/16fc38ccfc4804d034b1da3d4e396af5e6483a0f",
           "html_url": "https://github.com/danger/peril/commit/16fc38ccfc4804d034b1da3d4e396af5e6483a0f",
-          "comments_url":
-            "https://api.github.com/repos/danger/peril/commits/16fc38ccfc4804d034b1da3d4e396af5e6483a0f/comments",
+          "comments_url": "https://api.github.com/repos/danger/peril/commits/16fc38ccfc4804d034b1da3d4e396af5e6483a0f/comments",
           "author": {
             "login": "orta",
             "id": 49038,

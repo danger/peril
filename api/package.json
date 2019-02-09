@@ -12,7 +12,7 @@
     "test": "jest && tslint source/**/**/**.ts",
     "lint": " tslint source/**/**/**.ts",
     "generate:types:json": "ts-node source/scripts/json-types.ts && tslint source/**/*.ts --fix",
-    "generate:types:schema": "typescript-json-schema tsconfig.json PerilSettingsRepoJSON > peril-settings-json.schema",
+    "generate:types:schema": "typescript-json-schema tsconfig.json PerilSettingsRepoJSON > ../peril-settings-json.schema",
     "setup": "yarn run setup:plugins && yarn run setup:env",
     "setup:env": "node out/scripts/setup-env.js",
     "setup:plugins": "node out/scripts/setup-plugins.js",
@@ -174,13 +174,5 @@
       "yarn prettier --write",
       "git add"
     ]
-  },
-  "prettier": {
-    "printWidth": 120,
-    "semi": false,
-    "singleQuote": false,
-    "trailingComma": "es5",
-    "bracketSpacing": true,
-    "proseWrap": "always"
   }
 }
