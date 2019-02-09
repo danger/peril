@@ -2,7 +2,8 @@
 #
 version: 2
 jobs:
-  build:
+  #  The Peril web server
+  api:
     docker:
       - image: circleci/node:10
 
@@ -12,18 +13,79 @@ jobs:
       - checkout:
           path: ~/repo
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-api-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v1-api-dependencies-
 
       - run: yarn install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
+          key: v1-api-dependencies-{{ checksum "package.json" }}
       - run: yarn jest --max-workers=2
+
+  #  The Peril admin dashboard
+  dashboard:
+    docker:
+      - image: circleci/node:10
+
+    working_directory: ~/repo/dashboard
+
+    steps:
+      - checkout:
+          path: ~/repo
+
+      - restore_cache:
+          keys:
+            - v1-dash-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dash-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dash-dependencies-{{ checksum "package.json" }}
+      - run: yarn build
+
+  #  The Peril public front-end
+  web:
+    docker:
+      - image: circleci/node:10
+
+    working_directory: ~/repo/web
+
+    steps:
+      - checkout:
+          path: ~/repo
+
+      - restore_cache:
+          keys:
+            - v1-web-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-web-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-web-dependencies-{{ checksum "package.json" }}
+      - run: yarn build
+      - run: yarn jest  --max-workers=2
+
+workflows:
+  version: 2
+  api:
+    jobs:
+      - api
+  dashboard:
+    jobs:
+      - dashboard
+  web:
+    jobs:
+      - web
