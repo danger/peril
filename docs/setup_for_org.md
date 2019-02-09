@@ -1,8 +1,10 @@
 ### Setting up a Peril server
 
 This doc is for Peril who want to self-host. I'm using Heroku as the example, but it will work with most process-level
-server abstraction, e.g. next (which Peril Staging works with) or anything which can run a server from a Docker
+server abstraction, e.g. now.sh (which Peril Staging works with) or anything which can run a server from a Docker
 container.
+
+> Sidenote: This is broken on Heroku since I mono-repo'd, and realistically needs to be ported over to now.sh
 
 > Sidenote: here's a note with [terminology](./terminology.md) as it's a little tricky.
 

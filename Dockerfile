@@ -1,7 +1,7 @@
 FROM node:10-slim
 
-ADD . /app
-WORKDIR /app
+ADD . /app/api
+WORKDIR /app/api
 
 # This will also trigger the build process
 RUN yarn install
