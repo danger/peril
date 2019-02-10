@@ -1,91 +1,95 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
-jobs:
-  #  The Peril web server
-  api:
+version: 2.1
+
+executors:
+  parameters:
+    dir:
+      description: The working directory to use
+      type: string
+  node:
     docker:
       - image: circleci/node:10
-
-    working_directory: ~/repo/api
-
+    working_directory: ~/repo/<< parameters.dir >>
+    
+commands:
+  yarn-install:
+    description: A command that handles installing and caching npm packages
+    parameters:
+      cache-key:
+        description: String to differentiate caches
+        type: string
     steps:
       - checkout:
-          path: ~/repo
-
+            path: ~/repo
       - restore_cache:
           keys:
-            - v1-api-dependencies-{{ checksum "package.json" }}
+            - v1-<< parameters.cache-key >>-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-api-dependencies-
-
+            - v1-<< parameters.cache-key >>-dependencies-
       - run: yarn install
-
       - save_cache:
           paths:
             - node_modules
-          key: v1-api-dependencies-{{ checksum "package.json" }}
+          key: v1-<< parameters.cache-key >>-dependencies-{{ checksum "package.json" }}
+    
+
+jobs:
+  #  The Peril web server
+  api:
+    executor:
+      node:
+        dir: api
+
+    steps:
+      - yarn-install:
+          cache-key: api
       - run: yarn jest --max-workers=2
 
   #  The Peril admin dashboard
   dashboard:
-    docker:
-      - image: circleci/node:10
-
-    working_directory: ~/repo/dashboard
+    executor:
+      node:
+        dir: dashboard
 
     steps:
-      - checkout:
-          path: ~/repo
-
-      - restore_cache:
-          keys:
-            - v1-dash-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dash-dependencies-
-
-      - run: yarn install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dash-dependencies-{{ checksum "package.json" }}
+      - yarn-install:
+          cache-key: dash
       - run: yarn build
 
   #  The Peril public front-end
   web:
-    docker:
-      - image: circleci/node:10
-
-    working_directory: ~/repo/web
+    executor:
+      node:
+        dir: web
 
     steps:
-      - checkout:
-          path: ~/repo
-
-      - restore_cache:
-          keys:
-            - v1-web-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-web-dependencies-
-
-      - run: yarn install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-web-dependencies-{{ checksum "package.json" }}
+      - yarn-install:
+          cache-key: web
       - run: yarn build
       - run: yarn jest  --max-workers=2
+      
+   deploy:
+     executor:
+       node:
+         dir: ''
+     steps:
+       - yarn-install:
+           cache-key: all
+       - run: echo "deploy here..."
+       
 
 workflows:
-  version: 2
-  api:
+  build:
     jobs:
       - api
-  dashboard:
-    jobs:
       - dashboard
-  web:
-    jobs:
       - web
+      - deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - api
+            - dashboard
+            - web
