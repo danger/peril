@@ -3,11 +3,11 @@
 version: 2.1
 
 executors:
-  parameters:
-    dir:
-      description: The working directory to use
-      type: string
   node:
+    parameters:
+      dir:
+        description: The working directory to use
+        type: string
     docker:
       - image: circleci/node:10
     working_directory: ~/repo/<< parameters.dir >>
