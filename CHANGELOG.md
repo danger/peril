@@ -1,6 +1,6 @@
 # 2019 - Feb 9
 
-Move to mono-repo
+Move to a mono-repo - orta
 
 # 2018 - Nov 10
 

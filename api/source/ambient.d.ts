@@ -65,3 +65,5 @@ declare module "primus"
 
 // Basically does one thing
 declare module "override-require"
+
+declare module "filing-cabinet"
