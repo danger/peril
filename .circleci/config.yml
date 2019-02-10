@@ -69,14 +69,14 @@ jobs:
       - run: yarn build
       - run: yarn jest  --max-workers=2
       
-   deploy:
-     executor:
-       node:
-         dir: ''
-     steps:
-       - yarn-install:
-           cache-key: all
-       - run: echo "deploy here..."
+  deploy:
+    executor:
+      node:
+        dir: ''
+    steps:
+      - yarn-install:
+          cache-key: all
+      - run: echo "deploy here..."
        
 
 workflows:
