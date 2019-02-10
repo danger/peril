@@ -38,8 +38,8 @@ jobs:
   #  The Peril web server
   api:
     executor:
-      node:
-        dir: api
+      name: node
+      dir: api
 
     steps:
       - yarn-install:
@@ -49,8 +49,8 @@ jobs:
   #  The Peril admin dashboard
   dashboard:
     executor:
-      node:
-        dir: dashboard
+      name: node
+      dir: dashboard
 
     steps:
       - yarn-install:
@@ -60,8 +60,8 @@ jobs:
   #  The Peril public front-end
   web:
     executor:
-      node:
-        dir: web
+      name: node
+      dir: web
 
     steps:
       - yarn-install:
@@ -71,8 +71,8 @@ jobs:
       
   deploy:
     executor:
-      node:
-        dir: ''
+      name: node
+      dir: ''
     steps:
       - yarn-install:
           cache-key: all
