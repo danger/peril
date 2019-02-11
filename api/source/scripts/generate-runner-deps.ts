@@ -4,6 +4,9 @@ import * as lockFileGen from "@yarnpkg/lockfile"
 import * as dependencyTree from "dependency-tree"
 // @ts-ignore
 import * as detective from "detective-typescript"
+// @ts-ignore
+
+import * as semverSort from "semver-sort"
 
 import * as fs from "fs"
 import * as path from "path"
@@ -53,36 +56,39 @@ const file = fs.readFileSync("yarn.lock", "utf8")
 const lockFileParsed = lockFileGen.parse(file)
 const lockDeps = Object.keys(lockFileParsed.object)
 
-const getLockfileRefForDep = (name: string) => {
-  const reference = lockDeps.find(depName => depName.startsWith(name + "@"))
-  if (!reference) {
+const getLockfileVersionForDep = (name: string) => {
+  const references = lockDeps.filter(depName => depName.startsWith(name + "@"))
+  if (!references.length) {
     throw new Error("No dep in lockfile found for " + name)
   }
-  return lockFileParsed.object[reference]
+
+  const semvers = references.map(ref => lockFileParsed.object[ref].version)
+  return semverSort.desc(semvers)[0]
 }
 
 // Creates a 'dependencies' section for a package.json
 const depsSection: any = {}
 
-allDeps.forEach(dep => {
-  const ref = getLockfileRefForDep(dep)
-  depsSection[dep] = ref.version
+const extras = [
+  "graphql-relay",
+  "graphql-resolvers",
+  "graphql-tools-types",
+  "graphql-tools",
+  "graphql",
+  "node-mocks-http",
+  "winston-papertrail",
+]
+extras.forEach(e => allDeps.push(e))
+
+allDeps.sort().forEach(dep => {
+  depsSection[dep] = getLockfileVersionForDep(dep)
 })
-
-const specialCases = {
-  "winston-papertrail": getLockfileRefForDep("winston-papertrail").version,
-}
-
-const newDependencies = {
-  ...depsSection,
-  ...specialCases,
-}
 
 // Cool beans
 console.log("Updating the deps section:")
-console.log(JSON.stringify(newDependencies))
+console.log(JSON.stringify(depsSection))
 
 const existingPackageJSON = fs.readFileSync("../runner/package.json", "utf8")
 const pkg = JSON.parse(existingPackageJSON)
-pkg.dependencies = newDependencies
+pkg.dependencies = depsSection
 fs.writeFileSync("../runner/package.json", JSON.stringify(pkg, null, "  "), "utf8")
