@@ -1,4 +1,4 @@
-import { convertDBRepresentationToModel, prepareToSave } from "../mongo"
+import { convertDBRepresentationToModel, mongoDatabase, prepareToSave } from "../mongo"
 
 it("converts $ and . in user input to something mongo safe", () => {
   const before = {
@@ -51,4 +51,11 @@ it("handles missing data", () => {
 
   // from mongo
   expect(convertDBRepresentationToModel(before as any)).toEqual(after)
+})
+
+describe(mongoDatabase.updateInstallation, () => {
+  it("doesn't let users overwrite internal fields", async () => {
+    // TODO: Add this
+    // updateInstallation is pretty long
+  })
 })

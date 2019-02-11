@@ -1,8 +1,6 @@
 import * as dotenv from "dotenv"
 const isJest = typeof jest !== "undefined"
 const config = isJest ? { path: ".env.sample" } : {}
-console.log("CONF")
-console.log(dotenv)
 dotenv.config(config)
 
 /**

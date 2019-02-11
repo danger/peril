@@ -26,6 +26,8 @@ export interface MongoGithubInstallationModel extends Document, GitHubInstallati
   installationSlackUpdateWebhookURL: string
   /** An image representation of the installation */
   avatarURL: string
+  /** The name to trigger the lambda with */
+  lambdaName: string
 }
 
 /** The model for an installation in the DB */
@@ -48,6 +50,7 @@ const Installation = model<MongoGithubInstallationModel>(
     recordWebhooksUntilTime: Date,
     installationSlackUpdateWebhookURL: String,
     envVars: Schema.Types.Mixed,
+    lambdaName: String,
   })
 )
 
@@ -139,6 +142,14 @@ export const mongoDatabase = {
   getSchedulableInstallationsWithKey: async (key: string): Promise<GitHubInstallation[]> => {
     const query: any = {}
     query[`scheduler.${key}`] = { $exists: true }
+    const dbInstallations = await Installation.find(query)
+    return dbInstallations.map(convertDBRepresentationToModel)
+  },
+
+  /** Search through the installations for ones that match a particular scheduler key */
+  getLambdaBasedInstallations: async (): Promise<GitHubInstallation[]> => {
+    const query: any = {}
+    query[`lambdaName`] = { $exists: true }
     const dbInstallations = await Installation.find(query)
     return dbInstallations.map(convertDBRepresentationToModel)
   },
