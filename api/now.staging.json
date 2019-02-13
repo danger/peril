@@ -28,6 +28,7 @@
 
     "SENTRY_DSN": "@stag_sentry_dsn",
 
-    "DEBUG": "*runFromSameHost"
+    "AWS_ACCESS_KEY_ID": "@stag_aws_access_key_id",
+    "AWS_SECRET_ACCESS_KEY": "@stag_aws_secret_access_key"
   }
 }
