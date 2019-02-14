@@ -15,15 +15,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strict": true,
+    "strict": false,
     "pretty": true
-  },
-  "exclude": [
-    "source/danger/_tests/fixtures",
-    "runner/*",
-    "dangerfile_runtime_env",
-    "node_modules",
-    "wallaby.js",
-    "migrations"
-  ]
+  }
 }

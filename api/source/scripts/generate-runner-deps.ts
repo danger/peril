@@ -77,6 +77,7 @@ const extras = [
   "graphql",
   "node-mocks-http",
   "winston-papertrail",
+  "typescript",
 ]
 extras.forEach(e => allDeps.push(e))
 

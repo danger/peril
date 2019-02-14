@@ -1,3 +1,7 @@
+# 2019 - Feb 14ish
+
+Support having the Peril runtime be an AWS lamda job - orta
+
 # 2019 - Feb 9
 
 Move to a mono-repo - orta

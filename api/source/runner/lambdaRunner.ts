@@ -1,4 +1,4 @@
-import awsSDK from "aws-sdk"
+import * as awsSDK from "aws-sdk"
 import { getDB } from "../db/getDB"
 import { MongoDB } from "../db/mongo"
 import logger from "../logger"

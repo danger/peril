@@ -33,7 +33,7 @@ Peril is split into two things:
 
   - Setup the out folder:
 
-    - `scripts/deploy_staging.sh`
+    - `scripts/build-and-update-runner.sh`
 
   - Deploy to AWS:
 
