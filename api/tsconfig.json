@@ -19,11 +19,13 @@
     "pretty": true
   },
   "exclude": [
+    "out",
     "source/danger/_tests/fixtures",
     "runner/*",
     "dangerfile_runtime_env",
     "node_modules",
     "wallaby.js",
-    "migrations"
+    "migrations",
+    "dangerfile.lite.ts"
   ]
 }

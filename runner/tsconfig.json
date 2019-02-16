@@ -3,10 +3,8 @@
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
-    "outDir": "out",
     "lib": ["esnext", "dom"], // Re:dom https://github.com/graphcool/graphql-request/issues/26#issuecomment-354482903
     "sourceMap": true,
-    "rootDir": "source",
     "allowJs": true,
     "strictNullChecks": true,
     "alwaysStrict": true,
