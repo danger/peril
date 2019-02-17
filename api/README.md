@@ -12,49 +12,44 @@ There are some key files where the magic happens:
 This is a _reasonably tested_ project, there's a lot in places where the code isn't going to change much now so they're
 slowly getting covered.
 
-### Deployment
+Peril's main API is split into two components with three parts:
 
-- [staging](../docs/using_peril_staging.md)
+- ## The API
 
-Peril is split into two things:
+  The two main responsibilities of the API are to take webhooks from GitHub and convert those into Dangerfile runs, and
+  to provide a GraphQL API for the dashboard. It is an express app, it doesn't try to be too fancy because the domain is
+  reasonably complex WRT security.
 
-- The API
-
-  - Deploy: `yarn deploy:staging`
+  - Deploy: `yarn deploy:staging:api`
   - Logs: `yarn logs:staging`
 
-- The Runner
+- ## The Runner
 
   The runner is an AWS lambda, it has two parts. An
-  [AWS Layer](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) which is the Peril runtime. Then a
-  function per-org which triggers the layer.
+  [AWS Layer](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) which is the Peril "runtime". Then
+  a function per-org which sets up environment for the shared runtime layer.
 
   ### Layer
 
-  - Setup the out folder:
+  The shared Peril infrastructure that grabs the Dangerfile and evaluates it. It's effectively a subset of the Peril
+  server, and it's opening module is `source/runner/index.ts`.
 
-    - `scripts/build-and-update-runner.sh`
+  To understand how it is created, see: `source/scripts/generate-runner-deps.ts`. It will generate a subset of Peril's
+  dependencies for the layer because there is a 250MB size limit for the layer and Perils is _450MB_ (!).
 
-  - Deploy to AWS:
-
-    - `aws lambda publish-layer-version --layer-name peril-staging-runtime --zip-file fileb://runner.zip --profile peril`
-    - `rm runner.zip`
-
-    Note: Updating the layer won't be enough, you'll need up tell functions to use the new layer version.
+  - Deploy: `yarn deploy:staging:layer`
+  - [Layers on AWS](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/layers)
 
   ### Function
 
-  Take the runner index.js, zip it and ship it
-
-  - `zip bin/lambda.zip ../runner/index.js ../runner/tsconfig.json ../runner/app-module-path.js -j`
-  - `aws lambda update-function-code --function-name peril-s-danger-1234 --zip-file fileb://bin/lambda.zip --profile peril`
-  - `aws lambda update-function-configuration --function-name peril-s-danger-1234 --layers arn:aws:lambda:us-east-1:656992703780:layer:peril-staging-runtime:1 --profile peril`
+  A really basic set of files which are the CWD for the function. Enough to transpile JS/TS correctly and to handle
+  evaluation for
 
   Then you can test evaluation:
 
-  - `aws lambda invoke --function-name peril-s-danger-1234 dist/output.log --profile peril`
+  - Deploy: `yarn deploy:staging:runner`
+  - [Functions on AWS](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions)
 
-  Docs:
+## Links
 
-  - Layers: https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/layers
-  - Functions: https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions
+[Staging Infra + Links](../docs/using_peril_staging.md)
