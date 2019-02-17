@@ -154,7 +154,7 @@ export const mongoDatabase = {
     return dbInstallations.map(convertDBRepresentationToModel)
   },
 
-  /** Deletes an Integration */
+  /** Requests an update for an installation based on grabbing the JSON from the Peril Settings config file */
   updateInstallation: async (installationID: number) => {
     const dbInstallation = await Installation.findOne({ iID: installationID })
     if (!dbInstallation) {
@@ -198,7 +198,9 @@ export const mongoDatabase = {
 
     const parsedSettings: Partial<GitHubInstallation> = _.pick(json, userInput)
     const sanitizedSettings = prepareToSave(parsedSettings)
-    return await Installation.updateOne({ iID: installationID }, sanitizedSettings)
+    return (await Installation.updateOne({ iID: installationID }, sanitizedSettings)) as Promise<
+      MongoGithubInstallationModel
+    >
   },
 
   /** Deletes an Integration */

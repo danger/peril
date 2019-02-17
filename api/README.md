@@ -46,8 +46,8 @@ Peril is split into two things:
 
   Take the runner index.js, zip it and ship it
 
-  - `zip function.zip ../runner/index.js -j`
-  - `aws lambda update-function-code --function-name peril-s-danger-1234 --zip-file fileb://function.zip --profile peril`
+  - `zip bin/lambda.zip ../runner/index.js ../runner/tsconfig.json ../runner/app-module-path.js -j`
+  - `aws lambda update-function-code --function-name peril-s-danger-1234 --zip-file fileb://bin/lambda.zip --profile peril`
   - `aws lambda update-function-configuration --function-name peril-s-danger-1234 --layers arn:aws:lambda:us-east-1:656992703780:layer:peril-staging-runtime:1 --profile peril`
 
   Then you can test evaluation:

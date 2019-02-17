@@ -21,6 +21,7 @@ import {
   sendMessageToConnectionsWithAccessToInstallation,
 } from "../../api"
 import { getDetailsFromPerilJWT } from "../../auth/generate"
+import { createLambdaFunctionForInstallation } from "../../aws/lambda"
 import { authD } from "../utils/auth"
 import { getUserInstallations } from "../utils/installations"
 
@@ -55,14 +56,20 @@ export const mutations = {
       throw new Error(`Sorry folks, only Orta can create a new installation.`)
     }
 
-    logger.info(`mutation: editInstallation ${opts.iID}`)
+    logger.info(`mutation: convertPartialInstallation ${opts.iID}`)
 
     // Save the changes, then trigger an update from the new repo
     const db = getDB() as MongoDB
     const updatedInstallation = await db.saveInstallation(opts)
     try {
-      // Try run the mongo updater
+      // Try run the mongo updater, if this fails then it will raise
       await db.updateInstallation(updatedInstallation.iID)
+
+      // OK, that worked, let's set it up
+      const lambda = await createLambdaFunctionForInstallation(updatedInstallation.login)
+      // Set the lambda function for the server
+      await db.saveInstallation({ iID: updatedInstallation.iID, lambdaName: lambda.name })
+
       return updatedInstallation
     } catch (error) {
       // This is basically the difference between `convertPartialInstallation` and `editInstallation`

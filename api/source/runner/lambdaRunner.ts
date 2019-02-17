@@ -12,8 +12,11 @@ export const invokeLambda = (name: string, payloadString: string) => {
 export const updateLambdasToLatestLayers = async () => {
   const lambda = new awsSDK.Lambda()
   // https://console.aws.amazon.com/lambda/home?region=us-east-1#/layers
-  // TODO: Prod vs Staging
-  const layerName = "peril-staging-runtime"
+
+  const isProd = process.env.PRODUCTION === "true"
+  const runtime = isProd ? "production" : "staging"
+  const layerName = `peril-${runtime}-runtime`
+
   const allLayers = await lambda.listLayers({}).promise()
   const { data } = allLayers.$response
 
