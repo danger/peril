@@ -53,7 +53,7 @@ export const mutations = {
     const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
 
     if (decodedJWT.data.user.name !== "orta") {
-      throw new Error(`Sorry folks, only Orta can create a new installation.`)
+      return { error: { description: `Sorry folks, only Orta can create a new installation.` } }
     }
 
     logger.info(`mutation: convertPartialInstallation ${opts.iID}`)

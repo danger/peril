@@ -1,0 +1,4 @@
+{
+  "presets": ["es2015", "stage-3"],
+  "plugins": ["transform-flow-strip-types", "syntax-async-functions", "transform-regenerator"]
+}

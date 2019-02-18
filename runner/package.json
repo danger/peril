@@ -1,5 +1,5 @@
 {
-  "_": "These are ones that we want to add to make life easier for people using the runtimee",
+  "_": "These are ones that we want to add to make life easier for people using the runtime",
   "devDependencies": {
     "@types/lodash": "^4.14.116",
     "@types/node": "^9.1.2",
@@ -17,7 +17,6 @@
     "@slack/client": "4.8.0",
     "agenda": "1.0.3",
     "apollo-server-express": "1.4.0",
-    "app-module-path": "^2.2.0",
     "async-exit-hook": "2.0.1",
     "aws-sdk": "2.374.0",
     "babel-polyfill": "7.0.0-alpha.19",

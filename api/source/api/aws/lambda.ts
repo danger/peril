@@ -14,20 +14,19 @@ export const createLambdaFunctionForInstallation = async (installationName: stri
 
   const name = `${prefix}-${installationName}-${randoSuffix}`
 
-  const runtime = isProd ? "production" : "staging"
-  const layerName = `peril-${runtime}-runtime`
-
+  const layer = await getLatestLayer()
   await lambda
     .createFunction(
       {
         FunctionName: name,
         MemorySize: 512,
-        Layers: [layerName],
+        Layers: [layer.LatestMatchingVersion!.LayerVersionArn!],
+        Timeout: 30,
         Code: {
           ZipFile: lambdaZip,
         },
-        Role: "peril-minimal-access",
-        Runtime: "Node.js 8.10",
+        Role: "arn:aws:iam::656992703780:role/peril-minimal-access",
+        Runtime: "nodejs8.10",
         Handler: "index.handler",
       },
       undefined
@@ -43,4 +42,30 @@ export const createLambdaFunctionForInstallation = async (installationName: stri
 export const deleteLambdaFunctionNamed = (name: string) => {
   const lambda = new awsSDK.Lambda()
   return lambda.deleteFunction({ FunctionName: name }, undefined).promise()
+}
+
+export const invokeLambda = (name: string, payloadString: string) => {
+  const lambda = new awsSDK.Lambda()
+  return lambda.invokeAsync({ FunctionName: name, InvokeArgs: payloadString }, undefined).promise()
+}
+
+export const getLatestLayer = async () => {
+  const lambda = new awsSDK.Lambda()
+
+  const isProd = process.env.PRODUCTION === "true"
+  const runtime = isProd ? "production" : "staging"
+  const layerName = `peril-${runtime}-runtime`
+
+  const allLayers = await lambda.listLayers({}).promise()
+  const { data } = allLayers.$response
+  if (data && data.Layers) {
+    const thisLayer = data.Layers.find(l => l.LayerName === layerName)
+    if (!thisLayer) {
+      throw new Error("Could not get find layer from AWS")
+    }
+
+    return thisLayer
+  }
+
+  throw new Error("Could not get the layer from AWS")
 }
