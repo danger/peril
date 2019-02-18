@@ -2,19 +2,18 @@ import * as awsSDK from "aws-sdk"
 import { readFileSync } from "fs"
 import { join } from "path"
 
-const lambdaZip = readFileSync(join(__dirname, "..", "..", "..", "bin", "lambda.zip"))
-
 export const createLambdaFunctionForInstallation = async (installationName: string) => {
   const lambda = new awsSDK.Lambda()
   const isProd = process.env.PRODUCTION === "true"
   const prefix = isProd ? "p" : "s"
   const randoSuffix = Math.random()
-    .toString(36)
-    .substring(7)
-
+  .toString(36)
+  .substring(7)
+  
   const name = `${prefix}-${installationName}-${randoSuffix}`
-
+  
   const layer = await getLatestLayer()
+  const lambdaZip = readFileSync(join(__dirname, "..", "..", "..", "bin", "lambda.zip"))
   await lambda
     .createFunction(
       {

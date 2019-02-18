@@ -69,6 +69,9 @@ const getLockfileVersionForDep = (name: string) => {
 // Creates a 'dependencies' section for a package.json
 const depsSection: any = {}
 
+// These are **required** by the peril codebase
+// but don't appear in the dependency tree,
+// this is different from the devDependencies 
 const extras = [
   "graphql-relay",
   "graphql-resolvers",

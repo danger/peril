@@ -15,6 +15,7 @@ import { executorForInstallation, InstallationToRun, ValidatedPayload } from "..
 import { source } from "../danger/peril_ci_source"
 import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { githubAPIForCommentable } from "../github/events/utils/commenting"
+import { repoNameForWebhook } from "../github/events/utils/repoNameForWebhook";
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import logger from "../logger"
 import { customGitHubResolveRequest, perilPrefix, shouldUseGitHubOverride } from "./customGitHubRequire"
@@ -39,21 +40,21 @@ export const run = async (stdin: string) => {
     return
   }
 
-  logger.info(`Started run for ${input.paths.join(", ")}`)
+  logger.info(`---------------------------------------------------------------------`)
+  const repo = repoNameForWebhook(input.payload)
+  const context = repo ? `on ${repo}` : ""
+  logger.info(`Started run ${input.perilSettings.event} ${context} for ${input.paths.join(", ")}`)
   const installation = input.installation
 
   // Validate the JSON
   if (!input.payload.dsl) {
-    logger.error("Received a payload without github metadata")
+    logger.error("Received a payload without github metadata, not running")
     return
   }
 
   // Remove the nulls from the payload as by this point it should be set up
   const payload = input.payload as ValidatedPayload
   const dslMode = input.dslType === "pr" ? RunType.pr : RunType.import
-
-  // Because logs are now always streaming
-  logger.info(`Running ${input.paths} for ${input.perilSettings.event}\n\n`)
 
   // Run the job
   if (dslMode === RunType.pr && input.payload.dsl) {
@@ -76,7 +77,9 @@ const runDangerEvent = async (
 ) => {
   // Pull out the metadata from the JSON to load up the danger process
   const token = payload.dsl.settings.github.accessToken
-  const context = contextForDanger({ github: payload.dsl.github } as any)
+  const runtimeDSL = await jsonToDSL(payload.dsl, source)
+  const context = contextForDanger(runtimeDSL)
+  
   const peril = await perilObjectForInstallation(installation, input.perilSettings.envVars, input)
 
   // Attach Peril + the octokit API to the DSL
