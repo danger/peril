@@ -12,6 +12,6 @@ lambdas=$(aws lambda list-functions --profile peril --query 'Functions[?starts_w
 runtime=$(aws lambda list-layers --profile peril --query 'Layers[?starts_with(LayerName, `s-`)].LatestMatchingVersion.LayerVersionArn' --output text)
 
 for lambda in $lambdas; do
-  echo Updating the code for $lambda 
-  aws lambda update-function-code --function-name $lambda --zip-file fileb://bin/lambda.zip --profile peril
+  echo Updating the layer for $lambda 
+  aws lambda update-function-configuration --function-name $lambda --layers $runtime --profile peril`
 done

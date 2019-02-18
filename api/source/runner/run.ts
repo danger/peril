@@ -1,15 +1,5 @@
-// I test this locally by renaming the .env file, then running:
-//
-// ❯ yarn build; cat source/github/events/handlers/_tests/fixtures/PerilRunnerEventBootStrapExample.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | env DEBUG="*" node out/runner/index.js
-// ❯
-
-// If you want to be testing this via hyper
-//  yarn build; cat source/runner/fixtures/hello-world.json  | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | hyper func call danger-peril-staging-debug
-
-// Alternatively, to switch staging's runner to be a debug runner:
-// ❯ hyper func update --env "DEBUG='*'" peril-staging
-// and back with
-// ❯ hyper func update --env "DEBUG=''" peril-staging
+// This is pretty hard to test locally now. I'm not sure how to recommend you
+// emulate this locally ATM. Trust the TypeScript Compiler, and write tests.
 
 import * as exitHook from "async-exit-hook"
 import { GitHub } from "danger/distribution/platforms/GitHub"
@@ -33,6 +23,7 @@ import { PerilRunnerBootstrapJSON } from "./triggerSandboxRun"
 let runtimeEnv = {} as any
 const startTime = new Date().getTime()
 
+// This is the launch point for the Lambda runner
 export const run = async (stdin: string) => {
   if (stdin.trim().length === 0) {
     logger.error("Got no STDIN")
@@ -60,6 +51,9 @@ export const run = async (stdin: string) => {
   // Remove the nulls from the payload as by this point it should be set up
   const payload = input.payload as ValidatedPayload
   const dslMode = input.dslType === "pr" ? RunType.pr : RunType.import
+
+  // Because logs are now always streaming
+  logger.info(`Running ${input.paths} for ${input.perilSettings.event}\n\n`)
 
   // Run the job
   if (dslMode === RunType.pr && input.payload.dsl) {

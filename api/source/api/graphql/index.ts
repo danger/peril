@@ -125,6 +125,8 @@ const schemaSDL = gql`
     installation(iID: Int!): Installation
     # Gets a single webhook
     webhook(iID: Int!, eventID: String!): RecordedWebhook
+    # Gets a set of logs
+    logs(iID: Int!, paginationToken: String!): RecordedWebhook
 
     ${nodeField}
   }

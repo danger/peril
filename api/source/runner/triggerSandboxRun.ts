@@ -28,7 +28,7 @@ export interface PerilSettings extends GitHubInstallationSettings {
   event: string
 }
 
-// Sidenote: auth token is in  dsl.settings.github
+// Note: auth token is in  dsl.settings.github
 export interface PerilRunnerBootstrapJSON {
   /** The DSL for JSON, could be a DangerDSLJSON type or the raw webhook */
   payload: Payload
@@ -41,11 +41,6 @@ export interface PerilRunnerBootstrapJSON {
   /** The DI'd settings on a per-peril run */
   perilSettings: PerilSettings
 }
-
-// You can fake this by doing something like:
-//
-// cat source/runner/fixtures/branch-push.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | hyper func call danger-peril-staging
-//
 
 // TODO: Refactor to take a dbInstallation instead of InstallationToRun!
 

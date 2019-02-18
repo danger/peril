@@ -2,29 +2,6 @@ import * as getSTDIN from "get-stdin"
 import logger from "../logger"
 import { run } from "./run"
 
-// Inside Hyper the dockerfile's process.env is:
-// {
-//   HOME: "/root",
-//   PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-//   HOSTNAME: "85592a9be410",
-//   host: "us-west-1.hyperfunc.io",
-//   connection: "close",
-//   content_type: "application/json",
-//   x_hyper_content_sha256: "43e004873ea99b5a651e8873ec1677532a02f7e0b7b56b03cb734ec498104ba8",
-//   accept: "*/*",
-//   accept_encoding: "gzip,deflate",
-//   LOG_FETCH_REQUESTS: 'true',
-//   COMMIT: "XXXYYZZZ",
-//   x_hyper_date: "20180520T014347Z",
-//   x_forwarded_for: "52.53.215.111",
-//   NODE_VERSION: "9.11.1",
-//   YARN_VERSION: "1.5.1",
-//   content_length: "20941",
-//   authorization:
-//     "HYPER-HMAC-SHA256 Credential=XYZ/20180520/us-west-1/hyper/hyper_request, SignedHeaders=content-type;host;x-hyper-content-sha256;x-hyper-date, Signature=ZZZ",
-//   user_agent: "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
-// }
-
 // Log that the process has started, and on what commit
 logger.info(`☢️ Peril at ${process.env.COMMIT_SHA}`)
 

@@ -92,7 +92,6 @@
     "graphql-tools": "^3.1.1",
     "graphql-tools-types": "^1.1.26",
     "graphql-yoga": "^1.16.1",
-    "hyper-aws4": "^1.1.3",
     "jest": "^24.1.0",
     "json2ts": "orta/json2ts#ts-less",
     "json5": "^2.0.1",
