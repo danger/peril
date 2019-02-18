@@ -109,7 +109,7 @@
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "typescript": "^3.1.1",
-    "winston": "^2.4.2",
+    "winston": "^3.2.1",
     "winston-papertrail": "^1.0.5",
     "ws": "^6.0.0"
   },

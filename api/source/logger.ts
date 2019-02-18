@@ -13,7 +13,7 @@ if (PAPERTRAIL_URL) {
     port: parseInt(PAPERTRAIL_PORT as string, 10),
   })
 } else {
-  // On AWS, most likely
+  // On AWS, or tests, or whatever
   logger.add(
     new winston.transports.Console({
       format: winston.format.simple(),
