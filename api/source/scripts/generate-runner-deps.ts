@@ -71,7 +71,7 @@ const depsSection: any = {}
 
 // These are **required** by the peril codebase
 // but don't appear in the dependency tree,
-// this is different from the devDependencies 
+// this is different from the devDependencies
 const extras = [
   "graphql-relay",
   "graphql-resolvers",
@@ -89,7 +89,9 @@ allDeps.sort().forEach(dep => {
 })
 
 // Cool beans
+// tslint:disable-next-line:no-console
 console.log("Updating the deps section:")
+// tslint:disable-next-line:no-console
 console.log(JSON.stringify(depsSection))
 
 const existingPackageJSON = fs.readFileSync("../runner/package.json", "utf8")
