@@ -14,7 +14,7 @@ import * as path from "path"
 // Starting at the runner, generate a list of all the
 // files inside the Peril repo which are referenced by the runner
 const tree = dependencyTree.toList({
-  filename: path.resolve(__dirname, "..", "runner", "index.ts"),
+  filename: path.resolve(__dirname, "..", "runner", "run.ts"),
   directory: path.resolve(__dirname, "..", ".."),
 })
 
@@ -81,6 +81,7 @@ const extras = [
   "node-mocks-http",
   "winston-papertrail",
   "typescript",
+  "chalk",
 ]
 extras.forEach(e => allDeps.push(e))
 

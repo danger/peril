@@ -9,6 +9,7 @@ yarn ts-node source/scripts/generate-runner-deps.ts
 echo "Installing the deps"
 cd ../runner
 yarn install
+
 cd ../api
 
 echo "Copying over the node_modules"

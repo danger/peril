@@ -3,7 +3,10 @@
 # Based on https://claudiajs.com/tutorials/aws-cli-tricks.html
 
 echo Zipping up function
-zip bin/lambda.zip ../runner/index.js ../runner/tsconfig.json -j
+
+# -j = ignore files
+# -X = ignore metadata (deterministic-ish builds)
+zip bin/lambda.zip ../runner/index.js ../runner/tsconfig.json -j -X
 
 # Grab all of the lambdas and scope it to only Peril staging instances
 lambdas=$(aws lambda list-functions --profile peril --query 'Functions[?starts_with(FunctionName, `s-`)].FunctionName' --output text)
