@@ -15,7 +15,7 @@ import { executorForInstallation, InstallationToRun, ValidatedPayload } from "..
 import { source } from "../danger/peril_ci_source"
 import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { githubAPIForCommentable } from "../github/events/utils/commenting"
-import { repoNameForWebhook } from "../github/events/utils/repoNameForWebhook";
+import { repoNameForPayload } from "../github/events/utils/repoNameForWebhook"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import logger from "../logger"
 import { customGitHubResolveRequest, perilPrefix, shouldUseGitHubOverride } from "./customGitHubRequire"
@@ -40,8 +40,7 @@ export const run = async (stdin: string) => {
     return
   }
 
-  logger.info(`---------------------------------------------------------------------`)
-  const repo = repoNameForWebhook(input.payload)
+  const repo = repoNameForPayload(input.payload)
   const context = repo ? `on ${repo}` : ""
   logger.info(`Started run ${input.perilSettings.event} ${context} for ${input.paths.join(", ")}`)
   const installation = input.installation
@@ -77,9 +76,13 @@ const runDangerEvent = async (
 ) => {
   // Pull out the metadata from the JSON to load up the danger process
   const token = payload.dsl.settings.github.accessToken
-  const runtimeDSL = await jsonToDSL(payload.dsl, source)
-  const context = contextForDanger(runtimeDSL)
-  
+
+  // TODO: Why aren't we using these? and is it related to #367
+  // const context = contextForDanger(runtimeDSL)
+  // const runtimeDSL = await jsonToDSL(payload.dsl, source)
+
+  const context = contextForDanger({ github: payload.dsl.github } as any)
+
   const peril = await perilObjectForInstallation(installation, input.perilSettings.envVars, input)
 
   // Attach Peril + the octokit API to the DSL
