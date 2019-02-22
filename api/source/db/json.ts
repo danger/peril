@@ -106,6 +106,7 @@ export const partialInstallationToInstallation = (
     env_vars: (partial.settings && partial.settings.env_vars) || [],
     ignored_repos: (partial.settings && partial.settings.ignored_repos) || [],
     modules: (partial.settings && partial.settings.modules) || [],
+    disable_github_check: (partial.settings && partial.settings.disable_github_check) || false,
   },
 })
 
