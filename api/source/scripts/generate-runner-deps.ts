@@ -80,7 +80,7 @@ const extras = [
   "graphql",
   "node-mocks-http",
   "winston-papertrail",
-  "typescript",
+  // "typescript",
   "chalk",
 ]
 extras.forEach(e => allDeps.push(e))

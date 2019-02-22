@@ -222,6 +222,16 @@ const resolvers = {
       return webhook
     }),
 
+    // Get logs from cloudwatch - not finished
+    logs: authD(async (_: any, params: { iID: number; paginationToken: string }, context: GraphQLContext) => {
+      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
+      if (!decodedJWT.iss.includes(String(params.iID))) {
+        throw new Error("You don't have access to this installation")
+      }
+
+      return {}
+    }),
+
     node: nodeResolver,
   },
 

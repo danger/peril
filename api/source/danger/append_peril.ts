@@ -26,14 +26,9 @@ import { InstallationToRun } from "./danger_runner"
  */
 export const octokitAPIForPeril = async (installationID: number, authToken: string | undefined) => {
   const token = authToken || (await getTemporaryAccessTokenForInstallation(installationID))
-  const api = new NodeGithub()
-
-  api.authenticate({
-    token,
-    type: "app",
+  return new NodeGithub({
+    auth: `token ${token}`,
   })
-
-  return api
 }
 
 /**

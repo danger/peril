@@ -27,7 +27,7 @@ export const shouldUseGitHubOverride = (request: string, parent: NodeModule): bo
 
 export const customGitHubResolveRequest = (token: string) => async (request: string, parent: NodeModule) => {
   const prefixLessParent = parent.filename.replace(perilPrefix, "")
-  logger.info(`Grabbing relative import "${request}" to ${prefixLessParent}.`)
+  logger.debug(`Grabbing relative import "${request}" to ${prefixLessParent}.`)
 
   const dangerRep = dangerRepresentationForPath(prefixLessParent)
   // This is the un-prefixed local path for the module requested`./thing`
