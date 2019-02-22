@@ -20,6 +20,7 @@ Object {
   },
   "scheduler": Object {},
   "settings": Object {
+    "disable_github_check": false,
     "env_vars": Array [],
     "ignored_repos": Array [],
     "modules": Array [],
