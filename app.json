@@ -35,9 +35,16 @@
     "PAPERTRAIL_PORT": {
       "description": "Optional: If you want to see logs via papertrail, this is your port.",
       "required": false
+    },
+    "APP_BASE": {
+      "description": "The directory of the application to deploy. You probably don't want to change this.",
+      "value": "api"
     }
   },
   "buildpacks": [
+    {
+      "url": "https://github.com/lstoll/heroku-buildpack-monorepo"
+    },
     {
       "url": "heroku/nodejs"
     }
