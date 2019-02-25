@@ -13,3 +13,8 @@ git remote add peril https://github.com/danger/peril.git
 git pull peril master
 git push heroku master
 ```
+
+
+## Updating pre-monorepo to post-monorepo
+
+See: https://github.com/danger/peril/pull/423
