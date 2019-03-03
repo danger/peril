@@ -122,17 +122,6 @@ export const GITHUB_CLIENT_SECRET = getEnv("GITHUB_CLIENT_SECRET")
 /** The URL for a Mongo DB instance, currently used for installations and scheduling */
 export const MONGODB_URI = getEnv("MONGODB_URI")
 
-/** Optional: the hyper access key, adding this will convert
- *  Peril to run in a process separated mode.
- */
-export const HYPER_ACCESS_KEY = getEnv("HYPER_ACCESS_KEY")
-
-/** Optional: the hyper secret key from hyper.sh. */
-export const HYPER_SECRET_KEY = getEnv("HYPER_SECRET_KEY")
-
-/** Optional: the function name that represents a danger run */
-export const HYPER_FUNC_NAME = getEnv("HYPER_FUNC_NAME")
-
 /** Optional: Any truthy value here will start up clustering for Peril  */
 export const WEB_CONCURRENCY = getEnv("WEB_CONCURRENCY")
 

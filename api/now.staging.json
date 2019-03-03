@@ -11,10 +11,6 @@
     "PRIVATE_GITHUB_SIGNING_KEY": "@stag_private_github_signing_key",
     "PUBLIC_GITHUB_SIGNING_KEY": "@stag_public_github_signing_key",
 
-    "HYPER_FUNC_NAME": "@stag_hyper_func_name",
-    "HYPER_SECRET_KEY": "@stag_hyper_secret_key",
-    "HYPER_ACCESS_KEY": "@stag_hyper_access_key",
-
     "MONGODB_URI": "@stag_mongodb_uri",
 
     "PUBLIC_FACING_API": "true",
@@ -28,6 +24,8 @@
 
     "SENTRY_DSN": "@stag_sentry_dsn",
 
-    "DEBUG": "*runFromSameHost"
+    "AWS_ACCESS_KEY_ID": "@stag_aws_access_key_id",
+    "AWS_SECRET_ACCESS_KEY": "@stag_aws_secret_access_key",
+    "AWS_REGION": "us-east-1"
   }
 }

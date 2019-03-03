@@ -17,7 +17,7 @@ export const graphqlAPI = (url: string, query: string) =>
     .then(body => {
       if (body.errors) {
         logger.info("Received errors from the GraphQL API")
-        logger.info(body.errors)
+        logger.info(JSON.parse(body.errors))
       }
       return body
     })

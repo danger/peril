@@ -10,7 +10,7 @@ import { getDB } from "../db/getDB"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { MongoDB } from "../db/mongo"
 
-// import { runExternally } from "./runFromExternalHost"
+import { runExternally } from "./runFromExternalHost"
 import { runFromSameHost } from "./runFromSameHost"
 import { createPerilSandboxAPIJWT } from "./sandbox/jwt"
 
@@ -28,7 +28,7 @@ export interface PerilSettings extends GitHubInstallationSettings {
   event: string
 }
 
-// Sidenote: auth token is in  dsl.settings.github
+// Note: auth token is in  dsl.settings.github
 export interface PerilRunnerBootstrapJSON {
   /** The DSL for JSON, could be a DangerDSLJSON type or the raw webhook */
   payload: Payload
@@ -42,10 +42,7 @@ export interface PerilRunnerBootstrapJSON {
   perilSettings: PerilSettings
 }
 
-// You can fake this by doing something like:
-//
-// cat source/runner/fixtures/branch-push.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | hyper func call danger-peril-staging
-//
+// TODO: Refactor to take a dbInstallation instead of InstallationToRun!
 
 /** This function is used inside Peril */
 export const triggerSandboxDangerRun = async (
@@ -78,7 +75,13 @@ export const triggerSandboxDangerRun = async (
   payload.dsl = DSL
 
   // Grab the installation env vars
-  const envVars = await getEnvVars(installation.iID)
+  const db = getDB() as MongoDB
+  const dbInstallation = await db.getInstallation(installation.iID)
+  if (!dbInstallation) {
+    throw new Error("No db installation for " + installation.iID)
+  }
+
+  const envVars = dbInstallation.envVars || {}
   const perilRunID = uuid()
 
   const stdOUT: PerilRunnerBootstrapJSON = {
@@ -96,13 +99,9 @@ export const triggerSandboxDangerRun = async (
     paths,
   }
 
-  // await runExternally(stdOUT, eventName, installation)
-  await runFromSameHost(stdOUT, eventName, installation)
-}
-
-/** Sandbox runs need their envVars to be sent from Peril to the sandbox */
-const getEnvVars = async (iID: number) => {
-  const db = getDB() as MongoDB
-  const dbInstallation = await db.getInstallation(iID)
-  return dbInstallation ? dbInstallation.envVars || {} : {}
+  if (dbInstallation.lambdaName) {
+    await runExternally(stdOUT, eventName, dbInstallation)
+  } else {
+    await runFromSameHost(stdOUT, eventName, installation)
+  }
 }

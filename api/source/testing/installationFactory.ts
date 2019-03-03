@@ -6,6 +6,7 @@ const emptyInstallation: GitHubInstallation = {
   avatarURL: "",
   repos: {},
   rules: {},
+  lambdaName: "",
   scheduler: {},
   settings: {
     env_vars: [],

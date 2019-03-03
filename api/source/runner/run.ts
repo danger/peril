@@ -1,15 +1,5 @@
-// I test this locally by renaming the .env file, then running:
-//
-// ❯ yarn build; cat source/github/events/handlers/_tests/fixtures/PerilRunnerEventBootStrapExample.json | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | env DEBUG="*" node out/runner/index.js
-// ❯
-
-// If you want to be testing this via hyper
-//  yarn build; cat source/runner/fixtures/hello-world.json  | sed 's/12345/'"$DANGER_GITHUB_API_TOKEN"'/' | hyper func call danger-peril-staging-debug
-
-// Alternatively, to switch staging's runner to be a debug runner:
-// ❯ hyper func update --env "DEBUG='*'" peril-staging
-// and back with
-// ❯ hyper func update --env "DEBUG=''" peril-staging
+// This is pretty hard to test locally now. I'm not sure how to recommend you
+// emulate this locally ATM. Trust the TypeScript Compiler, and write tests.
 
 import * as exitHook from "async-exit-hook"
 import { GitHub } from "danger/distribution/platforms/GitHub"
@@ -25,6 +15,7 @@ import { executorForInstallation, InstallationToRun, ValidatedPayload } from "..
 import { source } from "../danger/peril_ci_source"
 import { getPerilPlatformForDSL } from "../danger/peril_platform"
 import { githubAPIForCommentable } from "../github/events/utils/commenting"
+import { repoNameForPayload } from "../github/events/utils/repoNameForWebhook"
 import { getGitHubFileContentsFromLocation } from "../github/lib/github_helpers"
 import logger from "../logger"
 import { customGitHubResolveRequest, perilPrefix, shouldUseGitHubOverride } from "./customGitHubRequire"
@@ -33,6 +24,7 @@ import { PerilRunnerBootstrapJSON } from "./triggerSandboxRun"
 let runtimeEnv = {} as any
 const startTime = new Date().getTime()
 
+// This is the launch point for the Lambda runner
 export const run = async (stdin: string) => {
   if (stdin.trim().length === 0) {
     logger.error("Got no STDIN")
@@ -48,12 +40,14 @@ export const run = async (stdin: string) => {
     return
   }
 
-  logger.info(`Started run for ${input.paths.join(", ")}`)
+  const repo = repoNameForPayload(input.payload)
+  const context = repo ? `on ${repo}` : ""
+  logger.info(`Started run ${input.perilSettings.event} ${context} for ${input.paths.join(", ")}`)
   const installation = input.installation
 
   // Validate the JSON
   if (!input.payload.dsl) {
-    logger.error("Received a payload without github metadata")
+    logger.error("Received a payload without github metadata, not running")
     return
   }
 
@@ -82,7 +76,13 @@ const runDangerEvent = async (
 ) => {
   // Pull out the metadata from the JSON to load up the danger process
   const token = payload.dsl.settings.github.accessToken
+
+  // TODO: Why aren't we using these? and is it related to #367
+  // const context = contextForDanger(runtimeDSL)
+  // const runtimeDSL = await jsonToDSL(payload.dsl, source)
+
   const context = contextForDanger({ github: payload.dsl.github } as any)
+
   const peril = await perilObjectForInstallation(installation, input.perilSettings.envVars, input)
 
   // Attach Peril + the octokit API to the DSL

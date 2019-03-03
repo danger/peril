@@ -12,6 +12,13 @@ if (PAPERTRAIL_URL) {
     host: PAPERTRAIL_URL,
     port: parseInt(PAPERTRAIL_PORT as string, 10),
   })
+} else {
+  // On AWS, or tests, or whatever
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    })
+  )
 }
 
 // tslint:disable-next-line:no-default-export

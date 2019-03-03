@@ -1,26 +1,32 @@
-import { InstallationToRun } from "../danger/danger_runner"
-import { HYPER_FUNC_NAME } from "../globals"
+import { GitHubInstallation } from "../db"
 import { sendSlackMessageToInstallationID } from "../infrastructure/installationSlackMessaging"
 import logger from "../logger"
-import { callHyperFunction } from "./hyper-api"
+
+import { invokeLambda } from "../api/aws/lambda"
 import { PerilRunnerBootstrapJSON } from "./triggerSandboxRun"
 
 export const runExternally = async (
   stdOUT: PerilRunnerBootstrapJSON,
   eventName: string,
-  installation: InstallationToRun
+  installation: GitHubInstallation
 ) => {
   try {
-    const call = await callHyperFunction(stdOUT)
-    const callID = JSON.parse(call).CallId
-    if (callID) {
-      // Make it easy to grab logs from
+    const call = await invokeLambda(installation.lambdaName, JSON.stringify(stdOUT))
+
+    if (call.Status === 202) {
       logger.info(` Logs`)
-      logger.info(` summary: hyper func logs --tail=all --callid ${callID} ${HYPER_FUNC_NAME}`)
-      logger.info(`  stdout: hyper func get ${callID}`)
+      logger.info(`  Running job: ${call.$response.requestId}`)
+
+      // prettier-ignore
+      const cloudWatchURL = `https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logStream:group=/aws/lambda/${installation.lambdaName};`
+      logger.info(`  ${cloudWatchURL}`)
+    } else {
+      const errorMessage = `# Lambda call failed for ${eventName} - ${call.Status}`
+      logger.error(errorMessage)
+      sendSlackMessageToInstallationID(errorMessage, installation.iID)
     }
   } catch (error) {
-    const errorMessage = `# Hyper function call failed for ${eventName}: \n\n${error}`
+    const errorMessage = `# Lambda  call failed for ${eventName}: \n\n${error}`
     logger.error(errorMessage)
     sendSlackMessageToInstallationID(errorMessage, installation.iID)
   }

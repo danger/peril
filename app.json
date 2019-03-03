@@ -4,6 +4,7 @@
   "website": "https://github.com/danger/peril",
   "repository": "https://github.com/danger/peril",
   "keywords": ["culture", "danger", "javascript"],
+  "version": 1,
   "env": {
     "PERIL_INTEGRATION_ID": {
       "description": "The ID for your custom Peril GitHub App. You can find this inside the 'General' setting of your Integration, down under 'Basic information'.",

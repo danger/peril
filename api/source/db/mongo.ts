@@ -26,6 +26,8 @@ export interface MongoGithubInstallationModel extends Document, GitHubInstallati
   installationSlackUpdateWebhookURL: string
   /** An image representation of the installation */
   avatarURL: string
+  /** The name to trigger the lambda with */
+  lambdaName: string
 }
 
 /** The model for an installation in the DB */
@@ -48,6 +50,7 @@ const Installation = model<MongoGithubInstallationModel>(
     recordWebhooksUntilTime: Date,
     installationSlackUpdateWebhookURL: String,
     envVars: Schema.Types.Mixed,
+    lambdaName: String,
   })
 )
 
@@ -143,7 +146,15 @@ export const mongoDatabase = {
     return dbInstallations.map(convertDBRepresentationToModel)
   },
 
-  /** Deletes an Integration */
+  /** Search through the installations for ones that match a particular scheduler key */
+  getLambdaBasedInstallations: async (): Promise<GitHubInstallation[]> => {
+    const query: any = {}
+    query[`lambdaName`] = { $exists: true }
+    const dbInstallations = await Installation.find(query)
+    return dbInstallations.map(convertDBRepresentationToModel)
+  },
+
+  /** Requests an update for an installation based on grabbing the JSON from the Peril Settings config file */
   updateInstallation: async (installationID: number) => {
     const dbInstallation = await Installation.findOne({ iID: installationID })
     if (!dbInstallation) {
@@ -187,7 +198,9 @@ export const mongoDatabase = {
 
     const parsedSettings: Partial<GitHubInstallation> = _.pick(json, userInput)
     const sanitizedSettings = prepareToSave(parsedSettings)
-    return await Installation.updateOne({ iID: installationID }, sanitizedSettings)
+    return (await Installation.updateOne({ iID: installationID }, sanitizedSettings)) as Promise<
+      MongoGithubInstallationModel
+    >
   },
 
   /** Deletes an Integration */

@@ -100,6 +100,7 @@ export const partialInstallationToInstallation = (
   rules: partial.rules || {},
   scheduler: partial.scheduler || {},
   tasks: partial.tasks || {},
+  lambdaName: partial.lambdaName || "",
   perilSettingsJSONURL: dangerfileRefString,
   installationSlackUpdateWebhookURL: undefined,
   settings: {

@@ -8,14 +8,15 @@ const isJest = typeof jest !== "undefined"
 
 const hasJSONDef = !!process.env.DATABASE_JSON_FILE
 const hasPerilAPIURL = !!process.env.PUBLIC_API_ROOT_URL
-const hasHyperEnv = !!process.env.x_hyper_content_sha256
+
+const hasLambdaEnv = !!process.env._HANDLER
 
 /** There are three runtime environments for Peril, this says which one it is */
 export const runtimeEnvironment = hasJSONDef
   ? RuntimeEnvironment.Standalone
   : hasPerilAPIURL
     ? RuntimeEnvironment.Peril
-    : hasHyperEnv
+    : hasLambdaEnv
       ? RuntimeEnvironment.Runner
       : RuntimeEnvironment.Unknown
 

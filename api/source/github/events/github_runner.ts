@@ -197,7 +197,6 @@ export const runEverything = async (
     commentOnResults(isPRDSL, finalResults, token, settings, installation.settings)
   }
 
-  // TODO: Get the hyper function metadata into here
   const status = `Run ${runs.length} Dangerfile${runs.length > 1 ? "s" : ""}`
   res.status(200).send(JSON.stringify({ status, results: allResults }, null, "  "))
 }

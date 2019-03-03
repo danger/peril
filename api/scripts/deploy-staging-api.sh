@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Installing Now (if needed)"
 command -v now >/dev/null 2>&1 || { npm install -g now; }
 

@@ -125,6 +125,8 @@ const schemaSDL = gql`
     installation(iID: Int!): Installation
     # Gets a single webhook
     webhook(iID: Int!, eventID: String!): RecordedWebhook
+    # Gets a set of logs
+    logs(iID: Int!, paginationToken: String!): RecordedWebhook
 
     ${nodeField}
   }
@@ -218,6 +220,16 @@ const resolvers = {
 
       const webhook = await getRecordedWebhook(params.iID, params.eventID)
       return webhook
+    }),
+
+    // Get logs from cloudwatch - not finished
+    logs: authD(async (_: any, params: { iID: number; paginationToken: string }, context: GraphQLContext) => {
+      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
+      if (!decodedJWT.iss.includes(String(params.iID))) {
+        throw new Error("You don't have access to this installation")
+      }
+
+      return {}
     }),
 
     node: nodeResolver,

@@ -28,6 +28,8 @@ export interface GitHubInstallation extends PerilInstallationSettings {
   avatarURL: string
   /** An image url for the installation owner */
   envVars?: any
+  /** AWS function ID */
+  lambdaName: string
 }
 
 export interface PerilSettingsRepoJSON {

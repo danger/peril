@@ -67,7 +67,7 @@ export const generateAuthToken = async (req: Request, res: Response, ___: NextFu
   const installations = await getUserInstallations(token)
   const user = await getUserAccount(token)
 
-  const authToken = createPerilUserJWT({ name: user.name, avatar_url: user.avatar_url }, installations)
+  const authToken = createPerilUserJWT({ name: user.login, avatar_url: user.avatar_url }, installations)
   // TODO: add max age
   res.cookie("jwt", authToken, { domain: ".peril.systems" })
   if (redirect) {

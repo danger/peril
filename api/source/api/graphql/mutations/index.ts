@@ -2,7 +2,6 @@ import { getDB } from "../../../db/getDB"
 import { MongoDB } from "../../../db/mongo"
 
 import { GitHubInstallation } from "../../../db"
-import { sendLogsToSlackForInstallation } from "../../../infrastructure/installationSlackMessaging"
 import logger from "../../../logger"
 import {
   getRecordedWebhook,
@@ -10,17 +9,11 @@ import {
   wipeAllRecordedWebhooks,
 } from "../../../plugins/utils/recordWebhookWithRequest"
 import { sendWebhookThroughGitHubRunner } from "../../../plugins/utils/sendWebhookThroughGitHubRunner"
-import { getHyperLogs } from "../../../runner/hyper-api"
 import { getDetailsFromPerilSandboxAPIJWT } from "../../../runner/sandbox/jwt"
 import { runTaskForInstallation, triggerAFutureDangerRun } from "../../../tasks/startTaskScheduler"
-import {
-  GraphQLContext,
-  MSGDangerfileFinished,
-  MSGDangerfileLog,
-  sendAsyncMessageToConnectionsWithAccessToInstallation,
-  sendMessageToConnectionsWithAccessToInstallation,
-} from "../../api"
+import { GraphQLContext, MSGDangerfileFinished, sendMessageToConnectionsWithAccessToInstallation } from "../../api"
 import { getDetailsFromPerilJWT } from "../../auth/generate"
+import { createLambdaFunctionForInstallation } from "../../aws/lambda"
 import { authD } from "../utils/auth"
 import { getUserInstallations } from "../utils/installations"
 
@@ -52,17 +45,23 @@ export const mutations = {
     const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
 
     if (decodedJWT.data.user.name !== "orta") {
-      throw new Error(`Sorry folks, only Orta can create a new installation.`)
+      return { error: { description: `Sorry folks, only Orta can create a new installation.` } }
     }
 
-    logger.info(`mutation: editInstallation ${opts.iID}`)
+    logger.info(`mutation: convertPartialInstallation ${opts.iID}`)
 
     // Save the changes, then trigger an update from the new repo
     const db = getDB() as MongoDB
     const updatedInstallation = await db.saveInstallation(opts)
     try {
-      // Try run the mongo updater
+      // Try run the mongo updater, if this fails then it will raise
       await db.updateInstallation(updatedInstallation.iID)
+
+      // OK, that worked, let's set it up
+      const lambda = await createLambdaFunctionForInstallation(updatedInstallation.login)
+      // Set the lambda function for the server
+      await db.saveInstallation({ iID: updatedInstallation.iID, lambdaName: lambda.name })
+
       return updatedInstallation
     } catch (error) {
       // This is basically the difference between `convertPartialInstallation` and `editInstallation`
@@ -232,48 +231,51 @@ export const mutations = {
 
     // TODO: Store the time in some kind of per-installation analytics document?
 
-    // Calls can come from outside hyper now
-    const hyperCallID = opts.hyperCallID
-    if (hyperCallID) {
-      // Wait 2 seconds for the container to finish
-      setTimeout(async () => {
-        let dangerfileLog: MSGDangerfileLog | undefined
-        // Get Hyper logs
-        const getLogs = async () => {
-          let logs = null
-          try {
-            logs = await getHyperLogs(hyperCallID)
-          } catch (error) {
-            logger.error(`Requesting the hyper logs for ${installation.iID} with callID ${hyperCallID} - ${error}`)
-            return
-          }
-          const logMessage: MSGDangerfileLog = {
-            event: opts.name,
-            action: "log",
-            filenames: opts.dangerfiles,
-            log: logs as string,
-          }
-          return logMessage
-        }
+    //  TODO: Bring back live logs?
 
-        // If you have a connected slack webhook, then always grab the logs
-        // and store the value somewhere where the websocket to admin connections
-        // can also read.
-        if (installation.installationSlackUpdateWebhookURL) {
-          dangerfileLog = await getLogs()
-          sendLogsToSlackForInstallation("Received logs", dangerfileLog!, installation)
-        }
-        // Callback inside is lazy loaded and only called if there are people
-        // in the dashboard
-        sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
-          // If the slack trigger above didn't grab the logs, then re-grab them.
-          if (!dangerfileLog) {
-            dangerfileLog = await getLogs()
-          }
-          spark.write(dangerfileLog)
-        })
-      }, 2000)
-    }
+    // // Calls can come from outside hyper now
+    // const hyperCallID = opts.hyperCallID
+    // if (hyperCallID) {
+    //   // Wait 2 seconds for the container to finish
+    //   setTimeout(async () => {
+    //     let dangerfileLog: MSGDangerfileLog | undefined
+    //     // Get Hyper logs
+    //     const getLogs = async () => {
+    //       let logs = null
+    //       try {
+    //         logs =  "" // await getHyperLogs(hyperCallID)
+    //       } catch (error) {
+    //         logger.error(`Requesting the hyper logs for ${installation.iID} with callID ${hyperCallID} - ${error}`)
+    //         return
+    //       }
+    //       const logMessage: MSGDangerfileLog = {
+    //         event: opts.name,
+    //         action: "log",
+    //         filenames: opts.dangerfiles,
+    //         log: logs as string,
+    //       }
+    //       return logMessage
+    //     }
+
+    //     // If you have a connected slack webhook, then always grab the logs
+    //     // and store the value somewhere where the websocket to admin connections
+    //     // can also read.
+    //     if (installation.installationSlackUpdateWebhookURL) {
+    //       dangerfileLog = await getLogs()
+    //       sendLogsToSlackForInstallation("Received logs", dangerfileLog!, installation)
+    //     }
+    //     // Callback inside is lazy loaded and only called if there are people
+    //     // in the dashboard
+    //     sendAsyncMessageToConnectionsWithAccessToInstallation(installation.iID, async spark => {
+    //       // If the slack trigger above didn't grab the logs, then re-grab them.
+    //       if (!dangerfileLog) {
+    //         dangerfileLog = await getLogs()
+    //       }
+    //       spark.write(dangerfileLog)
+    //     })
+    //   }, 2000)
+    // }
+
     return { success: true }
   },
 }
