@@ -138,7 +138,7 @@ export function executorForInstallation(platform: Platform, runner: DangerRunner
   // https://github.com/danger/danger-js/blob/master/source/ci_source/ci_source.js
 
   const config: ExecutorOptions = {
-    dangerID: "peril", // TODO: multiple Peril runs?
+    dangerID: "Peril", // TODO: multiple Peril runs?
     jsonOnly: false,
     stdoutOnly: false,
     verbose: !!process.env.LOG_FETCH_REQUESTS,
@@ -147,5 +147,5 @@ export function executorForInstallation(platform: Platform, runner: DangerRunner
   }
 
   // Source can be removed in the next release of Danger
-  return new Executor(source, platform, runner, config)
+  return new Executor(source, platform, runner, config, process)
 }
