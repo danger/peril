@@ -20,14 +20,16 @@ import { getRecordedWebhook, getRecordedWebhooksForInstallation } from "../../pl
 
 import { GraphQLContext } from "../api"
 import { getDetailsFromPerilJWT } from "../auth/generate"
+import { getAvailableReposForInstallation } from "./github/getAvailableReposForInstallation"
 import { gql } from "./gql"
-import { mutations } from "./mutations"
+import { mutations } from "./mutations/mutations"
 import { authD } from "./utils/auth"
 import { getUserInstallations } from "./utils/installations"
 
 const { connectionType: partialConnection } = connectionDefinitions({ name: "PartialInstallation" })
 const { connectionType: installationConnection } = connectionDefinitions({ name: "Installation" })
 const { connectionType: recordedWebhookConnection } = connectionDefinitions({ name: "RecordedWebhook" })
+const { connectionType: repoConnection } = connectionDefinitions({ name: "GitHubRepo" })
 
 const { nodeResolver } = nodeDefinitions(async globalId => {
   const { type, id } = fromGlobalId(globalId)
@@ -89,6 +91,24 @@ const schemaSDL = gql`
     startedRecordingWebhooksTime: String
     # A URL for Slack which Peril can send notifications about an installation to
     installationSlackUpdateWebhookURL: String
+    # The repos that Peril has access to on the org
+    repos${connectionArgs()}: GitHubRepoConnection!
+  }
+
+  type GitHubAccount {
+    # A name you can use
+    login: String!
+  }
+
+  type GitHubRepo {
+    # Display Name
+    name: String!
+    # Whether its open to the public or not
+    private: Boolean!
+    # The text that lives below the repo name
+    description: String
+    # The repo
+    owner: GitHubAccount!
   }
 
   # Someone logged in to the API, all user data is stored inside the JWT
@@ -144,6 +164,10 @@ const schemaSDL = gql`
     error: Error
   }
 
+  type MutationWithRepo {
+    repo: GitHubRepo
+  }
+
   union MutationWithInstallationOrError = Installation | MutationError
 
   type Mutation {
@@ -165,6 +189,10 @@ const schemaSDL = gql`
     scheduleTask(jwt: String!, task: String!, time: String!, data: String!): MutationWithSuccess
     # Triggers a message to admins in the dashboard, and prepares to grab the logs
     dangerfileFinished(jwt: String!, name: String!, dangerfiles: [String!]!, time: Int!, hyperCallID: String): MutationWithSuccess
+    # Triggers a message to admins in the dashboard, and prepares to grab the logs
+    createNewRepo(iID: Int!, repoName: String!): MutationWithRepo
+    # request a PR with Peril settings
+    requestNewRepo(iID: Int!, repoName: String!, useTypeScript: Boolean!, setupTests: Boolean!, isPublic: Boolean!): MutationWithRepo
   }
 `
 
@@ -191,6 +219,16 @@ const resolvers = {
       const installationID = parent.iID!
       const webhooks = await getRecordedWebhooksForInstallation(installationID)
       return connectionFromArray(webhooks, args)
+    }),
+
+    repos: authD(async (parent: Partial<GitHubInstallation>, _: any, context: GraphQLContext) => {
+      const installationID = parent.iID!
+      const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
+      if (!decodedJWT.iss.includes(String(installationID))) {
+        throw new Error("You don't have access to this installation")
+      }
+
+      return getAvailableReposForInstallation(installationID)
     }),
     id: globalIdResolver(),
   },
@@ -248,7 +286,7 @@ const resolvers = {
   },
 }
 
-const connections = [installationConnection, partialConnection, recordedWebhookConnection]
+const connections = [installationConnection, partialConnection, recordedWebhookConnection, repoConnection]
 
 export const schema = makeExecutableSchema<GraphQLContext>({
   typeDefs: [schemaSDL, pageInfoType, ...connections, nodeInterface],

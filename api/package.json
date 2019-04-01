@@ -37,6 +37,7 @@
   "author": "Orta",
   "license": "MIT",
   "dependencies": {
+    "@peril/utils": "^1.0.2",
     "@sentry/node": "^4.0.0-rc.1",
     "@slack/client": "^4.5.0",
     "@types/agenda": "1.0.3",
