@@ -35,7 +35,7 @@ Peril's main API is split into two components with three parts:
   server, and it's opening module is `source/runner/index.ts`.
 
   To understand how it is created, see: `source/scripts/generate-runner-deps.ts`. It will generate a subset of Peril's
-  dependencies for the layer because there is a 250MB size limit for the layer and Perils is _450MB_ (!).
+  dependencies for the layer because there is a 250MB size limit for the layer and Perils is _450MB_ (!!).
 
   - Deploy: `yarn deploy:staging:layer`
   - [Layers on AWS](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/layers)
