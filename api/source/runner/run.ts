@@ -109,13 +109,17 @@ const runDangerEvent = async (
   }
 
   exitHook((callback: () => void) => {
+    const endTime = new Date().getTime()
+    const duration = (endTime - startTime) / 1000
+    logger.info(`Danger run finished in ${duration}s, sending results`)
+
     logger.info(`Process finished, sending results`)
     postResultsCall(
       input.perilSettings.perilAPIRoot,
       input.perilSettings.perilJWT,
       input.perilSettings.event,
       input.paths,
-      1234,
+      duration,
       process.env.HYPER_CALL_ID || ""
     ).then(callback)
   })
@@ -190,8 +194,8 @@ const runDangerPR = async (
   // host process to create a message from the logs.
   exitHook((callback: () => void) => {
     const endTime = new Date().getTime()
-    const duration = (startTime - endTime) / 1000
-    logger.info(`Danger run finished in ${duration}, sending results`)
+    const duration = (endTime - startTime) / 1000
+    logger.info(`Danger run finished in ${duration}s, sending results`)
 
     Promise.all([
       postResultsCall(
