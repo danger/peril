@@ -131,7 +131,7 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
       `   ${runs.length} run${runs.length > 1 ? "s" : ""} needed: ${sentence(runs.map(r => r.referenceString))}`
     )
   } else {
-    logger.info(`${name} on ${installation.login || "heroku"} skipped`)
+    logger.info(`${name} on ${installation.login || "heroku"} ${maybeRepo}skipped`)
   }
 
   await runEverything(event, runs, settings, installation, req, res, next)
