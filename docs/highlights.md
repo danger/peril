@@ -57,4 +57,4 @@ and a hint of Danger too
 - Sept 2018 - Started [staging-web.peril.systems](https://staging-web.peril.systems)
 - Oct 2018 - [GitHub Actions announced](https://developer.github.com/actions/) effectively moving Peril to be feature
   stable
-- Feb 2019 - Moved Peril Runner to work via AWS labmdas - https://github.com/danger/peril/pull/417
+- Feb 2019 - Moved Peril Runner to work via AWS lambdas - https://github.com/danger/peril/pull/417
