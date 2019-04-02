@@ -50,6 +50,14 @@ Peril's main API is split into two components with three parts:
   - Deploy: `yarn deploy:staging:runner`
   - [Functions on AWS](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions)
 
+## Deployment
+
+I have changed:
+
+- The API: `yarn deploy:staging:api`
+- The Runner: `yarn deploy:staging:layer`
+- The config for all runners: `yarn deploy:staging:layer`
+
 ## Links
 
 [Staging Infra + Links](../docs/using_peril_staging.md)

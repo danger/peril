@@ -11,7 +11,7 @@ executors:
     docker:
       - image: circleci/node:10
     working_directory: ~/repo/<< parameters.dir >>
-    
+
 commands:
   yarn-install:
     description: A command that handles installing and caching npm packages
@@ -21,7 +21,7 @@ commands:
         type: string
     steps:
       - checkout:
-            path: ~/repo
+          path: ~/repo
       - restore_cache:
           keys:
             - v1-<< parameters.cache-key >>-dependencies-{{ checksum "package.json" }}
@@ -32,7 +32,6 @@ commands:
           paths:
             - node_modules
           key: v1-<< parameters.cache-key >>-dependencies-{{ checksum "package.json" }}
-    
 
 jobs:
   #  The Peril web server
@@ -68,14 +67,13 @@ jobs:
           cache-key: web
       - run: yarn build
       - run: yarn jest  --max-workers=2
-      
+
   deploy:
     executor:
       name: node
-      dir: ''
+      dir: ""
     steps:
       - run: echo "deploy here..."
-       
 
 workflows:
   build:
