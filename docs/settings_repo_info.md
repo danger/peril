@@ -32,7 +32,7 @@ It is parsed via JSON5, so you can add comments.
 ### `settings`
 
 **@see** -
-[source/db/GitHubRepoSettings.ts](https://github.com/danger/peril/blob/master/source/db/GitHubRepoSettings.ts)
+[api/source/db/GitHubRepoSettings.ts](https://github.com/danger/peril/blob/master/api/source/db/GitHubRepoSettings.ts)
 
 I'm hesitant to add the specific settings which are supported inside this document, as it'll always end up out of date.
 
@@ -40,7 +40,7 @@ The source code above should be a reasonable read.
 
 ### `rules`
 
-**@see** - [source/db/index.ts](https://github.com/danger/peril/blob/master/source/db/index.ts)
+**@see** - [api/source/db/index.ts](https://github.com/danger/peril/blob/master/api/source/db/index.ts)
 
 These are globally applied rules, e.g. to every repo. It's a set of `event names`, to `dangerfiles`.
 
@@ -224,8 +224,8 @@ dangerfiles instead of making a single mega-file.
 
 You can write your Dangerfiles in JavaScript or TypeScript. It will be transpiled with these settings:
 
-- [tsconfig.json](https://github.com/danger/peril/blob/master/tsconfig.json)
-- [.babelrc](https://github.com/danger/peril/blob/master/.babelrc)
+- [tsconfig.json](https://github.com/danger/peril/blob/master/runner/tsconfig.json)
+- [.babelrc](https://github.com/danger/peril/blob/master/runner/.babelrc)
 
 These are not set in stone. You're welcome to improve them.
 
@@ -364,7 +364,7 @@ Neither of these are issues when working with the main prod/staging Peril.
 # Importing other files
 
 For Peril prod/staging you have access to all of the dependencies used in Peril, as well as all of the dependencies
-noted in the `"availablePerilRuntimeDependencies"` section of the [`package.json`](../package.json). I'm pretty chill
+noted in the `"availablePerilRuntimeDependencies"` section of the [`package.json`](https://github.com/danger/peril/blob/master/runner/package.json). I'm pretty chill
 about expanding those dependencies, so long as they feel on topic to Danger - no using my VMs for mining please
 
 You can import and access any of those dependencies like normal. The one weird edge case is with relative imports inside
