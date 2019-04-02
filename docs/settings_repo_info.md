@@ -363,8 +363,7 @@ Neither of these are issues when working with the main prod/staging Peril.
 
 # Importing other files
 
-For Peril prod/staging you have access to all of the dependencies used in Peril, as well as all of the dependencies
-noted in the `"availablePerilRuntimeDependencies"` section of the [`package.json`](https://github.com/danger/peril/blob/master/runner/package.json). I'm pretty chill
+For Peril prod/staging you have access to all of the dependencies used in Peril. I'm pretty chill
 about expanding those dependencies, so long as they feel on topic to Danger - no using my VMs for mining please
 
 You can import and access any of those dependencies like normal. The one weird edge case is with relative imports inside
