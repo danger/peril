@@ -14,8 +14,16 @@
 
 **Scripts:**
 
+From the `api` folder:
+
 - Logs: `logs:staging`
-- Deploy: `deploy:staging`
+- Or https://zeit.co/deployments/staging-api.peril.systems/logs
+
+Deployment:
+
+- The API: `yarn deploy:staging:api`
+- The Runner: `yarn deploy:staging:layer`
+- The config for all runners: `yarn deploy:staging:layer`
 
 ---
 
