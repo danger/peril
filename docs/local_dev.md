@@ -3,6 +3,7 @@
 ```sh
 git clone https://github.com/danger/peril.git
 cd peril
+cd api
 yarn install
 ```
 

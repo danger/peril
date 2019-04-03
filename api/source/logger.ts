@@ -8,7 +8,7 @@ import { PAPERTRAIL_PORT, PAPERTRAIL_URL } from "./globals"
 // Optional, adds papertrail to the logging systems
 if (PAPERTRAIL_URL) {
   const transports = winston.transports as any
-  winston.add(transports.Papertrail, {
+  ;(winston.add as any)(transports.Papertrail, {
     host: PAPERTRAIL_URL,
     port: parseInt(PAPERTRAIL_PORT as string, 10),
   })

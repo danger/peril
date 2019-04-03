@@ -14,7 +14,6 @@ import { GitHubInstallation, GithubRepo } from "../../db"
 import { getDB } from "../../db/getDB"
 import { GitHubInstallationSettings } from "../../db/GitHubRepoSettings"
 import logger from "../../logger"
-import winston from "../../logger"
 import { runEventRun } from "./handlers/event"
 import { runPRRun } from "./handlers/pr"
 import { actionForWebhook } from "./utils/actions"
@@ -38,8 +37,6 @@ import { repoIsIgnored } from "./utils/ignore_repos"
  *
  * As you can imagine, this does indeed make it ripe for a good refactoring in the future.
  */
-
-const log = (message: string) => winston.info(`[runner] - ${message}`)
 
 export interface GitHubRunSettings {
   commentableID: number | null
@@ -128,10 +125,10 @@ export const githubDangerRunner = async (event: string, req: express.Request, re
     logger.info("")
     logger.info(`## ${name} on ${installation.login} ${maybeRepo}`)
     logger.info(
-      `   ${runs.length} run${runs.length > 1 ? "s" : ""} needed: ${sentence(runs.map(r => r.referenceString))}`
+      `  ${runs.length} run${runs.length > 1 ? "s" : ""} needed: ${sentence(runs.map(r => r.referenceString))}`
     )
   } else {
-    logger.info(`${name} on ${installation.login || "heroku"} ${maybeRepo}skipped`)
+    logger.info(`${name} on ${installation.login || "heroku"} ${maybeRepo} skipped`)
   }
 
   await runEverything(event, runs, settings, installation, req, res, next)
@@ -167,6 +164,7 @@ export const runEverything = async (
   }
 
   if (!req.body.installation || !req.body.installation.id) {
+    logger.error(`No installation ID sent from GitHub.`)
     res.status(204).send(`No installation ID sent from GitHub.`)
     next()
     return
@@ -189,10 +187,11 @@ export const runEverything = async (
     allResults.push(eventResults)
   }
 
+  // TODO: Can this be deleted?
   const commentableRun = runs.find(r => r.feedback === RunFeedback.commentable)
   if (commentableRun && allResults.length) {
     const finalResults = mergeResults(allResults)
-    log(`Commenting, with results: ${mdResults(finalResults)}`)
+    logger.info(`Commenting, with results: ${mdResults(finalResults)}`)
     const isPRDSL = runs.find(r => r.dslType === RunType.pr) ? RunType.pr : RunType.import
     commentOnResults(isPRDSL, finalResults, token, settings, installation.settings)
   }

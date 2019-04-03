@@ -27,8 +27,6 @@ Deployment:
 
 ---
 
-**Tricky Bits**
-
 - Secrets vars are a bit weird in now. You have team-wide secrets, that are then re-used in the env vars by aliases.
 - Adding the pem to now is hard, I ended up making a file copy of both private and public, then doing this:
   `now secrets -T peril add stag_private_github_signing_key (cat thing.pem | base64)`. Fish only.

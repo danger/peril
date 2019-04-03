@@ -1,6 +1,7 @@
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { DangerRun, RunType } from "../../../danger/danger_run"
 import { runDangerForInstallation } from "../../../danger/danger_runner"
+import logger from "../../../logger"
 import { canUserWriteToRepo, getGitHubFileContents } from "../../lib/github_helpers"
 import { createPRJSONDSL } from "../createPRDSL"
 import { GitHubRunSettings } from "../github_runner"
@@ -37,6 +38,7 @@ export const runPRRun = async (
 
   const errorResults = await validateRuns(runs, settings, token, pr)
   if (errorResults) {
+    logger.error("Got an error in run validator")
     return errorResults
   }
 
