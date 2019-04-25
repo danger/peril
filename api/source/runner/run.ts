@@ -229,7 +229,7 @@ const postResultsCall = (
       jwt: "${jwt}",
       name: "${name}",
       dangerfiles: [${dangerfiles.map(d => `"${d}"`).join(", ")}],
-      time: ${time}
+      time: ${Math.round(time)}
       ${hyperID ? `, hyperCallID: "${hyperID}"` : ""}
     ) {
       success

@@ -83,10 +83,6 @@ const recreateGitHubUtils = (api: NodeGithub): GitHubUtilsDSL => ({
  * by passing in an existing token.
  *
  * Then adds the peril object into the DSL sandbox
- *
- * @param installationID
- * @param sandbox
- * @param peril
  */
 export async function appendPerilContextToDSL(
   installationID: number,

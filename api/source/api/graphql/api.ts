@@ -15,13 +15,14 @@ export const graphqlAPI = (url: string, query: string) =>
       }
     })
     .then(body => {
-      if (body.errors) {
+      if (body.error) {
         logger.info("Received errors from the GraphQL API")
-        logger.info(JSON.parse(body.errors))
+        logger.info(JSON.parse(body))
       }
       return body
     })
-    .catch(e => {
+    .catch(error => {
       logger.error("Error making an API call to the GraphQL API")
-      logger.error(e)
+      logger.error(query)
+      logger.error(error)
     })
