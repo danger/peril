@@ -9,8 +9,8 @@ if (!hasChangelog) {
 // Ensure the NodeJS versions match everywhere
 const nodeVersion = JSON.parse(readFileSync("package.json", "utf8")).engines.node
 
-if (!readFileSync("../.circleci/config.yml", "utf8").includes("circleci/node: " + nodeVersion)) {
-  warn("The `.circleci/config.yml` does not have the same version of node in it")
+if (!readFileSync("../.circleci/config.yml", "utf8").includes("circleci/node:" + nodeVersion)) {
+  warn("The `.circleci/config.yml` does not have the same version of node in it (" + nodeVersion + ")")
 }
 
 if (

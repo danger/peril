@@ -97,3 +97,25 @@ pre {
   border-radius: 0.3em;
   background: #272822;
 }
+
+@font-face {
+  font-family: "Horta";
+  src: font-url("/themes/fonts/horta-webfont.woff2") format("woff2"),
+    font-url("/themes/fonts/horta-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FiraCode-Regular";
+  src: font-url("/themes/fonts/FiraCode-Regular.woff2") format("woff2"),
+    font-url("FiraCode-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Horta", "Arial Narrow Bold";
+}
