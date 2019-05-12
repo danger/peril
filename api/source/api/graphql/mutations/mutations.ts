@@ -200,11 +200,11 @@ export const mutations = {
     return { success: true }
   },
 
-  createNewRepo: async (_: any, params: any, __: GraphQLContext) => {
+  createNewRepo: async (_: any, _params: any, __: GraphQLContext) => {
     // # Triggers a message to admins in the dashboard, and prepares to grab the logs
     // createNewRepo(iID: Int!, repoName: String!): MutationWithRepo
   },
-  requestNewRepo: async (_: any, params: any, __: GraphQLContext) => {
+  requestNewRepo: async (_: any, _params: any, __: GraphQLContext) => {
     // # request a PR with Peril settings
     // requestNewRepo(iID: Int!, repoName: String!, useTypeScript: Boolean!, setupTests: Boolean!, isPublic: Boolean!): MutationWithRepo
   },

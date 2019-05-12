@@ -92,7 +92,7 @@ const schemaSDL = gql`
     # A URL for Slack which Peril can send notifications about an installation to
     installationSlackUpdateWebhookURL: String
     # The repos that Peril has access to on the org
-    repos${connectionArgs()}: GitHubRepoConnection!
+    availableRepos${connectionArgs()}: GitHubRepoConnection!
   }
 
   type GitHubAccount {
@@ -221,7 +221,7 @@ const resolvers = {
       return connectionFromArray(webhooks, args)
     }),
 
-    repos: authD(async (parent: Partial<GitHubInstallation>, _: any, context: GraphQLContext) => {
+    availableRepos: authD(async (parent: Partial<GitHubInstallation>, _: any, context: GraphQLContext) => {
       const installationID = parent.iID!
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       if (!decodedJWT.iss.includes(String(installationID))) {
