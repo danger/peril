@@ -25,12 +25,12 @@ of the ENV vars too.
 So, you got the server up and running, now you need to install your GitHub integration in your org. If you've already
 done this, you can go into your integration admin panel and re-send the event, or re-install.
 
-You should get a reply back from peril [saying](../source/github/events/create_installation.ts#L8)
+You should get a reply back from peril [saying](../api/source/github/events/create_installation.ts#L8)
 `"Creating new installation"`.
 
 Now, any other GitHub event goes to peril and is handled by the
-[GitHub runner](../source/github/events/github_runner.ts). This is powered by JSON and a set of rules called
-[DangerRunRules](../source/danger/danger_run.ts) - these bind GitHub event names + actions to actions in danger. E.g.
+[GitHub runner](../api/source/github/events/github_runner.ts). This is powered by JSON and a set of rules called
+[DangerRunRules](../api/source/danger/danger_run.ts) - these bind GitHub event names + actions to actions in danger. E.g.
 
 ```json
 "rules": {
@@ -44,7 +44,7 @@ Now, any other GitHub event goes to peril and is handled by the
 - When an event `"issue"` comes in, then `danger/issues.js` will run.
 
 All other events are ignored. You can do a bit more with these rules, see
-[the tests](/source/danger/_tests/_danger_run.test.ts).
+[the tests](/api/source/danger/_tests/_danger_run.test.ts).
 
 You can find the rules inside the tables for both `"installations"` and `"github_repo"`. The installations are global
 rules that run everywhere, the github_repo rules are only applied on one repo.
@@ -99,7 +99,7 @@ yarn link danger
 
 Assuming that the GitHub Integration is already set up:
 
-1. Set up your own `docker-compose.yml` based on the example one (see `docker-compose.sample.yml`).
+1. Set up your own `docker-compose.yml` based on the example one (see [docker-compose.yml](/api/docker-compose.yml)).
 
 2. Run `docker-compose up --build`. This will build the Peril service and launch the stack.
 

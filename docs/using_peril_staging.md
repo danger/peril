@@ -4,8 +4,9 @@ Peril Staging and Peril Production are orta-hosted instances of Peril with a few
 
 - There's a peril dashboard: https://staging-dashboard.peril.systems
 - You can have many orgs running on the same server (I run artsy, danger, orta, CocoaPods, PerilTest for example)
-- Each Peril run is a fresh Docker VM
-- Peril can send logs of a Dangerfile run to Slack, or to the admin dashboard (WIP, currently broken)
+- Each org gets its own AWS lambda
+- Peril can send logs of a Dangerfile run to Slack, or to the admin dashboard (WIP, currently broken, currently
+  re-thinking)
 - Peril can store 5 minutes of webhooks from GitHub to your org, and replay them so you can work on a feature
 - The scheduler is set up, allowing you to have repeat tasks or to run a dangerfile in the future
 
@@ -23,8 +24,9 @@ But only people who are in the danger org can turn the Peril on for their org.
 
 The only docs are in this repo:
 
+- https://github.com/danger/peril/blob/master/docs/service_map.md
 - https://github.com/danger/peril/blob/master/docs/settings_repo_info.md
-- https://github.com/danger/peril/blob/master/docs/architecture.md
+- https://github.com/danger/peril/blob/master/docs/api_architecture.md
 
 I'm working on user-facing docs, but they're not there today. It'll be on https://staging.peril.systems one of days. I
 waited until the dashboard was done before thinking about the user-facing docs.

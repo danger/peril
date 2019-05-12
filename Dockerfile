@@ -1,6 +1,6 @@
 FROM node:10-slim
 
-ADD . /app/api
+ADD . /app
 WORKDIR /app/api
 
 # This will also trigger the build process

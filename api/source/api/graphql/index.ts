@@ -221,14 +221,15 @@ const resolvers = {
       return connectionFromArray(webhooks, args)
     }),
 
-    availableRepos: authD(async (parent: Partial<GitHubInstallation>, _: any, context: GraphQLContext) => {
+    availableRepos: authD(async (parent: Partial<GitHubInstallation>, args: any, context: GraphQLContext) => {
       const installationID = parent.iID!
       const decodedJWT = await getDetailsFromPerilJWT(context.jwt)
       if (!decodedJWT.iss.includes(String(installationID))) {
         throw new Error("You don't have access to this installation")
       }
 
-      return getAvailableReposForInstallation(installationID)
+      const repos = await getAvailableReposForInstallation(installationID)
+      return connectionFromArray(repos, args)
     }),
     id: globalIdResolver(),
   },
