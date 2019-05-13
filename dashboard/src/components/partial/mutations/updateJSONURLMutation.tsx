@@ -1,4 +1,6 @@
-import { commitMutation, graphql } from "react-relay"
+import { commitMutation } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import { Environment } from "relay-runtime"
 
 export interface UpdateJSONURLMutationOptions {

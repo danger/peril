@@ -1,4 +1,6 @@
-import { graphql, QueryRenderer } from "react-relay"
+import {  QueryRenderer } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import initEnvironment from "../lib/createRelayEnvironment"
 
 import * as React from "react"

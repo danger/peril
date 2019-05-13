@@ -1,15 +1,17 @@
 /* tslint:disable */
 
-import { ConcreteFragment } from "relay-runtime";
+import { ReaderFragment } from "relay-runtime";
+export type Overview_installation$ref = any;
 export type Overview_installation = {
     readonly iID: number;
     readonly login: string;
     readonly avatarURL: string | null;
+    readonly " $refType": Overview_installation$ref;
 };
 
 
 
-const node: ConcreteFragment = {
+const node: ReaderFragment = {
   "kind": "Fragment",
   "name": "Overview_installation",
   "type": "Installation",
@@ -34,13 +36,6 @@ const node: ConcreteFragment = {
       "kind": "ScalarField",
       "alias": null,
       "name": "avatarURL",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": "__id",
-      "name": "id",
       "args": null,
       "storageKey": null
     }

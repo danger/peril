@@ -1,6 +1,8 @@
 import * as React from "react"
 
-import { createFragmentContainer, graphql, RelayProp } from "react-relay"
+import { createFragmentContainer, RelayProp } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import { Form, Message } from "semantic-ui-react"
 import { Settings_installation } from "./__generated__/Settings_installation.graphql"
 import { editInstallationMutation } from "./mutations/editInstallationMutation"
@@ -96,11 +98,11 @@ class Settings extends React.Component<RProps, State> {
 
 export default createFragmentContainer<RProps>(
   Settings,
-  graphql`
+  {installation: graphql`
     fragment Settings_installation on Installation {
       iID
       installationSlackUpdateWebhookURL
       perilSettingsJSONURL
     }
-  `
+  `}
 )

@@ -1,14 +1,16 @@
 /* tslint:disable */
 
-import { ConcreteFragment } from "relay-runtime";
+import { ReaderFragment } from "relay-runtime";
+export type TaskRunner_installation$ref = any;
 export type TaskRunner_installation = {
     readonly iID: number;
     readonly tasks: any;
+    readonly " $refType": TaskRunner_installation$ref;
 };
 
 
 
-const node: ConcreteFragment = {
+const node: ReaderFragment = {
   "kind": "Fragment",
   "name": "TaskRunner_installation",
   "type": "Installation",
@@ -26,13 +28,6 @@ const node: ConcreteFragment = {
       "kind": "ScalarField",
       "alias": null,
       "name": "tasks",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": "__id",
-      "name": "id",
       "args": null,
       "storageKey": null
     }

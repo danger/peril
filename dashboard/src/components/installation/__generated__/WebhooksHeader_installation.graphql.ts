@@ -1,15 +1,17 @@
 /* tslint:disable */
 
-import { ConcreteFragment } from "relay-runtime";
+import { ReaderFragment } from "relay-runtime";
+export type WebhooksHeader_installation$ref = any;
 export type WebhooksHeader_installation = {
     readonly iID: number;
     readonly recordWebhooksUntilTime: string | null;
     readonly startedRecordingWebhooksTime: string | null;
+    readonly " $refType": WebhooksHeader_installation$ref;
 };
 
 
 
-const node: ConcreteFragment = {
+const node: ReaderFragment = {
   "kind": "Fragment",
   "name": "WebhooksHeader_installation",
   "type": "Installation",
@@ -34,13 +36,6 @@ const node: ConcreteFragment = {
       "kind": "ScalarField",
       "alias": null,
       "name": "startedRecordingWebhooksTime",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": "__id",
-      "name": "id",
       "args": null,
       "storageKey": null
     }

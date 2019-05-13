@@ -1,13 +1,19 @@
 /* tslint:disable */
 
 import { ConcreteRequest } from "relay-runtime";
+type SetJSONPathForm_installation$ref = any;
 export type PartialInstallationQueryVariables = {
     readonly id: number;
 };
 export type PartialInstallationQueryResponse = {
-    readonly installation: ({
+    readonly installation: {
         readonly login: string;
-    }) | null;
+        readonly " $fragmentRefs": SetJSONPathForm_installation$ref;
+    } | null;
+};
+export type PartialInstallationQuery = {
+    readonly response: PartialInstallationQueryResponse;
+    readonly variables: PartialInstallationQueryVariables;
 };
 
 
@@ -19,13 +25,12 @@ query PartialInstallationQuery(
   installation(iID: $id) {
     login
     ...SetJSONPathForm_installation
-    __id: id
+    id
   }
 }
 
 fragment SetJSONPathForm_installation on Installation {
   iID
-  __id: id
 }
 */
 
@@ -42,8 +47,7 @@ v1 = [
   {
     "kind": "Variable",
     "name": "iID",
-    "variableName": "id",
-    "type": "Int!"
+    "variableName": "id"
   }
 ],
 v2 = {
@@ -52,44 +56,31 @@ v2 = {
   "name": "login",
   "args": null,
   "storageKey": null
-},
-v3 = {
-  "kind": "ScalarField",
-  "alias": "__id",
-  "name": "id",
-  "args": null,
-  "storageKey": null
 };
 return {
   "kind": "Request",
-  "operationKind": "query",
-  "name": "PartialInstallationQuery",
-  "id": null,
-  "text": "query PartialInstallationQuery(\n  $id: Int!\n) {\n  installation(iID: $id) {\n    login\n    ...SetJSONPathForm_installation\n    __id: id\n  }\n}\n\nfragment SetJSONPathForm_installation on Installation {\n  iID\n  __id: id\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "PartialInstallationQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "installation",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": "Installation",
         "plural": false,
         "selections": [
-          v2,
+          (v2/*: any*/),
           {
             "kind": "FragmentSpread",
             "name": "SetJSONPathForm_installation",
             "args": null
-          },
-          v3
+          }
         ]
       }
     ]
@@ -97,18 +88,18 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "PartialInstallationQuery",
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "installation",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": "Installation",
         "plural": false,
         "selections": [
-          v2,
+          (v2/*: any*/),
           {
             "kind": "ScalarField",
             "alias": null,
@@ -116,10 +107,23 @@ return {
             "args": null,
             "storageKey": null
           },
-          v3
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "id",
+            "args": null,
+            "storageKey": null
+          }
         ]
       }
     ]
+  },
+  "params": {
+    "operationKind": "query",
+    "name": "PartialInstallationQuery",
+    "id": null,
+    "text": "query PartialInstallationQuery(\n  $id: Int!\n) {\n  installation(iID: $id) {\n    login\n    ...SetJSONPathForm_installation\n    id\n  }\n}\n\nfragment SetJSONPathForm_installation on Installation {\n  iID\n}\n",
+    "metadata": {}
   }
 };
 })();

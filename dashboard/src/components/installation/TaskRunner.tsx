@@ -1,5 +1,7 @@
 import * as React from "react"
-import { createFragmentContainer, graphql, RelayProp } from "react-relay"
+import { createFragmentContainer, RelayProp } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 
 import { Button, Dropdown, Segment } from "semantic-ui-react"
 import { TaskRunner_installation } from "./__generated__/TaskRunner_installation.graphql"
@@ -80,10 +82,10 @@ class InsideTaskRunner extends React.Component<RProps, State> {
 
 export default createFragmentContainer<RProps>(
   InsideTaskRunner,
-  graphql`
+  {installation: graphql`
     fragment TaskRunner_installation on Installation {
       iID
       tasks
     }
-  `
+  `}
 )

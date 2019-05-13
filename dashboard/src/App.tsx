@@ -21,7 +21,7 @@ class App extends React.Component {
               path="/success"
               render={() => {
                 const params = new URL(document.location as any).searchParams
-                cookies.set("jwt", params.get("perilJWT"))
+                cookies.set("jwt", params.get("perilJWT")!)
                 return <Redirect to="/" />
               }}
             />

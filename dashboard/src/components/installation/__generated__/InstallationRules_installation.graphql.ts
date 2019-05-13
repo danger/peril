@@ -1,6 +1,7 @@
 /* tslint:disable */
 
-import { ConcreteFragment } from "relay-runtime";
+import { ReaderFragment } from "relay-runtime";
+export type InstallationRules_installation$ref = any;
 export type InstallationRules_installation = {
     readonly iID: number;
     readonly repos: any;
@@ -8,11 +9,12 @@ export type InstallationRules_installation = {
     readonly tasks: any;
     readonly scheduler: any;
     readonly perilSettingsJSONURL: string;
+    readonly " $refType": InstallationRules_installation$ref;
 };
 
 
 
-const node: ConcreteFragment = {
+const node: ReaderFragment = {
   "kind": "Fragment",
   "name": "InstallationRules_installation",
   "type": "Installation",
@@ -58,13 +60,6 @@ const node: ConcreteFragment = {
       "kind": "ScalarField",
       "alias": null,
       "name": "perilSettingsJSONURL",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": "__id",
-      "name": "id",
       "args": null,
       "storageKey": null
     }

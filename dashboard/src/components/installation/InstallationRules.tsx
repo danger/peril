@@ -1,5 +1,7 @@
 import * as React from "react"
-import { createFragmentContainer, graphql, RelayProp } from "react-relay"
+import { createFragmentContainer,  RelayProp } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import { Segment } from "semantic-ui-react"
 import { githubURLForReference } from "../../lib/dangerfileReferenceURLs"
 import { InstallationRules_installation } from "./__generated__/InstallationRules_installation.graphql"
@@ -34,6 +36,7 @@ export const InstallationRules: any = (props: Props & { relay: RelayProp }) => {
 
 export default createFragmentContainer<Props>(
   InstallationRules,
+  { installation: 
   graphql`
     fragment InstallationRules_installation on Installation {
       iID
@@ -44,4 +47,5 @@ export default createFragmentContainer<Props>(
       perilSettingsJSONURL
     }
   `
+  }
 )

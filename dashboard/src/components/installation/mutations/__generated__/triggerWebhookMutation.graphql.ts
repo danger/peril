@@ -6,9 +6,13 @@ export type triggerWebhookMutationVariables = {
     readonly eventID: string;
 };
 export type triggerWebhookMutationResponse = {
-    readonly sendWebhookForInstallation: ({
+    readonly sendWebhookForInstallation: {
         readonly event: string;
-    }) | null;
+    } | null;
+};
+export type triggerWebhookMutation = {
+    readonly response: triggerWebhookMutationResponse;
+    readonly variables: triggerWebhookMutationVariables;
 };
 
 
@@ -49,14 +53,12 @@ v1 = [
       {
         "kind": "Variable",
         "name": "eventID",
-        "variableName": "eventID",
-        "type": "String!"
+        "variableName": "eventID"
       },
       {
         "kind": "Variable",
         "name": "iID",
-        "variableName": "iID",
-        "type": "Int!"
+        "variableName": "iID"
       }
     ],
     "concreteType": "RecordedWebhook",
@@ -74,24 +76,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "triggerWebhookMutation",
-  "id": null,
-  "text": "mutation triggerWebhookMutation(\n  $iID: Int!\n  $eventID: String!\n) {\n  sendWebhookForInstallation(iID: $iID, eventID: $eventID) {\n    event\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "triggerWebhookMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "triggerWebhookMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "triggerWebhookMutation",
+    "id": null,
+    "text": "mutation triggerWebhookMutation(\n  $iID: Int!\n  $eventID: String!\n) {\n  sendWebhookForInstallation(iID: $iID, eventID: $eventID) {\n    event\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

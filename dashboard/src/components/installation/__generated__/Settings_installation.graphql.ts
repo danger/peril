@@ -1,15 +1,17 @@
 /* tslint:disable */
 
-import { ConcreteFragment } from "relay-runtime";
+import { ReaderFragment } from "relay-runtime";
+export type Settings_installation$ref = any;
 export type Settings_installation = {
     readonly iID: number;
     readonly installationSlackUpdateWebhookURL: string | null;
     readonly perilSettingsJSONURL: string;
+    readonly " $refType": Settings_installation$ref;
 };
 
 
 
-const node: ConcreteFragment = {
+const node: ReaderFragment = {
   "kind": "Fragment",
   "name": "Settings_installation",
   "type": "Installation",
@@ -34,13 +36,6 @@ const node: ConcreteFragment = {
       "kind": "ScalarField",
       "alias": null,
       "name": "perilSettingsJSONURL",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": "__id",
-      "name": "id",
       "args": null,
       "storageKey": null
     }

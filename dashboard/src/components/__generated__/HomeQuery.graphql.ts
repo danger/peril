@@ -3,26 +3,30 @@
 import { ConcreteRequest } from "relay-runtime";
 export type HomeQueryVariables = {};
 export type HomeQueryResponse = {
-    readonly me: ({
+    readonly me: {
         readonly name: string;
         readonly installations: {
-            readonly edges: ReadonlyArray<({
-                readonly node: ({
+            readonly edges: ReadonlyArray<{
+                readonly node: {
                     readonly login: string;
                     readonly iID: number;
                     readonly avatarURL: string | null;
-                }) | null;
-            }) | null> | null;
+                } | null;
+            } | null> | null;
         };
         readonly installationsToSetUp: {
-            readonly edges: ReadonlyArray<({
-                readonly node: ({
+            readonly edges: ReadonlyArray<{
+                readonly node: {
                     readonly iID: number;
                     readonly login: string;
-                }) | null;
-            }) | null> | null;
+                } | null;
+            } | null> | null;
         };
-    }) | null;
+    } | null;
+};
+export type HomeQuery = {
+    readonly response: HomeQueryResponse;
+    readonly variables: HomeQueryVariables;
 };
 
 
@@ -37,7 +41,7 @@ query HomeQuery {
           login
           iID
           avatarURL
-          __id: id
+          id
         }
       }
     }
@@ -46,7 +50,7 @@ query HomeQuery {
         node {
           iID
           login
-          __id: id
+          id
         }
       }
     }
@@ -58,114 +62,124 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "login",
+  "name": "name",
   "args": null,
   "storageKey": null
 },
 v1 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "iID",
+  "name": "login",
   "args": null,
   "storageKey": null
 },
 v2 = {
   "kind": "ScalarField",
-  "alias": "__id",
-  "name": "id",
+  "alias": null,
+  "name": "iID",
   "args": null,
   "storageKey": null
 },
-v3 = [
-  {
-    "kind": "LinkedField",
-    "alias": null,
-    "name": "me",
-    "storageKey": null,
-    "args": null,
-    "concreteType": "User",
-    "plural": false,
+v3 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "avatarURL",
+  "args": null,
+  "storageKey": null
+},
+v4 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+};
+return {
+  "kind": "Request",
+  "fragment": {
+    "kind": "Fragment",
+    "name": "HomeQuery",
+    "type": "Query",
+    "metadata": null,
+    "argumentDefinitions": [],
     "selections": [
-      {
-        "kind": "ScalarField",
-        "alias": null,
-        "name": "name",
-        "args": null,
-        "storageKey": null
-      },
       {
         "kind": "LinkedField",
         "alias": null,
-        "name": "installations",
+        "name": "me",
         "storageKey": null,
         "args": null,
-        "concreteType": "InstallationConnection",
+        "concreteType": "User",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "kind": "LinkedField",
             "alias": null,
-            "name": "edges",
+            "name": "installations",
             "storageKey": null,
             "args": null,
-            "concreteType": "InstallationEdge",
-            "plural": true,
+            "concreteType": "InstallationConnection",
+            "plural": false,
             "selections": [
               {
                 "kind": "LinkedField",
                 "alias": null,
-                "name": "node",
+                "name": "edges",
                 "storageKey": null,
                 "args": null,
-                "concreteType": "Installation",
-                "plural": false,
+                "concreteType": "InstallationEdge",
+                "plural": true,
                 "selections": [
-                  v0,
-                  v1,
                   {
-                    "kind": "ScalarField",
+                    "kind": "LinkedField",
                     "alias": null,
-                    "name": "avatarURL",
+                    "name": "node",
+                    "storageKey": null,
                     "args": null,
-                    "storageKey": null
-                  },
-                  v2
+                    "concreteType": "Installation",
+                    "plural": false,
+                    "selections": [
+                      (v1/*: any*/),
+                      (v2/*: any*/),
+                      (v3/*: any*/)
+                    ]
+                  }
                 ]
               }
             ]
-          }
-        ]
-      },
-      {
-        "kind": "LinkedField",
-        "alias": null,
-        "name": "installationsToSetUp",
-        "storageKey": null,
-        "args": null,
-        "concreteType": "PartialInstallationConnection",
-        "plural": false,
-        "selections": [
+          },
           {
             "kind": "LinkedField",
             "alias": null,
-            "name": "edges",
+            "name": "installationsToSetUp",
             "storageKey": null,
             "args": null,
-            "concreteType": "PartialInstallationEdge",
-            "plural": true,
+            "concreteType": "PartialInstallationConnection",
+            "plural": false,
             "selections": [
               {
                 "kind": "LinkedField",
                 "alias": null,
-                "name": "node",
+                "name": "edges",
                 "storageKey": null,
                 "args": null,
-                "concreteType": "PartialInstallation",
-                "plural": false,
+                "concreteType": "PartialInstallationEdge",
+                "plural": true,
                 "selections": [
-                  v1,
-                  v0,
-                  v2
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "node",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "PartialInstallation",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      (v1/*: any*/)
+                    ]
+                  }
                 ]
               }
             ]
@@ -173,28 +187,105 @@ v3 = [
         ]
       }
     ]
-  }
-];
-return {
-  "kind": "Request",
-  "operationKind": "query",
-  "name": "HomeQuery",
-  "id": null,
-  "text": "query HomeQuery {\n  me {\n    name\n    installations {\n      edges {\n        node {\n          login\n          iID\n          avatarURL\n          __id: id\n        }\n      }\n    }\n    installationsToSetUp {\n      edges {\n        node {\n          iID\n          login\n          __id: id\n        }\n      }\n    }\n  }\n}\n",
-  "metadata": {},
-  "fragment": {
-    "kind": "Fragment",
-    "name": "HomeQuery",
-    "type": "Query",
-    "metadata": null,
-    "argumentDefinitions": [],
-    "selections": v3
   },
   "operation": {
     "kind": "Operation",
     "name": "HomeQuery",
     "argumentDefinitions": [],
-    "selections": v3
+    "selections": [
+      {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "me",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "User",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "installations",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "InstallationConnection",
+            "plural": false,
+            "selections": [
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "edges",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "InstallationEdge",
+                "plural": true,
+                "selections": [
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "node",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "Installation",
+                    "plural": false,
+                    "selections": [
+                      (v1/*: any*/),
+                      (v2/*: any*/),
+                      (v3/*: any*/),
+                      (v4/*: any*/)
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "installationsToSetUp",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "PartialInstallationConnection",
+            "plural": false,
+            "selections": [
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "edges",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "PartialInstallationEdge",
+                "plural": true,
+                "selections": [
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "node",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "PartialInstallation",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      (v1/*: any*/),
+                      (v4/*: any*/)
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "params": {
+    "operationKind": "query",
+    "name": "HomeQuery",
+    "id": null,
+    "text": "query HomeQuery {\n  me {\n    name\n    installations {\n      edges {\n        node {\n          login\n          iID\n          avatarURL\n          id\n        }\n      }\n    }\n    installationsToSetUp {\n      edges {\n        node {\n          iID\n          login\n          id\n        }\n      }\n    }\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

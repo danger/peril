@@ -8,6 +8,7 @@
     "start": "gatsby develop",
     "develop": "gatsby develop",
     "build": "gatsby build",
+    "now-build": "yarn build",
     "generate": "plop --plopfile ./generators/plopfile.js",
     "graphql-types": "gql-gen --url http://localhost:8000/___graphql --template typescript --out ./src/graphql-types.d.ts",
     "precommit": "lint-staged"

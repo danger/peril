@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@types/react-relay": "^1.3.14"
+  }
+}

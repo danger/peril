@@ -17,6 +17,7 @@ export default () => (
           src="http://danger.systems/images/js/peril-logo-hero-cachable@2x.png"
           width="250"
           style={{ paddingBottom: 40 }}
+          alt="Logo"
         />
 
         <Segment stacked>

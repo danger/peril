@@ -7,10 +7,24 @@ export type makeInstallationRecordMutationVariables = {
 export type makeInstallationRecordMutationResponse = {
     readonly makeInstallationRecord: ({
         readonly login?: string;
-        readonly error?: ({
+        readonly error?: {
             readonly description: string;
-        }) | null;
-    }) | null;
+        } | null;
+    } & ({
+        readonly login: string;
+    } | {
+        readonly error: {
+            readonly description: string;
+        } | null;
+    } | {
+        /*This will never be '% other', but we need some
+        value in case none of the concrete values match.*/
+        readonly __typename: "%other";
+    })) | null;
+};
+export type makeInstallationRecordMutation = {
+    readonly response: makeInstallationRecordMutationResponse;
+    readonly variables: makeInstallationRecordMutationVariables;
 };
 
 
@@ -30,7 +44,7 @@ mutation makeInstallationRecordMutation(
       }
     }
     ... on Node {
-      __id: id
+      id
     }
   }
 }
@@ -49,16 +63,21 @@ v1 = [
   {
     "kind": "Variable",
     "name": "iID",
-    "variableName": "iID",
-    "type": "Int!"
+    "variableName": "iID"
   }
 ],
 v2 = {
-  "kind": "ScalarField",
-  "alias": "__id",
-  "name": "id",
-  "args": null,
-  "storageKey": null
+  "kind": "InlineFragment",
+  "type": "Installation",
+  "selections": [
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "login",
+      "args": null,
+      "storageKey": null
+    }
+  ]
 },
 v3 = {
   "kind": "InlineFragment",
@@ -83,46 +102,27 @@ v3 = {
       ]
     }
   ]
-},
-v4 = {
-  "kind": "InlineFragment",
-  "type": "Installation",
-  "selections": [
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "login",
-      "args": null,
-      "storageKey": null
-    }
-  ]
 };
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "makeInstallationRecordMutation",
-  "id": null,
-  "text": "mutation makeInstallationRecordMutation(\n  $iID: Int!\n) {\n  makeInstallationRecord(iID: $iID) {\n    __typename\n    ... on Installation {\n      login\n    }\n    ... on MutationError {\n      error {\n        description\n      }\n    }\n    ... on Node {\n      __id: id\n    }\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "makeInstallationRecordMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "makeInstallationRecord",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": null,
         "plural": false,
         "selections": [
-          v2,
-          v3,
-          v4
+          (v2/*: any*/),
+          (v3/*: any*/)
         ]
       }
     ]
@@ -130,14 +130,14 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "makeInstallationRecordMutation",
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "makeInstallationRecord",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": null,
         "plural": false,
         "selections": [
@@ -148,12 +148,25 @@ return {
             "args": null,
             "storageKey": null
           },
-          v2,
-          v3,
-          v4
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "id",
+            "args": null,
+            "storageKey": null
+          },
+          (v2/*: any*/),
+          (v3/*: any*/)
         ]
       }
     ]
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "makeInstallationRecordMutation",
+    "id": null,
+    "text": "mutation makeInstallationRecordMutation(\n  $iID: Int!\n) {\n  makeInstallationRecord(iID: $iID) {\n    __typename\n    ... on Installation {\n      login\n    }\n    ... on MutationError {\n      error {\n        description\n      }\n    }\n    ... on Node {\n      id\n    }\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

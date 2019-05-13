@@ -1,10 +1,14 @@
 import * as React from "react"
-import { graphql, QueryRenderer } from "react-relay"
+import { QueryRenderer } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 
 import { Container } from "semantic-ui-react"
 import initEnvironment from "../lib/createRelayEnvironment"
 import { customLoginRedirect, partialInstallation } from "../lib/routes"
 import SetJSONPathForm from "./partial/SetJSONPathForm"
+
+declare const location:any
 
 export default class PartialInstallation extends React.Component<any> {
   public render() {

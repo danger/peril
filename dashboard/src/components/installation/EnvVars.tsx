@@ -1,6 +1,8 @@
 import * as React from "react"
 
-import { createFragmentContainer, graphql, RelayProp } from "react-relay"
+import { createFragmentContainer, RelayProp } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import { Button, Form, Message } from "semantic-ui-react"
 import { EnvVars_installation } from "./__generated__/EnvVars_installation.graphql"
 import { runEditEnvVarsMutation } from "./mutations/editEnvVarMutation"
@@ -125,10 +127,12 @@ class EnvVars extends React.Component<RProps, State> {
 
 export default createFragmentContainer<RProps>(
   EnvVars,
-  graphql`
+  { 
+    installation: graphql`
     fragment EnvVars_installation on Installation {
       iID
       envVars
     }
   `
+  }
 )

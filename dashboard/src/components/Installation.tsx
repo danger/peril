@@ -1,5 +1,6 @@
 import * as React from "react"
-import { graphql, QueryRenderer } from "react-relay"
+import {  QueryRenderer } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
 
 import { BrowserRouter as Router, NavLink, Route } from "react-router-dom"
 import { Container, Menu } from "semantic-ui-react"

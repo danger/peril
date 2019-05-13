@@ -1,23 +1,27 @@
 /* tslint:disable */
 
-import { ConcreteFragment } from "relay-runtime";
+import { ReaderFragment } from "relay-runtime";
+type WebhooksHeader_installation$ref = any;
+export type Webhooks_installation$ref = any;
 export type Webhooks_installation = {
     readonly iID: number;
     readonly webhooks: {
-        readonly edges: ReadonlyArray<({
-            readonly node: ({
+        readonly edges: ReadonlyArray<{
+            readonly node: {
                 readonly event: string;
                 readonly iID: number;
                 readonly createdAt: any;
                 readonly eventID: string;
-            }) | null;
-        }) | null> | null;
+            } | null;
+        } | null> | null;
     };
+    readonly " $fragmentRefs": WebhooksHeader_installation$ref;
+    readonly " $refType": Webhooks_installation$ref;
 };
 
 
 
-const node: ConcreteFragment = (function(){
+const node: ReaderFragment = (function(){
 var v0 = {
   "kind": "ScalarField",
   "alias": null,
@@ -32,12 +36,7 @@ return {
   "metadata": null,
   "argumentDefinitions": [],
   "selections": [
-    v0,
-    {
-      "kind": "FragmentSpread",
-      "name": "WebhooksHeader_installation",
-      "args": null
-    },
+    (v0/*: any*/),
     {
       "kind": "LinkedField",
       "alias": null,
@@ -72,7 +71,7 @@ return {
                   "args": null,
                   "storageKey": null
                 },
-                v0,
+                (v0/*: any*/),
                 {
                   "kind": "ScalarField",
                   "alias": null,
@@ -94,11 +93,9 @@ return {
       ]
     },
     {
-      "kind": "ScalarField",
-      "alias": "__id",
-      "name": "id",
-      "args": null,
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "WebhooksHeader_installation",
+      "args": null
     }
   ]
 };

@@ -1,5 +1,6 @@
 import * as React from "react"
-import { createFragmentContainer, graphql, RelayProp } from "react-relay"
+import { createFragmentContainer, RelayProp } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
 
 import { Button, Header, Icon, Segment } from "semantic-ui-react"
 import relativeDate from "tiny-relative-date"
@@ -47,12 +48,12 @@ const WebhooksHeaderInternal = (props: Props) => {
 
 export default createFragmentContainer<Props>(
   WebhooksHeaderInternal,
-  graphql`
+  { installation: graphql`
     fragment WebhooksHeader_installation on Installation {
       iID
 
       recordWebhooksUntilTime
       startedRecordingWebhooksTime
     }
-  `
+  `}
 )

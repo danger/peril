@@ -8,10 +8,24 @@ export type updateJSONURLMutationVariables = {
 export type updateJSONURLMutationResponse = {
     readonly convertPartialInstallation: ({
         readonly perilSettingsJSONURL?: string;
-        readonly error?: ({
+        readonly error?: {
             readonly description: string;
-        }) | null;
-    }) | null;
+        } | null;
+    } & ({
+        readonly perilSettingsJSONURL: string;
+    } | {
+        readonly error: {
+            readonly description: string;
+        } | null;
+    } | {
+        /*This will never be '% other', but we need some
+        value in case none of the concrete values match.*/
+        readonly __typename: "%other";
+    })) | null;
+};
+export type updateJSONURLMutation = {
+    readonly response: updateJSONURLMutationResponse;
+    readonly variables: updateJSONURLMutationVariables;
 };
 
 
@@ -32,7 +46,7 @@ mutation updateJSONURLMutation(
       }
     }
     ... on Node {
-      __id: id
+      id
     }
   }
 }
@@ -57,22 +71,26 @@ v1 = [
   {
     "kind": "Variable",
     "name": "iID",
-    "variableName": "iID",
-    "type": "Int!"
+    "variableName": "iID"
   },
   {
     "kind": "Variable",
     "name": "perilSettingsJSONURL",
-    "variableName": "perilSettingsJSONURL",
-    "type": "String"
+    "variableName": "perilSettingsJSONURL"
   }
 ],
 v2 = {
-  "kind": "ScalarField",
-  "alias": "__id",
-  "name": "id",
-  "args": null,
-  "storageKey": null
+  "kind": "InlineFragment",
+  "type": "Installation",
+  "selections": [
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "perilSettingsJSONURL",
+      "args": null,
+      "storageKey": null
+    }
+  ]
 },
 v3 = {
   "kind": "InlineFragment",
@@ -97,46 +115,27 @@ v3 = {
       ]
     }
   ]
-},
-v4 = {
-  "kind": "InlineFragment",
-  "type": "Installation",
-  "selections": [
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "perilSettingsJSONURL",
-      "args": null,
-      "storageKey": null
-    }
-  ]
 };
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "updateJSONURLMutation",
-  "id": null,
-  "text": "mutation updateJSONURLMutation(\n  $iID: Int!\n  $perilSettingsJSONURL: String!\n) {\n  convertPartialInstallation(iID: $iID, perilSettingsJSONURL: $perilSettingsJSONURL) {\n    __typename\n    ... on Installation {\n      perilSettingsJSONURL\n    }\n    ... on MutationError {\n      error {\n        description\n      }\n    }\n    ... on Node {\n      __id: id\n    }\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "updateJSONURLMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "convertPartialInstallation",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": null,
         "plural": false,
         "selections": [
-          v2,
-          v3,
-          v4
+          (v2/*: any*/),
+          (v3/*: any*/)
         ]
       }
     ]
@@ -144,14 +143,14 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "updateJSONURLMutation",
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "convertPartialInstallation",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": null,
         "plural": false,
         "selections": [
@@ -162,12 +161,25 @@ return {
             "args": null,
             "storageKey": null
           },
-          v2,
-          v3,
-          v4
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "id",
+            "args": null,
+            "storageKey": null
+          },
+          (v2/*: any*/),
+          (v3/*: any*/)
         ]
       }
     ]
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "updateJSONURLMutation",
+    "id": null,
+    "text": "mutation updateJSONURLMutation(\n  $iID: Int!\n  $perilSettingsJSONURL: String!\n) {\n  convertPartialInstallation(iID: $iID, perilSettingsJSONURL: $perilSettingsJSONURL) {\n    __typename\n    ... on Installation {\n      perilSettingsJSONURL\n    }\n    ... on MutationError {\n      error {\n        description\n      }\n    }\n    ... on Node {\n      id\n    }\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

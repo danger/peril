@@ -1,5 +1,7 @@
 import * as React from "react"
-import { createFragmentContainer, graphql } from "react-relay"
+import { createFragmentContainer } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import { Feed, Segment } from "semantic-ui-react"
 import relativeDate from "tiny-relative-date"
 import { Websocket_installation } from "./__generated__/Websocket_installation.graphql"
@@ -88,6 +90,7 @@ class Websocket extends React.Component<Props, State> {
                 case "log":
                   return dangerfileLogEvent(e)
               }
+              return undefined
             })}
           </Feed>
         </Segment>
@@ -98,12 +101,12 @@ class Websocket extends React.Component<Props, State> {
 
 export default createFragmentContainer<Props>(
   Websocket,
-  graphql`
+{ installation:  graphql`
     fragment Websocket_installation on Installation {
       iID
       perilSettingsJSONURL
     }
-  `
+  `}
 )
 
 // Taken from Peril

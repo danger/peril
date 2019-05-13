@@ -1,6 +1,8 @@
 import * as React from "react"
 
-import { createFragmentContainer, graphql, RelayProp } from "react-relay"
+import { createFragmentContainer, RelayProp } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import { Form, Message } from "semantic-ui-react"
 import { SetJSONPathForm_installation } from "./__generated__/SetJSONPathForm_installation.graphql"
 import { updateJSONURLMutation } from "./mutations/updateJSONURLMutation"
@@ -67,9 +69,9 @@ class SetJSONPathForm extends React.Component<RProps, State> {
 
 export default createFragmentContainer<RProps>(
   SetJSONPathForm,
-  graphql`
+  {installation: graphql`
     fragment SetJSONPathForm_installation on Installation {
       iID
     }
-  `
+  `}
 )

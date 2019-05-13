@@ -1,13 +1,25 @@
 /* tslint:disable */
 
 import { ConcreteRequest } from "relay-runtime";
+type EnvVars_installation$ref = any;
+type InstallationRules_installation$ref = any;
+type Overview_installation$ref = any;
+type Settings_installation$ref = any;
+type TaskRunner_installation$ref = any;
+type Webhooks_installation$ref = any;
+type Websocket_installation$ref = any;
 export type InstallationQueryVariables = {
     readonly id: number;
 };
 export type InstallationQueryResponse = {
-    readonly installation: ({
+    readonly installation: {
         readonly iID: number;
-    }) | null;
+        readonly " $fragmentRefs": Overview_installation$ref & InstallationRules_installation$ref & Webhooks_installation$ref & TaskRunner_installation$ref & Websocket_installation$ref & Settings_installation$ref & EnvVars_installation$ref;
+    } | null;
+};
+export type InstallationQuery = {
+    readonly response: InstallationQueryResponse;
+    readonly variables: InstallationQueryVariables;
 };
 
 
@@ -25,7 +37,7 @@ query InstallationQuery(
     ...Websocket_installation
     ...Settings_installation
     ...EnvVars_installation
-    __id: id
+    id
   }
 }
 
@@ -33,7 +45,6 @@ fragment Overview_installation on Installation {
   iID
   login
   avatarURL
-  __id: id
 }
 
 fragment InstallationRules_installation on Installation {
@@ -43,7 +54,6 @@ fragment InstallationRules_installation on Installation {
   tasks
   scheduler
   perilSettingsJSONURL
-  __id: id
 }
 
 fragment Webhooks_installation on Installation {
@@ -59,39 +69,33 @@ fragment Webhooks_installation on Installation {
       }
     }
   }
-  __id: id
 }
 
 fragment TaskRunner_installation on Installation {
   iID
   tasks
-  __id: id
 }
 
 fragment Websocket_installation on Installation {
   iID
   perilSettingsJSONURL
-  __id: id
 }
 
 fragment Settings_installation on Installation {
   iID
   installationSlackUpdateWebhookURL
   perilSettingsJSONURL
-  __id: id
 }
 
 fragment EnvVars_installation on Installation {
   iID
   envVars
-  __id: id
 }
 
 fragment WebhooksHeader_installation on Installation {
   iID
   recordWebhooksUntilTime
   startedRecordingWebhooksTime
-  __id: id
 }
 */
 
@@ -108,8 +112,7 @@ v1 = [
   {
     "kind": "Variable",
     "name": "iID",
-    "variableName": "id",
-    "type": "Int!"
+    "variableName": "id"
   }
 ],
 v2 = {
@@ -118,38 +121,26 @@ v2 = {
   "name": "iID",
   "args": null,
   "storageKey": null
-},
-v3 = {
-  "kind": "ScalarField",
-  "alias": "__id",
-  "name": "id",
-  "args": null,
-  "storageKey": null
 };
 return {
   "kind": "Request",
-  "operationKind": "query",
-  "name": "InstallationQuery",
-  "id": null,
-  "text": "query InstallationQuery(\n  $id: Int!\n) {\n  installation(iID: $id) {\n    iID\n    ...Overview_installation\n    ...InstallationRules_installation\n    ...Webhooks_installation\n    ...TaskRunner_installation\n    ...Websocket_installation\n    ...Settings_installation\n    ...EnvVars_installation\n    __id: id\n  }\n}\n\nfragment Overview_installation on Installation {\n  iID\n  login\n  avatarURL\n  __id: id\n}\n\nfragment InstallationRules_installation on Installation {\n  iID\n  repos\n  rules\n  tasks\n  scheduler\n  perilSettingsJSONURL\n  __id: id\n}\n\nfragment Webhooks_installation on Installation {\n  iID\n  ...WebhooksHeader_installation\n  webhooks {\n    edges {\n      node {\n        event\n        iID\n        createdAt\n        eventID\n      }\n    }\n  }\n  __id: id\n}\n\nfragment TaskRunner_installation on Installation {\n  iID\n  tasks\n  __id: id\n}\n\nfragment Websocket_installation on Installation {\n  iID\n  perilSettingsJSONURL\n  __id: id\n}\n\nfragment Settings_installation on Installation {\n  iID\n  installationSlackUpdateWebhookURL\n  perilSettingsJSONURL\n  __id: id\n}\n\nfragment EnvVars_installation on Installation {\n  iID\n  envVars\n  __id: id\n}\n\nfragment WebhooksHeader_installation on Installation {\n  iID\n  recordWebhooksUntilTime\n  startedRecordingWebhooksTime\n  __id: id\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "InstallationQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "installation",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": "Installation",
         "plural": false,
         "selections": [
-          v2,
+          (v2/*: any*/),
           {
             "kind": "FragmentSpread",
             "name": "Overview_installation",
@@ -184,8 +175,7 @@ return {
             "kind": "FragmentSpread",
             "name": "EnvVars_installation",
             "args": null
-          },
-          v3
+          }
         ]
       }
     ]
@@ -193,25 +183,25 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "InstallationQuery",
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "installation",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": "Installation",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "kind": "ScalarField",
             "alias": null,
-            "name": "scheduler",
+            "name": "login",
             "args": null,
             "storageKey": null
           },
-          v2,
           {
             "kind": "ScalarField",
             "alias": null,
@@ -219,7 +209,6 @@ return {
             "args": null,
             "storageKey": null
           },
-          v3,
           {
             "kind": "ScalarField",
             "alias": null,
@@ -244,7 +233,7 @@ return {
           {
             "kind": "ScalarField",
             "alias": null,
-            "name": "login",
+            "name": "scheduler",
             "args": null,
             "storageKey": null
           },
@@ -303,7 +292,7 @@ return {
                         "args": null,
                         "storageKey": null
                       },
-                      v2,
+                      (v2/*: any*/),
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -337,10 +326,24 @@ return {
             "name": "envVars",
             "args": null,
             "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "id",
+            "args": null,
+            "storageKey": null
           }
         ]
       }
     ]
+  },
+  "params": {
+    "operationKind": "query",
+    "name": "InstallationQuery",
+    "id": null,
+    "text": "query InstallationQuery(\n  $id: Int!\n) {\n  installation(iID: $id) {\n    iID\n    ...Overview_installation\n    ...InstallationRules_installation\n    ...Webhooks_installation\n    ...TaskRunner_installation\n    ...Websocket_installation\n    ...Settings_installation\n    ...EnvVars_installation\n    id\n  }\n}\n\nfragment Overview_installation on Installation {\n  iID\n  login\n  avatarURL\n}\n\nfragment InstallationRules_installation on Installation {\n  iID\n  repos\n  rules\n  tasks\n  scheduler\n  perilSettingsJSONURL\n}\n\nfragment Webhooks_installation on Installation {\n  iID\n  ...WebhooksHeader_installation\n  webhooks {\n    edges {\n      node {\n        event\n        iID\n        createdAt\n        eventID\n      }\n    }\n  }\n}\n\nfragment TaskRunner_installation on Installation {\n  iID\n  tasks\n}\n\nfragment Websocket_installation on Installation {\n  iID\n  perilSettingsJSONURL\n}\n\nfragment Settings_installation on Installation {\n  iID\n  installationSlackUpdateWebhookURL\n  perilSettingsJSONURL\n}\n\nfragment EnvVars_installation on Installation {\n  iID\n  envVars\n}\n\nfragment WebhooksHeader_installation on Installation {\n  iID\n  recordWebhooksUntilTime\n  startedRecordingWebhooksTime\n}\n",
+    "metadata": {}
   }
 };
 })();

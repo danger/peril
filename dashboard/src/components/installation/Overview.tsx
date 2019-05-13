@@ -1,6 +1,8 @@
 import * as React from "react"
 
-import { createFragmentContainer, graphql } from "react-relay"
+import { createFragmentContainer } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import { Image, Header } from "semantic-ui-react"
 import { Overview_installation } from "./__generated__/Overview_installation.graphql"
 
@@ -18,11 +20,11 @@ interface Props {
 
 export default createFragmentContainer<Props>(
   OverviewInternal,
-  graphql`
+  { installation: graphql`
     fragment Overview_installation on Installation {
       iID
       login
       avatarURL
     }
-  `
+  `}
 )

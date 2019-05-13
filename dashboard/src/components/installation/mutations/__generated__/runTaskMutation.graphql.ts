@@ -7,9 +7,13 @@ export type runTaskMutationVariables = {
     readonly data: any;
 };
 export type runTaskMutationResponse = {
-    readonly runTask: ({
+    readonly runTask: {
         readonly success: boolean | null;
-    }) | null;
+    } | null;
+};
+export type runTaskMutation = {
+    readonly response: runTaskMutationResponse;
+    readonly variables: runTaskMutationVariables;
 };
 
 
@@ -57,20 +61,17 @@ v1 = [
       {
         "kind": "Variable",
         "name": "data",
-        "variableName": "data",
-        "type": "JSON"
+        "variableName": "data"
       },
       {
         "kind": "Variable",
         "name": "iID",
-        "variableName": "iID",
-        "type": "Int!"
+        "variableName": "iID"
       },
       {
         "kind": "Variable",
         "name": "task",
-        "variableName": "task",
-        "type": "String!"
+        "variableName": "task"
       }
     ],
     "concreteType": "MutationWithSuccess",
@@ -88,24 +89,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "runTaskMutation",
-  "id": null,
-  "text": "mutation runTaskMutation(\n  $iID: Int!\n  $task: String!\n  $data: JSON!\n) {\n  runTask(iID: $iID, task: $task, data: $data) {\n    success\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "runTaskMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "runTaskMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "runTaskMutation",
+    "id": null,
+    "text": "mutation runTaskMutation(\n  $iID: Int!\n  $task: String!\n  $data: JSON!\n) {\n  runTask(iID: $iID, task: $task, data: $data) {\n    success\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

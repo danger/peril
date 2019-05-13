@@ -1,13 +1,15 @@
 /* tslint:disable */
 
-import { ConcreteFragment } from "relay-runtime";
+import { ReaderFragment } from "relay-runtime";
+export type SetJSONPathForm_installation$ref = any;
 export type SetJSONPathForm_installation = {
     readonly iID: number;
+    readonly " $refType": SetJSONPathForm_installation$ref;
 };
 
 
 
-const node: ConcreteFragment = {
+const node: ReaderFragment = {
   "kind": "Fragment",
   "name": "SetJSONPathForm_installation",
   "type": "Installation",
@@ -18,13 +20,6 @@ const node: ConcreteFragment = {
       "kind": "ScalarField",
       "alias": null,
       "name": "iID",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": "__id",
-      "name": "id",
       "args": null,
       "storageKey": null
     }

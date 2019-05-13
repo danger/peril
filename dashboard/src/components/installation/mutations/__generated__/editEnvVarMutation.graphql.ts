@@ -9,6 +9,10 @@ export type editEnvVarMutationVariables = {
 export type editEnvVarMutationResponse = {
     readonly changeEnvVarForInstallation: any | null;
 };
+export type editEnvVarMutation = {
+    readonly response: editEnvVarMutationResponse;
+    readonly variables: editEnvVarMutationVariables;
+};
 
 
 
@@ -52,20 +56,17 @@ v1 = [
       {
         "kind": "Variable",
         "name": "iID",
-        "variableName": "iID",
-        "type": "Int!"
+        "variableName": "iID"
       },
       {
         "kind": "Variable",
         "name": "key",
-        "variableName": "key",
-        "type": "String!"
+        "variableName": "key"
       },
       {
         "kind": "Variable",
         "name": "value",
-        "variableName": "value",
-        "type": "String"
+        "variableName": "value"
       }
     ],
     "storageKey": null
@@ -73,24 +74,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "editEnvVarMutation",
-  "id": null,
-  "text": "mutation editEnvVarMutation(\n  $iID: Int!\n  $key: String!\n  $value: String\n) {\n  changeEnvVarForInstallation(iID: $iID, key: $key, value: $value)\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "editEnvVarMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "editEnvVarMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "editEnvVarMutation",
+    "id": null,
+    "text": "mutation editEnvVarMutation(\n  $iID: Int!\n  $key: String!\n  $value: String\n) {\n  changeEnvVarForInstallation(iID: $iID, key: $key, value: $value)\n}\n",
+    "metadata": {}
   }
 };
 })();

@@ -1,6 +1,8 @@
 import * as React from "react"
 
-import { createFragmentContainer, graphql, RelayProp } from "react-relay"
+import { createFragmentContainer, RelayProp } from "react-relay"
+import graphql from 'babel-plugin-relay/macro';
+
 import { Button, Table } from "semantic-ui-react"
 import { fetchQuery } from "../../lib/createRelayEnvironment"
 import { Webhooks_installation } from "./__generated__/Webhooks_installation.graphql"
@@ -102,7 +104,7 @@ class Webhooks extends React.Component<RProps, State> {
 
 export default createFragmentContainer<RProps>(
   Webhooks,
-  graphql`
+  { installation: graphql`
     fragment Webhooks_installation on Installation {
       iID
       ...WebhooksHeader_installation
@@ -118,5 +120,5 @@ export default createFragmentContainer<RProps>(
         }
       }
     }
-  `
+  `}
 )
