@@ -35,7 +35,7 @@ you could write tests which:
 
 ### I want to use Peril
 
-You gave two choices:
+You have two choices:
 
 - Wait for me to ship Peril to production (probably mid-2019)
 - Self-host your own Peril
@@ -48,7 +48,7 @@ Heroku, but the underlying principles work for all of them.
 ### I want to hack on Peril!
 
 Ace, great, cool. So, it's a bit of a process. I'm not sure if this will get easier in time. It's a complex app. You can
-find out [more here](./docs/local_dev.md)
+find out [more here](./docs/local_dev.md).
 
 ### This Repo
 
