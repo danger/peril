@@ -39,6 +39,7 @@ Object {
         "created_files": Array [],
         "deleted_files": Array [],
         "diffForFile": [Function],
+        "fileMatch": [Function],
         "linesOfCode": [Function],
         "modified_files": Array [],
         "structuredDiffForFile": [Function],
