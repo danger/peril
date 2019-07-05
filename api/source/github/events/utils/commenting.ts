@@ -25,9 +25,9 @@ export const commentOnResults = async (
   const platform = getPerilPlatformForDSL(dslType, gh, {})
   const exec = executorForInstallation(platform, vm2, installationSettings)
 
-  // TODO: Figure what happens here with `git` as being nully,
-  // for one I think it would mean non-sandbox runs cant use inline?
-  await exec.handleResults(results, {} as any)
+  // Don't pass a git dsl object here since we don't have one
+  // This means inline comments won't work
+  await exec.handleResults(results)
 }
 
 /** Pulls out the main ID for commenting on a PR or Issue */
