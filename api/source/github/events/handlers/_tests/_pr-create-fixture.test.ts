@@ -34,6 +34,8 @@ jest.mock("../../../../danger/peril_platform", () => ({
   getPerilPlatformForDSL: () => mockPlatform,
 }))
 
+jest.mock("../../createPRDSL", () => ({ createPRDSL: () => Promise.resolve({}) }))
+
 const apiFixtures = resolve(__dirname, "../../_tests/fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 

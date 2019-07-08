@@ -2,7 +2,7 @@ import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { DangerRun, RunType } from "../../../danger/danger_run"
 import { runDangerForInstallation } from "../../../danger/danger_runner"
 import { canUserWriteToRepo, getGitHubFileContents } from "../../lib/github_helpers"
-import { createPRJSONDSL } from "../createPRDSL"
+import { createPRDSL } from "../createPRDSL"
 import { GitHubRunSettings } from "../github_runner"
 import { Pull_request } from "../types/pull_request_updated.types"
 import { githubAPIForCommentable } from "../utils/commenting"
@@ -57,7 +57,7 @@ export const runPRRun = async (
     settings: settings.installationSettings,
   }
 
-  const dangerDSL = await createPRJSONDSL(githubAPI)
+  const dangerDSL = await createPRDSL(githubAPI)
   const results = await runDangerForInstallation(
     eventName,
     contents,
