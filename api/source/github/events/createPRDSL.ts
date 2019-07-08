@@ -14,6 +14,11 @@ import { source } from "../../danger/peril_ci_source"
  */
 export const createPRDSL = async (githubAPI: GitHubAPI) => {
   const jsonDSL = await createPRJSONDSL(githubAPI)
+  // Danger JS expects the Github access token to be set on
+  // settings.github.accessToken, so put it there if we have one
+  if (githubAPI.token !== undefined) {
+    jsonDSL.settings.github.accessToken = githubAPI.token
+  }
   return await jsonToDSL(jsonDSL, source)
 }
 
