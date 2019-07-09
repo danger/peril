@@ -25,7 +25,7 @@ import { runPRRun } from "../handlers/pr"
 const apiFixtures = resolve(__dirname, "fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
-jest.mock("../createPRDSL", () => ({ createPRJSONDSL: () => Promise.resolve({}) }))
+jest.mock("../createPRDSL", () => ({ createPRDSL: () => Promise.resolve({}) }))
 
 it("runs a Dangerfile for a PR with a local", async () => {
   mockContents.mockImplementationOnce(() => Promise.resolve("fail('dangerfile')"))

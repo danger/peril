@@ -12,39 +12,6 @@ Object {
   ],
   "payload": Object {
     "dsl": Object {
-      "git": Object {
-        "JSONDiffForFile": [Function],
-        "JSONPatchForFile": [Function],
-        "commits": Array [
-          Object {
-            "author": Object {
-              "date": "1",
-              "email": "1",
-              "name": "1",
-            },
-            "committer": Object {
-              "date": "1",
-              "email": "1",
-              "name": "1",
-            },
-            "message": "456",
-            "sha": "123",
-            "tree": Object {
-              "sha": "123",
-              "url": "123",
-            },
-            "url": "123",
-          },
-        ],
-        "created_files": Array [],
-        "deleted_files": Array [],
-        "diffForFile": [Function],
-        "fileMatch": [Function],
-        "linesOfCode": [Function],
-        "modified_files": Array [],
-        "structuredDiffForFile": [Function],
-      },
-      "github": Object {},
       "settings": Object {
         "cliArgs": Object {},
         "github": Object {
