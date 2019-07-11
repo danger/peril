@@ -58,7 +58,7 @@ export const PRIVATE_GITHUB_SIGNING_KEY = privateKey && privateKey.trim()
 /** Used only for verifying JWT keys, so is not useful for non-public */
 export const PUBLIC_GITHUB_SIGNING_KEY = publicKey && publicKey.trim()
 /** The ID for the GitHub integration */
-export const PERIL_INTEGRATION_ID = getEnv("PERIL_INTEGRATION_ID")
+export const PERIL_INTEGRATION_ID = parseInt(getEnv("PERIL_INTEGRATION_ID"), 10)
 /** The address for the GitHub App for re-direction */
 export const PUBLIC_GITHUB_APP_URL = getEnv("PUBLIC_GITHUB_APP_URL")
 
