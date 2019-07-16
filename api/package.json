@@ -36,6 +36,7 @@
   "author": "Orta",
   "license": "MIT",
   "dependencies": {
+    "@octokit/app": "^3.0.2",
     "@peril/utils": "^1.0.2",
     "@sentry/node": "^4.0.0-rc.1",
     "@slack/client": "^4.5.0",
@@ -51,6 +52,7 @@
     "@types/json5": "^0.0.30",
     "@types/jsonwebtoken": "^7.2.8",
     "@types/lodash": "^4.14.116",
+    "@types/lru-cache": "^5.1.0",
     "@types/mongodb": "^3.1.4",
     "@types/mongoose": "5.2.7",
     "@types/node": "^9.1.2",
