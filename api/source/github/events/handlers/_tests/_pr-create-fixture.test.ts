@@ -26,6 +26,7 @@ import { dangerRunForRules } from "../../../../danger/danger_run"
 import { PerilRunnerBootstrapJSON } from "../../../../runner/triggerSandboxRun"
 import { setupForRequest } from "../../github_runner"
 
+import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { FakePlatform } from "danger/distribution/platforms/FakePlatform"
 import { runPRRun } from "../pr"
 
@@ -34,12 +35,15 @@ jest.mock("../../../../danger/peril_platform", () => ({
   getPerilPlatformForDSL: () => mockPlatform,
 }))
 
-jest.mock("../../createPRDSL", () => ({ createPRDSL: () => Promise.resolve({}) }))
+jest.mock("../../createPRDSL", () => ({ createPRDSL: jest.fn() }))
+import { createPRDSL } from "../../createPRDSL"
 
 const apiFixtures = resolve(__dirname, "../../_tests/fixtures")
 const fixture = (file: string) => JSON.parse(readFileSync(resolve(apiFixtures, file), "utf8"))
 
 it("passes the right args to the hyper functions when it's a PR", async () => {
+  ;(createPRDSL as jest.Mock).mockResolvedValue({})
+
   mockDB.getInstallation.mockReturnValue({ iID: "123", repos: {}, envVars: { hello: "world" } })
 
   const body = fixture("pull_request_opened.json")
@@ -63,4 +67,25 @@ it("passes the right args to the hyper functions when it's a PR", async () => {
   writeFileSync(__dirname + "/fixtures/PerilRunnerPRBootStrapExample.json", file, "utf8")
 
   expect(payload).toMatchSnapshot()
+})
+
+it("catches error from missing PR", async () => {
+  ;(createPRDSL as jest.Mock).mockRejectedValue({})
+  mockDB.getInstallation.mockReturnValue({ iID: "123", repos: {}, envVars: { hello: "world" } })
+
+  const body = fixture("pull_request_opened.json")
+  const req = { body, headers: { "X-GitHub-Delivery": "123" } } as any
+  const settings = await setupForRequest(req, {})
+
+  const dangerfileForRun = "warn(danger.github.api)"
+  mockGetGitHubFileContents.mockImplementationOnce(() => Promise.resolve(dangerfileForRun))
+
+  const runSettings = { pull_request: "danger/peril-settings@testing/logger.ts" }
+  const run = dangerRunForRules("pull_request", "opened", runSettings, body)
+
+  expect.hasAssertions()
+  const results = await runPRRun("eventName", run, settings, "12345", body.pull_request)
+
+  expect(results).not.toBeNull()
+  expect((results as DangerResults).messages.length).toBeGreaterThan(0)
 })
