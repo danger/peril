@@ -13,7 +13,7 @@ export const githubRouter = (req: Request, res: Response, next: NextFunction) =>
   if (!event) {
     return
   }
-  winston.log("router", `Received ${event}:`)
+  winston.info(`[router] -- Received ${event}:`)
 
   // Creating / Removing installations from the DB
   installationLifeCycle(event, req, res, next)
