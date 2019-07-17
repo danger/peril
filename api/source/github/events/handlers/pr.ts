@@ -1,3 +1,4 @@
+import { DangerDSLType } from "danger/distribution/dsl/DangerDSL"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { DangerRun, RunType } from "../../../danger/danger_run"
 import { runDangerForInstallation } from "../../../danger/danger_runner"
@@ -57,7 +58,19 @@ export const runPRRun = async (
     settings: settings.installationSettings,
   }
 
-  const dangerDSL = await createPRDSL(githubAPI)
+  let dangerDSL: DangerDSLType
+  try {
+    dangerDSL = await createPRDSL(githubAPI)
+  } catch (error) {
+    const message = `Not running Danger because we could not access the GitHub PR ${error}.`
+    return {
+      fails: [],
+      markdowns: [],
+      warnings: [],
+      messages: [{ message }],
+    }
+  }
+
   const results = await runDangerForInstallation(
     eventName,
     contents,
