@@ -12,7 +12,7 @@ import { githubAPIForCommentable } from "../../github/events/utils/commenting"
 import { PERIL_ORG_INSTALLATION_ID } from "../../globals"
 
 export const prDSLRunner = async (req: express.Request, res: express.Response, _: express.NextFunction) => {
-  winston.log("router", `Received OK`)
+  winston.info("[router] -- Received OK")
 
   const query = req.query
   if (!query.owner) {
