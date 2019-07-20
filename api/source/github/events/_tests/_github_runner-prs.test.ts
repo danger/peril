@@ -9,6 +9,7 @@ const mockUserRepoAccess = jest.fn(() => Promise.resolve(true))
 jest.mock("../../../github/lib/github_helpers", () => ({
   canUserWriteToRepo: mockUserRepoAccess,
   getGitHubFileContents: mockContents,
+  doesPRExist: () => Promise.resolve(true),
 }))
 
 const mockRunner = jest.fn(() => Promise.resolve("OK"))
