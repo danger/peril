@@ -12,6 +12,12 @@ export async function canUserWriteToRepo(token: string, user: string, repoSlug: 
   return res.permission === "admin" || res.permission === "write"
 }
 
+export async function doesPRExist(token: string, repoSlug: string, prNumber: number) {
+  // https://developer.github.com/v3/repos/collaborators/#review-a-users-permission-level
+  const res = await api(token, `repos/${repoSlug}/pulls/${prNumber}`, {}, "", "HEAD")
+  return res.status === 200
+}
+
 export async function getGitHubFileContentsFromLocation(
   token: string | null,
   location: RepresentationForURL,

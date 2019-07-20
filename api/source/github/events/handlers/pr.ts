@@ -2,7 +2,7 @@ import { DangerDSLType } from "danger/distribution/dsl/DangerDSL"
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { DangerRun, RunType } from "../../../danger/danger_run"
 import { runDangerForInstallation } from "../../../danger/danger_runner"
-import { canUserWriteToRepo, getGitHubFileContents } from "../../lib/github_helpers"
+import { canUserWriteToRepo, doesPRExist, getGitHubFileContents } from "../../lib/github_helpers"
 import { createPRDSL } from "../createPRDSL"
 import { GitHubRunSettings } from "../github_runner"
 import { Pull_request } from "../types/pull_request_updated.types"
@@ -31,6 +31,13 @@ export const runPRRun = async (
 
   if (!pr.head.repo) {
     console.error("An event without a head repo was passed to runPRRun") // tslint:disable-line
+    return null
+  }
+
+  // No joke, GitHub's been sending up PRs which don't exist
+  const exists = await doesPRExist(token, pr.base.repo.full_name, pr.number)
+  if (!exists) {
+    console.error("Can't run Danger against a PR which doesn't exist.") // tslint:disable-line
     return null
   }
 
@@ -99,6 +106,7 @@ const validateRuns = async (
 
   const dangerfileRepoForPR = pr.head.repo.full_name
   const dangerfileBranchForPR = pr.head.ref
+
   for (const run of runs) {
     const neededDangerfileIsLocalRepo = !run.repoSlug
     const branch = neededDangerfileIsLocalRepo ? dangerfileBranchForPR : null

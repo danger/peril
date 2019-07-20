@@ -15,6 +15,7 @@ jest.mock("../../../../api/github", () => ({
 jest.mock("../../../../github/lib/github_helpers", () => ({
   getGitHubFileContents: jest.fn(),
   canUserWriteToRepo: () => true,
+  doesPRExist: () => Promise.resolve(true),
 }))
 import { getGitHubFileContents } from "../../../lib/github_helpers"
 const mockGetGitHubFileContents: any = getGitHubFileContents

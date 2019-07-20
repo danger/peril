@@ -38,7 +38,7 @@
   "dependencies": {
     "@octokit/app": "^3.0.2",
     "@peril/utils": "^1.0.2",
-    "@sentry/node": "^4.0.0-rc.1",
+    "@sentry/node": "^5.5.0",
     "@slack/client": "^4.5.0",
     "@types/agenda": "1.0.3",
     "@types/async-retry": "^1.4.1",
