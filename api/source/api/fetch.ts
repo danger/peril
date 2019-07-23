@@ -1,4 +1,37 @@
+import * as AsyncRetry from "async-retry"
 import * as node_fetch from "node-fetch"
+
+const shouldRetryRequest = (res: node_fetch.Response) => {
+  // Don't retry 4xx errors other than 401. All 4xx errors can probably be ignored once
+  // the Github API issue causing https://github.com/danger/peril/issues/440 is fixed
+  return res.status === 401 || (res.status >= 500 && res.status <= 599)
+}
+
+export async function retryableFetch(
+  url: string | node_fetch.Request,
+  init?: node_fetch.RequestInit
+): Promise<node_fetch.Response> {
+  const retries = 3
+  return AsyncRetry(
+    async (_, attempt) => {
+      const originalFetch = node_fetch.default
+      const res = await originalFetch(url, init)
+
+      // Throwing an error will trigger a retry
+      if (attempt <= retries && shouldRetryRequest(res)) {
+        throw new Error(`Request failed [${res.status}]: ${res.url}. Attempting retry ${attempt} of ${retries}.`)
+      }
+
+      return res
+    },
+    {
+      retries,
+      onRetry: (error) => {
+        console.log(error.message) // tslint:disable-line
+      },
+    }
+  )
+}
 
 export function fetch(url: string | node_fetch.Request, init?: node_fetch.RequestInit): Promise<node_fetch.Response> {
   const isTests = typeof jest !== "undefined"
@@ -37,8 +70,7 @@ export function fetch(url: string | node_fetch.Request, init?: node_fetch.Reques
     console.log(init) // tslint:disable-line
   }
 
-  const originalFetch: any = node_fetch
-  return originalFetch(url, init)
+  return retryableFetch(url, init)
 }
 
 export default fetch

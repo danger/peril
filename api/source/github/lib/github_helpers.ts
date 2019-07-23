@@ -1,4 +1,3 @@
-import * as AsyncRetry from "async-retry"
 import fetch from "../../api/fetch"
 import { getTemporaryAccessTokenForInstallation } from "../../api/github"
 import { RepresentationForURL } from "../../danger/danger_run"
@@ -87,12 +86,6 @@ const throwNoPerilInstallationID = () => {
   /* tslint:enable: max-line-length */
 }
 
-const canRetryStatus = (status: number) => {
-  // Don't retry 4xx errors other than 401. All 4xx errors can probably be ignored once
-  // the Github API issue causing https://github.com/danger/peril/issues/440 is fixed
-  return status === 401 || (status >= 500 && status <= 599)
-}
-
 /**
  * A quick GitHub API client
  */
@@ -103,35 +96,13 @@ async function api(token: string | null, path: string, headers: any = {}, body: 
 
   const baseUrl = process.env.DANGER_GITHUB_API_BASE_URL || "https://api.github.com"
   const includeBody = !(method === "GET" || method === "HEAD")
-
-  // Retry Github API requests up to 3 times.
-  // This will work around https://github.com/danger/peril/issues/440
-  // and make Peril somewhat resilient to 5xx failures.
-  return AsyncRetry(
-    async () => {
-      const res = await fetch(`${baseUrl}/${path}`, {
-        body: includeBody ? body : undefined,
-        headers: {
-          Accept: "application/vnd.github.machine-man-preview+json",
-          "Content-Type": "application/json",
-          ...headers,
-        },
-        method,
-      })
-
-      // Throwing an error will trigger a retry
-      if (!res.ok && canRetryStatus(res.status)) {
-        throw new Error(`Request failed (status: ${res.status} url: ${res.url}).`)
-      }
-
-      return res
+  return fetch(`${baseUrl}/${path}`, {
+    body: includeBody ? body : undefined,
+    headers: {
+      Accept: "application/vnd.github.machine-man-preview+json",
+      "Content-Type": "application/json",
+      ...headers,
     },
-    {
-      retries: 3,
-      onRetry: (error, attempt) => {
-        winston.info(error.message)
-        winston.info(`Retry ${attempt} of 3.`)
-      },
-    }
-  )
+    method,
+  })
 }
