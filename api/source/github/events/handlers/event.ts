@@ -1,5 +1,6 @@
 import { DangerResults } from "danger/distribution/dsl/DangerResults"
 import { GitHubAPI } from "danger/distribution/platforms/github/GitHubAPI"
+import { octokitAPIForPeril } from "../../../danger/append_peril"
 import { DangerRun, RunFeedback, RunType } from "../../../danger/danger_run"
 import { runDangerForInstallation } from "../../../danger/danger_runner"
 import { getGitHubFileContents } from "../../lib/github_helpers"
@@ -11,13 +12,13 @@ export const runEventRun = async (
   runs: DangerRun[],
   settings: GitHubRunSettings,
   token: string,
-  dangerDSL: any
+  event: any
 ): Promise<DangerResults | null> => {
   if (!runs.length) {
     return null
   }
 
-  const repoForDangerfile = runs[0].repoSlug || (dangerDSL.repository && dangerDSL.repository.full_name)
+  const repoForDangerfile = runs[0].repoSlug || (event.repository && event.repository.full_name)
   if (!repoForDangerfile) {
     return null
   }
@@ -42,6 +43,14 @@ export const runEventRun = async (
     settings: settings.installationSettings,
   }
 
+  // Manually set the Octokit API object so that danger.github.api works
+  const dangerDSL = {
+    github: {
+      ...event,
+      api: await octokitAPIForPeril(settings.installationID, token),
+    },
+  }
+
   const results = await runDangerForInstallation(
     eventName,
     contents,
@@ -49,7 +58,7 @@ export const runEventRun = async (
     githubAPI,
     RunType.import,
     installationSettings,
-    { dsl: { github: dangerDSL }, webhook: dangerDSL }
+    { dsl: dangerDSL, webhook: event }
   )
 
   return results || null

@@ -22,6 +22,7 @@ import { readFileSync, writeFileSync } from "fs"
 import { resolve } from "path"
 import { dangerRunForRules } from "../../../../danger/danger_run"
 
+import { DangerDSLJSONType } from "danger/distribution/dsl/DangerDSL"
 import { PerilRunnerBootstrapJSON } from "../../../../runner/triggerSandboxRun"
 import { setupForRequest } from "../../github_runner"
 import { runEventRun } from "../event"
@@ -44,10 +45,15 @@ it("passes the right args to the hyper functions", async () => {
 
   await runEventRun("mockEvent", [run], settings, "12345", body)
 
-  // Take the payload, remove the JWT and save a copy of the JSON into a fixture dir, then snapshot it
+  // Take the payload, remove the JWT and Github api and save a copy of the JSON into a fixture dir, then snapshot it
   const payload = (runFromSameHost as any).mock.calls[0][0] as PerilRunnerBootstrapJSON
   payload.perilSettings.perilJWT = "12345"
   payload.perilSettings.perilRunID = "[run-id]"
+
+  // Ensure Github API is set before clearing it for the snapshot
+  expect((payload.payload.dsl as DangerDSLJSONType).github!.api).toBeDefined()
+  delete (payload.payload.dsl as DangerDSLJSONType).github!.api
+
   writeFileSync(
     __dirname + "/fixtures/PerilRunnerEventBootStrapExample.json",
     format(JSON.stringify(payload, null, "  "), { parser: "json" }),
