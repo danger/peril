@@ -42,6 +42,10 @@ it("sets up the right call to trigger sandbox run", async () => {
   await runEventRun("mockEvent", [run], settings, "token", body)
   const mock = (triggerSandboxDangerRun as any).mock.calls[0]
 
+  // Check and remove github.api for snapshot
+  expect(mock[4].dsl.github.api).toBeDefined()
+  delete mock[4].dsl.github.api
+
   expect(mock[1]).toMatchSnapshot("type")
   expect(mock[2]).toMatchSnapshot("installation")
   expect(mock[3]).toMatchSnapshot("paths")
