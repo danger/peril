@@ -33,6 +33,21 @@ you could write tests which:
 
 ---
 
+### Peril vs GitHub Actions. 
+
+80% of Peril is available today in GitHub Actions. Key things which are not:
+
+- Multi-repo support ([which is on the Actions roadmap](https://twitter.com/chrisrpatterson/status/1162531343248633858))
+- Pre-workflow evaluation on webhook data (basically the ability to refuse to run the workflow unless something is set in the webhook JSON)
+- Triggering delayed jobs from webhooks (e.g. do this thing in 5m)
+
+Is this enough to warrant self-hosting? Maybe, but it's pushing it a bit if you aren't comfortable hosting a JS project.
+Danger got extended with a [lot of Peril's features](https://github.com/danger/danger-js/blob/master/CHANGELOG.md#500) in order to better support GitHub Actions during the alpha. 
+
+Given that I, Orta, can't install Peril on the Microsoft GitHub org, and GitHub Actions has most of Peril's features - it's unlikely that I'll be building much more into the core. I'll keep it ticking though, it's not much work.
+
+---
+
 ### I want to use Peril
 
 You have two choices:
