@@ -14,7 +14,11 @@ export const perilPrefix = "peril-downloaded-"
 // needs to be overridden.
 export const shouldUseGitHubOverride = (request: string, parent: NodeModule): boolean => {
   // Is it a from a file we're handling, and is it relative?
-  if (parent.filename.startsWith(perilPrefix) && request.startsWith(".")) {
+
+  // In environments like heroku there is an /app/ prefix. This regex
+  // checks that the file is peril downloaded
+  const checkFileRegex = new RegExp(".*\\/*" + perilPrefix + ".*..*")
+  if (checkFileRegex.test(parent.filename) && request.startsWith(".")) {
     return true
   }
   // Basically any import that's not a relative import from a Dangerfile
@@ -26,7 +30,7 @@ export const shouldUseGitHubOverride = (request: string, parent: NodeModule): bo
 // Which TypeScript handles just as you'd expect
 
 export const customGitHubResolveRequest = (token: string) => async (request: string, parent: NodeModule) => {
-  const prefixLessParent = parent.filename.replace(perilPrefix, "")
+  const prefixLessParent = parent.filename.replace(new RegExp(".*\\/*" + perilPrefix), "")
   logger.debug(`Grabbing relative import "${request}" to ${prefixLessParent}.`)
 
   const dangerRep = dangerRepresentationForPath(prefixLessParent)

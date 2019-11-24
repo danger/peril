@@ -7,12 +7,13 @@ import { contextForDanger } from "danger/distribution/runner/Dangerfile"
 import { Executor, ExecutorOptions } from "danger/distribution/runner/Executor"
 import vm2 from "danger/distribution/runner/runners/inline"
 import { DangerRunner } from "danger/distribution/runner/runners/runner"
+import * as overrideRequire from "override-require"
 import * as path from "path"
-
 import { DangerfileReferenceString } from "../db"
 import { runtimeEnvironment } from "../db/getDB"
 import { GitHubInstallationSettings } from "../db/GitHubRepoSettings"
 import { RuntimeEnvironment } from "../db/runtimeEnv"
+import { customGitHubResolveRequest, perilPrefix, shouldUseGitHubOverride } from "../runner/customGitHubRequire"
 import { triggerSandboxDangerRun } from "../runner/triggerSandboxRun"
 import { appendPerilContextToDSL, perilObjectForInstallation } from "./append_peril"
 import { RunType } from "./danger_run"
@@ -62,14 +63,25 @@ export async function runDangerForInstallation(
   const exec = await executorForInstallation(platform, vm2, installationRun.settings)
 
   const localDangerfilePaths = references.map(ref =>
-    path.resolve("./" + "danger-" + Math.random().toString(36) + path.extname(ref))
+    path.resolve("./" + perilPrefix + ref)
   )
 
   // Allow custom peril funcs to come from the task/scheduler DSL
   if (runtimeEnvironment === RuntimeEnvironment.Standalone) {
     const perilFromRunOrTask = DSL && (DSL as any).peril
     const peril = await perilObjectForInstallation(installationRun, process.env, perilFromRunOrTask)
-    return await runDangerAgainstFileInline(localDangerfilePaths, contents, installationRun, exec, peril, payload)
+
+    const token = gh ? gh.api.token : "";
+
+    const restoreOriginalModuleLoader = overrideRequire(shouldUseGitHubOverride,
+      customGitHubResolveRequest(token || ""))
+
+    const results = await runDangerAgainstFileInline(localDangerfilePaths, contents, installationRun, exec, peril, payload)
+
+    // Restore the original module loader.
+    restoreOriginalModuleLoader();
+
+    return results;
   } else {
     return await triggerSandboxDangerRun(eventName, type, installationRun, references, payload)
   }

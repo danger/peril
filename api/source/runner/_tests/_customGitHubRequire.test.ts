@@ -31,7 +31,7 @@ describe("shouldUseGitHubOverride", () => {
 describe("customGitHubResolveRequest", () => {
   it("makes the right GH request for the relative file", async () => {
     const module = "./myapp/peril-resolver"
-    const parent: any = { filename: perilPrefix + "orta/peril-settings@/my-import" }
+    const parent: any = { filename: perilPrefix + "orta/peril-settings@my-import" }
     const token = "1231231231"
     const resolver = customGitHubResolveRequest(token)
 
@@ -45,7 +45,7 @@ describe("customGitHubResolveRequest", () => {
       token,
       {
         branch: "master",
-        dangerfilePath: "/myapp/peril-resolver.js",
+        dangerfilePath: "myapp/peril-resolver.js",
         referenceString: "orta/peril-settings@/myapp/peril-resolver.js",
         repoSlug: "orta/peril-settings",
       },
