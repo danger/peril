@@ -82,8 +82,8 @@ const getInstallationId = (id: string | undefined): number => {
 
 /**
  * The ID for the GitHub installation, you can find this in the
- * `integration_installation` event sent by GitHub. Only needed if
- * you are doing JSON based Dangerfiles.
+ * `installation` event sent by GitHub. Only needed if you are doing
+ * JSON based Dangerfiles.
  *
  * In theory this can be optional if the repo is OSS.
  */

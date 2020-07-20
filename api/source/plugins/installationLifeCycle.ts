@@ -1,7 +1,7 @@
 import * as express from "express"
 import { createInstallation } from "../github/events/create_installation"
 import { deleteInstallation } from "../github/events/deleteInstallation"
-import { RootObject as InstallationCreated } from "../github/events/types/integration_installation_created.types"
+import { RootObject as InstallationCreated } from "../github/events/types/installation.types"
 import logger from "../logger"
 
 export const installationLifeCycle = (event: string, req: express.Request, res: express.Response, ___: any) => {

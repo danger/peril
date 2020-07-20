@@ -80,7 +80,7 @@ const throwNoPerilInstallationID = () => {
   const msg =
     "Sorry, if you have a Peril JSON settings file in a private repo, you will need an installation ID for your integration."
   const subtitle =
-    "You can find this inside the integration_installation event sent when you installed the integration into your org."
+    "You can find this inside the installation event sent when you installed the integration into your org."
   const action = `Set this as "PERIL_ORG_INSTALLATION_ID" in your ENV vars.`
   throw new Error([msg, subtitle, action].join(" "))
   /* tslint:enable: max-line-length */

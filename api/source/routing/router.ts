@@ -49,4 +49,5 @@ export const githubEventPluginHandler = (event: string, req: Request, res: Respo
 
 // Installation addition/removal isn't too useful, and knowing when the repos
 // have changed isn't of much value to peril considering how the JSON file is set up
+// integration_installation is deprecated, but let's keep ignoring it.
 export const webhookSkipListForPeril = ["integration_installation", "installation"]

@@ -1,6 +1,6 @@
 import * as express from "express"
 
-import { Installation } from "../events/types/integration_installation_created.types"
+import { Installation } from "../events/types/installation.types"
 
 import { getDB } from "../../db/getDB"
 import { generateInstallation } from "../../testing/installationFactory"

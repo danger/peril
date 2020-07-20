@@ -36,8 +36,8 @@ describe("makes the right settings for", () => {
     })
   })
 
-  it("an integration_installation_created event", async () => {
-    const pr = requestWithFixturedJSON("integration_installation_created")
+  it("an installation event", async () => {
+    const pr = requestWithFixturedJSON("installation")
     const settings = await setupForRequest(pr, {})
 
     expect(settings).toEqual({
