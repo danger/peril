@@ -1,7 +1,7 @@
 import * as express from "express"
 import { deleteLambdaFunctionNamed } from "../../api/aws/lambda"
 import { getDB } from "../../db/getDB"
-import { Installation } from "../events/types/integration_installation_created.types"
+import { Installation } from "./types/installation.types"
 
 export async function deleteInstallation(installationJSON: Installation, _: express.Request, res: express.Response) {
   const iID = installationJSON.id
