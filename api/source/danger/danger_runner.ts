@@ -62,26 +62,33 @@ export async function runDangerForInstallation(
 
   const exec = await executorForInstallation(platform, vm2, installationRun.settings)
 
-  const localDangerfilePaths = references.map(ref =>
-    path.resolve("./" + perilPrefix + ref)
-  )
+  const localDangerfilePaths = references.map(ref => path.resolve("./" + perilPrefix + ref))
 
   // Allow custom peril funcs to come from the task/scheduler DSL
   if (runtimeEnvironment === RuntimeEnvironment.Standalone) {
     const perilFromRunOrTask = DSL && (DSL as any).peril
     const peril = await perilObjectForInstallation(installationRun, process.env, perilFromRunOrTask)
 
-    const token = gh ? gh.api.token : "";
+    const token = gh ? gh.api.token : ""
 
-    const restoreOriginalModuleLoader = overrideRequire(shouldUseGitHubOverride,
-      customGitHubResolveRequest(token || ""))
+    const restoreOriginalModuleLoader = overrideRequire(
+      shouldUseGitHubOverride,
+      customGitHubResolveRequest(token || "")
+    )
 
-    const results = await runDangerAgainstFileInline(localDangerfilePaths, contents, installationRun, exec, peril, payload)
+    const results = await runDangerAgainstFileInline(
+      localDangerfilePaths,
+      contents,
+      installationRun,
+      exec,
+      peril,
+      payload
+    )
 
     // Restore the original module loader.
-    restoreOriginalModuleLoader();
+    restoreOriginalModuleLoader()
 
-    return results;
+    return results
   } else {
     return await triggerSandboxDangerRun(eventName, type, installationRun, references, payload)
   }
@@ -102,9 +109,9 @@ export async function runDangerAgainstFileInline(
   const context = contextForDanger(dangerDSL)
   const dangerRuntimeEnv = await exec.runner.createDangerfileRuntimeEnvironment(context)
 
-  if (dangerRuntimeEnv.sandbox) {
-    // Mutates runtimeEnv.sandbox
-    await appendPerilContextToDSL(installationRun.iID, undefined, dangerRuntimeEnv.sandbox, peril)
+  if (dangerRuntimeEnv) {
+    // Mutates runtimeEnv
+    await appendPerilContextToDSL(installationRun.iID, undefined, dangerRuntimeEnv, peril)
   }
 
   let results: DangerResults
