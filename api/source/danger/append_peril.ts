@@ -95,7 +95,7 @@ export async function appendPerilContextToDSL(
   peril: PerilDSL
 ) {
   // Update the GitHub related details with the new ocktokit generated per installation
-  if (sandbox.danger) {
+  if (sandbox && sandbox.danger) {
     // @ts-ignore - .github is readonly according to the types, but we have to have something here
     sandbox.danger.github = sandbox.danger.github || ({} as any)
     const api = await octokitAPIForPeril(installationID, authToken)
@@ -107,8 +107,7 @@ export async function appendPerilContextToDSL(
       sandbox.danger.github.utils = recreateGitHubUtils(api)
     }
 
-    const anySandbox = sandbox as any
-    anySandbox.peril = peril
+    sandbox.peril = peril
   }
 }
 
