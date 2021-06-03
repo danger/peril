@@ -1547,10 +1547,10 @@ babel-plugin-jest-hoist@^24.3.0:
   dependencies:
     "@types/babel__traverse" "^7.0.6"
 
-babel-plugin-syntax-async-functions@7.0.0-alpha.19:
-  version "7.0.0-alpha.19"
-  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-async-functions/-/babel-plugin-syntax-async-functions-7.0.0-alpha.19.tgz#f2853e10ab14057bd31991048d2da5769f546a99"
-  integrity sha512-8TrgRevIg/m3wCZNbUpr4FZgRzK5L91MLP6zchVWWR4mx/iRGR+Pg0Ubqg8YHk/kcpqVt5+aF2vteUEeIyONYQ==
+babel-plugin-syntax-async-functions@7.0.0-beta.0:
+  version "7.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-async-functions/-/babel-plugin-syntax-async-functions-7.0.0-beta.0.tgz#2d4074c6167cc78e0bdc49de65902f90e09b59de"
+  integrity sha512-IKh5AA3LKrqluJVc3xVE0i4zD7OIW1Iyua4uZQ3PCwey5lv/pM668eYhIEQT3fj8SmdP3cXVquvKQ0IdMVgQxg==
 
 babel-plugin-syntax-async-generators@7.0.0-alpha.19:
   version "7.0.0-alpha.19"
