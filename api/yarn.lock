@@ -1773,6 +1773,13 @@ babel-plugin-transform-regenerator@7.0.0-alpha.19:
   dependencies:
     regenerator-transform "0.9.11"
 
+babel-plugin-transform-regenerator@7.0.0-beta.3:
+  version "7.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-regenerator/-/babel-plugin-transform-regenerator-7.0.0-beta.3.tgz#761200c174183268a6ef57727967f6bbc8cecb1b"
+  integrity sha512-25qxAISuEL+MtISK0cShFQ3T8MUh3rbWAVqqFORTezcxBaxr28SNQR75ZdwkiNINEDZ/r7klLcxjNDQgJ67+MA==
+  dependencies:
+    regenerator-transform "^0.11.0"
+
 babel-plugin-transform-strict-mode@7.0.0-alpha.19:
   version "7.0.0-alpha.19"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-strict-mode/-/babel-plugin-transform-strict-mode-7.0.0-alpha.19.tgz#e8f5fdcb8f71b00ec32e3e2ed88c0dcd4d949bfe"
@@ -1920,6 +1927,15 @@ babel-types@7.0.0-alpha.19:
   version "7.0.0-alpha.19"
   resolved "https://registry.yarnpkg.com/babel-types/-/babel-types-7.0.0-alpha.19.tgz#8222ae72f349c51758a9451486783a7b9bffc605"
   integrity sha512-EY9Qn4xGxpUBhLs87s9K8k5bYI5bfIrRXobd5kHP0yBGWvu1bzM8oJ9w/xXTX+mdaRFs2w5V8bBP9in6GTHhGg==
+  dependencies:
+    esutils "^2.0.2"
+    lodash "^4.2.0"
+    to-fast-properties "^2.0.0"
+
+babel-types@7.0.0-beta.3:
+  version "7.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/babel-types/-/babel-types-7.0.0-beta.3.tgz#cd927ca70e0ae8ab05f4aab83778cfb3e6eb20b4"
+  integrity sha512-36k8J+byAe181OmCMawGhw+DtKO7AwexPVtsPXoMfAkjtZgoCX3bEuHWfdE5sYxRM8dojvtG/+O08M0Z/YDC6w==
   dependencies:
     esutils "^2.0.2"
     lodash "^4.2.0"
@@ -7412,6 +7428,14 @@ regenerator-transform@0.9.11:
   dependencies:
     babel-runtime "^6.18.0"
     babel-types "^6.19.0"
+    private "^0.1.6"
+
+regenerator-transform@^0.11.0:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/regenerator-transform/-/regenerator-transform-0.11.1.tgz#d3548a723f30bb9d69f2d17c4d0609516ac3f0e2"
+  integrity sha512-q8SAPMEyARQHzyXNWNrlz5oNnI6k4yo8ncEcvH1aXjUCqyVQ7TeV/AttqBLcySCReXVk/+fUydo/RaEIAOnRfA==
+  dependencies:
+    babel-types "7.0.0-beta.3"
     private "^0.1.6"
 
 regex-cache@^0.4.2:
