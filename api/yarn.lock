@@ -886,6 +886,11 @@
     "@types/koa-compose" "*"
     "@types/node" "*"
 
+"@types/lodash@^4.14.116":
+  version "4.14.117"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.117.tgz#695a7f514182771a1e0f4345d189052ee33c8778"
+  integrity sha512-xyf2m6tRbz8qQKcxYZa7PA4SllYcay+eh25DN3jmNYY6gSTL7Htc/bttVdkqj2wfJGbeWlQiX8pIyJpKU+tubw==
+
 "@types/loglevel@^1.5.3":
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/@types/loglevel/-/loglevel-1.5.3.tgz#adfce55383edc5998a2170ad581b3e23d6adb5b8"
@@ -911,7 +916,7 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/mongodb@*":
+"@types/mongodb@*", "@types/mongodb@^3.1.4":
   version "3.1.12"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.1.12.tgz#673cd6d8f494cf03860f15525c653302e109e0f9"
   integrity sha512-HKacBlbypwL3qR/W9o5G+3zCAcfLY2Wva1Ttq7u2y5HnkX20Huz8uNYnjo14eQeuOUyt8YZf963h2m64ajg5fA==
@@ -931,6 +936,13 @@
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@types/node-cleanup/-/node-cleanup-2.1.0.tgz#e9aabbe167907b0fafbb6155305824040c4d25c1"
   integrity sha512-UsZBGcziDJlt7i6SDydnyZigR0Q9f5RllqB4mK2A9culf5X33gEgLgWkXCXgKkF0+ZRQkPfMKqWv905VNTffPQ==
+
+"@types/node-fetch@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.1.2.tgz#8c5da14d70321e4c4ecd5db668e3f93cf6c7399f"
+  integrity sha512-XroxUzLpKuL+CVkQqXlffRkEPi4Gh3Oui/mWyS7ztKiyqVxiU+h3imCW5I2NQmde5jK+3q++36/Q96cyRWsweg==
+  dependencies:
+    "@types/node" "*"
 
 "@types/node-schedule@^1.2.2":
   version "1.2.2"
