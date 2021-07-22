@@ -166,12 +166,12 @@ export interface RepresentationForURL {
 /** Takes a DangerfileReferenceString and lets you know where to find it globally */
 export const dangerRepresentationForPath = (value: DangerfileReferenceString): RepresentationForURL => {
   let afterAt = value.includes("@") ? value.split("@")[1] : value
-  afterAt = afterAt.startsWith('/') ? afterAt.substring(1) : afterAt;
+  afterAt = afterAt.startsWith("/") ? afterAt.substring(1) : afterAt
   return {
     branch: value.includes("#") ? value.split("#")[1] : "master",
     dangerfilePath: afterAt.split("#")[0],
     repoSlug: value.includes("@") ? value.split("@")[0] : undefined,
-    referenceString: value,
+    referenceString: value.split("#")[0],
   }
 }
 
