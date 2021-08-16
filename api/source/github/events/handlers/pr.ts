@@ -56,7 +56,7 @@ export const runPRRun = async (
 
     const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, run.branch)
     contents.push(headDangerfile)
-    dangerfileReferences.push(run.referenceString)
+    dangerfileReferences.push(run.referenceString.split("#")[0])
   }
 
   // Everything is :+1:

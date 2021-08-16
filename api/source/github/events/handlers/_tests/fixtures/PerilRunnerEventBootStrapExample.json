@@ -243,6 +243,36 @@
         },
         "installation": {
           "id": 23511
+        },
+        "api": {
+          "log": {},
+          "activity": {},
+          "apps": {},
+          "checks": {},
+          "codesOfConduct": {},
+          "emojis": {},
+          "gists": {},
+          "git": {},
+          "gitignore": {},
+          "interactions": {},
+          "issues": {},
+          "licenses": {},
+          "markdown": {},
+          "meta": {},
+          "migrations": {},
+          "oauthAuthorizations": {},
+          "orgs": {},
+          "projects": {},
+          "pulls": {},
+          "rateLimit": {},
+          "reactions": {},
+          "repos": {},
+          "search": {},
+          "teams": {},
+          "users": {},
+          "gitdata": {},
+          "authorization": {},
+          "pullRequests": {}
         }
       },
       "settings": {

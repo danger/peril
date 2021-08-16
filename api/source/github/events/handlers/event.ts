@@ -54,7 +54,7 @@ export const runEventRun = async (
   const results = await runDangerForInstallation(
     eventName,
     contents,
-    runs.map(r => r.referenceString),
+    runs.map(r => r.referenceString.split("#")[0]),
     githubAPI,
     RunType.import,
     installationSettings,

@@ -171,7 +171,7 @@ export const dangerRepresentationForPath = (value: DangerfileReferenceString): R
     branch: value.includes("#") ? value.split("#")[1] : "master",
     dangerfilePath: afterAt.split("#")[0],
     repoSlug: value.includes("@") ? value.split("@")[0] : undefined,
-    referenceString: value.split("#")[0],
+    referenceString: value,
   }
 }
 
