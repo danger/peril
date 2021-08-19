@@ -64,10 +64,11 @@ export const jsonDatabase = (dangerFilePath: DangerfileReferenceString): Databas
   getSchedulableInstallationsWithKey: () => Promise.resolve([org]),
 
   setup: async () => {
-    const repo = dangerFilePath.split("@")[0]
-    const path = dangerFilePath.split("@")[1]
+    const ref = dangerFilePath.includes("#") ? dangerFilePath.split("#")[1] : null
+    const repo = dangerFilePath.split("#")[0].split("@")[0]
+    const path = dangerFilePath.split("#")[0].split("@")[1]
 
-    const file = await getGitHubFileContentsWithoutToken(repo, path)
+    const file = await getGitHubFileContentsWithoutToken(repo, path, ref)
 
     if (file === "") {
       throwNoJSONFileFound(dangerFilePath)

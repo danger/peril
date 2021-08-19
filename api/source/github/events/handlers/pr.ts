@@ -56,7 +56,7 @@ export const runPRRun = async (
 
     const headDangerfile = await getGitHubFileContents(token, repoForDangerfile, run.dangerfilePath, run.branch)
     contents.push(headDangerfile)
-    dangerfileReferences.push(run.referenceString)
+    dangerfileReferences.push(run.referenceString.split("#")[0])
   }
 
   // Everything is :+1:
@@ -109,7 +109,7 @@ const validateRuns = async (
 
   for (const run of runs) {
     const neededDangerfileIsLocalRepo = !run.repoSlug
-    const branch = neededDangerfileIsLocalRepo ? dangerfileBranchForPR : null
+    const branch = neededDangerfileIsLocalRepo ? dangerfileBranchForPR : run.branch
 
     // Either it's dictated in the run as an external repo, or we use the most natural repo
     const repoForDangerfileRun = run.repoSlug || dangerfileRepoForPR

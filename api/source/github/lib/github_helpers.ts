@@ -59,9 +59,9 @@ export async function getGitHubFileContents(
  * in the environment it will build the appropriate auth.
  * Returns either the contents or an empty string.
  */
-export async function getGitHubFileContentsWithoutToken(repo: string, path: string) {
+export async function getGitHubFileContentsWithoutToken(repo: string, path: string, ref: string | null) {
   // Try see if we can pull it without an access token
-  const file = await getGitHubFileContents(null, repo, path, null, false)
+  const file = await getGitHubFileContents(null, repo, path, ref, false)
   if (file !== "") {
     return file
   }
