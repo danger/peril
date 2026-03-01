@@ -5,13 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "type": "node2",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceRoot}/out/peril.js",
+      "name": "Launch Dev Web Server",
+      "program": "${workspaceRoot}/out/index.js",
+      "args": [
+        "--harmony-async-await"
+      ],
       "cwd": "${workspaceRoot}",
-      "outFiles": ["out"],
       "sourceMaps": true,
+      "smartStep": true,
       "preLaunchTask": "yarn"
     },
     {
@@ -20,6 +23,22 @@
       "name": "Attach to Process",
       "port": 5858,
       "outFiles": [],
+      "sourceMaps": true
+    },
+    {
+      "name": "Run Tests With Debugger (slower, use npm run watch for normal work)",
+      "type": "node",
+      "request": "launch",
+      "port": 5858,
+      "address": "localhost",
+      "stopOnEntry": false,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--debug-brk",
+        "./node_modules/.bin/jest",
+        "-i"
+      ],
+      "cwd": "${workspaceRoot}",
       "sourceMaps": true
     }
   ]

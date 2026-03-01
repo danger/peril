@@ -4,5 +4,8 @@ pids
 node_modules
 .npm
 *.dat
-config/default.json
 out
+.env
+.next
+thing.pem
+thing.pub
